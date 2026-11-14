@@ -80,8 +80,9 @@ Detail for humans: `CONTRIBUTING.md`.
 | Area | Owner |
 |---|---|
 | Core, App, docs/decisions | both (review by both) |
-| Physics, Presentation, Editor, Hazards H01–H05 + H07, Net/Sync, UI/Menus, scenes L2 L3 | Đình Duy `cornel05` |
-| AI, Match, Hazards/IceTiles (H06), Net/Session, UI/HUD (HUD, lobby, results, tutorial), scenes L1 L4 L5 | Minh Nhật `ZteHahah` |
+| Physics (PlayerMotor, CollisionResolver, FighterProfile), Presentation (RollVisual, CameraRig, audio), Editor, Hazards H01–H05 + H07, Net/Sync, UI/Menus, scenes L2 L3 | Đình Duy `cornel05` |
+| AI (BotBrain, A*), Match (MatchDirector, ScoreService), Hazards/IceTiles (H06), Net/Session, UI/HUD (HUD, lobby, results, tutorial), scenes L1 L4 L5 | Minh Nhật `ZteHahah` |
+Issue `area:` label → module: physics→Physics, hazard→Hazards, ai→AI, rules→Match, network→Net, ui→UI/Presentation, level→Scenes.
 | Build + README | Duy · Credits, change log, test record, playtest report: Nhật |
 Enforced for review by `.github/CODEOWNERS`. Per-module detail: `Assets/_Project/Scripts/<Module>/AGENTS.md`.
 
