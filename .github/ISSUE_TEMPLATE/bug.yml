@@ -1,0 +1,55 @@
+name: Bug
+description: Something does not work as the GDD or an issue says.
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happens
+      description: Observed behaviour. Include build/commit, scene and mode (Single Player, LAN host, LAN client).
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+      description: What should happen, with the GDD ID/section or issue that defines it.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      value: |
+        1. 
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Log lines (Player.log / Editor.log), screenshots, failing test name with file:line.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - area:infra
+        - area:physics
+        - area:hazard
+        - area:network
+        - area:ai
+        - area:rules
+        - area:ui
+        - area:level
+        - area:audio
+        - area:test
+        - area:docs
+  - type: textarea
+    id: criteria
+    attributes:
+      label: Tiêu chí hoàn thành
+      value: |
+        - [ ] Regression test that fails before the fix and passes after
+        - [ ] 

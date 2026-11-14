@@ -1,0 +1,31 @@
+# Review routing for Squishy Bump. Last matching rule wins. See AGENTS.md > Ownership.
+*                                         @cornel05 @ZteHahah
+
+/Assets/_Project/Scripts/Core/            @cornel05 @ZteHahah
+/Assets/_Project/Scripts/App/             @cornel05 @ZteHahah
+/docs/decisions/                          @cornel05 @ZteHahah
+
+/Assets/_Project/Scripts/Physics/         @cornel05
+/Assets/_Project/Scripts/Presentation/    @cornel05
+/Assets/_Project/Scripts/Editor/          @cornel05
+/Assets/_Project/Scripts/Hazards/         @cornel05
+/Assets/_Project/Scripts/Net/Sync/        @cornel05
+/Assets/_Project/Scripts/UI/Menus/        @cornel05
+/Assets/_Project/Scenes/Levels/L2.unity   @cornel05
+/Assets/_Project/Scenes/Levels/L3.unity   @cornel05
+/Assets/_Project/Scenes/Sandbox/Test_Duy.unity @cornel05
+/tools/                                   @cornel05
+/README.md                                @cornel05
+
+/Assets/_Project/Scripts/Hazards/IceTiles/ @ZteHahah
+/Assets/_Project/Scripts/AI/              @ZteHahah
+/Assets/_Project/Scripts/Match/           @ZteHahah
+/Assets/_Project/Scripts/Net/Session/     @ZteHahah
+/Assets/_Project/Scripts/UI/HUD/          @ZteHahah
+/Assets/_Project/Scenes/Levels/L1.unity   @ZteHahah
+/Assets/_Project/Scenes/Levels/L4.unity   @ZteHahah
+/Assets/_Project/Scenes/Levels/L5.unity   @ZteHahah
+/Assets/_Project/Scenes/Lobby.unity       @ZteHahah
+/Assets/_Project/Scenes/Sandbox/Test_Nhat.unity @ZteHahah
+/docs/design-changelog.md                 @ZteHahah
+/docs/testing.md                          @ZteHahah

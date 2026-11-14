@@ -1,0 +1,17 @@
+{
+    "name": "SquishyBump.Presentation",
+    "rootNamespace": "SquishyBump.Presentation",
+    "references": [
+        "SquishyBump.Core",
+        "Unity.Cinemachine"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

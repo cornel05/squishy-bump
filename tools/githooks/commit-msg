@@ -1,0 +1,9 @@
+#!/bin/sh
+# Subject must start with "SB-xx: " or "chore: " / "docs: " (merge/revert/fixup subjects pass).
+subject=$(head -n 1 "$1")
+if echo "$subject" | grep -Eq '^(SB-[0-9]{2}(-[0-9]{2})?: |chore: |docs: |Merge |Revert |fixup! |squash! )'; then
+  exit 0
+fi
+echo "commit-msg: subject must start with 'SB-xx: ', 'chore: ' or 'docs: '" >&2
+echo "  got: $subject" >&2
+exit 1

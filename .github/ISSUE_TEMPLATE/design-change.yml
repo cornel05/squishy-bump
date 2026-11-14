@@ -1,0 +1,38 @@
+name: Design change
+description: Implementation must differ from GDD v1.3 (values, rules, scope). Also add a D-entry to docs/design-changelog.md.
+title: "[Dnn] "
+labels: [design-change]
+body:
+  - type: textarea
+    id: change
+    attributes:
+      label: What changes
+      description: The new behaviour/value compared with the GDD text (quote it, with file#heading).
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+    validations:
+      required: true
+  - type: input
+    id: scope
+    attributes:
+      label: Scope (GDD sections / IDs)
+      placeholder: "Sections 6.1, 13.4 · PF03"
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact on other issues
+      description: Issues whose acceptance criteria change ("#n ...").
+  - type: textarea
+    id: criteria
+    attributes:
+      label: Tiêu chí hoàn thành
+      value: |
+        - [ ] Entry Dnn added to docs/design-changelog.md
+        - [ ] Both members agreed (comment on this issue)
+        - [ ] Affected ScriptableObject values / issues updated
