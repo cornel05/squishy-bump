@@ -42,7 +42,7 @@ Run from the repo root. Scripts work in Windows PowerShell 5.1 and pwsh 7.
 | Verify: compile + EditMode tests | `powershell -ExecutionPolicy Bypass -File tools/verify.ps1` (add `-PlayMode`) |
 | Build Windows x64 (Editor closed) | `powershell -ExecutionPolicy Bypass -File tools/build-windows.ps1` → `Builds/Windows/SquishyBump.exe` |
 | Repo rules | `python tools/check_repo.py` (hooks use `--quick`) |
-| Live Editor | `unity status`, `unity recompile .`, `unity test . --mode EditMode`, `unity command` |
+| Live Editor | `unity status`, `unity recompile .`, `unity command test run --mode editor`, `unity command` (lists all). `unity test` works only with the Editor closed |
 | Regenerate scenes/build list/input wrapper | Editor menu *Squishy Bump > Scaffold Project* |
 | Find a GDD fact | `docs/gdd/ids.md` (by ID) or search `docs/gdd/*.md` |
 
@@ -118,5 +118,5 @@ Enforced for review by `.github/CODEOWNERS`. Per-module detail: `Assets/_Project
   Unity plugin (`unity@unity-agent-plugin`), permissions and hooks (`tools/hooks/`). Skills load from `.claude/skills/`
   (thin wrappers to `.agents/skills/`).
 - **Both:** Unity CLI (`winget install Unity.CLI`, then `unity auth login`). `com.unity.pipeline` is in the manifest,
-  so `unity pipeline editors` / `unity recompile` / `unity test` can drive the open Editor.
+  so `unity pipeline editors` / `unity recompile` / `unity command test run` can drive the open Editor.
 - Project rules here override global agent frameworks (CCGS, awesome-gamedev skills). Do not spawn studio hierarchies.

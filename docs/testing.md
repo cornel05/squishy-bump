@@ -9,7 +9,7 @@
 | Windows build | `powershell -ExecutionPolicy Bypass -File tools/build-windows.ps1` | `Builds/Windows/SquishyBump.exe` |
 | Repo rules | `python tools/check_repo.py` (`--quick` in hooks) | `check_repo: PASS/FAIL` |
 
-`verify.ps1` uses the open Editor through the Unity CLI (`unity recompile`, `unity test`) when
+`verify.ps1` uses the open Editor through the Unity CLI (`unity recompile --strict`, `unity command test run`) when
 `Temp/UnityLockfile` exists, otherwise batchmode. Build needs the Editor closed.
 
 Tests live in `Assets/_Project/Tests/EditMode` and `Tests/PlayMode`. Naming: class `<System>Tests`,

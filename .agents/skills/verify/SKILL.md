@@ -8,7 +8,7 @@ description: Compile the Squishy Bump Unity project and run its tests via tools/
 1. Run from the repo root:
    `powershell -ExecutionPolicy Bypass -File tools/verify.ps1` (add `-PlayMode` when the change touches
    runtime behaviour that has PlayMode tests, or when asked).
-   - Editor open (`Temp/UnityLockfile` exists): it uses the live Editor (`unity recompile --strict`, `unity test`).
+   - Editor open (`Temp/UnityLockfile` exists): it uses the live Editor (`unity recompile --strict`, `unity command test run --mode editor`; PlayMode needs the Editor closed).
    - Editor closed: batchmode; first run can take a few minutes while Unity imports.
 2. Read the result. The last line is `VERIFY: PASS` or `VERIFY: FAIL`.
 3. On failure, report compactly:
