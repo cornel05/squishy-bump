@@ -1,0 +1,60 @@
+name: Task
+description: A planned piece of work with acceptance criteria (title "[SB-xx] ...").
+title: "[SB-xx] "
+body:
+  - type: input
+    id: gdd
+    attributes:
+      label: GDD
+      description: GDD sections and IDs this implements (see docs/gdd/ids.md), e.g. "6.2, 4.4, PF01, PF03".
+    validations:
+      required: true
+  - type: dropdown
+    id: tier
+    attributes:
+      label: Tier
+      options:
+        - tier:A-gate
+        - tier:B-mvp
+        - tier:C-full
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - area:infra
+        - area:physics
+        - area:hazard
+        - area:network
+        - area:ai
+        - area:rules
+        - area:ui
+        - area:level
+        - area:audio
+        - area:test
+        - area:docs
+  - type: textarea
+    id: hard-deps
+    attributes:
+      label: ⛔ Phải xong (merge vào main) trước khi bắt đầu
+      description: Hard dependencies, one "- #n [SB-xx] title" per line. Also add them as GitHub "blocked by". Write "✅ Không phụ thuộc issue nào, bắt đầu được ngay." if none.
+      value: "- #"
+  - type: textarea
+    id: soft-deps
+    attributes:
+      label: Phụ thuộc mềm
+      description: Soft dependencies and how to stub them behind a Core interface. Optional.
+  - type: textarea
+    id: criteria
+    attributes:
+      label: Tiêu chí hoàn thành
+      description: Hard acceptance criteria as checkboxes. Each one must be verifiable by a command, test or observation.
+      value: |
+        - [ ] 
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: "PR đóng issue này phải được người còn lại review. Kẹt quá nửa buổi thì gắn label `blocked`, báo người kia và chuyển sang issue khác. Làm khác GDD v1.3 thì mở issue label `design-change`."

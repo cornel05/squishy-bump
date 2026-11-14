@@ -1,0 +1,16 @@
+{
+    "name": "SquishyBump.Match",
+    "rootNamespace": "SquishyBump.Match",
+    "references": [
+        "SquishyBump.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

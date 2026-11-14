@@ -1,0 +1,26 @@
+{
+    "name": "SquishyBump.App",
+    "rootNamespace": "SquishyBump.App",
+    "references": [
+        "SquishyBump.Core",
+        "SquishyBump.Physics",
+        "SquishyBump.Hazards",
+        "SquishyBump.AI",
+        "SquishyBump.Match",
+        "SquishyBump.Net",
+        "SquishyBump.UI",
+        "SquishyBump.Presentation",
+        "Unity.Netcode.Runtime",
+        "Unity.Networking.Transport",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,5 @@
+#!/bin/sh
+# Runs fast repo checks before every commit (installed by tools/setup-dev.ps1 via core.hooksPath).
+PY=$(command -v python || command -v python3)
+[ -z "$PY" ] && { echo "pre-commit: python not found (uv python install 3.12 --default)"; exit 1; }
+exec "$PY" tools/check_repo.py --quick
