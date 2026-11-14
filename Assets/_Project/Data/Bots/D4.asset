@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4147751b6018f3c4b98ac8175fbc03bf, type: 3}
+  m_Name: D4
+  m_EditorClassIdentifier: SquishyBump.Core::SquishyBump.Core.BotProfile
+  tier: 4
+  decisionRateHz: 8
+  reactionDelaySeconds: 0.2
+  aimNoiseDegrees: 7
+  chargeAlignmentDegrees: 20
+  targetLeadSeconds: 0.35
+  edgeMarginMeters: 2
+  speedFactor: 1
+  targeting: 1
+  awareness: 1023
+  iceHandling: 2
+  iceEdgeMarginMultiplier: 1.5
+  classTactics: 2
