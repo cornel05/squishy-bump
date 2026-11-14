@@ -1,5 +1,10 @@
 * text=auto
 
+# Unity writes LF; keep metas and JSON assets LF on every OS so the Editor never rewrites them
+*.meta        text eol=lf
+*.asmdef      text eol=lf
+*.inputactions text eol=lf
+
 # Scripts that must keep LF (bash hooks) or CRLF-safe
 *.sh text eol=lf
 tools/githooks/* text eol=lf
