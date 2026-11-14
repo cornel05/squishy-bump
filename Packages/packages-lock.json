@@ -96,7 +96,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.netcode.gameobjects": {
-      "version": "2.14.0",
+      "version": "2.13.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -239,7 +239,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.transport": {
-      "version": "2.7.5",
+      "version": "2.6.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
