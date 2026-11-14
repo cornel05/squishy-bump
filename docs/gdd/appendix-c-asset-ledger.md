@@ -33,6 +33,28 @@ Text of this GDD was drafted with the help of an AI assistant (Claude) and revie
 
 ## C.2 Asset groups
 
+### Asset greybox L1 của SB-14
+
+Các tệp dưới đây thuộc phiên bản greybox SB-14 v1, tạo bằng C# và Unity
+6000.3.28f1 với hỗ trợ của Codex. Mesh được tạo từ công thức vòng tròn 120 phân
+đoạn và màu pastel đặt trực tiếp trong Unity. Yêu cầu nguồn là dựng L1 theo
+GDD 9.2.1, với 4 dải rộng 3 m và placeholder quả hạng Vừa. Không dùng seed,
+mô hình tạo ảnh, texture tải ngoài hoặc gói asset bên thứ ba. Mesh và giá trị
+màu do dự án tạo. Shader URP và primitive Sphere lấy từ Unity, dùng theo giấy
+phép của Unity và gói URP đi kèm dự án.
+
+| ID | Tệp trong `Assets/_Project/Data/TrainingRing/` | Vị trí sử dụng trong `L1.unity` |
+|---|---|---|
+| ENV-L1-GB01 | `Band1.asset` | Mesh mặt sàn và collider dải 0–3 m |
+| ENV-L1-GB02 | `Band2.asset` | Mesh mặt sàn và collider dải 3–6 m |
+| ENV-L1-GB03 | `Band3.asset` | Mesh mặt sàn và collider dải 6–9 m |
+| ENV-L1-GB04 | `Band4.asset` | Mesh mặt sàn và collider dải 9–12 m |
+| ENV-L1-GB05 | `Band1.mat` | Màu dải 0–3 m |
+| ENV-L1-GB06 | `Band2.mat` | Màu dải 3–6 m |
+| ENV-L1-GB07 | `Band3.mat` | Màu dải 6–9 m |
+| ENV-L1-GB08 | `Band4.mat` | Màu dải 9–12 m |
+| CH-L1-GB01 | `FruitPlaceholder.mat` | Màu của Sphere tích hợp sẵn tại sáu spawn. Các quả xem trước mặc định tắt. |
+
 The group codes below organise content; each file gets its own ID to track versions and provenance. The list defines what must be managed and does not claim that every asset is finished.
 
 | Code | Group | Content | Used in |

@@ -66,6 +66,19 @@ An exception needs an ADR with an `Allowed-Reference: A -> B` line. `tools/check
 
 ## Scenes
 
+### L1 Training Ring (SB-14)
+
+Scene L1 có bốn collider độc lập, mỗi collider ứng với một dải sàn rộng 3 m.
+Sáu điểm spawn đánh dấu vị trí trên mặt sàn. Hệ thống spawn cộng độ cao theo
+bán kính quả khi tạo fighter. Các sphere trong scene chỉ dùng để xem trước.
+
+Khi tích hợp SB-16, `MatchDirector` lấy `TrainingRingBounds` của scene đang
+chạy, đăng ký `RingOut` và gọi `SampleOnHost(fighterId, hostTick, worldCenter)`
+cho từng fighter còn sống sau bước mô phỏng. Sự kiện mang ID fighter, tick và
+lý do rơi. MatchDirector áp luật Survival hoặc Rank. Sau khi hồi sinh, gọi
+`ResetFighterOnHost(fighterId)` để lần rơi kế tiếp có thể được ghi nhận.
+Lịch cảnh báo và rụng vành H01 thuộc SB-15.
+
 `Scenes/Boot` (build index 0), `MainMenu`, `Lobby`, `Levels/L1…L5` are shared: edited by their owner
 (L1, L4, L5 Nhật; L2, L3 Duy) or through prefabs. `Scenes/Sandbox/Test_Duy` and `Test_Nhat` are personal and
 never built. Scene list is set by `SquishyBump.Editor.ProjectScaffold.Run`.
