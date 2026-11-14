@@ -67,6 +67,19 @@ Detail for humans: `CONTRIBUTING.md`.
 - Do not edit the generated `SquishyControls.cs`; edit the `.inputactions` asset.
 - Assets > 20 MB need the team's OK (GitHub LFS quota 1 GB). Binaries must match an LFS pattern in `.gitattributes`.
 - Sandbox scenes are personal. Shared scenes are edited by their owner, or changed through prefabs.
+- Never hand-edit `.unity`/`.prefab`/`.asset` YAML while an Editor has this project open (its next save overwrites
+  you); go through the Editor instead. With it closed, keep every `fileID`/`guid` intact and reopen to confirm it loads.
+
+## Code rules
+- Time-based logic uses `Time.fixedDeltaTime` in simulation (60 Hz) and `Time.deltaTime` only in presentation.
+- No static singletons for our own game state; pass references via Core interfaces wired in `App`
+  (engine singletons such as `NetworkManager.Singleton` are fine).
+- The host validates every client message (`InputCommand` ranges, cooldowns, sizes) before using it.
+  Each replicated value states reliable/unreliable and its rate (GDD 6.1: input 60 Hz, snapshots 30 Hz).
+- State machines (match flow, bot FSM) use explicit states and log transitions behind a debug flag.
+- UI and Presentation never modify game state; they raise Core events/commands.
+- Tests: class `<System>Tests`, methods `<Scenario>_<Expected>`, arrange/act/assert. A bug fix adds a
+  regression test that was seen failing before the fix.
 
 ## Definition of done
 - Every acceptance checkbox in the issue is satisfied and ticked, with evidence in the PR.
