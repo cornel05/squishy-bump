@@ -18,10 +18,12 @@ function Show-Results([string]$xml, [string]$mode) {
     $run = $r.'test-run'
     Write-Host ("  {0}: {1} passed, {2} failed, {3} skipped ({4})" -f $mode, $run.passed, $run.failed, $run.skipped, $run.result)
     foreach ($t in $r.SelectNodes("//test-case[@result='Failed']")) {
-        $loc = [regex]::Match([string]$t.failure.'stack-trace', 'in (.+?):(\d+)')
+        # message / stack-trace are CDATA elements: read their InnerText.
+        $msg = $t.SelectSingleNode('failure/message'); $st = $t.SelectSingleNode('failure/stack-trace')
+        $loc = [regex]::Match($(if ($st) { $st.InnerText } else { '' }), 'in (.+?):(\d+)')
         $where = if ($loc.Success) { "$($loc.Groups[1].Value):$($loc.Groups[2].Value)" } else { '' }
         Write-Host "    FAIL $($t.fullname) $where" -ForegroundColor Red
-        Write-Host "         $(([string]$t.failure.message).Trim())"
+        Write-Host "         $(if ($msg) { $msg.InnerText.Trim() })"
     }
     return ([int]$run.failed -eq 0 -and [int]$run.total -gt 0)
 }
