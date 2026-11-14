@@ -20,6 +20,7 @@ method `<Scenario>_<Expected>`, arrange/act/assert.
 | Test | Covers | Last run |
 |---|---|---|
 | `EngineSettingsTests` (3) | fixed step 1/60, gravity −20, Core dependency rule | 15/11/2026 pass (SB-01–03 bootstrap) |
+| `TrainingRingTests` (2) | SB-14: nạp scene L1, bốn collider và sáu spawn, hai điều kiện ring-out và chống báo trùng đến khi hồi sinh | 15/11/2026 · `1343ee1` · Minh Nhật · `tools/verify.ps1 -PlayMode`: 3/3 EditMode và 2/2 PlayMode đạt. Báo cáo: `TestResults/PlayMode.xml`. |
 
 ## Acceptance test record (GDD 14.3, T01–T20)
 
