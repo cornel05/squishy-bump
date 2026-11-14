@@ -19,8 +19,8 @@ MAX_BIN = 1024 * 1024
 errors: list[str] = []
 
 
-def git(*args: str, stdin: str | None = None) -> list[str]:
-    out = subprocess.run(["git", *args], cwd=ROOT, input=stdin, capture_output=True, text=True, encoding="utf-8", check=True).stdout
+def git(*args: str) -> list[str]:
+    out = subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True, encoding="utf-8", check=True).stdout
     return [line for line in out.splitlines() if line]
 
 
@@ -81,7 +81,8 @@ def check_lfs(candidates: list[str]) -> None:
     big = [f for f in candidates if (ROOT / f).is_file() and (ROOT / f).stat().st_size > MAX_BIN]
     if not big:
         return
-    for line in git("check-attr", "filter", "--stdin", stdin="\n".join(big) + "\n"):
+    # Paths as args, not --stdin: Python text mode on Windows would append \r to each path.
+    for line in git("check-attr", "filter", "--", *big):
         path, _, value = line.rsplit(": ", 2)
         if value != "lfs":
             errors.append(f"binary > 1 MB not in LFS: {path}  (add its extension to .gitattributes)")
