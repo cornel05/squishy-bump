@@ -1,6 +1,7 @@
 using System;
 using SquishyBump.Core;
 using SquishyBump.Net.Session;
+using SquishyBump.Net.Sync;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
@@ -12,12 +13,15 @@ namespace SquishyBump.App
     {
         private StubSessionService session;
         private GameEventHub events;
+        private NetSync sync;
 
         public ISessionService Session => session;
         public IHostClock Clock => this;
         public IGameEvents Events => events;
         public IGameEventSink EventSink => events;
         public GameEventHub EventHub => events;
+        /// <summary>Input up / snapshot down streams of this peer.</summary>
+        public NetSync Sync => sync;
 
         public uint Tick { get; private set; }
         public event Action<uint> Ticked;
@@ -30,9 +34,12 @@ namespace SquishyBump.App
             manager.NetworkConfig.NetworkTransport = transport;
             manager.NetworkConfig.TickRate = 60;
             session = new StubSessionService(manager, transport);
+            sync = new NetSync(manager);
             events = new GameEventHub(() => session.CanSimulateGameplay);
             session.StateChanged += OnSessionStateChanged;
         }
+
+        private void Update() => sync.Poll();
 
         // Vòng mô phỏng 60 Hz của host (GDD 10.4). Client không mở tick.
         private void FixedUpdate()
@@ -70,6 +77,7 @@ namespace SquishyBump.App
                 return;
 
             session.StateChanged -= OnSessionStateChanged;
+            sync.Dispose();
             session.Dispose();
         }
     }

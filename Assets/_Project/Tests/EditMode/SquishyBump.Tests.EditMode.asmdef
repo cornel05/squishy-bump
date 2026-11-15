@@ -8,7 +8,8 @@
         "SquishyBump.Match",
         "SquishyBump.Physics",
         "SquishyBump.Presentation",
-        "SquishyBump.Hazards"
+        "SquishyBump.Hazards",
+        "SquishyBump.Net"
     ],
     "includePlatforms": [
         "Editor"
