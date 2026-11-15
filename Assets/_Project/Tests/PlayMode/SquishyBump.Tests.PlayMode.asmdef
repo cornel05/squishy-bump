@@ -8,6 +8,7 @@
         "SquishyBump.Match",
         "SquishyBump.Physics",
         "SquishyBump.Presentation",
+        "SquishyBump.Hazards",
         "SquishyBump.App",
         "Unity.Netcode.Runtime"
     ],

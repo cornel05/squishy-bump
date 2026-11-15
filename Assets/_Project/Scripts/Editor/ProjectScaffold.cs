@@ -1,6 +1,7 @@
 using System.IO;
 using System.Linq;
 using SquishyBump.Core;
+using SquishyBump.Hazards;
 using SquishyBump.Physics;
 using SquishyBump.Presentation;
 using UnityEditor;
@@ -25,6 +26,8 @@ namespace SquishyBump.Editor
         const string FighterPrefabRoot = "Assets/_Project/Prefabs/Fighters";
         const string FruitMaterialRoot = "Assets/_Project/Art/Materials/Fruits";
         const string PresentationProfilePath = DataRoot + "/Presentation/PresentationProfile.asset";
+        const string HazardProfilePath = DataRoot + "/Hazards/HazardProfile.asset";
+        const string TrainingRingFloorPrefab = "Assets/_Project/Prefabs/Hazards/TrainingRingFloor.prefab";
         const string PlaceholderMaterial = DataRoot + "/TrainingRing/FruitPlaceholder.mat";
         static readonly string[] ClassNames = { "Heavy", "Normal", "Light" };
         static readonly string[] FruitNames = { "Watermelon", "Pineapple", "Apple", "Mangosteen", "Peach", "Blueberry" };
@@ -50,6 +53,7 @@ namespace SquishyBump.Editor
             EnsureDataAssets();
             EnsureFighterPrefabs();
             EnsureRollRigs();
+            EnsureTrainingRingFloor();
             ConfigureInputWrapper();
             // Project-wide actions = our asset (the template's default asset was removed).
             InputSystem.actions = AssetDatabase.LoadAssetAtPath<InputActionAsset>(InputAsset);
@@ -71,6 +75,7 @@ namespace SquishyBump.Editor
         {
             EnsureAsset<BalanceProfile>($"{DataRoot}/Balance/BalanceProfile.asset");
             EnsureAsset<PresentationProfile>(PresentationProfilePath);
+            EnsureAsset<HazardProfile>(HazardProfilePath);
             foreach (var c in ClassNames) EnsureAsset<ClassProfile>($"{DataRoot}/Classes/{c}.asset");
 
             var sphere = Resources.GetBuiltinResource<Mesh>("Sphere.fbx");
@@ -153,6 +158,42 @@ namespace SquishyBump.Editor
                 }
                 PrefabUtility.UnloadPrefabContents(root);
             }
+        }
+
+        // SB-15: the L1 floor as one self-running H01 prefab. Bands come from the L1 band meshes, outermost first.
+        static void EnsureTrainingRingFloor()
+        {
+            if (File.Exists(TrainingRingFloorPrefab)) return;
+            EnsureFolder(Path.GetDirectoryName(TrainingRingFloorPrefab)!);
+            var root = new GameObject("TrainingRingFloor");
+            var bands = Enumerable.Range(1, 4)
+                .Select(i => (mesh: AssetDatabase.LoadAssetAtPath<Mesh>($"{DataRoot}/TrainingRing/Band{i}.asset"),
+                    material: AssetDatabase.LoadAssetAtPath<Material>($"{DataRoot}/TrainingRing/Band{i}.mat")))
+                .OrderByDescending(b => b.mesh.bounds.extents.x)
+                .Select((b, i) =>
+                {
+                    var go = new GameObject($"Band {i}");
+                    go.transform.SetParent(root.transform, false);
+                    go.AddComponent<MeshFilter>().sharedMesh = b.mesh;
+                    go.AddComponent<MeshRenderer>().sharedMaterial = b.material;
+                    var collider = go.AddComponent<MeshCollider>();
+                    collider.sharedMesh = b.mesh;
+                    return (Object)collider;
+                })
+                .ToArray();
+
+            var drop = root.AddComponent<RingDrop>();
+            SetReferences(drop,
+                ("balance", AssetDatabase.LoadAssetAtPath<BalanceProfile>($"{DataRoot}/Balance/BalanceProfile.asset")),
+                ("hazards", AssetDatabase.LoadAssetAtPath<HazardProfile>(HazardProfilePath)));
+            var so = new SerializedObject(drop);
+            var list = so.FindProperty("bands");
+            list.arraySize = bands.Length;
+            for (var i = 0; i < bands.Length; i++) list.GetArrayElementAtIndex(i).objectReferenceValue = bands[i];
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            PrefabUtility.SaveAsPrefabAsset(root, TrainingRingFloorPrefab);
+            Object.DestroyImmediate(root);
         }
 
         static void SetReferences(Object target, params (string field, Object value)[] references)

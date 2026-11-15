@@ -4,6 +4,10 @@
     "references": [
         "SquishyBump.Core",
         "SquishyBump.Physics",
+        "SquishyBump.Hazards",
+        "SquishyBump.Match",
+        "SquishyBump.App",
+        "Unity.Netcode.Runtime",
         "SquishyBump.Presentation",
         "Unity.InputSystem"
     ],
