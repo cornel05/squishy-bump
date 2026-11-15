@@ -20,6 +20,7 @@ method `<Scenario>_<Expected>`, arrange/act/assert.
 | Test | Covers | Last run |
 |---|---|---|
 | `EngineSettingsTests` (3) | fixed step 1/60, gravity −20, Core dependency rule | 15/11/2026 pass (SB-01–03 bootstrap) |
+| `ConfigurationAssetTests` (10) | SB-05: 5 cấu hình sàn L1–L5 và 5 cấu hình bot D1–D5 theo GDD A.5 | 15/11/2026 · `40559a9` · Minh Nhật · `tools/verify.ps1`: 13/13 EditMode đạt, 0 lỗi, 0 cảnh báo. Chi tiết: `TestResults/EditMode.xml`. |
 
 ## Acceptance test record (GDD 14.3, T01–T20)
 
