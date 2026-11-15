@@ -1,0 +1,44 @@
+using System;
+using SquishyBump.Core;
+using SquishyBump.Core.Input;
+using SquishyBump.Presentation;
+using UnityEngine;
+
+namespace SquishyBump.App
+{
+    /// <summary>
+    /// The only place that reads this peer's devices for gameplay: turns the Gameplay map into
+    /// <see cref="InputCommand"/>s (yaw = camera heading) and feeds mouse look to the camera.
+    /// </summary>
+    public sealed class LocalPlayerInput : IDisposable
+    {
+        private readonly SquishyControls controls = new();
+        private readonly CameraRig camera;
+        private uint sequence;
+
+        public LocalPlayerInput(CameraRig cameraRig)
+        {
+            camera = cameraRig;
+            controls.Gameplay.Enable();
+        }
+
+        /// <summary>Per rendered frame: orbit the camera.</summary>
+        public void UpdateLook()
+        {
+            if (camera != null) camera.Orbit(controls.Gameplay.Look.ReadValue<Vector2>());
+        }
+
+        /// <summary>Per host tick: the held state of every input.</summary>
+        public InputCommand Sample() => new(++sequence,
+            controls.Gameplay.Move.ReadValue<Vector2>(),
+            controls.Gameplay.Jump.IsPressed(),
+            controls.Gameplay.Dash.IsPressed(),
+            camera != null ? camera.Yaw : 0f);
+
+        public void Dispose()
+        {
+            controls.Gameplay.Disable();
+            controls.Dispose();
+        }
+    }
+}
