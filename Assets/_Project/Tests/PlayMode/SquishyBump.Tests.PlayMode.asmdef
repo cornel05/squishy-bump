@@ -6,6 +6,7 @@
         "UnityEditor.TestRunner",
         "SquishyBump.Core",
         "SquishyBump.Match",
+        "SquishyBump.Physics",
         "SquishyBump.App",
         "Unity.Netcode.Runtime"
     ],

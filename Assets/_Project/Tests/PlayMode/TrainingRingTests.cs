@@ -32,13 +32,13 @@ namespace SquishyBump.Tests.PlayMode
             var bands = new HashSet<Collider>();
             for (int i = 0; i < 4; i++)
             {
-                Assert.That(Physics.Raycast(new Vector3(1.5f + i * 3f, 2f, 0f),
+                Assert.That(UnityEngine.Physics.Raycast(new Vector3(1.5f + i * 3f, 2f, 0f),
                     Vector3.down, out var hit, 3f), Is.True);
                 Assert.That(hit.point.y, Is.EqualTo(0f).Within(0.001f));
                 Assert.That(bands.Add(hit.collider), Is.True, "Mỗi vành cần có collider riêng.");
             }
 
-            Assert.That(Physics.Raycast(new Vector3(12.1f, 2f, 0f), Vector3.down, 3f), Is.False);
+            Assert.That(UnityEngine.Physics.Raycast(new Vector3(12.1f, 2f, 0f), Vector3.down, 3f), Is.False);
         }
 
         [UnityTest]

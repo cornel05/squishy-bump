@@ -14,7 +14,7 @@ namespace SquishyBump.Tests.EditMode
         public void FixedTimestep_Is60Hz() => Assert.AreEqual(1f / 60f, Time.fixedDeltaTime, 1e-6f);
 
         [Test]
-        public void Gravity_IsMinus20() => Assert.AreEqual(-20f, Physics.gravity.y, 1e-4f);
+        public void Gravity_IsMinus20() => Assert.AreEqual(-20f, UnityEngine.Physics.gravity.y, 1e-4f);
 
         [Serializable] class Asmdef { public string[] references = new string[0]; }
 
