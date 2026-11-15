@@ -73,6 +73,7 @@ namespace SquishyBump.Tests.EditMode
             Assert.That(b.Lives, Is.EqualTo(3));
             Assert.That(b.RespawnDelaySeconds, Is.EqualTo(2f));
             Assert.That(b.InvulnerabilitySeconds, Is.EqualTo(1.5f));
+            Assert.That(b.RespawnEdgeMarginMeters, Is.EqualTo(1.5f));
             Assert.That(b.LastTouchWindowSeconds, Is.EqualTo(3f));
             Assert.That(b.PointsPerRingOut, Is.EqualTo(1));
             Assert.That(b.InputRateHz, Is.EqualTo(60f));

@@ -45,6 +45,7 @@ MonoBehaviour:
   lives: 3
   respawnDelaySeconds: 2
   invulnerabilitySeconds: 1.5
+  respawnEdgeMarginMeters: 1.5
   lastTouchWindowSeconds: 3
   pointsPerRingOut: 1
   inputRateHz: 60
