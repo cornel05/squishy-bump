@@ -6,6 +6,7 @@ using SquishyBump.Match;
 using SquishyBump.Net.Sync;
 using SquishyBump.Physics;
 using SquishyBump.Presentation;
+using SquishyBump.UI.Menus;
 using UnityEngine;
 
 namespace SquishyBump.App
@@ -46,11 +47,55 @@ namespace SquishyBump.App
         private LocalPlayerInput localInput;
         private MatchClientView clientView;
         private int snapshotEveryTicks;
+        private PauseMenu pause;
+        private bool pausesGame;
 
         public MatchDirector Director { get; private set; }
         public IReadOnlyList<Fighter> Fighters => fighters;
         public MatchClientView ClientView => clientView;
         public bool Started => Director != null;
+        /// <summary>Set by the launcher: start the match on the first frame after Start (host only).</summary>
+        public bool StartWhenReady { get; set; }
+
+        /// <summary>For matches built at runtime: call on an inactive object, before Start.</summary>
+        public void Configure(GameplayBootstrap owner, BalanceProfile balanceProfile, TrainingRingBounds arenaBounds,
+            RingDrop ringDropHazard, CameraRig rig, GameObject[] roster, int levelNumber, bool autoHost)
+        {
+            bootstrap = owner;
+            balance = balanceProfile;
+            bounds = arenaBounds;
+            ringDrop = ringDropHazard;
+            cameraRig = rig;
+            fighterPrefabs = roster;
+            level = levelNumber;
+            this.autoHost = autoHost;
+        }
+
+        /// <summary>Esc menu: pauses in Single Player, overlay only in Multiplayer (GDD 3.4).</summary>
+        public void AttachPause(PauseMenu menu, bool singlePlayer, System.Action leave)
+        {
+            pause = menu;
+            pausesGame = singlePlayer;
+            pause.OpenChanged += OnPauseChanged;
+            pause.LeaveRequested += leave;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        private void OnPauseChanged(bool open)
+        {
+            localInput.Suspended = open;
+            if (pausesGame) Time.timeScale = open ? 0f : 1f;
+            Cursor.lockState = open ? CursorLockMode.None : CursorLockMode.Locked;
+        }
+
+        private void ApplySettings(GameSettings settings)
+        {
+            AudioListener.volume = settings.MasterVolume;
+            if (cameraRig == null) return;
+            cameraRig.SensitivityScale = settings.MouseSensitivity;
+            cameraRig.SetDistanceScale(settings.CameraDistance);
+            cameraRig.ShakeEnabled = settings.ScreenShake;
+        }
 
         public sealed class Fighter
         {
@@ -65,6 +110,8 @@ namespace SquishyBump.App
         {
             if (bootstrap == null) bootstrap = FindAnyObjectByType<GameplayBootstrap>();
             localInput = new LocalPlayerInput(cameraRig);
+            ApplySettings(bootstrap.Settings);
+            bootstrap.Settings.Changed += ApplySettings;
             bootstrap.Session.StateChanged += OnSessionState;
             bootstrap.Events.HazardRaised += OnHazard;
             if (autoHost && bootstrap.Session.State == SessionState.Idle) bootstrap.Session.Host(SessionMode.SinglePlayer);
@@ -120,6 +167,8 @@ namespace SquishyBump.App
 
         private void Update()
         {
+            if (StartWhenReady && !Started) StartMatch();
+            if (pause != null && localInput != null && localInput.MenuPressed) pause.Toggle();
             localInput?.UpdateLook();
             clientView?.Update(Time.time);
         }
@@ -198,10 +247,12 @@ namespace SquishyBump.App
             if (bootstrap != null)
             {
                 bootstrap.Session.StateChanged -= OnSessionState;
+                bootstrap.Settings.Changed -= ApplySettings;
                 bootstrap.Clock.Ticked -= OnTick;
                 bootstrap.Events.HazardRaised -= OnHazard;
                 bootstrap.Sync.InputReceived -= OnRemoteInput;
             }
+            if (pausesGame) Time.timeScale = 1f;
             clientView?.Dispose();
             localInput?.Dispose();
             Director?.Dispose();

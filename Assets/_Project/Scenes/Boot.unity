@@ -339,6 +339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d78f0c26a34d5c94cae4dd59883f931b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: SquishyBump.App::SquishyBump.App.GameplayBootstrap
+  setup: {fileID: 11400000, guid: 75b50dd22f902714da08746d1ecbb4a6, type: 2}
 --- !u!114 &1932689747
 MonoBehaviour:
   m_ObjectHideFlags: 0
