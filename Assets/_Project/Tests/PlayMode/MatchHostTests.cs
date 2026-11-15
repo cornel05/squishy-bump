@@ -24,8 +24,12 @@ namespace SquishyBump.Tests.PlayMode
         {
             Time.timeScale = 1f;
             if (hostObject != null) Object.Destroy(hostObject);
-            var app = Object.FindAnyObjectByType<GameplayBootstrap>();
-            if (app != null) app.Session.Leave();
+            // NGO keeps each NetworkManager across scene loads: end and remove them so later tests start clean.
+            foreach (var app in Object.FindObjectsByType<GameplayBootstrap>(FindObjectsSortMode.None))
+            {
+                app.Session.Leave();
+                Object.Destroy(app.gameObject);
+            }
             // L1's floor must not stay under later tests.
             var l1 = SceneManager.GetSceneByPath($"{Root}/Scenes/Levels/L1.unity");
             if (l1.isLoaded) yield return SceneManager.UnloadSceneAsync(l1);

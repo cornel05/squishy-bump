@@ -5,6 +5,7 @@ using SquishyBump.Net.Sync;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace SquishyBump.App
 {
@@ -14,6 +15,8 @@ namespace SquishyBump.App
         private StubSessionService session;
         private GameEventHub events;
         private NetSync sync;
+        [Tooltip("Boot only: profiles, levels and roster for the scene flow. Empty in test rigs.")]
+        [SerializeField] private MatchSetup setup;
 
         public ISessionService Session => session;
         public IHostClock Clock => this;
@@ -22,6 +25,9 @@ namespace SquishyBump.App
         public GameEventHub EventHub => events;
         /// <summary>Input up / snapshot down streams of this peer.</summary>
         public NetSync Sync => sync;
+        /// <summary>Local options (not game state); persisted by SB-51.</summary>
+        public GameSettings Settings { get; } = new();
+        public LevelLauncher Launcher { get; private set; }
 
         public uint Tick { get; private set; }
         public event Action<uint> Ticked;
@@ -37,9 +43,22 @@ namespace SquishyBump.App
             sync = new NetSync(manager);
             events = new GameEventHub(() => session.CanSimulateGameplay);
             session.StateChanged += OnSessionStateChanged;
+            if (setup != null)
+            {
+                Launcher = gameObject.AddComponent<LevelLauncher>();
+                Launcher.Init(this, setup);
+            }
             // Hazard events: the host's hub forwards each one reliably; a client's hub receives them (dedup by EventId).
             events.HazardRaised += ForwardHazard;
             sync.HazardReceived += events.Deliver;
+        }
+
+        private void Start()
+        {
+            // shortcut: only a fresh start (player launch or Play on Boot, frame ≤ 2) goes to the menu, so PlayMode
+            // tests that load Boot mid-run keep their own scenes. Replace with an explicit boot flag if it bites.
+            if (Launcher != null && Time.frameCount <= 2)
+                SceneManager.LoadScene(setup.MainMenuScene, LoadSceneMode.Single);
         }
 
         private void Update() => sync.Poll();

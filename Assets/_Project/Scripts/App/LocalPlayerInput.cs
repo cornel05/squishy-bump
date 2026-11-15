@@ -22,18 +22,26 @@ namespace SquishyBump.App
             controls.Gameplay.Enable();
         }
 
+        /// <summary>While a menu is open the fruit gets no steering or buttons and the camera stays put.</summary>
+        public bool Suspended { get; set; }
+
+        /// <summary>Esc this frame (GDD 3.4).</summary>
+        public bool MenuPressed => controls.Gameplay.Menu.WasPressedThisFrame();
+
         /// <summary>Per rendered frame: orbit the camera.</summary>
         public void UpdateLook()
         {
-            if (camera != null) camera.Orbit(controls.Gameplay.Look.ReadValue<Vector2>());
+            if (camera != null && !Suspended) camera.Orbit(controls.Gameplay.Look.ReadValue<Vector2>());
         }
 
         /// <summary>Per host tick: the held state of every input.</summary>
-        public InputCommand Sample() => new(++sequence,
-            controls.Gameplay.Move.ReadValue<Vector2>(),
-            controls.Gameplay.Jump.IsPressed(),
-            controls.Gameplay.Dash.IsPressed(),
-            camera != null ? camera.Yaw : 0f);
+        public InputCommand Sample() => Suspended
+            ? new InputCommand(++sequence, Vector2.zero, false, false, camera != null ? camera.Yaw : 0f)
+            : new InputCommand(++sequence,
+                controls.Gameplay.Move.ReadValue<Vector2>(),
+                controls.Gameplay.Jump.IsPressed(),
+                controls.Gameplay.Dash.IsPressed(),
+                camera != null ? camera.Yaw : 0f);
 
         public void Dispose()
         {

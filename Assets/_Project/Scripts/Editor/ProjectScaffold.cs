@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using SquishyBump.App;
 using SquishyBump.Core;
 using SquishyBump.Hazards;
 using SquishyBump.Physics;
@@ -28,6 +29,7 @@ namespace SquishyBump.Editor
         const string PresentationProfilePath = DataRoot + "/Presentation/PresentationProfile.asset";
         const string HazardProfilePath = DataRoot + "/Hazards/HazardProfile.asset";
         const string TrainingRingFloorPrefab = "Assets/_Project/Prefabs/Hazards/TrainingRingFloor.prefab";
+        const string MatchSetupPath = DataRoot + "/MatchSetup.asset";
         const string PlaceholderMaterial = DataRoot + "/TrainingRing/FruitPlaceholder.mat";
         static readonly string[] ClassNames = { "Heavy", "Normal", "Light" };
         static readonly string[] FruitNames = { "Watermelon", "Pineapple", "Apple", "Mangosteen", "Peach", "Blueberry" };
@@ -54,6 +56,7 @@ namespace SquishyBump.Editor
             EnsureFighterPrefabs();
             EnsureRollRigs();
             EnsureTrainingRingFloor();
+            EnsureMatchSetup();
             ConfigureInputWrapper();
             // Project-wide actions = our asset (the template's default asset was removed).
             InputSystem.actions = AssetDatabase.LoadAssetAtPath<InputActionAsset>(InputAsset);
@@ -194,6 +197,44 @@ namespace SquishyBump.Editor
 
             PrefabUtility.SaveAsPrefabAsset(root, TrainingRingFloorPrefab);
             Object.DestroyImmediate(root);
+        }
+
+        // SB-31: the scene flow's data asset, and the Boot bootstrap pointing at it. Fills only empty slots.
+        static void EnsureMatchSetup()
+        {
+            var setup = EnsureAsset<MatchSetup>(MatchSetupPath);
+            var so = new SerializedObject(setup);
+            if (so.FindProperty("balance").objectReferenceValue == null)
+            {
+                so.FindProperty("balance").objectReferenceValue =
+                    AssetDatabase.LoadAssetAtPath<BalanceProfile>($"{DataRoot}/Balance/BalanceProfile.asset");
+                so.FindProperty("presentation").objectReferenceValue =
+                    AssetDatabase.LoadAssetAtPath<PresentationProfile>(PresentationProfilePath);
+                var levels = so.FindProperty("levels");
+                levels.arraySize = 5;
+                for (var i = 0; i < 5; i++)
+                    levels.GetArrayElementAtIndex(i).objectReferenceValue =
+                        AssetDatabase.LoadAssetAtPath<LevelDefinition>($"{DataRoot}/Levels/L{i + 1}.asset");
+                var roster = so.FindProperty("roster");
+                roster.arraySize = FruitNames.Length;
+                for (var i = 0; i < FruitNames.Length; i++)
+                    roster.GetArrayElementAtIndex(i).objectReferenceValue =
+                        AssetDatabase.LoadAssetAtPath<GameObject>($"{FighterPrefabRoot}/{FruitNames[i]}.prefab");
+                so.FindProperty("mainMenuScene").stringValue = $"{SceneRoot}/MainMenu.unity";
+                so.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(setup);
+            }
+
+            var boot = EditorSceneManager.OpenScene($"{SceneRoot}/Boot.unity", OpenSceneMode.Additive);
+            var bootstrap = boot.GetRootGameObjects().Select(g => g.GetComponentInChildren<GameplayBootstrap>()).First(b => b != null);
+            var bso = new SerializedObject(bootstrap);
+            if (bso.FindProperty("setup").objectReferenceValue == null)
+            {
+                bso.FindProperty("setup").objectReferenceValue = setup;
+                bso.ApplyModifiedPropertiesWithoutUndo();
+                EditorSceneManager.SaveScene(boot);
+            }
+            if (EditorSceneManager.sceneCount > 1) EditorSceneManager.CloseScene(boot, true);
         }
 
         static void SetReferences(Object target, params (string field, Object value)[] references)

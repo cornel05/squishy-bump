@@ -24,6 +24,18 @@ namespace SquishyBump.Presentation
         public float Pitch => orbit.VerticalAxis.Value;
         public float Distance => orbit.Radius;
         public bool ShakeEnabled { get => shakeEnabled; set => shakeEnabled = value; }
+        /// <summary>Player option: multiplier on the profile's look sensitivity.</summary>
+        public float SensitivityScale { get; set; } = 1f;
+
+        /// <summary>For rigs built at runtime: call on an inactive object, before Awake.</summary>
+        public void Configure(PresentationProfile presentationProfile, Camera camera)
+        {
+            profile = presentationProfile;
+            outputCamera = camera;
+        }
+
+        /// <summary>Player option: multiplier on the profile's camera distance.</summary>
+        public void SetDistanceScale(float scale) => orbit.Radius = profile.CameraDistance * scale;
 
         private void Awake()
         {
@@ -56,7 +68,7 @@ namespace SquishyBump.Presentation
         /// <summary>Applies one frame of look input (mouse delta). Pitch stays inside the clamp.</summary>
         public void Orbit(Vector2 look)
         {
-            var degrees = look * profile.LookSensitivity;
+            var degrees = look * (profile.LookSensitivity * SensitivityScale);
             orbit.HorizontalAxis.Value = Mathf.Repeat(orbit.HorizontalAxis.Value + degrees.x + 180f, 360f) - 180f;
             orbit.VerticalAxis.Value = ClampPitch(orbit.VerticalAxis.Value - degrees.y, profile);
         }

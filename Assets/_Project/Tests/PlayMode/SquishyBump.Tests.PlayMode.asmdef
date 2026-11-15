@@ -10,6 +10,7 @@
         "SquishyBump.Presentation",
         "SquishyBump.Hazards",
         "SquishyBump.Net",
+        "SquishyBump.UI",
         "SquishyBump.App",
         "Unity.Netcode.Runtime"
     ],
