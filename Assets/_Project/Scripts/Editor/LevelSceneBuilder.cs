@@ -23,6 +23,8 @@ namespace SquishyBump.Editor
             var ground = new GameObject("Moving Ground").AddComponent<MovingGround>();
             Set(ground, ("balance", Balance), ("hazards", Hazards),
                 ("turntableMaterial", Mat(1)), ("ringMaterial", Mat(2)), ("boxMaterial", Mat(4)));
+            var pushers = new GameObject("Pusher Blocks").AddComponent<PusherBlocks>();
+            Set(pushers, ("balance", Balance), ("hazards", Hazards), ("ground", ground), ("blockMaterial", Mat(3)));
         });
 
         static void Build(int number, System.Action<UnityEngine.SceneManagement.Scene> addHazards)
