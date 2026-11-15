@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe13d66c2e0cca48834d8ab1b326fe0, type: 3}
+  m_Name: BalanceProfile
+  m_EditorClassIdentifier: SquishyBump.Core::SquishyBump.Core.BalanceProfile
+  fixedStepHz: 60
+  gravity: 20
+  floorFriction: 0.6
+  iceFriction: 0.3
+  airControl: 0.3
+  jumpApexMeters: 1.2
+  dashImpulse: 80
+  dashCooldownSeconds: 3
+  dashStateSeconds: 0.35
+  dashBonus: 1.25
+  restitution: 0.6
+  hitThreshold: 30
+  knockbackPerWobble: 0.12
+  knockbackCap: 2.2
+  wobbleMax: 10
+  wobbleDecaySeconds: 6
+  stunBaseSeconds: 0.15
+  stunPerWobbleSeconds: 0.02
+  timeLimitSeconds: 150
+  ringDropSeconds:
+  - 45
+  - 75
+  - 105
+  - 135
+  ringDropWarningSeconds: 3
+  ringWidthMeters: 3
+  killPlaneY: -5
+  lives: 3
+  respawnDelaySeconds: 2
+  invulnerabilitySeconds: 1.5
+  lastTouchWindowSeconds: 3
+  pointsPerRingOut: 1
+  inputRateHz: 60
+  snapshotRateHz: 30
+  interpolationBufferSeconds: 0.1
