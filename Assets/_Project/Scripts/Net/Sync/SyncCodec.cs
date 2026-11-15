@@ -146,6 +146,34 @@ namespace SquishyBump.Net.Sync
             return true;
         }
 
+        const int HazardBytes = 4 + 4 + 1 + 4 + 12 + 1;
+
+        public static byte[] WriteHazard(HazardEvent e)
+        {
+            using var stream = new MemoryStream(HazardBytes);
+            using var w = new BinaryWriter(stream);
+            w.Write(e.EventId);
+            w.Write(e.HostTick);
+            w.Write((byte)e.Kind);
+            w.Write(e.Index);
+            Write(w, e.Aim);
+            w.Write((sbyte)Math.Sign(e.Direction));
+            return stream.ToArray();
+        }
+
+        public static bool TryReadHazard(byte[] data, out HazardEvent gameEvent)
+        {
+            gameEvent = default;
+            if (data == null || data.Length != HazardBytes) return false;
+            using var r = new BinaryReader(new MemoryStream(data));
+            var id = r.ReadUInt32();
+            var tick = r.ReadUInt32();
+            var kind = (HazardEventKind)r.ReadByte();
+            if (!Enum.IsDefined(typeof(HazardEventKind), kind)) return false;
+            gameEvent = new HazardEvent(id, tick, kind, r.ReadInt32(), Read(r), r.ReadSByte());
+            return true;
+        }
+
         static void Write(BinaryWriter w, Vector3 v)
         {
             w.Write(v.x);

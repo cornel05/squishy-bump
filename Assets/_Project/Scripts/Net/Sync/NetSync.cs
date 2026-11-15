@@ -21,6 +21,7 @@ namespace SquishyBump.Net.Sync
     {
         public const string InputMessage = "SB.Input";
         public const string SnapshotMessage = "SB.Snapshot";
+        public const string HazardMessage = "SB.Hazard";
 
         // Largest legal payload is a full snapshot (5 + 8 × 34 bytes); anything bigger is rejected unread.
         private const int MaxPayloadBytes = 512;
@@ -35,6 +36,8 @@ namespace SquishyBump.Net.Sync
         public event Action<ulong, IReadOnlyList<InputCommand>> InputReceived;
         /// <summary>Client: a well-formed snapshot from the host.</summary>
         public event Action<WorldSnapshot> SnapshotReceived;
+        /// <summary>Client: a hazard event from the host.</summary>
+        public event Action<HazardEvent> HazardReceived;
         public int RejectedPackets { get; private set; }
 
         public void Poll()
@@ -45,6 +48,7 @@ namespace SquishyBump.Net.Sync
             if (messaging == null) return;
             messaging.RegisterNamedMessageHandler(InputMessage, OnInput);
             messaging.RegisterNamedMessageHandler(SnapshotMessage, OnSnapshot);
+            messaging.RegisterNamedMessageHandler(HazardMessage, OnHazard);
             registeredOn = messaging;
         }
 
@@ -58,13 +62,35 @@ namespace SquishyBump.Net.Sync
 
         public void BroadcastSnapshot(WorldSnapshot snapshot)
         {
-            if (!manager.IsServer) return;
-            var remote = new List<ulong>();
-            foreach (var id in manager.ConnectedClientsIds)
-                if (id != NetworkManager.ServerClientId) remote.Add(id);
+            var remote = RemoteClients();
             if (remote.Count == 0) return;
             Send(SyncCodec.WriteSnapshot(snapshot), w =>
                 manager.CustomMessagingManager.SendNamedMessage(SnapshotMessage, remote, w, NetworkDelivery.Unreliable));
+        }
+
+        /// <summary>Host: one hazard event to every remote client, <b>reliable sequenced</b> (GDD 10.4).</summary>
+        public void BroadcastHazard(HazardEvent gameEvent)
+        {
+            var remote = RemoteClients();
+            if (remote.Count == 0) return;
+            Send(SyncCodec.WriteHazard(gameEvent), w =>
+                manager.CustomMessagingManager.SendNamedMessage(HazardMessage, remote, w, NetworkDelivery.ReliableSequenced));
+        }
+
+        private List<ulong> RemoteClients()
+        {
+            var remote = new List<ulong>();
+            if (manager == null || !manager.IsServer) return remote;
+            foreach (var id in manager.ConnectedClientsIds)
+                if (id != NetworkManager.ServerClientId) remote.Add(id);
+            return remote;
+        }
+
+        private void OnHazard(ulong sender, FastBufferReader reader)
+        {
+            if (manager.IsServer || sender != NetworkManager.ServerClientId) return;
+            if (SyncCodec.TryReadHazard(Receive(reader), out var gameEvent)) HazardReceived?.Invoke(gameEvent);
+            else RejectedPackets++;
         }
 
         private static void Send(byte[] payload, Action<FastBufferWriter> send)
@@ -105,6 +131,7 @@ namespace SquishyBump.Net.Sync
             if (registeredOn == null) return;
             registeredOn.UnregisterNamedMessageHandler(InputMessage);
             registeredOn.UnregisterNamedMessageHandler(SnapshotMessage);
+            registeredOn.UnregisterNamedMessageHandler(HazardMessage);
             registeredOn = null;
         }
 
