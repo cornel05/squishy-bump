@@ -12,7 +12,7 @@ namespace SquishyBump.Hazards
     /// collider turns off so a fruit on it falls with it. Telegraph and fall visuals run on every peer from
     /// <see cref="BeginWarning"/>, which App wires to the <see cref="HazardEventKind.RingDropWarning"/> event.
     /// </summary>
-    public sealed class RingDrop : MonoBehaviour
+    public sealed class RingDrop : MonoBehaviour, IHazard
     {
         [SerializeField] private BalanceProfile balance;
         [SerializeField] private HazardProfile hazards;
@@ -46,6 +46,11 @@ namespace SquishyBump.Hazards
 
         /// <summary>Host only: where warnings are published.</summary>
         public void Bind(IGameEventSink eventSink) => sink = eventSink;
+
+        public void Bind(IGameEventSink eventSink, IFighterPhysics fighters) => sink = eventSink;
+
+        // Clients follow the RingDropWarning event instead (BeginWarning), so there is nothing to pose here.
+        public void ShowAt(float playingSeconds) { }
 
         /// <summary>Host only. <paramref name="playingTicks"/> counts ticks since GO (MatchDirector.ElapsedTicks).</summary>
         public void StepOnHost(int playingTicks, uint hostTick, float dt)

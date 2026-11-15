@@ -48,12 +48,16 @@ namespace SquishyBump.App
         private MatchClientView clientView;
         private int snapshotEveryTicks;
         private PauseMenu pause;
+        private readonly List<IHazard> hazardList = new();
+        private FighterPhysicsAdapter fighterPhysics;
+        private uint goTick;
         private bool pausesGame;
 
         public MatchDirector Director { get; private set; }
         public IReadOnlyList<Fighter> Fighters => fighters;
         public MatchClientView ClientView => clientView;
         public bool Started => Director != null;
+        public IReadOnlyList<IHazard> Hazards => hazardList;
         /// <summary>Set by the launcher: start the match on the first frame after Start (host only).</summary>
         public bool StartWhenReady { get; set; }
 
@@ -110,6 +114,11 @@ namespace SquishyBump.App
         {
             if (bootstrap == null) bootstrap = FindAnyObjectByType<GameplayBootstrap>();
             localInput = new LocalPlayerInput(cameraRig);
+            // Every hazard of this level scene (H01 floor, moving ground, cannons…).
+            foreach (var root in gameObject.scene.GetRootGameObjects())
+                hazardList.AddRange(root.GetComponentsInChildren<IHazard>(true));
+            if (ringDrop != null && !hazardList.Contains(ringDrop)) hazardList.Add(ringDrop);
+            if (ringDrop == null) ringDrop = hazardList.OfType<RingDrop>().FirstOrDefault();
             ApplySettings(bootstrap.Settings);
             bootstrap.Settings.Changed += ApplySettings;
             bootstrap.Session.StateChanged += OnSessionState;
@@ -131,6 +140,7 @@ namespace SquishyBump.App
             if (Started || !bootstrap.Session.CanSimulateGameplay) return;
             resolver = gameObject.AddComponent<CollisionResolver>();
             resolver.Configure(balance);
+            fighterPhysics = new FighterPhysicsAdapter(resolver);
             snapshotEveryTicks = Mathf.Max(1, Mathf.RoundToInt(balance.InputRateHz / balance.SnapshotRateHz));
 
             var humans = new List<ulong> { 0 };
@@ -148,6 +158,7 @@ namespace SquishyBump.App
                 };
                 fighters.Add(f);
                 resolver.Register(f.Id, f.Motor);
+                fighterPhysics.Add(f.Id, f.Motor);
                 if (i > 0 && i < humans.Count) inboxes[id] = new InputInbox();
             }
 
@@ -158,7 +169,7 @@ namespace SquishyBump.App
             if (cameraRig != null) cameraRig.Follow(fighters[0].Motor.transform);
             resolver.WobbleChanged += Director.SetWobble;
             resolver.Hit += OnHit;
-            if (ringDrop != null) ringDrop.Bind(bootstrap.EventSink);
+            foreach (var h in hazardList) h.Bind(bootstrap.EventSink, fighterPhysics);
             bootstrap.Sync.InputReceived += OnRemoteInput;
             bootstrap.Clock.Ticked += OnTick;
         }
@@ -171,6 +182,8 @@ namespace SquishyBump.App
             if (pause != null && localInput != null && localInput.MenuPressed) pause.Toggle();
             localInput?.UpdateLook();
             clientView?.Update(Time.time);
+            if (clientView != null && clientView.TryPlayingSeconds(Time.time, out var seconds))
+                foreach (var h in hazardList) h.ShowAt(seconds);
         }
 
         private void FixedUpdate() => clientView?.FixedUpdate();
@@ -198,7 +211,11 @@ namespace SquishyBump.App
                 bootstrap.TrySimulate(f.Motor, input);
             }
             resolver.Step(dt);
-            if (playing && ringDrop != null) ringDrop.StepOnHost(Director.ElapsedTicks + 1, tick, dt);
+            if (playing)
+            {
+                if (goTick == 0) goTick = tick - (uint)Director.ElapsedTicks;
+                foreach (var h in hazardList) h.StepOnHost(Director.ElapsedTicks + 1, tick, dt);
+            }
 
             foreach (var f in fighters.Where(f => !f.Out))
                 Director.SampleArena(f.Id, tick, f.Motor.transform.position);
@@ -208,12 +225,13 @@ namespace SquishyBump.App
             {
                 f.Out = true;
                 resolver.Unregister(f.Id);
+                fighterPhysics.Remove(f.Id);
             }
 
             if (tick % snapshotEveryTicks == 0) bootstrap.Sync.BroadcastSnapshot(Snapshot(tick));
         }
 
-        public WorldSnapshot Snapshot(uint tick) => new(tick, fighters.Select(f =>
+        public WorldSnapshot Snapshot(uint tick) => new(tick, goTick, fighters.Select(f =>
         {
             var body = f.Motor.GetComponent<Rigidbody>();
             var flags = (f.Motor.IsDashing ? FighterFlags.Dashing : 0) | (f.Motor.IsStunned ? FighterFlags.Stunned : 0)

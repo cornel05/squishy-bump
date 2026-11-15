@@ -102,10 +102,11 @@ namespace SquishyBump.Tests.EditMode
         {
             var f = new FighterSnapshot(3, 2, new Vector3(1, 2, 3), new Vector3(-4, 0, 5), 7, 1,
                 FighterFlags.Dashing | FighterFlags.Stunned, 99);
-            var bytes = SyncCodec.WriteSnapshot(new WorldSnapshot(1234, new[] { f, f }));
+            var bytes = SyncCodec.WriteSnapshot(new WorldSnapshot(1234, 600, new[] { f, f }));
 
             Assert.That(SyncCodec.TryReadSnapshot(bytes, out var s), Is.True);
             Assert.That(s.HostTick, Is.EqualTo(1234u));
+            Assert.That(s.GoTick, Is.EqualTo(600u));
             Assert.That(s.Fighters.Count, Is.EqualTo(2));
             var r = s.Fighters[1];
             Assert.That((r.Id, r.Fruit, r.Position, r.Velocity, r.Wobble, r.Lives, r.Flags, r.LastInput),
@@ -115,7 +116,7 @@ namespace SquishyBump.Tests.EditMode
         }
 
         static WorldSnapshot At(uint tick, float x) =>
-            new(tick, new[] { new FighterSnapshot(1, 0, new Vector3(x, 0, 0), Vector3.zero, 0, 1, 0, 0) });
+            new(tick, 0, new[] { new FighterSnapshot(1, 0, new Vector3(x, 0, 0), Vector3.zero, 0, 1, 0, 0) });
 
         [Test]
         public void Buffer_RendersHundredMillisecondsBehindAndInterpolates()

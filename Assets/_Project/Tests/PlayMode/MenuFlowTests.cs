@@ -86,6 +86,24 @@ namespace SquishyBump.Tests.PlayMode
             Assert.That(app.Session.State, Is.EqualTo(CoreSession.Idle));
         }
 
+        [UnityTest]
+        public IEnumerator L2_StartsWithMovingGroundHazard()
+        {
+            yield return SceneManager.LoadSceneAsync($"{Root}/Scenes/Boot.unity", LoadSceneMode.Single);
+            app = System.Linq.Enumerable.First(Object.FindObjectsByType<GameplayBootstrap>(FindObjectsSortMode.None),
+                b => b.gameObject.scene.name == "DontDestroyOnLoad" && b.Launcher != null);
+            Assert.That(app.Session.Host(Core.SessionMode.SinglePlayer), Is.True);
+            app.Launcher.LoadLevel(2);
+            yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
+
+            var match = app.Launcher.Match;
+            Assert.That(match.Fighters, Has.Count.EqualTo(6));
+            Assert.That(System.Linq.Enumerable.OfType<SquishyBump.Hazards.MovingGround>(match.Hazards), Is.Not.Empty);
+            for (var i = 0; i < 5; i++) yield return new WaitForFixedUpdate();
+            Assert.That(System.Linq.Enumerable.All(match.Fighters, f => f.Motor.transform.position.y > 0f),
+                "all six spawns stand on the moving floor");
+        }
+
         [Test]
         public void StatusText_ShowsHostAndPeers() =>
             Assert.That(MainMenu.StatusText(CoreSession.Hosting, 2), Does.Contain("2 joined"));

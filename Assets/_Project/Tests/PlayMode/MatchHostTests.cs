@@ -53,7 +53,7 @@ namespace SquishyBump.Tests.PlayMode
 
             Assert.That(host.Fighters, Has.Count.EqualTo(6));
             // Six fighters fit the ~200-byte snapshot of GDD 10.4.
-            Assert.That(SquishyBump.Net.Sync.SyncCodec.WriteSnapshot(host.Snapshot(app.Clock.Tick)).Length, Is.EqualTo(209));
+            Assert.That(SquishyBump.Net.Sync.SyncCodec.WriteSnapshot(host.Snapshot(app.Clock.Tick)).Length, Is.EqualTo(213));
             Assert.That(host.Director.Phase, Is.EqualTo(MatchPhase.Countdown));
             Assert.That(app.Clock.Tick, Is.GreaterThan(5u));
         }
