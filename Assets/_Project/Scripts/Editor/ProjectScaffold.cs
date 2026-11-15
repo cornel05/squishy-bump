@@ -2,6 +2,7 @@ using System.IO;
 using System.Linq;
 using SquishyBump.Core;
 using SquishyBump.Physics;
+using SquishyBump.Presentation;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -23,6 +24,7 @@ namespace SquishyBump.Editor
         const string DataRoot = "Assets/_Project/Data";
         const string FighterPrefabRoot = "Assets/_Project/Prefabs/Fighters";
         const string FruitMaterialRoot = "Assets/_Project/Art/Materials/Fruits";
+        const string PresentationProfilePath = DataRoot + "/Presentation/PresentationProfile.asset";
         const string PlaceholderMaterial = DataRoot + "/TrainingRing/FruitPlaceholder.mat";
         static readonly string[] ClassNames = { "Heavy", "Normal", "Light" };
         static readonly string[] FruitNames = { "Watermelon", "Pineapple", "Apple", "Mangosteen", "Peach", "Blueberry" };
@@ -47,6 +49,7 @@ namespace SquishyBump.Editor
 
             EnsureDataAssets();
             EnsureFighterPrefabs();
+            EnsureRollRigs();
             ConfigureInputWrapper();
             // Project-wide actions = our asset (the template's default asset was removed).
             InputSystem.actions = AssetDatabase.LoadAssetAtPath<InputActionAsset>(InputAsset);
@@ -67,6 +70,7 @@ namespace SquishyBump.Editor
         static void EnsureDataAssets()
         {
             EnsureAsset<BalanceProfile>($"{DataRoot}/Balance/BalanceProfile.asset");
+            EnsureAsset<PresentationProfile>(PresentationProfilePath);
             foreach (var c in ClassNames) EnsureAsset<ClassProfile>($"{DataRoot}/Classes/{c}.asset");
 
             var sphere = Resources.GetBuiltinResource<Mesh>("Sphere.fbx");
@@ -120,6 +124,34 @@ namespace SquishyBump.Editor
 
                 PrefabUtility.SaveAsPrefabAsset(root, prefabPath);
                 Object.DestroyImmediate(root);
+            }
+        }
+
+        // SB-13: Visual (RollVisual, squash) -> Body (mesh, rolls). Prefabs that already have the rig are skipped.
+        static void EnsureRollRigs()
+        {
+            var profile = AssetDatabase.LoadAssetAtPath<PresentationProfile>(PresentationProfilePath);
+            foreach (var f in FruitNames)
+            {
+                var path = $"{FighterPrefabRoot}/{f}.prefab";
+                var root = PrefabUtility.LoadPrefabContents(path);
+                var visual = root.transform.Find("Visual");
+                if (visual != null && !visual.TryGetComponent<RollVisual>(out _))
+                {
+                    var body = new GameObject("Body");
+                    body.transform.SetParent(visual, false);
+                    body.AddComponent<MeshFilter>().sharedMesh = visual.GetComponent<MeshFilter>().sharedMesh;
+                    body.AddComponent<MeshRenderer>().sharedMaterial = visual.GetComponent<MeshRenderer>().sharedMaterial;
+                    Object.DestroyImmediate(visual.GetComponent<MeshRenderer>());
+                    Object.DestroyImmediate(visual.GetComponent<MeshFilter>());
+                    var roll = visual.gameObject.AddComponent<RollVisual>();
+                    SetReferences(roll, ("profile", profile), ("body", body.transform));
+                    var so = new SerializedObject(roll);
+                    so.FindProperty("radius").floatValue = root.GetComponent<SphereCollider>().radius;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    PrefabUtility.SaveAsPrefabAsset(root, path);
+                }
+                PrefabUtility.UnloadPrefabContents(root);
             }
         }
 
