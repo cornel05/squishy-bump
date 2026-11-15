@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "SquishyBump.Core",
         "SquishyBump.Match",
-        "SquishyBump.Physics"
+        "SquishyBump.Physics",
+        "SquishyBump.Presentation"
     ],
     "includePlatforms": [
         "Editor"

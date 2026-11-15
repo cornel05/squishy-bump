@@ -4,6 +4,7 @@
     "references": [
         "SquishyBump.Core",
         "SquishyBump.Physics",
+        "SquishyBump.Presentation",
         "Unity.InputSystem"
     ],
     "includePlatforms": [
