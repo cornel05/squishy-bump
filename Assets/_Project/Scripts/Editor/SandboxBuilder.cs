@@ -66,6 +66,14 @@ namespace SquishyBump.Editor
             so.FindProperty("cameraRig").objectReferenceValue = rig;
             SetArray(so.FindProperty("fighterPrefabs"), Roster
                 .Select(f => (Object)AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Fighters/{f}.prefab")).ToArray());
+            // The dev panel picks Single Player / Host LAN / Join, so two instances (Multiplayer Play Mode) can meet.
+            so.FindProperty("autoHost").boolValue = false;
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            var panel = host.gameObject.AddComponent<DevSessionPanel>();
+            so = new SerializedObject(panel);
+            so.FindProperty("bootstrap").objectReferenceValue = bootstrap;
+            so.FindProperty("match").objectReferenceValue = host;
             so.ApplyModifiedPropertiesWithoutUndo();
 
             EditorSceneManager.SaveScene(scene, Scene);
