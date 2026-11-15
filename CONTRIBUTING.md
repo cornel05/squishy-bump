@@ -8,9 +8,9 @@ Short version for humans. Agents: the same rules, in more detail, are in [`AGENT
 - **Small commits**, one logical change each. Subject: `SB-xx: <imperative>` (e.g. `SB-10: add dash cooldown`);
   `chore:` / `docs:` for housekeeping. The `commit-msg` hook rejects other subjects.
 - Open a PR with the template, write `Closes #<issue number>` (issue numbers differ from SB ids: SB-01 = #2).
-- **Every PR must be reviewed and approved by the other member** before it is merged. Squash merge only;
-  the branch is deleted on merge.
-- Before asking for review: `tools/verify.ps1` and `python tools/check_repo.py` both pass.
+- Review is optional: you may squash merge your own PR. Ask the other member when you want a second look.
+  Squash merge only; the branch is deleted on merge.
+- Before merging (CI is disabled, so this is the only gate): `tools/verify.ps1` and `python tools/check_repo.py` both pass.
 
 ## Scenes and prefabs
 - Each member only edits the scenes they own:

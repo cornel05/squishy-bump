@@ -45,7 +45,7 @@ Nếu đến 21/11 vẫn trễ, đề xuất cắt theo thứ tự này. Cả ha
 - Cột Status: Todo → In Progress → Done. WIP tối đa 2 việc In Progress mỗi người.
 - Workflow có sẵn: Item added → Todo; Item closed → Done; PR merged → Done.
 - Phụ thuộc cứng gắn bằng "blocked by" của GitHub (badge Blocked). Phụ thuộc mềm ghi trong body issue, kèm cách làm stub.
-- Mỗi issue một branch `feat/SB-xx-ten`, PR ghi `Closes #n`, người còn lại review, squash merge.
+- Mỗi issue một branch `feat/SB-xx-ten`, PR ghi `Closes #n`, squash merge (người còn lại review là tuỳ chọn).
 - 4 rule: interface trước (SB-06); "xong" = đã merge vào main; mỗi người một scene test riêng; kẹt quá nửa buổi thì gắn `blocked`, báo người kia và chuyển issue. Sync 10 phút mỗi tối.
 - Phải làm khác GDD thì mở issue label `design-change` và ghi vào `docs/design-changelog.md`.
 

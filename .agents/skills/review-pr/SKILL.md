@@ -16,7 +16,7 @@ Input: PR number `p`.
    - **GDD values:** numbers match `docs/gdd/` (look up IDs in `docs/gdd/ids.md`, balance in GDD 6.1) and
      come from ScriptableObjects, not literals. A deviation must have a D-entry in `docs/design-changelog.md`.
    - **Boundaries:** asmdef references follow ADR-0003 (only Core + own packages); no module→module refs;
-     namespaces = assembly names; Core changes are reviewed by both members.
+     namespaces = assembly names.
    - **Host authority:** gameplay state written only on the host (`IsServer`); clients send `InputCommand`;
      no keyboard reads in gameplay modules; Single Player also runs in host mode.
    - **Unity hygiene:** every new asset has its `.meta`; no hand-written GUIDs; no edits to

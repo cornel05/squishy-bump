@@ -20,4 +20,4 @@ merge conflicts, hidden coupling and compile breaks when one side is half done.
 
 ## Consequences
 Stubs behind Core interfaces let each member work without waiting for the other (SB-06).
-Core changes need review from both members.
+Core changes affect both members; the author tells the teammate (review is optional since 15/11/2026).

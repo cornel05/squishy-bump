@@ -11,7 +11,7 @@ Two devs: Đình Duy (`cornel05`, Claude Code) and Minh Nhật (`ZteHahah`, Code
 3. **Host-authoritative.** Gameplay state changes only on the host; clients send `InputCommand`. Host mode even in Single Player (ADR-0002).
 4. **Modules depend only on Core** (ADR-0003). Cross-module talk goes through Core interfaces/events, wired in `App`.
 5. **Prove it with a command.** Nothing is done until `tools/verify.ps1` and `python tools/check_repo.py` pass.
-6. Stay in your module and your owner's files (see Ownership). Core changes need review from both members.
+6. Stay in your module and your owner's files (see Ownership). Core changes affect both members: tell the teammate what changed.
 7. Never force-push, never `git reset --hard` shared work, never commit `Library/` or secrets.
 
 ## Repo map
@@ -30,7 +30,7 @@ docs/gdd/                  GDD v1.3 as Markdown, ids.md = ID index (PDF original
 docs/                      architecture, tech-stack, plan, testing, design-changelog, decisions/ (ADRs)
 tools/                     setup-dev, verify, build-windows (.ps1), check_repo.py, githooks/, hooks/, gdd/
 .agents/skills/            shared skills (Codex native; Claude via .claude/skills wrappers)
-.github/                   PR + issue templates, CODEOWNERS, CI (repo-checks)
+.github/                   PR + issue templates, CODEOWNERS, CI (repo-checks, disabled)
 ```
 
 ## Commands
@@ -51,8 +51,9 @@ Run from the repo root. Scripts work in Windows PowerShell 5.1 and pwsh 7.
 2. Branch `feat/SB-xx-short-slug` from `main` (`chore/` or `docs/` for non-feature work).
 3. Small commits, subject `SB-xx: <imperative>` (or `chore:` / `docs:`). The commit-msg hook enforces it.
 4. `tools/verify.ps1` + `python tools/check_repo.py` green. Skill: `verify`.
-5. PR from `.github/pull_request_template.md` with `Closes #n`; request review from the teammate. Skill: `issue-finish`.
-6. Teammate reviews (skill `review-pr`), then **squash merge**. The branch is deleted on merge.
+5. PR from `.github/pull_request_template.md` with `Closes #n`. Skill: `issue-finish`.
+6. **Squash merge** your own PR once step 4 is green. Review is optional: ask the teammate (skill `review-pr`)
+   when you want a second look. Nothing on GitHub checks the PR (CI is disabled), so step 4 is the only gate.
 Detail for humans: `CONTRIBUTING.md`.
 
 ## Unity rules for agents
@@ -87,17 +88,17 @@ Detail for humans: `CONTRIBUTING.md`.
 - `python tools/check_repo.py` → `PASS`. Metas committed. No new magic numbers.
 - Tests added or updated for new logic; `docs/testing.md` updated if a T-test ran.
 - Design change → `docs/design-changelog.md` entry + `design-change` issue.
-- PR reviewed by the teammate and squash-merged into `main` ("done" = merged).
+- PR squash-merged into `main` ("done" = merged). Teammate review is optional.
 
 ## Ownership
 | Area | Owner |
 |---|---|
-| Core, App, docs/decisions | both (review by both) |
+| Core, App, docs/decisions | both |
 | Physics (PlayerMotor, CollisionResolver, FighterProfile), Presentation (RollVisual, CameraRig, audio), Editor, Hazards H01–H05 + H07, Net/Sync, UI/Menus, scenes L2 L3 | Đình Duy `cornel05` |
 | AI (BotBrain, A*), Match (MatchDirector, ScoreService), Hazards/IceTiles (H06), Net/Session, UI/HUD (HUD, lobby, results, tutorial), scenes L1 L4 L5 | Minh Nhật `ZteHahah` |
 Issue `area:` label → module: physics→Physics, hazard→Hazards, ai→AI, rules→Match, network→Net, ui→UI/Presentation, level→Scenes.
 | Build + README | Duy · Credits, change log, test record, playtest report: Nhật |
-Enforced for review by `.github/CODEOWNERS`. Per-module detail: `Assets/_Project/Scripts/<Module>/AGENTS.md`.
+`.github/CODEOWNERS` only suggests a reviewer; no approval is required to merge. Per-module detail: `Assets/_Project/Scripts/<Module>/AGENTS.md`.
 
 ## Where design truth lives
 | Question | Look in |

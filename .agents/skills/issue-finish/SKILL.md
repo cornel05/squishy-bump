@@ -1,6 +1,6 @@
 ---
 name: issue-finish
-description: Finish a Squishy Bump issue - run verify and repo checks, tick satisfied acceptance checkboxes, update docs/testing.md, and open the PR with Closes #n requesting the teammate's review. Use when the code for an issue is complete on its feat/SB-xx branch. Do not use to start an issue (issue-start) or to review someone else's PR (review-pr).
+description: Finish a Squishy Bump issue - run verify and repo checks, tick satisfied acceptance checkboxes, update docs/testing.md, and open the PR with Closes #n (teammate review is optional). Use when the code for an issue is complete on its feat/SB-xx branch. Do not use to start an issue (issue-start) or to review someone else's PR (review-pr).
 ---
 
 # issue-finish
@@ -17,9 +17,9 @@ Input: issue number `n` (default: from the branch name `feat/SB-xx-*`, resolved 
    short commit, who, evidence) and commit it: `docs: record T0x result` or within the SB commit.
 5. Commit remaining work (`SB-xx: <imperative>`), then `git push -u origin HEAD` (never `--force`).
 6. Open the PR from the template:
-   `gh pr create --title "SB-xx: <summary>" --body-file pr.md --reviewer <teammate>`
+   `gh pr create --title "SB-xx: <summary>" --body-file pr.md`
    where `pr.md` follows `.github/pull_request_template.md`, contains `Closes #n` on its own line,
-   the commands run with their result lines, and the GDD refs. Teammate: `ZteHahah` if you are
+   the commands run with their result lines, and the GDD refs. For an optional review add `--reviewer <teammate>`: `ZteHahah` if you are
    `cornel05`, else `cornel05` (`gh api user -q .login`).
 7. Design deviated? Make sure the `design-change` skill was run and the D-entry is in this PR.
 

@@ -18,7 +18,7 @@ Input: issue number `n` (or an SB id; resolve with `gh issue list --search "SB-x
    (slug: 2–4 lowercase words from the title, translated to English).
 4. Find the module(s) from the issue's `area:` label and title, then read
    `Assets/_Project/Scripts/<Module>/AGENTS.md` (owner, invariants). If the issue touches more than one
-   module, say so: plan mode (Claude) and Core changes need review from both members.
+   module, say so: plan mode (Claude), and tell the teammate about Core changes.
 5. For each GDD ref: an ID → `docs/gdd/ids.md` → open the linked file#heading; a section number →
    the `## <number>` heading in `docs/gdd/`. Note exact values (balance numbers come from GDD 6.1).
 6. Post a short plan as an issue comment (≤ 15 lines, English):

@@ -42,7 +42,7 @@ If still late on 21/11, cut in this order (both agree; each cut is a change-log 
 ## Board and process
 
 - Status: Todo → In Progress → Done. WIP limit 2 per person. Hard deps use GitHub "blocked by".
-- One branch per issue `feat/SB-xx-slug`, PR with `Closes #n`, the other member reviews, squash merge.
+- One branch per issue `feat/SB-xx-slug`, PR with `Closes #n`, squash merge (review by the other member is optional).
 - Rules: interfaces first (SB-06); "done" = merged to main; one personal test scene each; stuck for
   half a session → label `blocked`, tell the other, switch issue. 10-minute sync every evening.
 - Deviating from the GDD → issue labelled `design-change` + entry in [`design-changelog.md`](design-changelog.md).
