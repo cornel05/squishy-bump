@@ -30,6 +30,9 @@ namespace SquishyBump.Core
         [Header("Collision")]
         [SerializeField] private float restitution;
         [SerializeField] private float hitThreshold;
+        [Tooltip("Share of the overlap beyond the slop that is removed per tick (GDD 6.3).")]
+        [SerializeField] private float penetrationCorrection;
+        [SerializeField] private float penetrationSlopMeters;
 
         [Header("Wobble")]
         [SerializeField] private float knockbackPerWobble;
@@ -74,6 +77,8 @@ namespace SquishyBump.Core
         public float DashBonus => dashBonus;
         public float Restitution => restitution;
         public float HitThreshold => hitThreshold;
+        public float PenetrationCorrection => penetrationCorrection;
+        public float PenetrationSlopMeters => penetrationSlopMeters;
         public float KnockbackPerWobble => knockbackPerWobble;
         public float KnockbackCap => knockbackCap;
         public int WobbleMax => wobbleMax;

@@ -56,6 +56,8 @@ namespace SquishyBump.Tests.EditMode
             Assert.That(b.DashBonus, Is.EqualTo(1.25f));
             Assert.That(b.Restitution, Is.EqualTo(0.6f));
             Assert.That(b.HitThreshold, Is.EqualTo(30f));
+            Assert.That(b.PenetrationCorrection, Is.EqualTo(0.8f));
+            Assert.That(b.PenetrationSlopMeters, Is.EqualTo(0.01f));
             Assert.That(b.KnockbackPerWobble, Is.EqualTo(0.12f));
             Assert.That(b.KnockbackCap, Is.EqualTo(2.2f));
             Assert.That(b.WobbleMax, Is.EqualTo(10));
