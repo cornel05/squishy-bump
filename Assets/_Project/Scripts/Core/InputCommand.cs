@@ -2,16 +2,21 @@ using UnityEngine;
 
 namespace SquishyBump.Core
 {
-    /// <summary>Một mẫu input của người chơi hoặc bot, trước khi host kiểm tra và xử lý.</summary>
+    /// <summary>
+    /// Một mẫu input của người chơi hoặc bot cho một tick. Constructor kẹp Move về độ dài 1
+    /// và đưa yaw về [0, 360) (GDD 10.4), nên host dựng lại lệnh từ gói mạng là đã được kẹp.
+    /// Jump và Dash là trạng thái đang giữ ở tick đó: motor tự phát hiện cạnh nhấn.
+    /// Host xử lý mỗi Sequence đúng một lần, vì mỗi gói lặp lại ba lệnh gần nhất.
+    /// </summary>
     public readonly struct InputCommand
     {
         public InputCommand(uint sequence, Vector2 move, bool jump, bool dash, float yawDegrees)
         {
             Sequence = sequence;
-            Move = move;
+            Move = Vector2.ClampMagnitude(move, 1f);
             Jump = jump;
             Dash = dash;
-            YawDegrees = yawDegrees;
+            YawDegrees = Mathf.Repeat(yawDegrees, 360f);
         }
 
         public uint Sequence { get; }
@@ -20,11 +25,10 @@ namespace SquishyBump.Core
         public bool Dash { get; }
         public float YawDegrees { get; }
 
-        // Phần đồng bộ của host còn phải kiểm tra sequence, tần suất và hồi chiêu.
-        public bool HasValidValues =>
-            !float.IsNaN(YawDegrees) && !float.IsInfinity(YawDegrees) &&
-            !float.IsNaN(Move.x) && !float.IsInfinity(Move.x) &&
-            !float.IsNaN(Move.y) && !float.IsInfinity(Move.y) && Move.sqrMagnitude <= 1f;
+        // Chỉ loại NaN và vô cực. Phần đồng bộ của host còn phải kiểm tra sequence, tần suất và hồi chiêu.
+        public bool HasValidValues => IsFinite(YawDegrees) && IsFinite(Move.x) && IsFinite(Move.y);
+
+        private static bool IsFinite(float value) => !float.IsNaN(value) && !float.IsInfinity(value);
     }
 
     public interface IFighterMotor
