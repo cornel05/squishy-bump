@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using SquishyBump.Core;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -17,6 +18,10 @@ namespace SquishyBump.Editor
         const string SceneRoot = "Assets/_Project/Scenes";
         const string InputAsset = "Assets/_Project/Settings/Input/SquishyControls.inputactions";
         const string InputWrapper = "Assets/_Project/Scripts/Core/Input/SquishyControls.cs";
+
+        const string DataRoot = "Assets/_Project/Data";
+        static readonly string[] ClassNames = { "Heavy", "Normal", "Light" };
+        static readonly string[] FruitNames = { "Watermelon", "Pineapple", "Apple", "Mangosteen", "Peach", "Blueberry" };
 
         // Build order: Boot first; sandboxes are never built.
         static readonly string[] BuildScenes =
@@ -36,6 +41,7 @@ namespace SquishyBump.Editor
                 .Select(s => new EditorBuildSettingsScene($"{SceneRoot}/{s}.unity", true))
                 .ToArray();
 
+            EnsureDataAssets();
             ConfigureInputWrapper();
             // Project-wide actions = our asset (the template's default asset was removed).
             InputSystem.actions = AssetDatabase.LoadAssetAtPath<InputActionAsset>(InputAsset);
@@ -49,6 +55,35 @@ namespace SquishyBump.Editor
             Directory.CreateDirectory(Path.GetDirectoryName(path)!);
             var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
             EditorSceneManager.SaveScene(scene, path);
+        }
+
+        // Creates missing assets only (Unity owns the GUIDs). Values are edited in the assets,
+        // never here, and are guarded by BalanceProfileTests.
+        static void EnsureDataAssets()
+        {
+            EnsureAsset<BalanceProfile>($"{DataRoot}/Balance/BalanceProfile.asset");
+            foreach (var c in ClassNames) EnsureAsset<ClassProfile>($"{DataRoot}/Classes/{c}.asset");
+
+            var sphere = Resources.GetBuiltinResource<Mesh>("Sphere.fbx");
+            foreach (var f in FruitNames)
+            {
+                var so = new SerializedObject(EnsureAsset<FruitDefinition>($"{DataRoot}/Fruits/{f}.asset"));
+                var mesh = so.FindProperty("mesh");
+                if (mesh.objectReferenceValue != null) continue;
+                mesh.objectReferenceValue = sphere;
+                so.ApplyModifiedPropertiesWithoutUndo();
+            }
+        }
+
+        static T EnsureAsset<T>(string path) where T : ScriptableObject
+        {
+            var asset = AssetDatabase.LoadAssetAtPath<T>(path);
+            if (asset != null) return asset;
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+            AssetDatabase.Refresh();
+            asset = ScriptableObject.CreateInstance<T>();
+            AssetDatabase.CreateAsset(asset, path);
+            return asset;
         }
 
         static void ConfigureInputWrapper()
