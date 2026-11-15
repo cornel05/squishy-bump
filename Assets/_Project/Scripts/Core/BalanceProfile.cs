@@ -57,6 +57,8 @@ namespace SquishyBump.Core
         [SerializeField] private int lives;
         [SerializeField] private float respawnDelaySeconds;
         [SerializeField] private float invulnerabilitySeconds;
+        [Tooltip("Respawn points stay at least this far inside the current floor edge (GDD 3.6).")]
+        [SerializeField] private float respawnEdgeMarginMeters;
         [SerializeField] private float lastTouchWindowSeconds;
         [SerializeField] private int pointsPerRingOut;
 
@@ -94,6 +96,7 @@ namespace SquishyBump.Core
         public int Lives => lives;
         public float RespawnDelaySeconds => respawnDelaySeconds;
         public float InvulnerabilitySeconds => invulnerabilitySeconds;
+        public float RespawnEdgeMarginMeters => respawnEdgeMarginMeters;
         public float LastTouchWindowSeconds => lastTouchWindowSeconds;
         public int PointsPerRingOut => pointsPerRingOut;
         public float InputRateHz => inputRateHz;
