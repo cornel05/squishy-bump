@@ -68,12 +68,23 @@ namespace SquishyBump.Hazards
             }
         }
 
-        /// <summary>Every peer: starts the seam telegraph of a band.</summary>
-        public void BeginWarning(int band)
+        /// <summary>
+        /// Every peer: starts the seam telegraph of a band. A client that hears the event late passes how far
+        /// into the warning the host already is, so both show the same stage at the same host tick.
+        /// </summary>
+        public void BeginWarning(int band, float alreadyElapsedSeconds = 0f)
         {
             if (band < 0 || band >= bands.Length || !float.IsNaN(warningStartedAt[band])) return;
-            warningStartedAt[band] = Time.time;
+            // Negative: the client renders behind the host, so the telegraph starts a little later.
+            warningStartedAt[band] = Time.time - alreadyElapsedSeconds;
         }
+
+        /// <summary>
+        /// Seconds since a telegraph began at host time <paramref name="hostNow"/>, for an event that acts at
+        /// <paramref name="effectiveTick"/> after a lead of <paramref name="leadSeconds"/>.
+        /// </summary>
+        public static float TelegraphElapsed(uint effectiveTick, float leadSeconds, float hostNow, float dt) =>
+            hostNow - (effectiveTick * dt - leadSeconds);
 
         private void Drop(int band)
         {

@@ -37,6 +37,9 @@ namespace SquishyBump.App
             sync = new NetSync(manager);
             events = new GameEventHub(() => session.CanSimulateGameplay);
             session.StateChanged += OnSessionStateChanged;
+            // Hazard events: the host's hub forwards each one reliably; a client's hub receives them (dedup by EventId).
+            events.HazardRaised += ForwardHazard;
+            sync.HazardReceived += events.Deliver;
         }
 
         private void Update() => sync.Poll();
@@ -61,8 +64,17 @@ namespace SquishyBump.App
             return true;
         }
 
+        private void ForwardHazard(HazardEvent gameEvent)
+        {
+            if (session.CanSimulateGameplay) sync.BroadcastHazard(gameEvent);
+        }
+
         private void OnSessionStateChanged(SessionState state)
         {
+            // A client starts a fresh EventId stream when it joins.
+            if (state == SessionState.Joined)
+                events.Reset();
+
             // Hosting mở phiên mới, Idle đóng phiên: cả hai đều bắt đầu lại tick và EventId.
             if (state != SessionState.Hosting && state != SessionState.Idle)
                 return;
@@ -77,6 +89,8 @@ namespace SquishyBump.App
                 return;
 
             session.StateChanged -= OnSessionStateChanged;
+            events.HazardRaised -= ForwardHazard;
+            sync.HazardReceived -= events.Deliver;
             sync.Dispose();
             session.Dispose();
         }

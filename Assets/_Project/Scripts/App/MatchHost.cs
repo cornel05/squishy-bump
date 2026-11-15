@@ -66,6 +66,7 @@ namespace SquishyBump.App
             if (bootstrap == null) bootstrap = FindAnyObjectByType<GameplayBootstrap>();
             localInput = new LocalPlayerInput(cameraRig);
             bootstrap.Session.StateChanged += OnSessionState;
+            bootstrap.Events.HazardRaised += OnHazard;
             if (autoHost && bootstrap.Session.State == SessionState.Idle) bootstrap.Session.Host(SessionMode.SinglePlayer);
             if (autoHost && bootstrap.Session.State == SessionState.Hosting) StartMatch();
             if (bootstrap.Session.State == SessionState.Joined) OnSessionState(SessionState.Joined);
@@ -111,7 +112,6 @@ namespace SquishyBump.App
             resolver.WobbleChanged += Director.SetWobble;
             resolver.Hit += OnHit;
             if (ringDrop != null) ringDrop.Bind(bootstrap.EventSink);
-            bootstrap.Events.HazardRaised += OnHazard;
             bootstrap.Sync.InputReceived += OnRemoteInput;
             bootstrap.Clock.Ticked += OnTick;
         }
@@ -184,7 +184,13 @@ namespace SquishyBump.App
 
         private void OnHazard(HazardEvent e)
         {
-            if (e.Kind == HazardEventKind.RingDropWarning && ringDrop != null) ringDrop.BeginWarning(e.Index);
+            if (e.Kind != HazardEventKind.RingDropWarning || ringDrop == null) return;
+            // A client hears the event one trip late: start the telegraph as far in as the host time it renders.
+            var elapsed = clientView?.Buffer.Newest != null
+                ? RingDrop.TelegraphElapsed(e.HostTick, balance.RingDropWarningSeconds,
+                    clientView.Buffer.RenderTime(Time.time), Time.fixedDeltaTime)
+                : 0f;
+            ringDrop.BeginWarning(e.Index, elapsed);
         }
 
         private void OnDestroy()
