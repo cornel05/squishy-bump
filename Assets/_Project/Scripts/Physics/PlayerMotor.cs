@@ -95,8 +95,10 @@ namespace SquishyBump.Physics
         private GroundInfo ProbeGround()
         {
             var origin = body.position + sphere.center;
+            // Another fruit is never a floor: fighter contacts belong to the CollisionResolver.
+            var mask = groundMask & ~(1 << CollisionResolver.FighterLayer);
             if (!UnityEngine.Physics.Raycast(origin, Vector3.down, out var hit, sphere.radius + groundProbeMeters,
-                    groundMask, QueryTriggerInteraction.Ignore))
+                    mask, QueryTriggerInteraction.Ignore))
                 return default;
 
             // A floor says how slippery it is through its physics material (ice, GDD 6.2); bare floors use μ.

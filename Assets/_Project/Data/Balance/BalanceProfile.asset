@@ -24,6 +24,8 @@ MonoBehaviour:
   dashBonus: 1.25
   restitution: 0.6
   hitThreshold: 30
+  penetrationCorrection: 0.8
+  penetrationSlopMeters: 0.01
   knockbackPerWobble: 0.12
   knockbackCap: 2.2
   wobbleMax: 10

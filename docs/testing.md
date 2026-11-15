@@ -27,6 +27,7 @@ method `<Scenario>_<Expected>`, arrange/act/assert.
 | `SharedContractTests` (6), `HostGameplayTests` (4) | SB-07: `InputCommand` kẹp move và yaw (regression: vector đơn vị ở góc 38° từng bị loại), payload của `MatchEvent`/`HazardEvent`, host clock chỉ tick khi đang host, hub bỏ event trùng ID, Join từ chối tham số sai, lý do kết thúc phiên | 15/11/2026 · Đình Duy · `tools/verify.ps1 -PlayMode`: 26/26 EditMode, 7/7 PlayMode đạt, 0 lỗi, 0 cảnh báo. |
 | `BalanceProfileTests` (20) | SB-04/SB-19: `BalanceProfile`, 3 `ClassProfile`, 6 `FruitDefinition` assets match GDD 6.1 / 12.2; design checks of GDD 14.1 (slide distances, match end, class responsiveness, jump vs box, snapshot load) | 16/11/2026 · Đình Duy · `tools/verify.ps1`: 46/46 EditMode pass, 0 errors, 0 warnings. |
 | `PlayerMotorTests` (20), `FighterTests` (8) | SB-10/SB-11: traction rule per class, ice, air control 30%, surface velocity, jump launch speed, dash Δv = J/m, host cooldown reject, one air dash per airtime, jump → dash → move order, stun input lock and 0.1 s buffer; six fighter prefabs get mass/radius/colour/v_max of their class, real jump apex 1.2 m and air time 0.69 s on a PhysX floor | 16/11/2026 · Đình Duy · `tools/verify.ps1 -PlayMode`: 66/66 EditMode, 15/15 PlayMode pass, 0 errors, 0 warnings. |
+| `CollisionResolverTests` (14), `CollisionTests` (4) | SB-12: impulse formula of GDD 6.3 with K(h) and dash bonus (worked example, all classes, h = 0 and 5), knockback cap, 80% overlap correction beyond the 0.01 m slop by inverse mass, hit threshold 30 N·s, all 15 pairs tested; on prefabs: T02 head-on, stun 0.15 + 0.02h, PhysX ignores fighter pairs, Wobble decay per 6 s and cap 10 | 16/11/2026 · Đình Duy · `tools/verify.ps1 -PlayMode`: 80/80 EditMode, 19/19 PlayMode pass, 0 errors, 0 warnings. |
 
 ## Acceptance test record (GDD 14.3, T01–T20)
 
@@ -36,7 +37,7 @@ and [`gdd/ids.md`](gdd/ids.md). Update a row whenever the test is run (date, bui
 | ID | Status | Date | Commit | By | Evidence / notes |
 |---|---|---|---|---|---|
 | T01 | partial | 16/11/2026 | PR SB-04 | Đình Duy | `BalanceProfileTests`: 8/9 claims of GDD 14.1 pass. The hazard telegraph claim (≥ 1.0 s) waits for the hazard configs (SB-40, SB-42). |
-| T02 | not run | | | | |
+| T02 | pass | 16/11/2026 | PR SB-12 | Đình Duy | `CollisionResolverTests.HeadOn_KnownSpeeds_MatchesImpulseFormula` and `CollisionTests.HeadOn_KnownSpeeds_MatchesFormulaWithinTwoPercent`: Normal vs Normal at +5 / −3 m/s → −1.4 / +3.4 m/s, within 2%. |
 | T03 | not run | | | | |
 | T04 | not run | | | | |
 | T05 | not run | | | | |
