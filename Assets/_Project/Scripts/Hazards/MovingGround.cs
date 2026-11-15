@@ -80,7 +80,7 @@ namespace SquishyBump.Hazards
         private void AddArrowPart(Transform arrow, Vector3 scale, Vector3 position)
         {
             var part = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            Destroy(part.GetComponent<Collider>());
+            DestroyImmediate(part.GetComponent<Collider>()); // visual only
             part.transform.SetParent(arrow, false);
             part.transform.localPosition = position;
             part.transform.localScale = scale;

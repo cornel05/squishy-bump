@@ -24,6 +24,14 @@ MonoBehaviour:
   obstacleBoxCount: 3
   obstacleBoxRadius: 5.9
   obstacleBoxSize: {x: 1.2, y: 0.8, z: 1}
+  pusherLaneZ: 1.2
+  pusherDockX: 9.5
+  pusherSize: {x: 1.5, y: 0.8, z: 1}
+  pusherSpeed: 3
+  pusherEaseSeconds: 0.3
+  pusherDockWaitSeconds: 2
+  pusherFirstDepartureSeconds: 5
+  pusherLightSeconds: 1
   obstacleImpulse: 50
   obstacleRadialShare: 0.5
   obstacleWobble: 1

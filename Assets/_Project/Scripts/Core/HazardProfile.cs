@@ -30,6 +30,20 @@ namespace SquishyBump.Core
         [Tooltip("x along the ring, y height, z radial; metres.")]
         [SerializeField] private Vector3 obstacleBoxSize;
 
+        [Header("H03 Pusher blocks (GDD 7.2)")]
+        [Tooltip("Lanes run east–west at z = ±this.")]
+        [SerializeField] private float pusherLaneZ;
+        [Tooltip("Docks at x = ±this (off the floor).")]
+        [SerializeField] private float pusherDockX;
+        [Tooltip("x along the lane, y height, z across; metres.")]
+        [SerializeField] private Vector3 pusherSize;
+        [SerializeField] private float pusherSpeed;
+        [SerializeField] private float pusherEaseSeconds;
+        [SerializeField] private float pusherDockWaitSeconds;
+        [SerializeField] private float pusherFirstDepartureSeconds;
+        [Tooltip("Dock light turns amber this long before a departure.")]
+        [SerializeField] private float pusherLightSeconds;
+
         [Header("Box and block contact (GDD 6.5)")]
         [SerializeField] private float obstacleImpulse;
         [Tooltip("Weight of r̂ in normalize(t̂ + k·r̂) for H07.")]
@@ -49,6 +63,14 @@ namespace SquishyBump.Core
         public int ObstacleBoxCount => obstacleBoxCount;
         public float ObstacleBoxRadius => obstacleBoxRadius;
         public Vector3 ObstacleBoxSize => obstacleBoxSize;
+        public float PusherLaneZ => pusherLaneZ;
+        public float PusherDockX => pusherDockX;
+        public Vector3 PusherSize => pusherSize;
+        public float PusherSpeed => pusherSpeed;
+        public float PusherEaseSeconds => pusherEaseSeconds;
+        public float PusherDockWaitSeconds => pusherDockWaitSeconds;
+        public float PusherFirstDepartureSeconds => pusherFirstDepartureSeconds;
+        public float PusherLightSeconds => pusherLightSeconds;
         public float ObstacleImpulse => obstacleImpulse;
         public float ObstacleRadialShare => obstacleRadialShare;
         public int ObstacleWobble => obstacleWobble;
