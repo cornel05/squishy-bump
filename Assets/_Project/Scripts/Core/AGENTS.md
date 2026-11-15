@@ -18,9 +18,9 @@ Shared contracts only: `InputCommand`, events, interfaces, ScriptableObject type
 - Deterministic: RNG is seeded and owned by the host.
 
 ## Public API surface
-`InputCommand`, `I*` service interfaces, event structs, ScriptableObject profile types, `SquishyBump.Core.Input.SquishyControls`.
+`InputCommand`, `I*` service interfaces (`ISessionService`, `IHostClock`, `IGameEvents`, `IGameEventSink`, `IFighterMotor`), event structs, ScriptableObject profile types, `SquishyBump.Core.Input.SquishyControls`.
 
 ## Related issues
-SB-02 #3, SB-04 #5, SB-05 #6, SB-06 #7
+SB-02 #3, SB-04 #5, SB-05 #6, SB-06 #7, SB-07 #62
 
 Root rules: `/AGENTS.md`. Architecture: `docs/architecture.md`.

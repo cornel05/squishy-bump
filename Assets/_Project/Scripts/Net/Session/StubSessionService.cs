@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using SquishyBump.Core;
 using Unity.Netcode;
@@ -12,6 +13,7 @@ namespace SquishyBump.Net.Session
         private const ushort LanPort = 7777;
         private readonly NetworkManager manager;
         private readonly UnityTransport transport;
+        private readonly List<ulong> peers = new();
         private SessionMode hostMode;
 
         public StubSessionService(NetworkManager manager, UnityTransport transport)
@@ -20,12 +22,17 @@ namespace SquishyBump.Net.Session
             this.transport = transport;
             manager.ConnectionApprovalCallback = ApproveConnection;
             manager.OnClientConnectedCallback += OnClientConnected;
+            manager.OnClientDisconnectCallback += OnClientDisconnected;
             manager.OnClientStopped += OnClientStopped;
         }
 
         public SessionState State { get; private set; }
         public bool CanSimulateGameplay => State == SessionState.Hosting && manager.IsHost;
         public event Action<SessionState> StateChanged;
+        public SessionEndReason LastEndReason { get; private set; }
+        public IReadOnlyList<ulong> Peers => peers;
+        public event Action<ulong> PeerJoined;
+        public event Action<ulong> PeerLeft;
 
         public bool Host(SessionMode mode)
         {
@@ -43,6 +50,7 @@ namespace SquishyBump.Net.Session
             if (!manager.StartHost())
                 return false;
 
+            LastEndReason = SessionEndReason.None;
             SetState(SessionState.Hosting);
             return true;
         }
@@ -57,6 +65,7 @@ namespace SquishyBump.Net.Session
             if (!manager.StartClient())
                 return false;
 
+            LastEndReason = SessionEndReason.None;
             SetState(SessionState.Joining);
             return true;
         }
@@ -76,6 +85,7 @@ namespace SquishyBump.Net.Session
                 return;
 
             manager.OnClientConnectedCallback -= OnClientConnected;
+            manager.OnClientDisconnectCallback -= OnClientDisconnected;
             manager.OnClientStopped -= OnClientStopped;
             manager.ConnectionApprovalCallback = null;
             if (manager.IsListening)
@@ -94,9 +104,31 @@ namespace SquishyBump.Net.Session
         {
             if (State == SessionState.Joining && clientId == manager.LocalClientId)
                 SetState(SessionState.Joined);
+            else if (State == SessionState.Hosting && clientId != manager.LocalClientId && !peers.Contains(clientId))
+            {
+                peers.Add(clientId);
+                PeerJoined?.Invoke(clientId);
+            }
         }
 
-        private void OnClientStopped(bool wasHost) => SetState(SessionState.Idle);
+        private void OnClientDisconnected(ulong clientId)
+        {
+            if (peers.Remove(clientId))
+                PeerLeft?.Invoke(clientId);
+        }
+
+        private void OnClientStopped(bool wasHost)
+        {
+            // Leave() đặt Leaving trước khi tắt; mọi trạng thái khác nghĩa là phiên tự đứt.
+            LastEndReason = State switch
+            {
+                SessionState.Leaving => SessionEndReason.LocalLeave,
+                SessionState.Joining => SessionEndReason.ConnectFailed,
+                _ => SessionEndReason.HostLost,
+            };
+            peers.Clear();
+            SetState(SessionState.Idle);
+        }
 
         private void SetState(SessionState state)
         {
