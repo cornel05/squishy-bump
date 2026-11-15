@@ -14,3 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: SquishyBump.Core::SquishyBump.Core.HazardProfile
   ringDropFinalWarningSeconds: 1
   telegraphBlinkHz: 2
+  turntableRadius: 4
+  turntableDegreesPerSecond: 20
+  turntableReversalSeconds: 15
+  turntableRampSeconds: 2
+  turntableWarningSeconds: 2
+  obstacleRingOuterRadius: 6.5
+  obstacleRingDegreesPerSecond: 15
+  obstacleBoxCount: 3
+  obstacleBoxRadius: 5.9
+  obstacleBoxSize: {x: 1.2, y: 0.8, z: 1}
+  obstacleImpulse: 50
+  obstacleRadialShare: 0.5
+  obstacleWobble: 1
+  obstacleRehitSeconds: 0.5

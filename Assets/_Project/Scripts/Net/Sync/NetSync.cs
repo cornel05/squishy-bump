@@ -23,7 +23,7 @@ namespace SquishyBump.Net.Sync
         public const string SnapshotMessage = "SB.Snapshot";
         public const string HazardMessage = "SB.Hazard";
 
-        // Largest legal payload is a full snapshot (5 + 8 × 34 bytes); anything bigger is rejected unread.
+        // Largest legal payload is a full snapshot (9 + 8 × 34 bytes); anything bigger is rejected unread.
         private const int MaxPayloadBytes = 512;
 
         private readonly NetworkManager manager;

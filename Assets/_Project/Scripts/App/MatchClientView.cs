@@ -20,6 +20,7 @@ namespace SquishyBump.App
         private readonly CameraRig cameraRig;
         private readonly LocalPlayerInput input;
         private readonly SnapshotBuffer buffer;
+        private readonly float tickSeconds;
         private readonly List<InputCommand> recent = new();
         private readonly Dictionary<ushort, GameObject> views = new();
 
@@ -30,12 +31,23 @@ namespace SquishyBump.App
             this.prefabs = prefabs;
             this.cameraRig = cameraRig;
             this.input = input;
-            buffer = new SnapshotBuffer(1f / balance.FixedStepHz, balance.InterpolationBufferSeconds);
+            tickSeconds = 1f / balance.FixedStepHz;
+            buffer = new SnapshotBuffer(tickSeconds, balance.InterpolationBufferSeconds);
             bootstrap.Sync.SnapshotReceived += OnSnapshot;
         }
 
         public IReadOnlyDictionary<ushort, GameObject> Views => views;
         public SnapshotBuffer Buffer => buffer;
+
+        /// <summary>Seconds since GO at the host time this client renders; false before GO.</summary>
+        public bool TryPlayingSeconds(float now, out float seconds)
+        {
+            seconds = 0f;
+            var newest = buffer.Newest;
+            if (newest == null || newest.GoTick == 0) return false;
+            seconds = buffer.RenderTime(now) - newest.GoTick * tickSeconds;
+            return seconds >= 0f;
+        }
 
         private void OnSnapshot(WorldSnapshot snapshot) => buffer.Add(snapshot, Time.time);
 

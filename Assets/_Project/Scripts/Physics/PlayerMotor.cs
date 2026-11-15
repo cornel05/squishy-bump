@@ -104,7 +104,10 @@ namespace SquishyBump.Physics
             // A floor says how slippery it is through its physics material (ice, GDD 6.2); bare floors use μ.
             var material = hit.collider.sharedMaterial;
             var friction = material != null ? material.dynamicFriction : balance.FloorFriction;
-            var surface = hit.rigidbody != null ? hit.rigidbody.GetPointVelocity(hit.point) : Vector3.zero;
+            // A hazard floor (turntable, ring) states its own v_surface = ω × r_c; other bodies report PhysX velocity.
+            var motion = hit.collider.GetComponentInParent<ISurfaceMotion>();
+            var surface = motion != null ? motion.VelocityAt(hit.point)
+                : hit.rigidbody != null ? hit.rigidbody.GetPointVelocity(hit.point) : Vector3.zero;
             return new GroundInfo(friction, surface);
         }
 

@@ -46,13 +46,16 @@ namespace SquishyBump.Net.Sync
 
     public sealed class WorldSnapshot
     {
-        public WorldSnapshot(uint hostTick, IReadOnlyList<FighterSnapshot> fighters)
+        public WorldSnapshot(uint hostTick, uint goTick, IReadOnlyList<FighterSnapshot> fighters)
         {
             HostTick = hostTick;
+            GoTick = goTick;
             Fighters = fighters;
         }
 
         public uint HostTick { get; }
+        /// <summary>Host tick of GO, 0 before the match plays: clients pose time-driven hazards from it.</summary>
+        public uint GoTick { get; }
         public IReadOnlyList<FighterSnapshot> Fighters { get; }
     }
 
@@ -66,6 +69,7 @@ namespace SquishyBump.Net.Sync
         public const int CommandsPerPacket = 3;
         public const int MaxFighters = 8;
         const int CommandBytes = 4 + 4 + 4 + 1 + 4;
+        const int SnapshotHeader = 4 + 4 + 1;
         const int FighterBytes = 2 + 1 + 12 + 12 + 1 + 1 + 1 + 4;
 
         public static byte[] WriteInput(IReadOnlyList<InputCommand> commands)
@@ -110,9 +114,10 @@ namespace SquishyBump.Net.Sync
         public static byte[] WriteSnapshot(WorldSnapshot snapshot)
         {
             var count = Math.Min(snapshot.Fighters.Count, MaxFighters);
-            using var stream = new MemoryStream(5 + count * FighterBytes);
+            using var stream = new MemoryStream(SnapshotHeader + count * FighterBytes);
             using var w = new BinaryWriter(stream);
             w.Write(snapshot.HostTick);
+            w.Write(snapshot.GoTick);
             w.Write((byte)count);
             for (var i = 0; i < count; i++)
             {
@@ -132,17 +137,18 @@ namespace SquishyBump.Net.Sync
         public static bool TryReadSnapshot(byte[] data, out WorldSnapshot snapshot)
         {
             snapshot = null;
-            if (data == null || data.Length < 5) return false;
-            var count = data[4];
-            if (count > MaxFighters || data.Length != 5 + count * FighterBytes) return false;
+            if (data == null || data.Length < SnapshotHeader) return false;
+            var count = data[SnapshotHeader - 1];
+            if (count > MaxFighters || data.Length != SnapshotHeader + count * FighterBytes) return false;
             using var r = new BinaryReader(new MemoryStream(data));
             var tick = r.ReadUInt32();
+            var go = r.ReadUInt32();
             r.ReadByte();
             var fighters = new FighterSnapshot[count];
             for (var i = 0; i < count; i++)
                 fighters[i] = new FighterSnapshot(r.ReadUInt16(), r.ReadByte(), Read(r), Read(r), r.ReadByte(),
                     r.ReadByte(), (FighterFlags)r.ReadByte(), r.ReadUInt32());
-            snapshot = new WorldSnapshot(tick, fighters);
+            snapshot = new WorldSnapshot(tick, go, fighters);
             return true;
         }
 
