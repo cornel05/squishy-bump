@@ -4,7 +4,8 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "SquishyBump.Core"
+        "SquishyBump.Core",
+        "SquishyBump.Match"
     ],
     "includePlatforms": [
         "Editor"

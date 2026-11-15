@@ -87,12 +87,26 @@ Scene L1 có bốn collider độc lập, mỗi collider ứng với một dải
 Sáu điểm spawn đánh dấu vị trí trên mặt sàn. Hệ thống spawn cộng độ cao theo
 bán kính quả khi tạo fighter. Các sphere trong scene chỉ dùng để xem trước.
 
-Khi tích hợp SB-16, `MatchDirector` lấy `TrainingRingBounds` của scene đang
-chạy, đăng ký `RingOut` và gọi `SampleOnHost(fighterId, hostTick, worldCenter)`
-cho từng fighter còn sống sau bước mô phỏng. Sự kiện mang ID fighter, tick và
-lý do rơi. MatchDirector áp luật Survival hoặc Rank. Sau khi hồi sinh, gọi
-`ResetFighterOnHost(fighterId)` để lần rơi kế tiếp có thể được ghi nhận.
-Lịch cảnh báo và rụng vành H01 thuộc SB-15.
+`MatchDirector` đăng ký `RingOut` khi nhận `TrainingRingBounds` của scene.
+Sau bước mô phỏng, host cập nhật Wobble và gọi `SampleArena` cho các fighter
+còn sống, rồi gọi `CompleteTick` đúng một lần. Sự kiện giữ ID, tick và lý do
+rơi. Director gom toàn bộ lượt rơi theo tick rồi mới xếp hạng.
+Khởi động lại Survival giữ level, roster và seed, đồng thời xóa các ring-out
+cũ. Session điều phối việc nạp scene tiếp theo dựa trên `SurvivalOutcome`.
+
+### Trình tự Survival (SB-16)
+
+Intro → Countdown 3 giây → Playing → Result. Các thời lượng được cấp qua
+constructor. Host cấp nhịp 60 Hz và tín hiệu quyền mô phỏng, có thể nối từ
+`ISessionService.CanSimulateGameplay` khi SB-06 được tích hợp. Các tick trong
+Intro và Countdown không làm tăng đồng hồ trận.
+
+Khi còn tối đa một fighter, host chờ 30 tick kể từ lần loại cuối và vẫn nhận
+ring-out trong thời gian đó. Khi còn nhiều fighter tại giới hạn giờ, host lấy
+Wobble hiện tại để xếp hạng. Với L1, SB-15 sẽ làm vành cuối rụng ở giây 135
+để kích hoạt ring-out qua scene. Giới hạn 150 giây là chốt dự phòng nếu sàn
+không phát sinh thêm lượt rơi. Menu, tiến trình session và luật Rank sẽ được
+nối trong các issue tương ứng.
 
 `Scenes/Boot` (build index 0), `MainMenu`, `Lobby`, `Levels/L1…L5` are shared: edited by their owner
 (L1, L4, L5 Nhật; L2, L3 Duy) or through prefabs. `Scenes/Sandbox/Test_Duy` and `Test_Nhat` are personal and
