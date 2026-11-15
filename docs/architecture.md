@@ -52,6 +52,21 @@ An exception needs an ADR with an `Allowed-Reference: A -> B` line. `tools/check
   same code path is tested every day and M2 networking adds no rewrite.
 - Randomness is seeded by the host (GDD 10.5).
 
+## Hợp đồng chung của SB-06
+
+| Kiểu | Luồng sử dụng |
+|---|---|
+| `InputCommand` | Người chơi và bot dùng chung sequence, vector di chuyển XZ trước khi xoay theo camera, cờ nhảy/dash và yaw tính bằng độ. Host kiểm tra vector hữu hạn có độ dài tối đa 1 và yaw hữu hạn trước khi đưa vào motor. GDD 10.4 quy định gửi 60 Hz, không tin cậy, lặp ba lệnh gần nhất. Đóng gói, kiểm tra thứ tự và hồi chiêu thuộc phần đồng bộ tiếp theo. |
+| `HazardEvent`, `MatchEvent` | Header có loại sự kiện, `EventId` và `HostTick`. Host cấp ID duy nhất trong phiên, `HostTick` theo bước mô phỏng 60 Hz. Với hazard, tick là thời điểm hiệu lực. GDD yêu cầu phát tin cậy và dùng ID để bỏ sự kiện lặp. Payload từng loại, truyền và bỏ bản lặp thuộc phần đồng bộ tiếp theo. |
+| `ISessionService` | UI và luồng phiên gọi `Host`, `Join` hoặc `Leave`, rồi theo dõi `StateChanged`. Giá trị trả về của Host/Join báo thao tác có khởi động được. Trạng thái Joined xuất hiện sau khi NGO xác nhận kết nối. |
+
+`GameplayBootstrap` trong Boot dựng service và truyền input hợp lệ qua `IFighterMotor.Step`
+chỉ khi phiên đang host và NGO báo `IsHost`. `StubSessionService` gọi NGO `StartHost()`
+cho cả Single Player và LAN. Single Player lắng nghe trên loopback với cổng tự cấp
+và từ chối client từ xa. LAN dùng cổng 7777. `StubMotor` giữ lệnh cuối và dịch
+vị trí thử theo yaw trong một bước cố định. Menu, vòng lặp trận, PlayerMotor và quản lý lobby
+sẽ nối vào các hợp đồng này trong các issue tiếp theo.
+
 ## Engine settings (verified by `EngineSettingsTests`)
 
 | Setting | Value | Why |
