@@ -57,4 +57,4 @@ body:
       required: true
   - type: markdown
     attributes:
-      value: "PR đóng issue này phải được người còn lại review. Kẹt quá nửa buổi thì gắn label `blocked`, báo người kia và chuyển sang issue khác. Làm khác GDD v1.3 thì mở issue label `design-change`."
+      value: "Review của người còn lại là tuỳ chọn. Kẹt quá nửa buổi thì gắn label `blocked`, báo người kia và chuyển sang issue khác. Làm khác GDD v1.3 thì mở issue label `design-change`."

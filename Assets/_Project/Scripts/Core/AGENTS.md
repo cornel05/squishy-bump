@@ -11,7 +11,7 @@ Shared contracts only: `InputCommand`, events, interfaces, ScriptableObject type
 - IDs: O01–O12 (object register: the data types) (look up in `docs/gdd/ids.md`)
 
 ## Invariants
-- **Changes to Core need review from BOTH members**, because every module and stub depends on it.
+- **Every module and stub depends on Core.** Review is optional, but tell the teammate about any Core change.
 - No behaviour: types, interfaces, events, data. No MonoBehaviour gameplay logic.
 - References no other SquishyBump assembly (enforced by `EngineSettingsTests` and `tools/check_repo.py`).
 - `Input/SquishyControls.cs` is generated from `Settings/Input/SquishyControls.inputactions`. Edit the asset, never the .cs.
