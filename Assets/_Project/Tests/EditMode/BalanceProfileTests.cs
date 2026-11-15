@@ -62,6 +62,7 @@ namespace SquishyBump.Tests.EditMode
             Assert.That(b.WobbleDecaySeconds, Is.EqualTo(6f));
             Assert.That(b.StunBaseSeconds, Is.EqualTo(0.15f));
             Assert.That(b.StunPerWobbleSeconds, Is.EqualTo(0.02f));
+            Assert.That(b.StunInputBufferSeconds, Is.EqualTo(0.1f));
             Assert.That(b.TimeLimitSeconds, Is.EqualTo(150f));
             Assert.That(b.RingDropSeconds, Is.EqualTo(new[] { 45f, 75f, 105f, 135f }));
             Assert.That(b.RingDropWarningSeconds, Is.EqualTo(3f));
@@ -81,7 +82,7 @@ namespace SquishyBump.Tests.EditMode
         public void BalanceAsset_MatchesEngineSettings()
         {
             Assert.That(1f / Balance.FixedStepHz, Is.EqualTo(Time.fixedDeltaTime).Within(1e-6f));
-            Assert.That(-Balance.Gravity, Is.EqualTo(Physics.gravity.y).Within(1e-4f));
+            Assert.That(-Balance.Gravity, Is.EqualTo(UnityEngine.Physics.gravity.y).Within(1e-4f));
         }
 
         [TestCase("Heavy", 15f, 0.60f, 4.5f, 0.8f, 9.6f, 4.8f, 5.3f)]

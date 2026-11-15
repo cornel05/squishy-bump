@@ -40,6 +40,8 @@ namespace SquishyBump.Core
         [Header("Stun")]
         [SerializeField] private float stunBaseSeconds;
         [SerializeField] private float stunPerWobbleSeconds;
+        [Tooltip("How long a press made during stun stays valid (GDD 4.4).")]
+        [SerializeField] private float stunInputBufferSeconds;
 
         [Header("Match")]
         [SerializeField] private float timeLimitSeconds;
@@ -78,6 +80,7 @@ namespace SquishyBump.Core
         public float WobbleDecaySeconds => wobbleDecaySeconds;
         public float StunBaseSeconds => stunBaseSeconds;
         public float StunPerWobbleSeconds => stunPerWobbleSeconds;
+        public float StunInputBufferSeconds => stunInputBufferSeconds;
         public float TimeLimitSeconds => timeLimitSeconds;
         public IReadOnlyList<float> RingDropSeconds => ringDropSeconds;
         public float RingDropWarningSeconds => ringDropWarningSeconds;

@@ -3,6 +3,7 @@
     "rootNamespace": "SquishyBump.Editor",
     "references": [
         "SquishyBump.Core",
+        "SquishyBump.Physics",
         "Unity.InputSystem"
     ],
     "includePlatforms": [

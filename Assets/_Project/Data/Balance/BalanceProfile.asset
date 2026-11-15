@@ -30,6 +30,7 @@ MonoBehaviour:
   wobbleDecaySeconds: 6
   stunBaseSeconds: 0.15
   stunPerWobbleSeconds: 0.02
+  stunInputBufferSeconds: 0.1
   timeLimitSeconds: 150
   ringDropSeconds:
   - 45
