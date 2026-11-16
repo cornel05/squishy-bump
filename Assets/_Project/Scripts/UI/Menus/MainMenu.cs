@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace SquishyBump.UI.Menus
 {
     /// <summary>
-    /// Main menu (GDD 3.1, F01): Single Player, Multiplayer (rule, Host, Join by IP), Settings, Credits, Quit.
+    /// Main menu (GDD 3.1, F01): Single Player (level picker), Multiplayer (rule, Host, Join by IP), Settings, Credits, Quit.
     /// Raises requests only; App decides what they do. Session state is read from <see cref="ISessionService"/>.
     /// </summary>
     public sealed class MainMenu : MonoBehaviour
@@ -16,12 +16,13 @@ namespace SquishyBump.UI.Menus
 
         private ISessionService session;
         private GameSettings settings;
-        private RectTransform main, multiplayer, options, credits;
+        private RectTransform main, levels, multiplayer, options, credits;
         private InputField address;
         private Text status;
         private Button startMatch;
 
-        public event Action SinglePlayerRequested;
+        /// <summary>Level number picked on the Single Player page.</summary>
+        public event Action<int> SinglePlayerRequested;
         public event Action HostRequested;
         public event Action<string> JoinRequested;
         public event Action QuitRequested;
@@ -30,7 +31,7 @@ namespace SquishyBump.UI.Menus
 
         public string CurrentPage { get; private set; }
 
-        public void Init(ISessionService sessionService, GameSettings gameSettings, string version)
+        public void Init(ISessionService sessionService, GameSettings gameSettings, string version, LevelDefinition[] levelList)
         {
             session = sessionService;
             settings = gameSettings;
@@ -39,12 +40,21 @@ namespace SquishyBump.UI.Menus
 
             main = UiFactory.Page(canvas, "Main");
             UiFactory.Label(main, "SQUISHY BUMP", 64);
-            UiFactory.Button(main, "Single Player", () => SinglePlayerRequested?.Invoke());
+            UiFactory.Button(main, "Single Player", () => Show(levels));
             UiFactory.Button(main, "Multiplayer", () => Show(multiplayer));
             UiFactory.Button(main, "Settings", () => Show(options));
             UiFactory.Button(main, "Credits", () => Show(credits));
             UiFactory.Button(main, "Quit", () => QuitRequested?.Invoke());
             UiFactory.Label(main, version, 20);
+
+            levels = UiFactory.Page(canvas, "Single Player");
+            UiFactory.Label(levels, "Pick a level", 44);
+            foreach (var level in levelList)
+            {
+                var number = level.LevelNumber;
+                UiFactory.Button(levels, $"L{number} · {level.ArenaName}", () => SinglePlayerRequested?.Invoke(number));
+            }
+            UiFactory.Button(levels, "Back", () => Show(main));
 
             multiplayer = UiFactory.Page(canvas, "Multiplayer");
             UiFactory.Label(multiplayer, "Multiplayer (LAN)", 44);
@@ -106,13 +116,13 @@ namespace SquishyBump.UI.Menus
 
         public void ShowPage(string name)
         {
-            foreach (var page in new[] { main, multiplayer, options, credits })
+            foreach (var page in new[] { main, levels, multiplayer, options, credits })
                 if (page.name == name) Show(page);
         }
 
         private void Show(RectTransform page)
         {
-            foreach (var p in new[] { main, multiplayer, options, credits }) p.gameObject.SetActive(p == page);
+            foreach (var p in new[] { main, levels, multiplayer, options, credits }) p.gameObject.SetActive(p == page);
             CurrentPage = page.name;
         }
     }

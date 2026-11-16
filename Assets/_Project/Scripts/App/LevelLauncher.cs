@@ -38,11 +38,11 @@ namespace SquishyBump.App
 
         private void OnDestroy() => SceneManager.sceneLoaded -= OnSceneLoaded;
 
-        public void StartSinglePlayer()
+        public void StartSinglePlayer(int level = 1)
         {
             singlePlayer = true;
             if (bootstrap.Session.State == SessionState.Idle && !bootstrap.Session.Host(SessionMode.SinglePlayer)) return;
-            LoadLevel(1);
+            LoadLevel(level);
         }
 
         public bool HostLan()
@@ -88,7 +88,7 @@ namespace SquishyBump.App
             var go = new GameObject("Main Menu");
             SceneManager.MoveGameObjectToScene(go, scene);
             Menu = go.AddComponent<MainMenu>();
-            Menu.Init(bootstrap.Session, bootstrap.Settings, $"v{Application.version}");
+            Menu.Init(bootstrap.Session, bootstrap.Settings, $"v{Application.version}", setup.Levels);
             Menu.SinglePlayerRequested += StartSinglePlayer;
             Menu.HostRequested += () => HostLan();
             Menu.JoinRequested += address => Join(address);
@@ -101,7 +101,9 @@ namespace SquishyBump.App
             var bounds = FindInScene<TrainingRingBounds>(scene);
             if (bounds == null)
             {
-                Debug.LogWarning($"[LevelLauncher] {scene.path} has no TrainingRingBounds yet; no match started.");
+                Debug.LogWarning($"[LevelLauncher] {scene.path} has no TrainingRingBounds yet; back to the menu.");
+                // No match means no pause menu: return instead of leaving the player stuck on an empty level.
+                LeaveToMenu();
                 return;
             }
 
