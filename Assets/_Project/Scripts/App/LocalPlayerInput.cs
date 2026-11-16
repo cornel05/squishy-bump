@@ -3,6 +3,7 @@ using SquishyBump.Core;
 using SquishyBump.Core.Input;
 using SquishyBump.Presentation;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace SquishyBump.App
 {
@@ -16,9 +17,11 @@ namespace SquishyBump.App
         private readonly CameraRig camera;
         private uint sequence;
 
-        public LocalPlayerInput(CameraRig cameraRig)
+        public LocalPlayerInput(CameraRig cameraRig, string bindingOverrides = null)
         {
             camera = cameraRig;
+            // Saved rebinds (GDD 10.5); empty means the asset's defaults.
+            if (!string.IsNullOrEmpty(bindingOverrides)) controls.asset.LoadBindingOverridesFromJson(bindingOverrides);
             controls.Gameplay.Enable();
         }
 
