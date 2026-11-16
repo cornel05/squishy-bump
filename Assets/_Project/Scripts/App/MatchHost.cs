@@ -51,6 +51,10 @@ namespace SquishyBump.App
         private readonly List<IHazard> hazardList = new();
         private FighterPhysicsAdapter fighterPhysics;
         private uint goTick;
+        private MatchOverlay overlay;
+        private float introSeconds, bannerSeconds, finalWarningSeconds;
+        private bool finalWarningShown;
+        private uint? introStartTick;
         private bool pausesGame;
 
         public MatchDirector Director { get; private set; }
@@ -84,6 +88,19 @@ namespace SquishyBump.App
             pause.LeaveRequested += leave;
             Cursor.lockState = CursorLockMode.Locked;
         }
+
+        /// <summary>Arena card before the countdown and hazard banners (GDD B.3, B.6). The host holds the intro for the card.</summary>
+        public void AttachOverlay(MatchOverlay matchOverlay, float cardSeconds, float banner, float finalWarning)
+        {
+            overlay = matchOverlay;
+            introSeconds = cardSeconds;
+            bannerSeconds = banner;
+            finalWarningSeconds = finalWarning;
+        }
+
+        /// <summary>B07 on L2–L5: true once, when the match clock reaches the last-seconds warning.</summary>
+        public static bool FinalWarningDue(int level, float playingSeconds, float limitSeconds, float warningSeconds) =>
+            level != 1 && playingSeconds >= limitSeconds - warningSeconds;
 
         private void OnPauseChanged(bool open)
         {
@@ -184,6 +201,14 @@ namespace SquishyBump.App
             clientView?.Update(Time.time);
             if (clientView != null && clientView.TryPlayingSeconds(Time.time, out var seconds))
                 foreach (var h in hazardList) h.ShowAt(seconds);
+            else if (Started) seconds = Director.ElapsedTicks * Time.fixedDeltaTime;
+            else seconds = 0f;
+            if (overlay != null && !finalWarningShown &&
+                FinalWarningDue(level, seconds, balance.TimeLimitSeconds, finalWarningSeconds))
+            {
+                finalWarningShown = true;
+                overlay.ShowBanner($"{finalWarningSeconds:0} seconds left!", bannerSeconds);
+            }
         }
 
         private void FixedUpdate() => clientView?.FixedUpdate();
@@ -197,7 +222,9 @@ namespace SquishyBump.App
         private void OnTick(uint tick)
         {
             var dt = Time.fixedDeltaTime;
-            if (Director.Phase == MatchPhase.Intro) Director.FinishIntro(tick);
+            introStartTick ??= tick;
+            if (Director.Phase == MatchPhase.Intro && tick - introStartTick.Value >= Mathf.RoundToInt(introSeconds / dt))
+                Director.FinishIntro(tick);
             var playing = Director.Phase == MatchPhase.Playing;
             var local = localInput.Sample();
 
@@ -259,6 +286,8 @@ namespace SquishyBump.App
                 foreach (var c in hazardList.OfType<Cannons>())
                     c.ApplyAim(e.Index, e.Aim, (int)(e.HostTick - go.GoTick));
             if (e.Kind != HazardEventKind.RingDropWarning || ringDrop == null) return;
+            // B07 on L1: one banner per ring drop, under the clock.
+            if (overlay != null) overlay.ShowBanner($"Ring drop in {balance.RingDropWarningSeconds:0} s!", bannerSeconds);
             // A client hears the event one trip late: start the telegraph as far in as the host time it renders.
             var elapsed = clientView?.Buffer.Newest != null
                 ? RingDrop.TelegraphElapsed(e.HostTick, balance.RingDropWarningSeconds,
