@@ -155,7 +155,7 @@ namespace SquishyBump.App
         private void Start()
         {
             if (bootstrap == null) bootstrap = FindAnyObjectByType<GameplayBootstrap>();
-            localInput = new LocalPlayerInput(cameraRig);
+            localInput = new LocalPlayerInput(cameraRig, bootstrap.Saved.Bindings);
             // Every hazard of this level scene (H01 floor, moving ground, cannons…).
             foreach (var root in gameObject.scene.GetRootGameObjects())
                 hazardList.AddRange(root.GetComponentsInChildren<IHazard>(true));
@@ -220,7 +220,12 @@ namespace SquishyBump.App
             resolver.Hit += OnHit;
             foreach (var f in fighters)
                 if (f.Visual != null) f.Visual.TookOff += OnTookOff;
-            Director.ResultConfirmed += _ => Sound(Sfx.Win, cameraRig != null ? cameraRig.transform.position : Vector3.zero);
+            Director.ResultConfirmed += _ =>
+            {
+                Sound(Sfx.Win, cameraRig != null ? cameraRig.transform.position : Vector3.zero);
+                // Best Single Player Survival run: the player won this level outright.
+                if (pausesGame && Director.GetSinglePlayerOutcome(0) != SurvivalOutcome.Retry) bootstrap.RecordSurvival(level);
+            };
             bootstrap.Events.MatchRaised += OnMatchEvent;
             foreach (var h in hazardList) h.Bind(bootstrap.EventSink, fighterPhysics);
             bootstrap.Sync.InputReceived += OnRemoteInput;

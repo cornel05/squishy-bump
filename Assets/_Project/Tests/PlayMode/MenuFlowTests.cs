@@ -45,6 +45,8 @@ namespace SquishyBump.Tests.PlayMode
             // Bootstraps of earlier tests may survive (NGO keeps NetworkManager across loads): take Boot's own.
             app = System.Linq.Enumerable.First(Object.FindObjectsByType<GameplayBootstrap>(FindObjectsSortMode.None),
                 b => b.gameObject.scene.name == "DontDestroyOnLoad" && b.Launcher != null);
+            // Never write the player's real save from a test.
+            app.Store = new LocalSave(System.IO.Path.Combine(Application.temporaryCachePath, "sb-tests"));
             Assert.That(app.Launcher, Is.Not.Null, "Boot carries the match setup");
 
             SceneManager.LoadScene($"{Root}/Scenes/MainMenu.unity", LoadSceneMode.Single);
@@ -94,6 +96,8 @@ namespace SquishyBump.Tests.PlayMode
             yield return SceneManager.LoadSceneAsync($"{Root}/Scenes/Boot.unity", LoadSceneMode.Single);
             app = System.Linq.Enumerable.First(Object.FindObjectsByType<GameplayBootstrap>(FindObjectsSortMode.None),
                 b => b.gameObject.scene.name == "DontDestroyOnLoad" && b.Launcher != null);
+            // Never write the player's real save from a test.
+            app.Store = new LocalSave(System.IO.Path.Combine(Application.temporaryCachePath, "sb-tests"));
             Assert.That(app.Session.Host(Core.SessionMode.SinglePlayer), Is.True);
             app.Launcher.LoadLevel(level);
             yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);

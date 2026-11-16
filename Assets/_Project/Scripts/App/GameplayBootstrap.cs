@@ -26,7 +26,24 @@ namespace SquishyBump.App
         /// <summary>Input up / snapshot down streams of this peer.</summary>
         public NetSync Sync => sync;
         /// <summary>Local options (not game state); persisted by SB-51.</summary>
-        public GameSettings Settings { get; } = new();
+        public GameSettings Settings => Saved.Settings;
+        /// <summary>This player's save (GDD 10.5); loaded on Boot, written whenever settings or records change.</summary>
+        public SaveData Saved { get; private set; } = new();
+        /// <summary>Where saves go; null (test rigs without a match setup) keeps everything in memory.</summary>
+        public LocalSave Store { get; set; }
+
+        public void WriteSave() => Store?.Save(Saved);
+
+        /// <summary>Single Player Survival level won: keeps the best run.</summary>
+        public void RecordSurvival(int levelWon)
+        {
+            if (Saved.RecordSurvival(levelWon)) WriteSave();
+        }
+
+        public void RecordRank(int points)
+        {
+            if (Saved.RecordRank(points)) WriteSave();
+        }
         public LevelLauncher Launcher { get; private set; }
 
         public uint Tick { get; private set; }
@@ -45,6 +62,9 @@ namespace SquishyBump.App
             session.StateChanged += OnSessionStateChanged;
             if (setup != null)
             {
+                Store = new LocalSave(Application.persistentDataPath);
+                Saved = Store.Load();
+                Settings.Changed += _ => WriteSave();
                 Launcher = gameObject.AddComponent<LevelLauncher>();
                 Launcher.Init(this, setup);
             }
