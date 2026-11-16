@@ -63,8 +63,8 @@ and [`gdd/ids.md`](gdd/ids.md). Update a row whenever the test is run (date, bui
 | T13 | not run | | | | |
 | T14 | not run | | | | |
 | T15 | not run | | | | |
-| T16 | not run | | | | |
-| T17 | not run | | | | |
+| T16 | cut | 16/11/2026 | | Đình Duy | Out of A02 scope: D36 (#82). |
+| T17 | cut | 16/11/2026 | | Đình Duy | Out of A02 scope: D37 (#83). |
 | T18 | not run | | | | |
 | T19 | not run | | | | |
 | T20 | not run | | | | |
