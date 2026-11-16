@@ -100,6 +100,13 @@ namespace SquishyBump.Tests.PlayMode
 
             var match = app.Launcher.Match;
             Assert.That(match.Fighters, Has.Count.EqualTo(6));
+            // SB-49: a strong hit squishes with a higher pitch, a light one bumps.
+            var sfx = app.Launcher.Audio;
+            sfx.PlayHit(10f, Vector3.zero);
+            Assert.That(sfx.LastPlayed, Is.EqualTo(SquishyBump.Presentation.Sfx.Bump));
+            sfx.PlayHit(150f, Vector3.zero);
+            Assert.That(sfx.LastPlayed, Is.EqualTo(SquishyBump.Presentation.Sfx.SquishBump));
+            Assert.That(sfx.LastPitch, Is.GreaterThan(1f));
             Assert.That(level == 2 ? System.Linq.Enumerable.OfType<SquishyBump.Hazards.MovingGround>(match.Hazards).Count()
                 : System.Linq.Enumerable.OfType<SquishyBump.Hazards.Cannons>(match.Hazards).Count(), Is.EqualTo(1));
             for (var i = 0; i < 5; i++) yield return new WaitForFixedUpdate();

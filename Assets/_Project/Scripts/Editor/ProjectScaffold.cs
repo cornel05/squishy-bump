@@ -57,6 +57,7 @@ namespace SquishyBump.Editor
             EnsureRollRigs();
             EnsureTrainingRingFloor();
             EnsureMatchSetup();
+            EnsureSfxClips();
             ConfigureInputWrapper();
             // Project-wide actions = our asset (the template's default asset was removed).
             InputSystem.actions = AssetDatabase.LoadAssetAtPath<InputActionAsset>(InputAsset);
@@ -235,6 +236,24 @@ namespace SquishyBump.Editor
                 EditorSceneManager.SaveScene(boot);
             }
             if (EditorSceneManager.sceneCount > 1) EditorSceneManager.CloseScene(boot, true);
+        }
+
+        // SB-49: the twelve SFX placeholders (tools/audio/make_sfx.py) into PresentationProfile, in Sfx order.
+        static void EnsureSfxClips()
+        {
+            var so = new SerializedObject(AssetDatabase.LoadAssetAtPath<PresentationProfile>(PresentationProfilePath));
+            var list = so.FindProperty("sfx");
+            var names = System.Enum.GetNames(typeof(Sfx));
+            if (list.arraySize == names.Length) return;
+            list.arraySize = names.Length;
+            for (var i = 0; i < names.Length; i++)
+            {
+                var snake = System.Text.RegularExpressions.Regex.Replace(names[i], "(?<!^)([A-Z])", "_$1").ToLowerInvariant();
+                var clip = AssetDatabase.LoadAssetAtPath<AudioClip>($"Assets/_Project/Audio/SFX/sfx_{snake}.wav");
+                if (clip == null) Debug.LogError($"[ProjectScaffold] missing sfx_{snake}.wav");
+                list.GetArrayElementAtIndex(i).objectReferenceValue = clip;
+            }
+            so.ApplyModifiedPropertiesWithoutUndo();
         }
 
         static void SetReferences(Object target, params (string field, Object value)[] references)

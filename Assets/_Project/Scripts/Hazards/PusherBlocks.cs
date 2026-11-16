@@ -23,7 +23,6 @@ namespace SquishyBump.Hazards
         [SerializeField] private MovingGround ground;
         [SerializeField] private Material blockMaterial;
         [SerializeField] private Color lightIdle = new(0.3f, 0.3f, 0.3f);
-        [SerializeField] private Color lightWarning = new(1f, 0.65f, 0f);
 
         private sealed class Block
         {
@@ -68,6 +67,17 @@ namespace SquishyBump.Hazards
                 };
                 blocks.Add(block);
                 go.transform.localPosition = new Vector3(side * hazards.PusherDockX, hazards.PusherSize.y * 0.5f, z);
+                // GDD 7.2: lanes are painted with amber stripes at all times (both lane edges).
+                foreach (var edge in new[] { -0.5f, 0.5f })
+                {
+                    var stripe = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    DestroyImmediate(stripe.GetComponent<Collider>()); // visual only
+                    stripe.name = "Lane stripe";
+                    stripe.transform.SetParent(transform, false);
+                    stripe.transform.localPosition = new Vector3(0f, 0.012f, z + edge * hazards.PusherSize.z);
+                    stripe.transform.localScale = new Vector3(2f * hazards.PusherDockX, 0.004f, 0.08f);
+                    stripe.GetComponent<Renderer>().material.color = TelegraphColors.Amber;
+                }
             }
         }
 
@@ -156,7 +166,7 @@ namespace SquishyBump.Hazards
             Place(b, x, z);
             var warning = b.DepartTick >= 0 && t < b.DepartTick * dt;
             for (var s = 0; s < 2; s++)
-                b.Lights[s].material.color = warning && (s == 0 ? -1 : 1) == b.Side ? lightWarning : lightIdle;
+                b.Lights[s].material.color = warning && (s == 0 ? -1 : 1) == b.Side ? TelegraphColors.Amber : lightIdle;
         }
 
         private bool PassIsClear(int block, float departSeconds)

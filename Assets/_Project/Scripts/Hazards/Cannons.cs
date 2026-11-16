@@ -32,10 +32,7 @@ namespace SquishyBump.Hazards
         [SerializeField] private Mount[] mounts = Array.Empty<Mount>();
         [Tooltip("Chaos Core uses the faster period.")]
         [SerializeField] private bool chaosPeriod;
-        [SerializeField] private Color glowColor = new(1f, 0.65f, 0f);
         [SerializeField] private Color idleColor = new(0.35f, 0.35f, 0.4f);
-        [SerializeField] private Color coneColor = new(0.6f, 0.85f, 1f, 0.35f);
-        [SerializeField] private Color markerColor = new(1f, 0.9f, 0.2f, 0.8f);
         [SerializeField] private Color patchColor = new(1f, 0.25f, 0.05f, 0.7f);
 
         private sealed class Cannon
@@ -99,10 +96,20 @@ namespace SquishyBump.Hazards
                 barrel.transform.localScale = new Vector3(0.5f, 0.5f, 1.4f);
                 c.Barrel = barrel.transform;
                 c.BarrelRenderer = barrel.GetComponent<Renderer>();
-                if (m.Kind == CannonKind.Air) c.Cone = Flat("Gust cone", ConeMesh(), coneColor);
+                if (m.Kind == CannonKind.Air) c.Cone = Flat("Gust cone", ConeMesh(), TelegraphColors.AmberZone);
                 else
                 {
-                    c.Marker = Flat("Landing marker", AnnulusMesh.Build(hazards.BlastRadius * 0.85f, hazards.BlastRadius, 48), markerColor);
+                    // Ring with a cross (GDD 12.5), red blinking at 2 Hz while the fireball flies.
+                    c.Marker = Flat("Landing marker", AnnulusMesh.Build(hazards.BlastRadius * 0.85f, hazards.BlastRadius, 48), TelegraphColors.Red);
+                    foreach (var yaw in new[] { 45f, -45f })
+                    {
+                        var bar = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        DestroyImmediate(bar.GetComponent<Collider>()); // visual only
+                        bar.transform.SetParent(c.Marker.transform, false);
+                        bar.transform.localRotation = Quaternion.Euler(0f, yaw, 0f);
+                        bar.transform.localScale = new Vector3(0.15f, 0.01f, hazards.BlastRadius * 1.7f);
+                        bar.GetComponent<Renderer>().material.color = TelegraphColors.Red;
+                    }
                     c.Patch = Flat("Burning patch", AnnulusMesh.Build(0f, hazards.PatchRadius, 48), patchColor);
                     var ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                     DestroyImmediate(ball.GetComponent<Collider>());
@@ -302,7 +309,7 @@ namespace SquishyBump.Hazards
                 var dir = locked && (telegraph || gusting) ? Flat(c.Aim - c.Muzzle).normalized : SweepDirection(c, t);
                 if (c.Mount.Kind == CannonKind.Fire && locked && t >= fireAt) dir = Flat(c.Aim - c.Muzzle).normalized;
                 c.Barrel.rotation = Quaternion.LookRotation(dir);
-                c.BarrelRenderer.material.color = telegraph ? glowColor : idleColor;
+                c.BarrelRenderer.material.color = telegraph ? TelegraphColors.Amber : idleColor;
 
                 if (c.Cone != null)
                 {
@@ -314,7 +321,10 @@ namespace SquishyBump.Hazards
                 var flight = FlightSeconds(c.Muzzle, c.Aim, hazards.FireLaunchAngle, balance.Gravity);
                 var inFlight = locked && t >= fireAt && t < fireAt + flight;
                 var burning = locked && t >= fireAt + flight && t < fireAt + flight + hazards.PatchSeconds;
-                c.Marker.enabled = inFlight;
+                var blinkOn = inFlight && RingDrop.BlinkOn(t - fireAt, hazards.TelegraphBlinkHz);
+                c.Marker.enabled = blinkOn;
+                foreach (var bar in c.Marker.GetComponentsInChildren<Renderer>())
+                    if (bar != c.Marker) bar.enabled = blinkOn;
                 c.Marker.transform.position = c.Aim + Vector3.up * 0.03f;
                 c.Patch.enabled = burning;
                 c.Patch.transform.position = c.Aim + Vector3.up * 0.02f;

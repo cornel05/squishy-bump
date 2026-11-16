@@ -21,3 +21,21 @@ MonoBehaviour:
   pitchDefaultDegrees: 35
   lookSensitivity: 0.1
   shakePerImpulse: 0.05
+  hitStopSeconds: 0.04
+  strongHitImpulse: 60
+  squishPitch: {x: 0.9, y: 1.5}
+  squishTopImpulse: 200
+  whooshDistance: 2
+  sfx:
+  - {fileID: 8300000, guid: 33f4015ab20853e4994446d26b300264, type: 3}
+  - {fileID: 8300000, guid: 0af52f55047e5954886efd111741a6e3, type: 3}
+  - {fileID: 8300000, guid: 852834be76eb15d43b4cbae4062ae8c8, type: 3}
+  - {fileID: 8300000, guid: d9ef9db30402afa46958d2a34570155f, type: 3}
+  - {fileID: 8300000, guid: aed1687d5d2e4f94796fd63c1a613dec, type: 3}
+  - {fileID: 8300000, guid: 86da772f7635b34438f0f1f5aa85b3c5, type: 3}
+  - {fileID: 8300000, guid: a70b7b8f9d2251b47b371b73e27bdea0, type: 3}
+  - {fileID: 8300000, guid: 36764178f5d9b2841894167c3ccfe46e, type: 3}
+  - {fileID: 8300000, guid: 84bb6e4d695cd50409fbeb3811ba0dc7, type: 3}
+  - {fileID: 8300000, guid: 0cfe870157eb93548b9018e7422aea80, type: 3}
+  - {fileID: 8300000, guid: 18a611c92918caa4a8de296d8a872ed3, type: 3}
+  - {fileID: 8300000, guid: 844c39acfc2f7c94ab4e58745f79da0f, type: 3}
