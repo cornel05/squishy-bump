@@ -27,6 +27,31 @@ namespace SquishyBump.Editor
             Set(pushers, ("balance", Balance), ("hazards", Hazards), ("ground", ground), ("blockMaterial", Mat(3)));
         });
 
+        [MenuItem("Squishy Bump/Build Level L3 (Cannon Court)")]
+        public static void BuildL3() => Build(3, scene =>
+        {
+            var floor = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            floor.name = "Floor r 9 m";
+            // Unity's cylinder is 1 m wide and 2 m tall: flatten it to an 18 m disc whose top sits at y = 0.
+            floor.transform.localScale = new Vector3(18f, 0.05f, 18f);
+            floor.transform.position = new Vector3(0f, -0.05f, 0f);
+            Object.DestroyImmediate(floor.GetComponent<Collider>());
+            floor.AddComponent<MeshCollider>();
+            floor.GetComponent<Renderer>().sharedMaterial = Mat(1);
+            var cannons = new GameObject("Cannons");
+            cannons.SetActive(false);
+            var c = cannons.AddComponent<Cannons>();
+            // GDD 7.3: fire at 45° and 225°, air at 135° and 315°, staggered in this order.
+            c.Configure(Balance, Hazards, new[]
+            {
+                new Cannons.Mount { Kind = CannonKind.Fire, AngleDegrees = 45f },
+                new Cannons.Mount { Kind = CannonKind.Air, AngleDegrees = 135f },
+                new Cannons.Mount { Kind = CannonKind.Fire, AngleDegrees = 225f },
+                new Cannons.Mount { Kind = CannonKind.Air, AngleDegrees = 315f },
+            }, false);
+            cannons.SetActive(true);
+        });
+
         static void Build(int number, System.Action<UnityEngine.SceneManagement.Scene> addHazards)
         {
             var level = AssetDatabase.LoadAssetAtPath<LevelDefinition>($"{Root}/Data/Levels/L{number}.asset");

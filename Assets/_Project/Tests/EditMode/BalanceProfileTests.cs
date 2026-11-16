@@ -217,6 +217,18 @@ namespace SquishyBump.Tests.EditMode
         public void Jump_ClearsObstacleBox() =>
             Assert.That(Balance.JumpApexMeters, Is.GreaterThan(ObstacleBoxHeight));
 
+        /// <summary>GDD 14.1 / 7: every hazard telegraph lasts at least 1.0 s. H07 boxes are always visible;
+        /// H06 (ice cracks, 1.5 s) joins when its config lands.</summary>
+        [Test]
+        public void HazardTelegraphs_LastAtLeastOneSecond()
+        {
+            var h = Load<HazardProfile>("Hazards/HazardProfile");
+            Assert.That(Balance.RingDropWarningSeconds, Is.GreaterThanOrEqualTo(1f), "H01");
+            Assert.That(h.TurntableWarningSeconds, Is.GreaterThanOrEqualTo(1f), "H02");
+            Assert.That(h.PusherLightSeconds, Is.GreaterThanOrEqualTo(1f), "H03");
+            Assert.That(h.CannonTelegraphSeconds, Is.GreaterThanOrEqualTo(1f), "H04 / H05");
+        }
+
         [Test]
         public void SnapshotLoad_FitsLanAndRelay() =>
             Assert.That(SnapshotBytes * Balance.SnapshotRateHz * Clients, Is.EqualTo(30000f).Within(1f));

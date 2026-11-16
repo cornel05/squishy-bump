@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections;
+using System.Linq;
 using NUnit.Framework;
 using SquishyBump.App;
 using SquishyBump.Match;
@@ -87,21 +88,22 @@ namespace SquishyBump.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator L2_StartsWithMovingGroundHazard()
+        public IEnumerator Level_StartsWithItsHazard([Values(2, 3)] int level)
         {
             yield return SceneManager.LoadSceneAsync($"{Root}/Scenes/Boot.unity", LoadSceneMode.Single);
             app = System.Linq.Enumerable.First(Object.FindObjectsByType<GameplayBootstrap>(FindObjectsSortMode.None),
                 b => b.gameObject.scene.name == "DontDestroyOnLoad" && b.Launcher != null);
             Assert.That(app.Session.Host(Core.SessionMode.SinglePlayer), Is.True);
-            app.Launcher.LoadLevel(2);
+            app.Launcher.LoadLevel(level);
             yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
 
             var match = app.Launcher.Match;
             Assert.That(match.Fighters, Has.Count.EqualTo(6));
-            Assert.That(System.Linq.Enumerable.OfType<SquishyBump.Hazards.MovingGround>(match.Hazards), Is.Not.Empty);
+            Assert.That(level == 2 ? System.Linq.Enumerable.OfType<SquishyBump.Hazards.MovingGround>(match.Hazards).Count()
+                : System.Linq.Enumerable.OfType<SquishyBump.Hazards.Cannons>(match.Hazards).Count(), Is.EqualTo(1));
             for (var i = 0; i < 5; i++) yield return new WaitForFixedUpdate();
             Assert.That(System.Linq.Enumerable.All(match.Fighters, f => f.Motor.transform.position.y > 0f),
-                "all six spawns stand on the moving floor");
+                "all six spawns stand on the floor");
         }
 
         [Test]

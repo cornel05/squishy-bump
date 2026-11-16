@@ -255,6 +255,9 @@ namespace SquishyBump.App
             if (e.Kind == HazardEventKind.PusherDeparture && clientView?.Buffer.Newest is { GoTick: > 0 } newest)
                 foreach (var p in hazardList.OfType<PusherBlocks>())
                     p.ApplyDeparture(e.Index, (int)(e.HostTick - newest.GoTick));
+            if (e.Kind == HazardEventKind.CannonAim && clientView?.Buffer.Newest is { GoTick: > 0 } go)
+                foreach (var c in hazardList.OfType<Cannons>())
+                    c.ApplyAim(e.Index, e.Aim, (int)(e.HostTick - go.GoTick));
             if (e.Kind != HazardEventKind.RingDropWarning || ringDrop == null) return;
             // A client hears the event one trip late: start the telegraph as far in as the host time it renders.
             var elapsed = clientView?.Buffer.Newest != null
