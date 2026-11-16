@@ -26,6 +26,10 @@ namespace SquishyBump.App
             byCollider.Remove(body.GetComponent<SphereCollider>());
         }
 
+        public IReadOnlyCollection<ulong> FighterIds => bodies.Keys;
+
+        public Vector3 GetPosition(ulong fighterId) => bodies.TryGetValue(fighterId, out var b) ? b.position : Vector3.zero;
+
         public bool TryGetFighter(Collider collider, out ulong fighterId) => byCollider.TryGetValue(collider, out fighterId);
 
         public int GetWobble(ulong fighterId) => resolver.GetWobble(fighterId);

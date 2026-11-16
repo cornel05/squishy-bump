@@ -36,3 +36,25 @@ MonoBehaviour:
   obstacleRadialShare: 0.5
   obstacleWobble: 1
   obstacleRehitSeconds: 0.5
+  cannonRimRadius: 9.9
+  cannonMuzzleHeight: 0.5
+  cannonSweepDegrees: 60
+  cannonSweepDegreesPerSecond: 30
+  cannonPeriodSeconds: 5
+  cannonChaosPeriodSeconds: 4
+  cannonStaggerSeconds: 1.25
+  cannonTelegraphSeconds: 1
+  airConeHalfAngle: 15
+  airRange: 10
+  airGustSeconds: 0.6
+  airForce: 150
+  fireLaunchAngle: 45
+  fireMinRange: 10
+  fireMaxRange: 16
+  fireFallbackRange: 13
+  blastRadius: 3
+  blastImpulse: 90
+  blastUpShare: 0.3
+  blastWobble: 2
+  patchRadius: 2
+  patchSeconds: 3

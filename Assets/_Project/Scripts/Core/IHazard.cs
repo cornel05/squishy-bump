@@ -21,6 +21,9 @@ namespace SquishyBump.Core
     /// <summary>Host-side access to fighters for hazards, without a Physics dependency (ADR-0003).</summary>
     public interface IFighterPhysics
     {
+        /// <summary>Fighters still in the arena.</summary>
+        System.Collections.Generic.IReadOnlyCollection<ulong> FighterIds { get; }
+        Vector3 GetPosition(ulong fighterId);
         bool TryGetFighter(Collider collider, out ulong fighterId);
         int GetWobble(ulong fighterId);
         /// <summary>Adds an impulse in N·s (Δv = J / m).</summary>

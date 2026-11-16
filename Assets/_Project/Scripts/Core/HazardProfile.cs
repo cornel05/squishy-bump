@@ -44,6 +44,36 @@ namespace SquishyBump.Core
         [Tooltip("Dock light turns amber this long before a departure.")]
         [SerializeField] private float pusherLightSeconds;
 
+        [Header("H04 Air cannon / H05 fire cannon (GDD 7.3, 6.5)")]
+        [Tooltip("Cannons stand at this radius, just outside the rim.")]
+        [SerializeField] private float cannonRimRadius;
+        [Tooltip("Muzzle height above the floor (not in the GDD; visual, enters Δh).")]
+        [SerializeField] private float cannonMuzzleHeight;
+        [Tooltip("Sweep ± this around the home direction.")]
+        [SerializeField] private float cannonSweepDegrees;
+        [SerializeField] private float cannonSweepDegreesPerSecond;
+        [SerializeField] private float cannonPeriodSeconds;
+        [Tooltip("L5 Chaos Core.")]
+        [SerializeField] private float cannonChaosPeriodSeconds;
+        [SerializeField] private float cannonStaggerSeconds;
+        [SerializeField] private float cannonTelegraphSeconds;
+        [SerializeField] private float airConeHalfAngle;
+        [SerializeField] private float airRange;
+        [SerializeField] private float airGustSeconds;
+        [Tooltip("F₀ in N.")]
+        [SerializeField] private float airForce;
+        [SerializeField] private float fireLaunchAngle;
+        [SerializeField] private float fireMinRange;
+        [SerializeField] private float fireMaxRange;
+        [SerializeField] private float fireFallbackRange;
+        [SerializeField] private float blastRadius;
+        [Tooltip("J₀ in N·s.")]
+        [SerializeField] private float blastImpulse;
+        [SerializeField] private float blastUpShare;
+        [SerializeField] private int blastWobble;
+        [SerializeField] private float patchRadius;
+        [SerializeField] private float patchSeconds;
+
         [Header("Box and block contact (GDD 6.5)")]
         [SerializeField] private float obstacleImpulse;
         [Tooltip("Weight of r̂ in normalize(t̂ + k·r̂) for H07.")]
@@ -71,6 +101,28 @@ namespace SquishyBump.Core
         public float PusherDockWaitSeconds => pusherDockWaitSeconds;
         public float PusherFirstDepartureSeconds => pusherFirstDepartureSeconds;
         public float PusherLightSeconds => pusherLightSeconds;
+        public float CannonRimRadius => cannonRimRadius;
+        public float CannonMuzzleHeight => cannonMuzzleHeight;
+        public float CannonSweepDegrees => cannonSweepDegrees;
+        public float CannonSweepDegreesPerSecond => cannonSweepDegreesPerSecond;
+        public float CannonPeriodSeconds => cannonPeriodSeconds;
+        public float CannonChaosPeriodSeconds => cannonChaosPeriodSeconds;
+        public float CannonStaggerSeconds => cannonStaggerSeconds;
+        public float CannonTelegraphSeconds => cannonTelegraphSeconds;
+        public float AirConeHalfAngle => airConeHalfAngle;
+        public float AirRange => airRange;
+        public float AirGustSeconds => airGustSeconds;
+        public float AirForce => airForce;
+        public float FireLaunchAngle => fireLaunchAngle;
+        public float FireMinRange => fireMinRange;
+        public float FireMaxRange => fireMaxRange;
+        public float FireFallbackRange => fireFallbackRange;
+        public float BlastRadius => blastRadius;
+        public float BlastImpulse => blastImpulse;
+        public float BlastUpShare => blastUpShare;
+        public int BlastWobble => blastWobble;
+        public float PatchRadius => patchRadius;
+        public float PatchSeconds => patchSeconds;
         public float ObstacleImpulse => obstacleImpulse;
         public float ObstacleRadialShare => obstacleRadialShare;
         public int ObstacleWobble => obstacleWobble;

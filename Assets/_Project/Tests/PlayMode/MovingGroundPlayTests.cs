@@ -22,6 +22,8 @@ namespace SquishyBump.Tests.PlayMode
             public Collider Fighter;
             public readonly List<Vector3> Impulses = new();
             public int Wobble;
+            public IReadOnlyCollection<ulong> FighterIds => new ulong[] { 1 };
+            public Vector3 GetPosition(ulong id) => Fighter.transform.position;
             public bool TryGetFighter(Collider c, out ulong id) { id = 1; return c == Fighter; }
             public int GetWobble(ulong id) => Wobble;
             public void AddImpulse(ulong id, Vector3 j) => Impulses.Add(j);
