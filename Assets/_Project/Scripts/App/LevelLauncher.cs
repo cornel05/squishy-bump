@@ -26,6 +26,7 @@ namespace SquishyBump.App
         public MainMenu Menu { get; private set; }
         public MatchHost Match { get; private set; }
         public PauseMenu Pause { get; private set; }
+        public MatchOverlay Overlay { get; private set; }
 
         public void Init(GameplayBootstrap owner, MatchSetup matchSetup)
         {
@@ -119,6 +120,10 @@ namespace SquishyBump.App
             Pause = hostObject.AddComponent<PauseMenu>();
             Pause.Init(bootstrap.Settings, singlePlayer);
             Match.AttachPause(Pause, singlePlayer, LeaveToMenu);
+            Overlay = hostObject.AddComponent<MatchOverlay>();
+            Overlay.Init();
+            Match.AttachOverlay(Overlay, setup.CardSeconds, setup.BannerSeconds, setup.FinalWarningSeconds);
+            Overlay.ShowCard(level.ArenaName, setup.CardLine(level.LevelNumber), setup.CardSeconds);
             hostObject.SetActive(true);
             // Host starts on its first frame (after Start); clients only show snapshots.
             Match.StartWhenReady = bootstrap.Session.CanSimulateGameplay;

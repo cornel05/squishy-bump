@@ -28,3 +28,12 @@ MonoBehaviour:
   - {fileID: 1168396647808799705, guid: ac22eeb319169fd43881c771a426f3da, type: 3}
   - {fileID: 7195008699048383265, guid: 093cf58ce63d45942b8a722bdcbc4d5b, type: 3}
   mainMenuScene: Assets/_Project/Scenes/MainMenu.unity
+  cardLines:
+  - Every Cup starts on the play mat. Watch the rings!
+  - Two rings, two directions. Hop over the blocks!
+  - The toy soldiers have loaded their cannons!
+  - 'Careful in the freezer: the ice is cracking.'
+  - The top shelf is waiting. The Golden Squish is right there!
+  cardSeconds: 2.5
+  bannerSeconds: 3
+  finalWarningSeconds: 10

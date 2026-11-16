@@ -60,8 +60,9 @@ namespace SquishyBump.Tests.PlayMode
             app.Launcher.StartSinglePlayer();
             yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
             var match = app.Launcher.Match;
-            yield return new WaitForFixedUpdate();
-            yield return new WaitForFixedUpdate();
+            Assert.That(app.Launcher.Overlay.CardVisible, Is.True, "arena card (B02) before the countdown");
+            Assert.That(match.Director.Phase, Is.EqualTo(MatchPhase.Intro), "countdown waits for the card");
+            yield return WaitFor(() => match.Director.Phase != MatchPhase.Intro, 6f);
             Assert.That(match.Started, Is.True, "L1 match started from the menu");
             Assert.That(app.Session.State, Is.EqualTo(CoreSession.Hosting));
             Assert.That(match.Director.Phase, Is.Not.EqualTo(MatchPhase.Intro));

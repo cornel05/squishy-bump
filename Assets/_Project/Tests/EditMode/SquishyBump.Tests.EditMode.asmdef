@@ -9,7 +9,8 @@
         "SquishyBump.Physics",
         "SquishyBump.Presentation",
         "SquishyBump.Hazards",
-        "SquishyBump.Net"
+        "SquishyBump.Net",
+        "SquishyBump.App"
     ],
     "includePlatforms": [
         "Editor"
