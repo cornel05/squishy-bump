@@ -41,8 +41,15 @@ powershell -ExecutionPolicy Bypass -File tools/build-windows.ps1
 Output: `Builds/Windows/SquishyBump.exe`.
 
 ## LAN quick-start
-*TBD (SB-20).* The host picks *Host* and shares their LAN IP; others pick *Join* and enter it. Port **7777/UDP**
-(Unity Transport default, GDD 10.2) must be allowed through Windows Firewall on the host.
+1. Host: main menu → **Multiplayer** → pick the rule → **Host game**. Share your LAN IP (`ipconfig`, IPv4 address).
+2. Others: **Multiplayer** → type the host's IP → **Join**. The status line shows how many have joined.
+3. Host: **Start match** once everyone is in. Every peer loads the level together.
+
+Port **7777/UDP** (Unity Transport, GDD 10.2) must be allowed through Windows Firewall on the host
+(Windows asks on the first *Host game*: allow *Private networks*).
+
+Two instances on one PC: open `Assets/_Project/Scenes/Sandbox/Test_Duy.unity`, enable Multiplayer Play Mode
+with one virtual player, then *Host LAN* in one window and *Join* `127.0.0.1` in the other.
 
 ## Controls (GDD 3.4)
 | Input | Action |
@@ -55,7 +62,12 @@ Output: `Builds/Windows/SquishyBump.exe`.
 | Esc | Menu (pauses only in single-player) |
 
 ## Known limits
-*None recorded yet.*
+- No client-side prediction yet (SB-22): a joined player's own fruit is shown 100 ms behind the host, like the others.
+- Bump, dash and ring-out sounds and the hit-stop play on the host only; clients get the hazard and jump sounds.
+- Only levels with arena bounds start a match from the launcher (L1–L3 now); L4/L5 follow with their scenes.
+- Menus and banners are English only (no localisation yet); key rebinding is not in the menu (bindings are saved).
+- Audio is procedural placeholder SFX (`tools/audio/make_sfx.py`); no music yet.
+- Saves: `%USERPROFILE%\AppData\LocalLow\BKU Group 18\Squishy Bump\save.json` (settings, bindings, last fruit, records).
 
 ## Documentation
 - [`AGENTS.md`](AGENTS.md): rules for AI agents and the dev workflow · [`CONTRIBUTING.md`](CONTRIBUTING.md)
