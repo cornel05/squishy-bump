@@ -53,11 +53,18 @@ namespace SquishyBump.Tests.PlayMode
             yield return WaitFor(() => app.Launcher.Menu != null);
             var menu = app.Launcher.Menu;
             Assert.That(menu.CurrentPage, Is.EqualTo("Main"));
-            foreach (var page in new[] { "Multiplayer", "Settings", "Credits", "Main" })
+            foreach (var page in new[] { "Single Player", "Multiplayer", "Settings", "Credits", "Main" })
             {
                 menu.ShowPage(page);
                 Assert.That(menu.CurrentPage, Is.EqualTo(page));
             }
+
+            // The level picker lists every level of the match setup.
+            menu.ShowPage("Single Player");
+            var picks = menu.GetComponentsInChildren<UnityEngine.UI.Button>()
+                .Select(b => b.GetComponentInChildren<UnityEngine.UI.Text>().text).Where(t => t.StartsWith("L")).ToArray();
+            Assert.That(picks, Has.Length.EqualTo(5));
+            Assert.That(picks[1], Does.StartWith("L2"));
 
             app.Launcher.StartSinglePlayer();
             yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
