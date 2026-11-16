@@ -18,8 +18,6 @@ namespace SquishyBump.Hazards
         [SerializeField] private HazardProfile hazards;
         [Tooltip("Bands, outermost first.")]
         [SerializeField] private Collider[] bands = Array.Empty<Collider>();
-        [SerializeField] private Color warningColor = new(1f, 0.65f, 0f);
-        [SerializeField] private Color finalWarningColor = Color.red;
 
         private IGameEventSink sink;
         private bool[] warned;
@@ -127,12 +125,12 @@ namespace SquishyBump.Hazards
             {
                 case BandStage.Warning:
                     seam.enabled = true;
-                    seam.startColor = seam.endColor = warningColor;
+                    seam.startColor = seam.endColor = TelegraphColors.Amber;
                     break;
                 case BandStage.FinalWarning:
                     seam.enabled = BlinkOn(elapsed - (balance.RingDropWarningSeconds - hazards.RingDropFinalWarningSeconds),
                         hazards.TelegraphBlinkHz);
-                    seam.startColor = seam.endColor = finalWarningColor;
+                    seam.startColor = seam.endColor = TelegraphColors.Red;
                     break;
                 default:
                     seam.enabled = false;

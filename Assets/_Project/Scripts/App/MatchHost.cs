@@ -55,6 +55,10 @@ namespace SquishyBump.App
         private float introSeconds, bannerSeconds, finalWarningSeconds;
         private bool finalWarningShown;
         private uint? introStartTick;
+        private AudioDirector sfxPlayer;
+        private readonly HashSet<ulong> dashing = new();
+        private readonly HashSet<Collider> nearBoxes = new();
+        private bool hitStopping;
         private bool pausesGame;
 
         public MatchDirector Director { get; private set; }
@@ -97,6 +101,27 @@ namespace SquishyBump.App
             bannerSeconds = banner;
             finalWarningSeconds = finalWarning;
         }
+
+        /// <summary>SFX for this peer's events (GDD 12.7). Optional.</summary>
+        public void AttachAudio(AudioDirector director) => sfxPlayer = director;
+
+        private void Sound(Sfx id, Vector3 at) { if (sfxPlayer != null) sfxPlayer.Play(id, at); }
+
+        private void OnTookOff(RollVisual visual) => Sound(Sfx.Jump, visual.transform.position);
+
+        // GDD 3.4: 40 ms hit-stop on a host-confirmed hit. Only when the local fruit is involved, so the host's
+        // simulation is not slowed for every distant bump; never while paused.
+        private System.Collections.IEnumerator HitStop()
+        {
+            if (hitStopping || Time.timeScale == 0f || sfxPlayer == null) yield break;
+            hitStopping = true;
+            Time.timeScale = 0f;
+            yield return new WaitForSecondsRealtime(setupHitStopSeconds);
+            if (pause == null || !pause.IsOpen) Time.timeScale = 1f;
+            hitStopping = false;
+        }
+
+        private float setupHitStopSeconds;
 
         /// <summary>B07 on L2–L5: true once, when the match clock reaches the last-seconds warning.</summary>
         public static bool FinalWarningDue(int level, float playingSeconds, float limitSeconds, float warningSeconds) =>
@@ -147,8 +172,15 @@ namespace SquishyBump.App
 
         private void OnSessionState(SessionState state)
         {
-            if (state == SessionState.Joined && clientView == null)
-                clientView = new MatchClientView(bootstrap, fighterPrefabs, cameraRig, localInput, balance);
+            if (state != SessionState.Joined || clientView != null) return;
+            clientView = new MatchClientView(bootstrap, fighterPrefabs, cameraRig, localInput, balance);
+            {
+                clientView.ViewSpawned += (_, view) =>
+                {
+                    var visual = view.GetComponentInChildren<RollVisual>();
+                    if (visual != null) visual.TookOff += OnTookOff;
+                };
+            }
         }
 
         /// <summary>Host: spawns the roster (host, connected clients, idle slots) and starts the countdown.</summary>
@@ -186,6 +218,10 @@ namespace SquishyBump.App
             if (cameraRig != null) cameraRig.Follow(fighters[0].Motor.transform);
             resolver.WobbleChanged += Director.SetWobble;
             resolver.Hit += OnHit;
+            foreach (var f in fighters)
+                if (f.Visual != null) f.Visual.TookOff += OnTookOff;
+            Director.ResultConfirmed += _ => Sound(Sfx.Win, cameraRig != null ? cameraRig.transform.position : Vector3.zero);
+            bootstrap.Events.MatchRaised += OnMatchEvent;
             foreach (var h in hazardList) h.Bind(bootstrap.EventSink, fighterPhysics);
             bootstrap.Sync.InputReceived += OnRemoteInput;
             bootstrap.Clock.Ticked += OnTick;
@@ -198,6 +234,7 @@ namespace SquishyBump.App
             if (StartWhenReady && !Started) StartMatch();
             if (pause != null && localInput != null && localInput.MenuPressed) pause.Toggle();
             localInput?.UpdateLook();
+            UpdateSounds();
             clientView?.Update(Time.time);
             if (clientView != null && clientView.TryPlayingSeconds(Time.time, out var seconds))
                 foreach (var h in hazardList) h.ShowAt(seconds);
@@ -251,6 +288,7 @@ namespace SquishyBump.App
             foreach (var f in fighters.Where(f => !f.Out && !Director.AliveFighters.Contains(f.Id)))
             {
                 f.Out = true;
+                Sound(Sfx.FallOff, f.Motor.transform.position);
                 resolver.Unregister(f.Id);
                 fighterPhysics.Remove(f.Id);
             }
@@ -274,6 +312,64 @@ namespace SquishyBump.App
             foreach (var f in fighters)
                 if ((f.Id == hit.ReceiverId || f.Id == hit.OtherId) && f.Visual != null) f.Visual.PlaySquash();
             if (hit.ReceiverId == 0 && cameraRig != null) cameraRig.Shake(hit.Impulse);
+            var receiver = fighters.FirstOrDefault(f => f.Id == hit.ReceiverId);
+            if (sfxPlayer != null && receiver != null) sfxPlayer.PlayHit(hit.Impulse, receiver.Motor.transform.position);
+            if ((hit.ReceiverId == 0 || hit.OtherId == 0) && hit.Impulse >= balance.HitThreshold) StartCoroutine(HitStop());
+        }
+
+        private void OnMatchEvent(MatchEvent e)
+        {
+            if (e.Kind == MatchEventKind.Respawn) Sound(Sfx.Respawn, LocalFighterPosition());
+        }
+
+        private void PlayHazardSound(HazardEvent e)
+        {
+            switch (e.Kind)
+            {
+                case HazardEventKind.RingDropWarning: Sound(Sfx.RingDrop, LocalFighterPosition()); break;
+                case HazardEventKind.PusherDeparture: Sound(Sfx.PusherHorn, LocalFighterPosition()); break;
+                case HazardEventKind.IceTileWarning: Sound(Sfx.IceCrack, LocalFighterPosition()); break;
+                case HazardEventKind.CannonAim:
+                    foreach (var c in hazardList.OfType<Cannons>())
+                        if (e.Index < c.Count) Sound(Sfx.Cannon, c.Muzzle(e.Index));
+                    break;
+            }
+        }
+
+        private Vector3 LocalFighterPosition()
+        {
+            if (clientView != null)
+                return clientView.Views.TryGetValue((ushort)Unity.Netcode.NetworkManager.Singleton.LocalClientId, out var v) && v != null
+                    ? v.transform.position : Vector3.zero;
+            return fighters.Count > 0 ? fighters[0].Motor.transform.position : Vector3.zero;
+        }
+
+        // Host: dash starts (motor flag rising edge). Every peer: whoosh when an H07 box comes within 2 m of the own fruit.
+        private void UpdateSounds()
+        {
+            if (sfxPlayer == null) return;
+            foreach (var f in fighters)
+            {
+                if (f.Out) continue;
+                if (f.Motor.IsDashing && dashing.Add(f.Id)) Sound(Sfx.Dash, f.Motor.transform.position);
+                else if (!f.Motor.IsDashing) dashing.Remove(f.Id);
+            }
+            var me = LocalFighterPosition();
+            foreach (var ground in hazardList.OfType<MovingGround>())
+                foreach (var box in ground.Boxes)
+                {
+                    var near = Vector3.Distance(box.transform.position, me) <= audioWhoosh;
+                    if (near && nearBoxes.Add(box)) Sound(Sfx.ObstacleWhoosh, box.transform.position);
+                    else if (!near) nearBoxes.Remove(box);
+                }
+        }
+
+        private float audioWhoosh;
+
+        public void ConfigureFeedback(float hitStopSeconds, float whooshDistance)
+        {
+            setupHitStopSeconds = hitStopSeconds;
+            audioWhoosh = whooshDistance;
         }
 
         private void OnHazard(HazardEvent e)
@@ -285,6 +381,7 @@ namespace SquishyBump.App
             if (e.Kind == HazardEventKind.CannonAim && clientView?.Buffer.Newest is { GoTick: > 0 } go)
                 foreach (var c in hazardList.OfType<Cannons>())
                     c.ApplyAim(e.Index, e.Aim, (int)(e.HostTick - go.GoTick));
+            PlayHazardSound(e);
             if (e.Kind != HazardEventKind.RingDropWarning || ringDrop == null) return;
             // B07 on L1: one banner per ring drop, under the clock.
             if (overlay != null) overlay.ShowBanner($"Ring drop in {balance.RingDropWarningSeconds:0} s!", bannerSeconds);
@@ -304,6 +401,7 @@ namespace SquishyBump.App
                 bootstrap.Settings.Changed -= ApplySettings;
                 bootstrap.Clock.Ticked -= OnTick;
                 bootstrap.Events.HazardRaised -= OnHazard;
+                bootstrap.Events.MatchRaised -= OnMatchEvent;
                 bootstrap.Sync.InputReceived -= OnRemoteInput;
             }
             if (pausesGame) Time.timeScale = 1f;

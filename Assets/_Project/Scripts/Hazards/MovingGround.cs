@@ -22,7 +22,6 @@ namespace SquishyBump.Hazards
         [SerializeField] private Material ringMaterial;
         [SerializeField] private Material boxMaterial;
         [SerializeField] private Color arrowColor = Color.white;
-        [SerializeField] private Color arrowWarningColor = new(1f, 0.65f, 0f);
 
         private Rigidbody turntable;
         private Rigidbody ring;
@@ -60,6 +59,16 @@ namespace SquishyBump.Hazards
                 box.transform.localScale = new Vector3(size.x, size.y, size.z);
                 if (boxMaterial != null) box.GetComponent<Renderer>().sharedMaterial = boxMaterial;
                 boxes.Add(box.GetComponent<BoxCollider>());
+                // GDD 7.2 / 12.5: an amber stripe on both faces along the ring (the leading face flips at reversal).
+                foreach (var side in new[] { -1f, 1f })
+                {
+                    var stripe = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    DestroyImmediate(stripe.GetComponent<Collider>()); // visual only
+                    stripe.transform.SetParent(box.transform, false);
+                    stripe.transform.localPosition = new Vector3(side * 0.51f, 0.15f, 0f);
+                    stripe.transform.localScale = new Vector3(0.02f, 0.3f, 1.01f);
+                    stripe.GetComponent<Renderer>().material.color = TelegraphColors.Amber;
+                }
             }
 
             // Four arrows on the disc showing its turning direction.
@@ -134,7 +143,7 @@ namespace SquishyBump.Hazards
             turntable.MoveRotation(rotation * Quaternion.Euler(0f, TurntableAngle(t, hazards), 0f));
             ring.MoveRotation(rotation * Quaternion.Euler(0f, RingAngle(t, hazards), 0f));
             var warning = InReversalWarning(t, hazards);
-            foreach (var a in arrows) a.material.color = warning ? arrowWarningColor : arrowColor;
+            foreach (var a in arrows) a.material.color = warning ? TelegraphColors.Amber : arrowColor;
             // Arrows point along the current turning direction.
             var backwards = TurntableDegreesPerSecond(t, hazards) < 0f;
             for (var i = 0; i < arrowRoots.Count; i++)

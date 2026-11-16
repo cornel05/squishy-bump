@@ -38,6 +38,7 @@ namespace SquishyBump.App
 
         public IReadOnlyDictionary<ushort, GameObject> Views => views;
         public SnapshotBuffer Buffer => buffer;
+        public event Action<ushort, GameObject> ViewSpawned;
 
         /// <summary>Seconds since GO at the host time this client renders; false before GO.</summary>
         public bool TryPlayingSeconds(float now, out float seconds)
@@ -72,6 +73,7 @@ namespace SquishyBump.App
                     view.GetComponent<Rigidbody>().isKinematic = true;
                     foreach (var c in view.GetComponents<Collider>()) c.enabled = false;
                     views[f.Id] = view;
+                    ViewSpawned?.Invoke(f.Id, view);
                     if (f.Id == own && cameraRig != null) cameraRig.Follow(view.transform);
                 }
                 if (buffer.TrySample(f.Id, now, out var position, out _)) view.transform.position = position;

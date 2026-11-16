@@ -22,6 +22,8 @@ namespace SquishyBump.Presentation
         private float squashElapsed = float.PositiveInfinity;
 
         public Transform Body => body;
+        /// <summary>Visual jump detection, on every peer (for the jump sound).</summary>
+        public event System.Action<RollVisual> TookOff;
 
         private void Awake()
         {
@@ -58,6 +60,9 @@ namespace SquishyBump.Presentation
             // Landing: falling fast, then the fall stops within one frame.
             if (lastVerticalSpeed < -profile.LandingSpeed && velocity.y - lastVerticalSpeed > profile.LandingSpeed)
                 PlaySquash();
+            // Take-off: resting, then rising fast within one frame (a jump).
+            else if (lastVerticalSpeed > -profile.LandingSpeed && velocity.y - lastVerticalSpeed > profile.LandingSpeed)
+                TookOff?.Invoke(this);
             lastVerticalSpeed = velocity.y;
 
             var factor = SquashFactor(squashElapsed, profile.SquashScale, profile.SquashSeconds);
