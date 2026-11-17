@@ -12,6 +12,7 @@ packages.unity.com on 15/11/2026); boring and proven over new, because the deadl
 | Unity Transport | 2.6.0 | GDD 10.2 "Unity Transport 2.x": UDP, LAN port 7777, network simulator. Pinned to exactly the version NGO 2.13.3 depends on, so UPM does not pull a newer Transport than NGO was tested with |
 | Input System | 1.20.1 | GDD 10.2 / 3.4 rebindable actions. Template version, newest |
 | Cinemachine | 3.1.7 | GDD 10.2 "Cinemachine 3": follow, orbit, spectator, impulse |
+| glTFast (`com.unity.cloud.gltfast`) | 6.20.0 | Imports the A15 fruit prototypes (.glb, GDD 12.2, Appendix C). 6.21.0 skipped: released 11/11/2026, under two weeks old |
 | Multiplayer Play Mode | 2.0.2 | GDD 10.2: up to four players on one machine during development |
 | Multiplayer Tools | 2.2.12 | Network profiler / runtime stats for T14–T15 and the network simulator |
 | Unity Pipeline | 1.0.0 | Lets agents drive a live Editor (`unity recompile`, `unity command test run`, `unity command`) |
