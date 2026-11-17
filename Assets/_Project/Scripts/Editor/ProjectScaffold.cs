@@ -26,6 +26,7 @@ namespace SquishyBump.Editor
         const string DataRoot = "Assets/_Project/Data";
         const string FighterPrefabRoot = "Assets/_Project/Prefabs/Fighters";
         const string FruitMaterialRoot = "Assets/_Project/Art/Materials/Fruits";
+        const string FruitModelRoot = "Assets/_Project/Art/Fruits";
         const string PresentationProfilePath = DataRoot + "/Presentation/PresentationProfile.asset";
         const string HazardProfilePath = DataRoot + "/Hazards/HazardProfile.asset";
         const string TrainingRingFloorPrefab = "Assets/_Project/Prefabs/Hazards/TrainingRingFloor.prefab";
@@ -55,6 +56,7 @@ namespace SquishyBump.Editor
             EnsureDataAssets();
             EnsureFighterPrefabs();
             EnsureRollRigs();
+            EnsureFruitModels();
             EnsureTrainingRingFloor();
             EnsureMatchSetup();
             EnsureSfxClips();
@@ -158,6 +160,30 @@ namespace SquishyBump.Editor
                     var so = new SerializedObject(roll);
                     so.FindProperty("radius").floatValue = root.GetComponent<SphereCollider>().radius;
                     so.ApplyModifiedPropertiesWithoutUndo();
+                    PrefabUtility.SaveAsPrefabAsset(root, path);
+                }
+                PrefabUtility.UnloadPrefabContents(root);
+            }
+        }
+
+        // SB-11: the A15 .glb (tools/models/make_fruits.py) as Visual/Body/Model. Its body has radius 0.5 like the
+        // placeholder sphere, so Body's scale fits it to the class radius. The placeholder renderer stays, switched
+        // off, so the radius is still visible in the Scene view. Prefabs that already have a Model are skipped.
+        static void EnsureFruitModels()
+        {
+            foreach (var f in FruitNames)
+            {
+                var model = AssetDatabase.LoadAssetAtPath<GameObject>($"{FruitModelRoot}/{f}.glb");
+                if (model == null) continue;
+                var path = $"{FighterPrefabRoot}/{f}.prefab";
+                var root = PrefabUtility.LoadPrefabContents(path);
+                var body = root.transform.Find("Visual/Body");
+                if (body != null && body.Find("Model") == null)
+                {
+                    var instance = (GameObject)PrefabUtility.InstantiatePrefab(model, body);
+                    instance.name = "Model";
+                    foreach (var c in instance.GetComponentsInChildren<Collider>(true)) Object.DestroyImmediate(c);
+                    body.GetComponent<MeshRenderer>().enabled = false;
                     PrefabUtility.SaveAsPrefabAsset(root, path);
                 }
                 PrefabUtility.UnloadPrefabContents(root);
