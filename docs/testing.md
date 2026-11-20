@@ -99,6 +99,33 @@ the level, so the sample includes the opening countdown.
 - Use L5 Chaos Core with the prescribed roster and measure bot logic before updating T14.
   This L3 run measured frame time only. Some objects at the edge of the scene appeared magenta in the Windows player.
 
+## T15 Multiplayer Play Mode evidence (#45)
+
+21/11/2026 · Codex · Unity 6000.3.28f1, project v0.1.0, commit `4f0c0de`.
+Main Editor hosted L3 Cannon Court with one Multiplayer Play Mode clone on
+`127.0.0.1:7777`. The other four fighter slots were idle. The host's Multiplayer
+Tools Network Simulator applied 50 ms packet delay in each direction, zero
+configured jitter, and 2% packet loss. On the instrumented client run, Unity
+Transport reported 146 ms RTT despite the nominal 100 ms setting.
+
+- In the instrumented run, all six alternating A/D inputs moved the client's fruit.
+  From queuing input to 4.5 cm of visible horizontal displacement took **344–354 ms**.
+  The host logged 162 distinct movement commands. The client stayed joined and
+  displayed six fighters. The immediate-response criterion failed, consistent with
+  the absence of client-side prediction in D35.
+- A separate run moved the host fruit with all six inputs (99–110 ms by the same
+  displacement measure). In that run the client did not move within the 420 ms
+  observation windows. The probe did not yet confirm keyboard state or command
+  arrival on that run, so it cannot establish a gameplay freeze.
+- Host and client logs matched for all 71 captured cannon events. The first six
+  visible gust-cone onsets matched in direction and rounded rendered host tick.
+  By wall clock the client displayed them 148–161 ms after the host.
+
+The test used a temporary Unity Input System probe. Local evidence is in
+`TestResults/T15-host.txt`, `TestResults/T15-client.txt`, and the corresponding
+`-run1` and `-run2` logs in the test worktree. Physical LAN and a full six-human
+session remain unverified.
+
 ## Acceptance test record (GDD 14.3, T01–T20)
 
 Definitions: [`gdd/14-validation-rubric-map.md`](gdd/14-validation-rubric-map.md#143-priority-acceptance-tests)
@@ -120,7 +147,7 @@ and [`gdd/ids.md`](gdd/ids.md). Update a row whenever the test is run (date, bui
 | T12 | pass (PlayMode loopback) | 21/11/2026 | SB-20 recovery, base `39bfc7f` | Codex | Client L1 về MainMenu và hiện thông báo khi host đóng phiên. |
 | T13 | not run | | | | |
 | T14 | not run | | | | |
-| T15 | not run | | | | |
+| T15 | fail — delayed local response | 21/11/2026 | v0.1.0 / `4f0c0de` | Codex | MPP L3, nominal 100 ms RTT / 2% loss. Client moved on 6/6 instrumented inputs after 344–354 ms. Gust warning matched the rendered host tick and aim. See T15 evidence above. |
 | T16 | cut | 16/11/2026 | | Đình Duy | Out of A02 scope: D36 (#82). |
 | T17 | cut | 16/11/2026 | | Đình Duy | Out of A02 scope: D37 (#83). |
 | T18 | not run | | | | |
