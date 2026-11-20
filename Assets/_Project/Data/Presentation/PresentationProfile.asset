@@ -26,6 +26,8 @@ MonoBehaviour:
   squishPitch: {x: 0.9, y: 1.5}
   squishTopImpulse: 200
   whooshDistance: 2
+  perfMedianFps: 60
+  perfP95Milliseconds: 25
   sfx:
   - {fileID: 8300000, guid: 33f4015ab20853e4994446d26b300264, type: 3}
   - {fileID: 8300000, guid: 0af52f55047e5954886efd111741a6e3, type: 3}
