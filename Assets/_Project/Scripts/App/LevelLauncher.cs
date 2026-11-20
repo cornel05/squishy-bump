@@ -34,9 +34,15 @@ namespace SquishyBump.App
             bootstrap = owner;
             setup = matchSetup;
             SceneManager.sceneLoaded += OnSceneLoaded;
+            bootstrap.Session.StateChanged += OnSessionStateChanged;
         }
 
-        private void OnDestroy() => SceneManager.sceneLoaded -= OnSceneLoaded;
+        private void OnDestroy()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            if (bootstrap != null)
+                bootstrap.Session.StateChanged -= OnSessionStateChanged;
+        }
 
         public void StartSinglePlayer(int level = 1)
         {
@@ -70,17 +76,38 @@ namespace SquishyBump.App
 
         public void LeaveToMenu()
         {
+            bootstrap.Session.Leave();
+            LoadMenu();
+        }
+
+        private void LoadMenu()
+        {
             Time.timeScale = 1f;
             Cursor.lockState = CursorLockMode.None;
-            bootstrap.Session.Leave();
             SceneManager.LoadScene(setup.MainMenuScene, LoadSceneMode.Single);
+        }
+
+        private void OnSessionStateChanged(SessionState state)
+        {
+            if (state != SessionState.Idle || bootstrap.Session.LastEndReason == SessionEndReason.LocalLeave)
+                return;
+
+            var activePath = SceneManager.GetActiveScene().path;
+            if (setup.Levels.Any(level => level.ScenePath == activePath))
+                LoadMenu();
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if (scene.path == setup.MainMenuScene) BuildMenu(scene);
             var level = setup.Levels.FirstOrDefault(l => l.ScenePath == scene.path);
-            if (level != null) BuildMatch(scene, level);
+            if (level == null) return;
+
+            // A disconnect can finish before an in-flight network scene load reaches this callback.
+            if (bootstrap.Session.State == SessionState.Idle && bootstrap.Session.LastEndReason == SessionEndReason.HostLost)
+                LoadMenu();
+            else
+                BuildMatch(scene, level);
         }
 
         private void BuildMenu(Scene scene)
@@ -89,6 +116,8 @@ namespace SquishyBump.App
             SceneManager.MoveGameObjectToScene(go, scene);
             Menu = go.AddComponent<MainMenu>();
             Menu.Init(bootstrap.Session, bootstrap.Settings, $"v{Application.version}", setup.Levels);
+            if (bootstrap.Session.LastEndReason == SessionEndReason.HostLost)
+                Menu.ShowPage("Multiplayer");
             Menu.SinglePlayerRequested += StartSinglePlayer;
             Menu.HostRequested += () => HostLan();
             Menu.JoinRequested += address => Join(address);

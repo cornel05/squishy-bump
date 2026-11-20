@@ -30,6 +30,7 @@ namespace SquishyBump.Editor
             var level = AssetDatabase.LoadAssetAtPath<LevelDefinition>($"{Root}/Data/Levels/L1.asset");
 
             var net = new GameObject("App", typeof(NetworkManager), typeof(UnityTransport));
+            net.GetComponent<UnityTransport>().MaxConnectAttempts = 5;
             var bootstrap = net.AddComponent<GameplayBootstrap>();
 
             var floor = (GameObject)PrefabUtility.InstantiatePrefab(
