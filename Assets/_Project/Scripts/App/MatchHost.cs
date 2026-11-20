@@ -117,7 +117,8 @@ namespace SquishyBump.App
             hitStopping = true;
             Time.timeScale = 0f;
             yield return new WaitForSecondsRealtime(setupHitStopSeconds);
-            if (pause == null || !pause.IsOpen) Time.timeScale = 1f;
+            // Stay frozen only if the Esc menu really pauses (Single Player); a LAN menu never resumes time itself.
+            if (!pausesGame || pause == null || !pause.IsOpen) Time.timeScale = 1f;
             hitStopping = false;
         }
 
