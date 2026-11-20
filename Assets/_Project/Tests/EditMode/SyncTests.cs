@@ -9,6 +9,35 @@ namespace SquishyBump.Tests.EditMode
     /// <summary>SB-21: wire formats, host input validation and the 100 ms interpolation buffer (GDD 10.4).</summary>
     public sealed class SyncTests
     {
+        [TestCase(1, SessionEndReason.None)]
+        [TestCase(5, SessionEndReason.None)]
+        [TestCase(6, SessionEndReason.RoomFull)]
+        public void LanApproval_EnforcesSixTotalPlayers(int connected, SessionEndReason expected)
+        {
+            var payload = System.Text.Encoding.UTF8.GetBytes("build-1");
+            Assert.That(SquishyBump.Net.Session.StubSessionService.CheckJoin(payload, "build-1", connected, SessionMode.Lan),
+                Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void LanApproval_RejectsWrongVersionMalformedPayloadAndSinglePlayer()
+        {
+            var check = new System.Func<byte[], string, int, SessionMode, SessionEndReason>(
+                SquishyBump.Net.Session.StubSessionService.CheckJoin);
+            Assert.That(check(null, "build-1", 1, SessionMode.Lan), Is.EqualTo(SessionEndReason.VersionMismatch));
+            Assert.That(check(new byte[129], "build-1", 1, SessionMode.Lan), Is.EqualTo(SessionEndReason.VersionMismatch));
+            Assert.That(check(System.Text.Encoding.UTF8.GetBytes("build-2"), "build-1", 1, SessionMode.Lan),
+                Is.EqualTo(SessionEndReason.VersionMismatch));
+            Assert.That(check(System.Text.Encoding.UTF8.GetBytes("build-1"), "build-1", 1, SessionMode.SinglePlayer),
+                Is.EqualTo(SessionEndReason.RoomFull));
+        }
+
+        [TestCase("SB:VersionMismatch", SessionEndReason.VersionMismatch)]
+        [TestCase("SB:RoomFull", SessionEndReason.RoomFull)]
+        [TestCase("unknown", SessionEndReason.ConnectFailed)]
+        public void LanRejection_MapsHostReasonToStableCode(string text, SessionEndReason expected) =>
+            Assert.That(SquishyBump.Net.Session.StubSessionService.ReadRejection(text), Is.EqualTo(expected));
+
         static InputCommand Cmd(uint seq, float x = 0f) => new(seq, new Vector2(x, 0f), seq % 2 == 0, false, 90f);
 
         [Test]

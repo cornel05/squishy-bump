@@ -1,5 +1,18 @@
 # Testing
 
+## Lượt thử SB-20 ngày 20/11/2026
+
+Nhánh `feat/SB-20-lan-session`, base `b856485`: `python tools/check_repo.py` đạt;
+`git diff --check` đạt. Đã bổ sung ca kiểm tra policy approval 2–6 người, version/payload
+không hợp lệ, phòng đầy, Single Player và mã từ chối; PlayMode kiểm tra IPv4/port sai
+không mở transport. Các ca mới chưa chạy: `tools/verify.ps1 -PlayMode` ngoài sandbox
+thoát 198 ở cả hai lượt, `No valid Unity Editor license found`, không có XML kết quả.
+Chưa biên dịch, chưa kiểm tra LAN/loopback, chưa có build Windows mới. Không đổi T06/T11/T12
+hoặc đánh dấu issue đã đạt. Lỗi môi trường không được ghi như một test gameplay thất bại.
+
+Cập nhật 20/11/2026 (Đình Duy, license OK): gộp #87 + #88 + #89 trên `b856485`, `tools/verify.ps1 -PlayMode`
+→ VERIFY: PASS (compile 0 warning, EditMode 162/162, PlayMode 33/33); `check_repo` PASS. LAN/loopback vẫn chưa chạy.
+
 ## Lượt kiểm tra môi trường 20/11/2026 — SB-61
 
 Nhánh `feat/SB-61-credits-ai`, base `b856485`: `python tools/check_repo.py` đạt,

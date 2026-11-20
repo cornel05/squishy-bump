@@ -75,8 +75,11 @@ namespace SquishyBump.Tests.PlayMode
             yield return LoadBoot();
 
             Assert.That(app.Session.Join("not-an-ip", 7777), Is.False);
+            Assert.That(app.Session.LastEndReason, Is.EqualTo(SessionEndReason.InvalidAddress));
             Assert.That(app.Session.Join("127.0.0.1", 0), Is.False);
+            Assert.That(app.Session.Join("::1", 7777), Is.False, "LAN flow nhận IPv4 theo hướng dẫn demo");
             Assert.That(app.Session.State, Is.EqualTo(SessionState.Idle));
+            Assert.That(root.GetComponent<NetworkManager>().IsListening, Is.False);
         }
 
         [Test]

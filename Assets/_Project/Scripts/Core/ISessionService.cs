@@ -5,7 +5,7 @@ namespace SquishyBump.Core
 {
     public enum SessionMode { SinglePlayer, Lan }
     public enum SessionState { Idle, Hosting, Joining, Joined, Leaving }
-    public enum SessionEndReason { None, LocalLeave, ConnectFailed, HostLost }
+    public enum SessionEndReason { None, LocalLeave, ConnectFailed, HostLost, VersionMismatch, RoomFull, InvalidAddress, StartFailed }
 
     public interface ISessionService
     {
@@ -23,7 +23,7 @@ namespace SquishyBump.Core
 
         // Trả true khi thao tác được khởi động. StateChanged báo kết quả kết nối.
         bool Host(SessionMode mode);
-        bool Join(string address, ushort port);
+        bool Join(string address, ushort port = 7777);
         void Leave();
     }
 }

@@ -105,7 +105,7 @@ namespace SquishyBump.UI.Menus
         private void Update()
         {
             if (status == null || session == null) return;
-            status.text = StatusText(session.State, session.Peers.Count);
+            status.text = session.State == SessionState.Idle ? ErrorText(session.LastEndReason) : StatusText(session.State, session.Peers.Count);
             startMatch.gameObject.SetActive(session.State == SessionState.Hosting);
         }
 
@@ -114,6 +114,17 @@ namespace SquishyBump.UI.Menus
             SessionState.Hosting => $"Hosting on port 7777 · {peers} joined",
             SessionState.Joining => "Joining…",
             SessionState.Joined => "Joined · waiting for the host",
+            _ => "",
+        };
+
+        public static string ErrorText(SessionEndReason reason) => reason switch
+        {
+            SessionEndReason.VersionMismatch => "Sai phiên bản build. Hãy dùng cùng bản với host.",
+            SessionEndReason.RoomFull => "Phòng đã đủ 6 người hoặc không nhận kết nối.",
+            SessionEndReason.InvalidAddress => "Địa chỉ IPv4 hoặc port không hợp lệ.",
+            SessionEndReason.ConnectFailed => "Không tới được host. Kiểm tra IP và kết nối LAN.",
+            SessionEndReason.HostLost => "Host đã rời phòng hoặc mất kết nối.",
+            SessionEndReason.StartFailed => "Không thể mở kết nối. Hãy thử lại.",
             _ => "",
         };
 
