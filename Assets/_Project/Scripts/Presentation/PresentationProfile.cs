@@ -38,6 +38,12 @@ namespace SquishyBump.Presentation
         [Header("SFX (GDD 12.7), in Sfx enum order")]
         [SerializeField] private AudioClip[] sfx;
 
+        [Header("Frame performance targets (GDD 10.6)")]
+        [SerializeField] private float perfMedianFps;
+        [SerializeField] private float perfP95Milliseconds;
+
+        public float PerfMedianFps => perfMedianFps;
+        public float PerfP95Milliseconds => perfP95Milliseconds;
         public float HitStopSeconds => hitStopSeconds;
         public float StrongHitImpulse => strongHitImpulse;
         public Vector2 SquishPitch => squishPitch;

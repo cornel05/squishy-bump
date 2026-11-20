@@ -82,6 +82,23 @@ method `<Scenario>_<Expected>`, arrange/act/assert.
 | `FighterVisualTests` (18) | SB-11: each of the six fighter prefabs has its A15 .glb (`tools/models/make_fruits.py`, Blender 4.2) under `Visual/Body/Model`, the placeholder sphere hidden; the only collider is the root sphere at the class radius; the model body is 2r wide (oval fruits within 15%) |
 | `HitStopTests` (1) | SB-21 LAN bug: a hit-stop that lands while the host's Esc menu is open (LAN, does not pause) gives time back; before the fix the host stayed at `timeScale` 0 and both windows froze when two fruits touched. Seen failing (`Expected 1, But was 0`) before the fix |
 
+## L3 frame-time baseline for SB-52 (#43)
+
+21/11/2026 · Codex · Windows x64 v0.1.0, commit `2bf7cc3` · Intel Core i7-12700H,
+RTX 4050 Laptop GPU, PC quality, 1920 × 1080. The build script succeeded. Ran
+`SquishyBump.exe -perf 30 -screen-width 1920 -screen-height 1080 -screen-fullscreen 0`
+and selected **Single Player → L3 Cannon Court**. The recorder starts on entering
+the level, so the sample includes the opening countdown.
+
+- 30.0003 s, 23,313 frames, zero overwritten. Median **869.79 FPS**, p95 **1.803 ms**.
+  Both metrics were recomputed independently from the CSV and matched the summary.
+- Capture files: `Application.persistentDataPath/perf/20261120T175926004Z-L3-2cf6265a5ca34ceb8afc2903b6832a78.{csv,txt}`.
+  The file timestamp is UTC.
+- `tools/verify.ps1 -PlayMode`: 165 EditMode and 36 PlayMode tests, zero compile
+  warnings. `FrameStatsTests` covers median and p95, ring wrap, and GDD thresholds.
+- Use L5 Chaos Core with the prescribed roster and measure bot logic before updating T14.
+  This L3 run measured frame time only. Some objects at the edge of the scene appeared magenta in the Windows player.
+
 ## Acceptance test record (GDD 14.3, T01–T20)
 
 Definitions: [`gdd/14-validation-rubric-map.md`](gdd/14-validation-rubric-map.md#143-priority-acceptance-tests)

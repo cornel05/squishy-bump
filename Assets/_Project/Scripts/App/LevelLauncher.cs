@@ -22,6 +22,7 @@ namespace SquishyBump.App
         private GameplayBootstrap bootstrap;
         private MatchSetup setup;
         private bool singlePlayer;
+        private double perfSeconds;
 
         public MainMenu Menu { get; private set; }
         public MatchHost Match { get; private set; }
@@ -33,6 +34,7 @@ namespace SquishyBump.App
         {
             bootstrap = owner;
             setup = matchSetup;
+            perfSeconds = FrameStatsRecorder.ReadDuration(System.Environment.GetCommandLineArgs());
             SceneManager.sceneLoaded += OnSceneLoaded;
             bootstrap.Session.StateChanged += OnSessionStateChanged;
         }
@@ -160,6 +162,8 @@ namespace SquishyBump.App
             Overlay.Init();
             Match.AttachOverlay(Overlay, setup.CardSeconds, setup.BannerSeconds, setup.FinalWarningSeconds);
             Overlay.ShowCard(level.ArenaName, setup.CardLine(level.LevelNumber), setup.CardSeconds);
+            if (perfSeconds > 0d)
+                hostObject.AddComponent<FrameStatsRecorder>().Configure(setup.Presentation, perfSeconds);
             hostObject.SetActive(true);
             // Host starts on its first frame (after Start); clients only show snapshots.
             Match.StartWhenReady = bootstrap.Session.CanSimulateGameplay;
