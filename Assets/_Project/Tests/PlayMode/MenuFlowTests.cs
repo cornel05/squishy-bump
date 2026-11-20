@@ -6,6 +6,7 @@ using SquishyBump.App;
 using SquishyBump.Match;
 using SquishyBump.Presentation;
 using SquishyBump.UI.Menus;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
@@ -18,11 +19,14 @@ namespace SquishyBump.Tests.PlayMode
     {
         const string Root = "Assets/_Project";
         GameplayBootstrap app;
+        GameplayBootstrap host;
 
         [UnityTearDown]
         public IEnumerator CleanUp()
         {
             Time.timeScale = 1f;
+            if (host != null)
+                Object.Destroy(host.gameObject);
             if (app != null)
             {
                 app.Session.Leave();
@@ -95,6 +99,40 @@ namespace SquishyBump.Tests.PlayMode
             Assert.That(SceneManager.GetActiveScene().path, Does.EndWith("MainMenu.unity"));
             yield return WaitFor(() => app.Session.State == CoreSession.Idle, 3f);
             Assert.That(app.Session.State, Is.EqualTo(CoreSession.Idle));
+        }
+
+        [UnityTest]
+        public IEnumerator LanHostLeaves_ClientInLevelReturnsToMenuWithHostLostMessage()
+        {
+            yield return SceneManager.LoadSceneAsync($"{Root}/Scenes/Boot.unity", LoadSceneMode.Single);
+            app = Object.FindObjectsByType<GameplayBootstrap>(FindObjectsSortMode.None).First(b => b.Launcher != null);
+            app.Store = null;
+            host = new GameObject("Test LAN host").AddComponent<GameplayBootstrap>();
+            // The loopback peers share Unity's scene list in this process.
+            foreach (var peer in new[] { app, host })
+            {
+                var config = peer.GetComponent<NetworkManager>().NetworkConfig;
+                config.EnableSceneManagement = false;
+                config.ForceSamePrefabs = false;
+            }
+            Assert.That(host.Session.Host(Core.SessionMode.Lan), Is.True);
+            Assert.That(app.Launcher.Join("127.0.0.1"), Is.True);
+            yield return WaitFor(() => app.Session.State == CoreSession.Joined, 7f);
+            Assert.That(app.Session.State, Is.EqualTo(CoreSession.Joined));
+
+            app.Launcher.LoadLevel(1);
+            yield return WaitFor(() => app.Launcher.Match != null);
+            Assert.That(SceneManager.GetActiveScene().path, Does.EndWith("/L1.unity"));
+
+            host.Session.Leave();
+            yield return WaitFor(() => app.Launcher.Menu != null, 3f);
+            Assert.That(app.Session.State, Is.EqualTo(CoreSession.Idle));
+            Assert.That(app.Session.LastEndReason, Is.EqualTo(Core.SessionEndReason.HostLost));
+            Assert.That(SceneManager.GetActiveScene().path, Does.EndWith("/MainMenu.unity"));
+            Assert.That(app.Launcher.Menu.CurrentPage, Is.EqualTo("Multiplayer"));
+            yield return null;
+            Assert.That(app.Launcher.Menu.GetComponentsInChildren<UnityEngine.UI.Text>().Select(label => label.text),
+                Does.Contain(MainMenu.ErrorText(Core.SessionEndReason.HostLost)));
         }
 
         [UnityTest]

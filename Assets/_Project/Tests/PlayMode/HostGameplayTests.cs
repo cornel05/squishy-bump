@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 using NUnit.Framework;
 using SquishyBump.App;
 using SquishyBump.Core;
@@ -80,6 +82,25 @@ namespace SquishyBump.Tests.PlayMode
             Assert.That(app.Session.Join("::1", 7777), Is.False, "LAN flow nhận IPv4 theo hướng dẫn demo");
             Assert.That(app.Session.State, Is.EqualTo(SessionState.Idle));
             Assert.That(root.GetComponent<NetworkManager>().IsListening, Is.False);
+        }
+
+        [UnityTest]
+        public IEnumerator Join_UnresponsiveHost_ReturnsConnectFailedWithinSevenSeconds()
+        {
+            yield return LoadBoot();
+            // Keep the port reserved without replying so the transport must time out.
+            using var sink = new UdpClient(new IPEndPoint(IPAddress.Loopback, 0));
+            var endpoint = (IPEndPoint)sink.Client.LocalEndPoint;
+            LogAssert.Expect(LogType.Error, "Failed to connect to server.");
+            Assert.That(app.Session.Join(endpoint.Address.ToString(), (ushort)endpoint.Port), Is.True);
+            Assert.That(app.Session.State, Is.EqualTo(SessionState.Joining));
+
+            var deadline = Time.realtimeSinceStartup + 7f;
+            while (app.Session.State == SessionState.Joining && Time.realtimeSinceStartup < deadline)
+                yield return null;
+
+            Assert.That(app.Session.State, Is.EqualTo(SessionState.Idle));
+            Assert.That(app.Session.LastEndReason, Is.EqualTo(SessionEndReason.ConnectFailed));
         }
 
         [Test]

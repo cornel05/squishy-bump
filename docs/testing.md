@@ -1,5 +1,20 @@
 # Testing
 
+## Lượt thử SB-20 ngày 21/11/2026 — phục hồi phiên LAN
+
+Nhánh `feat/SB-20-lan-session-recovery`, base `39bfc7f`: `tools/verify.ps1 -PlayMode`
+→ VERIFY: PASS (0 warning, EditMode 162/162, PlayMode 36/36), `python tools/check_repo.py` → PASS.
+
+- `Join_UnresponsiveHost_ReturnsConnectFailedWithinSevenSeconds`: cổng UDP loopback không phản hồi,
+  client về Idle với `ConnectFailed`; ca thử hoàn tất trong 5,19 s.
+- `LanHostLeaves_ClientInLevelReturnsToMenuWithHostLostMessage`: hai peer NGO qua
+  `127.0.0.1:7777`. Khi host đóng phiên, client đang ở L1 về MainMenu và hiện thông báo
+  `HostLost` trên trang Multiplayer. Ca thử nạp L1 cục bộ vì hai peer cùng chạy trong
+  một tiến trình Unity.
+
+Chưa chạy trên hai máy vật lý hoặc thử mất kết nối đột ngột. Timeout khi không nhận
+gói tin của phiên đã kết nối vẫn là 30 s.
+
 ## Lượt thử SB-20 ngày 20/11/2026
 
 Nhánh `feat/SB-20-lan-session`, base `b856485`: `python tools/check_repo.py` đạt;
@@ -85,7 +100,7 @@ and [`gdd/ids.md`](gdd/ids.md). Update a row whenever the test is run (date, bui
 | T09 | not run | | | | |
 | T10 | not run | | | | |
 | T11 | not run | | | | |
-| T12 | not run | | | | |
+| T12 | pass (PlayMode loopback) | 21/11/2026 | SB-20 recovery, base `39bfc7f` | Codex | Client L1 về MainMenu và hiện thông báo khi host đóng phiên. |
 | T13 | not run | | | | |
 | T14 | not run | | | | |
 | T15 | not run | | | | |
