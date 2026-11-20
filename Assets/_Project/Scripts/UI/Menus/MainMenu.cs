@@ -75,8 +75,11 @@ namespace SquishyBump.UI.Menus
 
             credits = UiFactory.Page(canvas, "Credits");
             UiFactory.Label(credits, "Credits", 44);
-            UiFactory.Label(credits, "BKU Group 18\nĐình Duy · Minh Nhật\nUnity 6 · Netcode for GameObjects", 28)
-                .GetComponent<LayoutElement>().minHeight = 200;
+            UiFactory.Label(credits,
+                "BKU Group 18\nĐình Duy · Minh Nhật\nUnity 6 · URP · Netcode · glTFast\n" +
+                "Font: Unity LegacyRuntime\n6 model: Blender / script nhóm\n12 SFX: Python / script nhóm\n" +
+                "Nhạc: chưa có\nAI hỗ trợ code và asset: Claude / Codex\nChi tiết nguồn: CREDITS.md", 24)
+                .GetComponent<LayoutElement>().minHeight = 400;
             UiFactory.Button(credits, "Back", () => Show(main));
 
             Show(main);
