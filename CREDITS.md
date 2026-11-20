@@ -1,0 +1,62 @@
+# Credits và khai báo AI
+
+Kiểm kê ngày 20/11/2026 trên main `b856485`, phục vụ SB-61 #48, GDD 15.2 và Phụ lục C.
+Đây là hồ sơ nguồn của checkout, chưa xác nhận nội dung của một build phát hành.
+
+## Nhóm thực hiện
+
+BKU Group 18: Đình Duy (`cornel05`) và Minh Nhật (`ZteHahah`).
+Phân công hiện hành nằm trong `AGENTS.md`; tác giả và các lượt sửa được truy vết bằng Git history.
+
+## Asset đang dùng trong project
+
+| Nhóm | Nguồn, công cụ và sử dụng | Khai báo |
+| --- | --- | --- |
+| Sáu quả `.glb` | `tools/models/make_fruits.py`, Blender 4.2 LTS; commit `b856485`, PR #86; prefab fighter tại `Assets/_Project/Prefabs/Fighters/` | Mô hình procedural có Claude hỗ trợ viết script. Không phải ảnh text-to-image và không nhập model bên ngoài. Seed Blueberry 18, các quả khác dùng mặc định 0; không có bản lưu prompt nguyên văn trong repo. |
+| 12 SFX `.wav` | `tools/audio/make_sfx.py`, Python stdlib; commit `3d22d10`, PR #78; `AudioDirector` / `PresentationProfile` | Tổng hợp bằng code có Claude hỗ trợ, seed 18, 44.1 kHz mono PCM 16-bit. Placeholder, không lấy sample âm thanh ngoài. |
+| L1 và vật liệu greybox | Mesh/material dưới `Data/TrainingRing/`, `ProjectScaffold` và dữ liệu mesh đã commit (script tạo mesh ban đầu không có trong checkout); Phụ lục C đã ghi nguồn SB-14 | C# và Unity 6000.3.28f1 với Codex hỗ trợ. Không dùng seed ngẫu nhiên hay model tạo ảnh. |
+| L2/L3 và hình hazard | `LevelSceneBuilder`, `MovingGround`, `PusherBlocks`, `Cannons`, `AnnulusMesh`, `RingDrop` | Primitive, mesh và màu tạo bằng C#/Unity với AI hỗ trợ code. Không có texture, model hoặc sample tải ngoài trong nhóm này. |
+| Giao diện | `UI/Menus/UiFactory.cs` tạo panel và chữ bằng uGUI | Font thực tế là `Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf")` từ Unity. Không có tệp Baloo 2/Fredoka trong Assets tại mốc kiểm kê. |
+| Nhạc | Không tìm thấy clip nhạc trong `Assets/` | Chưa nhập nhạc. Không gán tác giả/giấy phép cho nội dung chưa có. |
+
+Danh sách từng tệp, hash SHA-256, nguồn, vị trí dùng và giới hạn thông tin nằm tại
+[`docs/asset-ledger.csv`](docs/asset-ledger.csv). Các tài sản do nhóm tạo không tự động được
+cấp một giấy phép nguồn mở; repo chưa có LICENSE chung. Thành phần Unity, shader URP,
+font tích hợp và package vẫn theo giấy phép tương ứng của nhà cung cấp.
+
+## Thành phần bên ngoài
+
+Unity Editor 6000.3.28f1, URP 17.3.0, uGUI 2.0.0 (font tích hợp), Input System 1.20.1,
+Cinemachine 3.1.7, Netcode for GameObjects 2.13.3, Unity Transport 2.6.0,
+glTFast 6.20.0 và các package phát triển/kiểm thử được khóa trong `Packages/manifest.json`
+và `Packages/packages-lock.json`. Không coi chúng là tài sản của nhóm.
+Các thông báo LICENSE/Third Party Notices đi kèm package cần được giữ khi đóng gói;
+chưa kiểm tra bản build cuối nên chưa xác nhận các notice đã được phát hành đầy đủ.
+
+Blender và Python là công cụ tạo asset, không phải model hay thư viện âm thanh được nhập vào game.
+Không áp giấy phép phần mềm Blender cho model đầu ra chỉ vì model được xuất từ Blender.
+
+## Hình minh họa GDD
+
+Phụ lục C.1 giữ danh mục A01–A15 và F1–F4 của bộ tài liệu thiết kế. A01 và A05 L1 được
+GDD khai báo là ảnh Blender tinh chỉnh bằng FLUX.1 Kontext [dev], seed lần lượt 7001 và 7005;
+GDD ghi giới hạn phi thương mại. Baloo 2/Fredoka được GDD ghi SIL OFL 1.1.
+Đây là thông tin từ GDD; checkout hiện tại không chứa bộ nguồn `_src/`, prompt đầy đủ,
+file license của bộ ảnh hay hai font nên chưa xác minh lại độc lập các hồ sơ đó.
+Các ảnh thiết kế không phải ảnh chụp game hay bằng chứng nghiệm thu.
+
+## AI trong code và tài liệu
+
+Claude Code hỗ trợ Đình Duy, Codex hỗ trợ Minh Nhật trong thiết kế, C#, Editor tooling,
+test, script sinh model/SFX và tài liệu. Phạm vi truy vết bằng commit, issue và PR;
+không có log prompt/model-version đầy đủ cho mọi lượt sinh code nên không tự điền phiên bản hay seed.
+Hai thành viên chịu trách nhiệm đọc, kiểm thử và giải thích phần mình nộp.
+Khai báo dùng AI không đồng nghĩa mỗi dòng đã được người thật review hoặc mọi tính năng đã đạt test.
+
+## Việc còn phải đối chiếu trước khi nộp build
+
+- Đối chiếu lại CSV với commit được build sau khi các PR asset mới merge; giữ lịch sử khi thay asset.
+- Kiểm tra Credits trong game và các notice thực sự có trong thư mục build.
+- Nếu đưa hình/font từ bộ GDD vào runtime, bổ sung tệp nguồn, license và prompt gốc khi nguồn cung cấp.
+- Chạy compile/PlayMode và build Windows sau khi khôi phục license Unity; lượt ngày 20/11 thoát 198,
+  `No valid Unity Editor license found`, chưa có kết quả kiểm thử mới.

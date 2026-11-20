@@ -1,5 +1,16 @@
 # Testing
 
+## Lượt kiểm tra môi trường 20/11/2026 — SB-61
+
+Nhánh `feat/SB-61-credits-ai`, base `b856485`: `python tools/check_repo.py` đạt,
+CSV nguồn asset có 48 bản ghi (43 tệp có hash SHA-256 khớp và 5 nhóm runtime/tích hợp),
+không trùng ID/đường dẫn và không có trường trống. Đây là kiểm tra hồ sơ nguồn.
+`tools/verify.ps1` với `UNITY_EDITOR=D:\Tool\Unity\6000.3.28f1\Editor\Unity.exe`
+chạy ngoài sandbox nhưng thoát 198: `No valid Unity Editor license found`.
+Không có `EditMode.xml`, chưa chạy compile/test; dòng `Compile: OK (0 warnings)` của script
+không phải bằng chứng biên dịch trong lượt này. Chưa chạy PlayMode Credits hoặc build Windows.
+Không đổi trạng thái T01–T20 vì lượt kiểm tra bị chặn trước khi thực thi test.
+
 ## Commands
 
 | What | Command | Output |

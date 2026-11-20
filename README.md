@@ -70,6 +70,9 @@ with one virtual player, then *Host LAN* in one window and *Join* `127.0.0.1` in
 - Saves: `%USERPROFILE%\AppData\LocalLow\BKU Group 18\Squishy Bump\save.json` (settings, bindings, last fruit, records).
 
 ## Documentation
+- Credits, nguồn asset và khai báo AI: [`CREDITS.md`](CREDITS.md), [`docs/asset-ledger.csv`](docs/asset-ledger.csv).
+  Claude Code và Codex đã hỗ trợ viết code, test, công cụ tạo asset và tài liệu; phạm vi cụ thể truy vết
+  bằng Git history/issue/PR. Các thành viên chịu trách nhiệm kiểm thử và giải thích phần mình nộp.
 - [`AGENTS.md`](AGENTS.md): rules for AI agents and the dev workflow · [`CONTRIBUTING.md`](CONTRIBUTING.md)
 - [`docs/gdd/`](docs/gdd/README.md): Game Design Document v1.3 ([ID index](docs/gdd/ids.md))
 - [`docs/architecture.md`](docs/architecture.md) · [`docs/tech-stack.md`](docs/tech-stack.md) · [`docs/plan.md`](docs/plan.md)
