@@ -10,6 +10,20 @@ thoát 198 ở cả hai lượt, `No valid Unity Editor license found`, không c
 Chưa biên dịch, chưa kiểm tra LAN/loopback, chưa có build Windows mới. Không đổi T06/T11/T12
 hoặc đánh dấu issue đã đạt. Lỗi môi trường không được ghi như một test gameplay thất bại.
 
+Cập nhật 20/11/2026 (Đình Duy, license OK): gộp #87 + #88 + #89 trên `b856485`, `tools/verify.ps1 -PlayMode`
+→ VERIFY: PASS (compile 0 warning, EditMode 162/162, PlayMode 33/33); `check_repo` PASS. LAN/loopback vẫn chưa chạy.
+
+## Lượt kiểm tra môi trường 20/11/2026 — SB-61
+
+Nhánh `feat/SB-61-credits-ai`, base `b856485`: `python tools/check_repo.py` đạt,
+CSV nguồn asset có 48 bản ghi (43 tệp có hash SHA-256 khớp và 5 nhóm runtime/tích hợp),
+không trùng ID/đường dẫn và không có trường trống. Đây là kiểm tra hồ sơ nguồn.
+`tools/verify.ps1` với `UNITY_EDITOR=D:\Tool\Unity\6000.3.28f1\Editor\Unity.exe`
+chạy ngoài sandbox nhưng thoát 198: `No valid Unity Editor license found`.
+Không có `EditMode.xml`, chưa chạy compile/test; dòng `Compile: OK (0 warnings)` của script
+không phải bằng chứng biên dịch trong lượt này. Chưa chạy PlayMode Credits hoặc build Windows.
+Không đổi trạng thái T01–T20 vì lượt kiểm tra bị chặn trước khi thực thi test.
+
 ## Commands
 
 | What | Command | Output |
