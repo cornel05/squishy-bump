@@ -3,11 +3,9 @@
 A 3D party brawler for up to six squishy fruit fighters: bump each other off living arenas, on one PC
 against bots or with friends over LAN. Course project of BKU Group 18 (Đình Duy, Minh Nhật).
 
-> Skeleton of the A02 README (GDD 14.5). Sections marked *TBD* are filled during M1–M5.
-
 ## Requirements
 - Windows 10/11 x64, keyboard and mouse.
-- To play: nothing else (the build is self-contained). *Download link: TBD (SB-60).*
+- To play: extract the entire Windows build archive to one folder and run `SquishyBump.exe`. #47 tracks the release archive and clean-PC check.
 - To develop:
   - **Unity 6000.3.28f1** (Unity 6.3 LTS, pinned in `ProjectSettings/ProjectVersion.txt`), with Unity Hub or the Unity CLI
     (`winget install Unity.CLI`, then `unity install 6000.3.28f1`). A Unity Personal licence must be active.
@@ -38,7 +36,8 @@ Close the Editor, then:
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/build-windows.ps1
 ```
-Output: `Builds/Windows/SquishyBump.exe`.
+Output: `Builds/Windows/SquishyBump.exe`. Keep the whole `Builds/Windows/` folder together when copying or sharing it.
+On the target PC, run the executable and choose **Single Player** → **L3 Cannon Court** to smoke-test a match.
 
 ## LAN quick-start
 1. Host: main menu → **Multiplayer** → pick the rule → **Host game**. Share your LAN IP (`ipconfig`, IPv4 address).
@@ -62,7 +61,8 @@ with one virtual player, then *Host LAN* in one window and *Join* `127.0.0.1` in
 | Esc | Menu (pauses only in single-player) |
 
 ## Known limits
-- No client-side prediction yet (SB-22): a joined player's own fruit is shown 100 ms behind the host, like the others.
+- LAN only for A02 (D36). Use the host's LAN IP. Unity Relay and Internet join codes were cut from this release.
+- Joined players see their own fruit through the 100 ms snapshot interpolation buffer (D35).
 - Bump, dash and ring-out sounds and the hit-stop play on the host only; clients get the hazard and jump sounds.
 - Only levels with arena bounds start a match from the launcher (L1–L3 now); L4/L5 follow with their scenes.
 - Menus and banners are English only (no localisation yet); key rebinding is not in the menu (bindings are saved).
