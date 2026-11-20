@@ -86,6 +86,21 @@ sẽ nối vào các hợp đồng này trong các issue tiếp theo.
 
 ## Scenes
 
+### Phiên LAN và kiểm tra build (SB-20)
+
+`StubSessionService` giữ tên để tương thích SB-06, thực hiện Host/Join bằng NGO và
+UnityTransport. LAN mặc định UDP 7777, tối đa 6 người gồm host; Single Player nghe loopback
+và từ chối client từ xa. Client gửi payload UTF-8 `SquishyBump-LAN-1:<Application.version>`.
+Host kiểm tra độ dài tối đa 128 byte và so khớp chính xác trước khi cấp slot; chưa có xác thực
+tài khoản hoặc Relay. Khi thay wire format phải đổi revision Protocol trên tất cả peer.
+
+Host trả mã từ chối `SB:VersionMismatch` hoặc `SB:RoomFull` qua approval response của NGO.
+Client đọc `DisconnectReason` trong disconnect callback, giữ nguyên mã đến khi về Idle;
+UI đọc các lý do Core để báo sai build/phòng đầy/host không tới được/host rời.
+`InvalidAddress` báo ngay khi IPv4/port không hợp lệ; `StartFailed` khi NGO không mở được kết nối.
+Hợp đồng `ISessionService` chỉ thêm giá trị enum và port mặc định, không thêm quyền mô phỏng cho client.
+Chưa xác nhận LAN nhiều PC hoặc các test mới cho tới khi Unity compile/PlayMode và build chạy được.
+
 ### L1 Training Ring (SB-14)
 
 Scene L1 có bốn collider độc lập, mỗi collider ứng với một dải sàn rộng 3 m.

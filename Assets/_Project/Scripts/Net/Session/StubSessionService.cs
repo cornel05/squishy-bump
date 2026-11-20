@@ -1,25 +1,34 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 using SquishyBump.Core;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using UnityEngine;
 
 namespace SquishyBump.Net.Session
 {
+    /// <summary>Phiên LAN NGO; giữ tên stub để tương thích composition root đã có từ SB-06.</summary>
     public sealed class StubSessionService : ISessionService, IDisposable
     {
         private const string Loopback = "127.0.0.1";
         private const ushort LanPort = 7777;
+        public const int MaxPlayers = 6;
+        // Phiên bản hợp đồng mạng, độc lập Application.version; đổi khi wire format thay đổi.
+        public const string Protocol = "SquishyBump-LAN-1";
         private readonly NetworkManager manager;
         private readonly UnityTransport transport;
         private readonly List<ulong> peers = new();
         private SessionMode hostMode;
+        private readonly string buildVersion;
+        private SessionEndReason pendingEndReason;
 
-        public StubSessionService(NetworkManager manager, UnityTransport transport)
+        public StubSessionService(NetworkManager manager, UnityTransport transport, string version = null)
         {
             this.manager = manager;
             this.transport = transport;
+            buildVersion = $"{Protocol}:{version ?? Application.version}";
             manager.ConnectionApprovalCallback = ApproveConnection;
             manager.OnClientConnectedCallback += OnClientConnected;
             manager.OnClientDisconnectCallback += OnClientDisconnected;
@@ -42,31 +51,47 @@ namespace SquishyBump.Net.Session
 
             hostMode = mode;
             manager.NetworkConfig.ConnectionApproval = true;
+            manager.NetworkConfig.ConnectionData = Encoding.UTF8.GetBytes(buildVersion);
+            pendingEndReason = SessionEndReason.None;
             if (mode == SessionMode.SinglePlayer)
                 transport.SetConnectionData(Loopback, 0, Loopback);
             else
                 transport.SetConnectionData(Loopback, LanPort, "0.0.0.0");
 
             if (!manager.StartHost())
+            {
+                LastEndReason = SessionEndReason.StartFailed;
                 return false;
+            }
 
             LastEndReason = SessionEndReason.None;
             SetState(SessionState.Hosting);
             return true;
         }
 
-        public bool Join(string address, ushort port)
+        public bool Join(string address, ushort port = LanPort)
         {
-            if (State != SessionState.Idle || manager.IsListening || port == 0 ||
-                !IPAddress.TryParse(address, out var ip))
+            if (State != SessionState.Idle || manager.IsListening)
                 return false;
+            if (port == 0 || !IPAddress.TryParse(address?.Trim(), out var ip) ||
+                ip.AddressFamily != System.Net.Sockets.AddressFamily.InterNetwork)
+            {
+                LastEndReason = SessionEndReason.InvalidAddress;
+                return false;
+            }
 
             transport.SetConnectionData(ip.ToString(), port);
-            if (!manager.StartClient())
-                return false;
-
+            manager.NetworkConfig.ConnectionApproval = true;
+            manager.NetworkConfig.ConnectionData = Encoding.UTF8.GetBytes(buildVersion);
+            pendingEndReason = SessionEndReason.None;
             LastEndReason = SessionEndReason.None;
             SetState(SessionState.Joining);
+            if (!manager.StartClient())
+            {
+                LastEndReason = SessionEndReason.StartFailed;
+                SetState(SessionState.Idle);
+                return false;
+            }
             return true;
         }
 
@@ -95,10 +120,30 @@ namespace SquishyBump.Net.Session
         private void ApproveConnection(NetworkManager.ConnectionApprovalRequest request,
             NetworkManager.ConnectionApprovalResponse response)
         {
-            response.Approved = request.ClientNetworkId == NetworkManager.ServerClientId ||
-                (hostMode == SessionMode.Lan && manager.ConnectedClientsIds.Count < 6);
+            var reason = request.ClientNetworkId == NetworkManager.ServerClientId ? SessionEndReason.None :
+                CheckJoin(request.Payload, buildVersion, manager.ConnectedClientsIds.Count, hostMode);
+            response.Approved = reason == SessionEndReason.None;
             response.CreatePlayerObject = false;
+            response.Pending = false;
+            response.Reason = reason == SessionEndReason.None ? "" : $"SB:{reason}";
         }
+
+        /// <summary>Host kiểm tra payload có giới hạn trước khi cấp slot; không nhận gameplay state từ client.</summary>
+        public static SessionEndReason CheckJoin(byte[] payload, string expectedVersion, int connected, SessionMode mode)
+        {
+            if (payload == null || payload.Length == 0 || payload.Length > 128 ||
+                !string.Equals(Encoding.UTF8.GetString(payload), expectedVersion, StringComparison.Ordinal))
+                return SessionEndReason.VersionMismatch;
+            if (mode != SessionMode.Lan || connected >= MaxPlayers) return SessionEndReason.RoomFull;
+            return SessionEndReason.None;
+        }
+
+        public static SessionEndReason ReadRejection(string reason) => reason switch
+        {
+            "SB:VersionMismatch" => SessionEndReason.VersionMismatch,
+            "SB:RoomFull" => SessionEndReason.RoomFull,
+            _ => SessionEndReason.ConnectFailed,
+        };
 
         private void OnClientConnected(ulong clientId)
         {
@@ -113,6 +158,7 @@ namespace SquishyBump.Net.Session
 
         private void OnClientDisconnected(ulong clientId)
         {
+            if (State == SessionState.Joining) pendingEndReason = ReadRejection(manager.DisconnectReason);
             if (peers.Remove(clientId))
                 PeerLeft?.Invoke(clientId);
         }
@@ -123,7 +169,7 @@ namespace SquishyBump.Net.Session
             LastEndReason = State switch
             {
                 SessionState.Leaving => SessionEndReason.LocalLeave,
-                SessionState.Joining => SessionEndReason.ConnectFailed,
+                SessionState.Joining => pendingEndReason == SessionEndReason.None ? SessionEndReason.ConnectFailed : pendingEndReason,
                 _ => SessionEndReason.HostLost,
             };
             peers.Clear();
