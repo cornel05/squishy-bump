@@ -65,6 +65,7 @@ method `<Scenario>_<Expected>`, arrange/act/assert.
 | `AudioFeedbackTests` (3), `MenuFlowTests` (audio assert) | SB-49: twelve GDD 12.7 placeholders exist as 44.1 kHz mono WAVs and are wired in Sfx order; cannon charge ≥ 1.0 s, ring creak ≥ 3 s; hit-stop 40 ms, squish pitch rises with impulse and caps; light hit → bump, strong hit → squish with pitch > 1 on L2/L3; amber #FFB703 / red #E63946 | 16/11/2026 · Đình Duy · `tools/verify.ps1 -PlayMode`: 132/132 EditMode, 33/33 PlayMode pass, 0 errors, 0 warnings. |
 | `LocalSaveTests` (5) | SB-51: save → load keeps settings, binding overrides, last fruit, best Survival level and best Rank score; replacing a save leaves no temp file; records only improve; missing file → defaults; corrupt file kept as `.bad` with defaults; the JSON holds no match state | 16/11/2026 · Đình Duy · `tools/verify.ps1 -PlayMode`: 137/137 EditMode, 33/33 PlayMode pass, 0 errors, 0 warnings. |
 | `FighterVisualTests` (18) | SB-11: each of the six fighter prefabs has its A15 .glb (`tools/models/make_fruits.py`, Blender 4.2) under `Visual/Body/Model`, the placeholder sphere hidden; the only collider is the root sphere at the class radius; the model body is 2r wide (oval fruits within 15%) |
+| `HitStopTests` (1) | SB-21 LAN bug: a hit-stop that lands while the host's Esc menu is open (LAN, does not pause) gives time back; before the fix the host stayed at `timeScale` 0 and both windows froze when two fruits touched. Seen failing (`Expected 1, But was 0`) before the fix |
 
 ## Acceptance test record (GDD 14.3, T01–T20)
 
