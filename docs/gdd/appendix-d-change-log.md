@@ -4,6 +4,11 @@
 
 ## D.1 Update log
 
+Các thay đổi Assignment 02 tiếp nối D33 trở đi được duy trì tại
+[`../design-changelog.md`](../design-changelog.md). Bản đối chiếu SB-62 ngày 20/11/2026
+khôi phục D33 và liên kết các issue `design-change` #1, #81–#83, phân biệt quyết định
+đã áp dụng với bằng chứng đồng ý/kiểm thử còn thiếu. D01–D32 dưới đây giữ nguyên lịch sử v1.3.
+
 | Code | Date | Change | Scope |
 |---|---|---|---|
 | D01 | 30/10/2026 | First concept (then called Bump Dojo): 3D low-poly party brawler on PC for players aged 10+, Unity 6 | Concept, gameplay, technical plan |
