@@ -41,9 +41,9 @@ D34 là phân công setup được ghi sẵn tại main. Không tạo D-number m
 | Quyết định | Issue / bằng chứng trong main | Tình trạng hồ sơ |
 | --- | --- | --- |
 | D33 | #1 đóng, đủ 3/3 tiêu chí; `docs/IMPLEMENTATION_PLAN_A02.md`, `docs/plan.md`, `AGENTS.md` | Khôi phục nội dung ở trên, thay chỗ giữ số trống. |
-| D35 | #81; `docs/design-changelog.md`, README Known limits; `MatchClientView` dùng nội suy 100 ms | Đã áp dụng trong repo. Body #81 ghi Đình Duy đồng ý và yêu cầu Minh Nhật xác nhận; chưa có comment xác nhận tại lượt đọc này. Không suy ra cả hai đã đồng ý từ việc PR merge. |
-| D36 | #82; manifest không có Relay; `docs/testing.md` ghi T16 cut; PR #84 đã merge | Đã ghi cắt A02. Body #82 vẫn yêu cầu xác nhận của Minh Nhật; chưa có comment tại lượt đọc này. Relay vẫn thuộc full scope GDD. |
-| D37 | #83; README ghi chưa có UI đổi phím; T17 cut; PR #84 đã merge | Đã ghi cắt A02, vẫn lưu binding overrides. Body #83 còn yêu cầu Minh Nhật xác nhận; chưa có comment tại lượt đọc này. |
+| D35 | #81; `docs/design-changelog.md`, README Known limits; `MatchClientView` dùng nội suy 100 ms | Đã áp dụng trong repo. Đình Duy đồng ý (body #81); Minh Nhật xác nhận ngày 20/11/2026 (báo qua Đình Duy). Cả hai đã đồng ý. |
+| D36 | #82; manifest không có Relay; `docs/testing.md` ghi T16 cut; PR #84 đã merge | Đã ghi cắt A02. Body #82 vẫn chờ Minh Nhật xác nhận (D35, D37 đã xác nhận 20/11/2026; D36 chưa). Relay vẫn thuộc full scope GDD. |
+| D37 | #83; README ghi chưa có UI đổi phím; T17 cut; PR #84 đã merge | Đã ghi cắt A02, vẫn lưu binding overrides. Minh Nhật xác nhận ngày 20/11/2026 (báo qua Đình Duy). |
 
 Các mục chưa triển khai/kiểm chứng (L4/L5, Rank, LAN nhiều PC, playtest, tutorial, cutscene,
 font Baloo 2/VI) là khoảng thiếu triển khai, không tự coi là quyết định cắt scope.
