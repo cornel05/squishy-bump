@@ -1,5 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using SquishyBump.Core;
 
 namespace SquishyBump.UI.Menus
 {
@@ -12,6 +16,8 @@ namespace SquishyBump.UI.Menus
         private RectTransform card;
         private Text cardTitle, cardLine, banner;
         private float cardUntil, bannerUntil;
+        private Text result;
+        public string ResultText => result != null && result.gameObject.activeSelf ? result.text : "";
 
         public bool CardVisible => card.gameObject.activeSelf;
         public string BannerText => banner.gameObject.activeSelf ? banner.text : "";
@@ -35,6 +41,13 @@ namespace SquishyBump.UI.Menus
             banner.color = new Color(1f, 0.718f, 0.012f); // amber #FFB703 (GDD 12.5)
             card.gameObject.SetActive(false);
             banner.gameObject.SetActive(false);
+            result = UiFactory.Label(canvas, "", 32);
+            var resultRect = (RectTransform)result.transform;
+            resultRect.anchorMin = resultRect.anchorMax = new Vector2(0.5f, 0.5f);
+            resultRect.pivot = new Vector2(0.5f, 0.5f);
+            resultRect.sizeDelta = new Vector2(1000, 600);
+            result.raycastTarget = false;
+            result.gameObject.SetActive(false);
         }
 
         public void ShowCard(string title, string line, float seconds)
@@ -50,6 +63,16 @@ namespace SquishyBump.UI.Menus
             banner.text = text;
             banner.gameObject.SetActive(true);
             bannerUntil = Time.unscaledTime + seconds;
+        }
+
+        /// <summary>Chỉ trình bày kết quả đã được host xác nhận; không tự xếp lại thứ hạng.</summary>
+        public void ShowResult(IReadOnlyList<MatchStanding> standings, Func<ulong, string> label)
+        {
+            card.gameObject.SetActive(false);
+            banner.gameObject.SetActive(false);
+            result.text = "KẾT QUẢ\n" + string.Join("\n", standings.Select(s =>
+                $"{s.Rank}. {label(s.FighterId)} — {s.Points} điểm · {s.Lives} mạng"));
+            result.gameObject.SetActive(true);
         }
 
         private void Update()
