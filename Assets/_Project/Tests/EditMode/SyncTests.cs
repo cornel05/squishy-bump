@@ -130,7 +130,7 @@ namespace SquishyBump.Tests.EditMode
         public void Snapshot_RoundTripsAndRejectsBadLength()
         {
             var f = new FighterSnapshot(3, 2, new Vector3(1, 2, 3), new Vector3(-4, 0, 5), 7, 1,
-                FighterFlags.Dashing | FighterFlags.Stunned, 99);
+                FighterFlags.Dashing | FighterFlags.Stunned, 99, 137);
             var bytes = SyncCodec.WriteSnapshot(new WorldSnapshot(1234, 600, new[] { f, f }));
 
             Assert.That(SyncCodec.TryReadSnapshot(bytes, out var s), Is.True);
@@ -138,6 +138,7 @@ namespace SquishyBump.Tests.EditMode
             Assert.That(s.GoTick, Is.EqualTo(600u));
             Assert.That(s.Fighters.Count, Is.EqualTo(2));
             var r = s.Fighters[1];
+            Assert.That(r.DashCooldownTicks, Is.EqualTo(137));
             Assert.That((r.Id, r.Fruit, r.Position, r.Velocity, r.Wobble, r.Lives, r.Flags, r.LastInput),
                 Is.EqualTo(((ushort)3, (byte)2, f.Position, f.Velocity, (byte)7, (byte)1,
                     FighterFlags.Dashing | FighterFlags.Stunned, 99u)));

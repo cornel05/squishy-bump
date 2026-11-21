@@ -7,6 +7,7 @@ using SquishyBump.Net.Sync;
 using SquishyBump.Physics;
 using SquishyBump.Presentation;
 using SquishyBump.UI.Menus;
+using SquishyBump.UI;
 using UnityEngine;
 
 namespace SquishyBump.App
@@ -60,6 +61,8 @@ namespace SquishyBump.App
         private readonly HashSet<Collider> nearBoxes = new();
         private bool hitStopping;
         private bool pausesGame;
+        public MatchHud Hud { get; private set; }
+        private WorldSnapshot hudSnapshot;
 
         public MatchDirector Director { get; private set; }
         public IReadOnlyList<Fighter> Fighters => fighters;
@@ -157,6 +160,9 @@ namespace SquishyBump.App
         {
             if (bootstrap == null) bootstrap = FindAnyObjectByType<GameplayBootstrap>();
             localInput = new LocalPlayerInput(cameraRig, bootstrap.Saved.Bindings);
+            Hud = gameObject.AddComponent<MatchHud>();
+            Hud.Init(balance, level);
+            bootstrap.Sync.SnapshotReceived += RefreshClientHud;
             // Every hazard of this level scene (H01 floor, moving ground, cannons…).
             foreach (var root in gameObject.scene.GetRootGameObjects())
                 hazardList.AddRange(root.GetComponentsInChildren<IHazard>(true));
@@ -180,6 +186,13 @@ namespace SquishyBump.App
                 {
                     var visual = view.GetComponentInChildren<RollVisual>();
                     if (visual != null) visual.TookOff += OnTookOff;
+                };
+                clientView.ViewSpawned += (id, view) =>
+                {
+                    Hud.Register(id, view.transform, view.GetComponent<SphereCollider>().radius + 0.5f);
+                    if (id == (ushort)Unity.Netcode.NetworkManager.Singleton.LocalClientId)
+                        Hud.SetFruit(view.GetComponent<FighterProfileApplier>()?.Fruit);
+                    if (hudSnapshot != null) RefreshClientHud(hudSnapshot);
                 };
             }
         }
@@ -207,6 +220,8 @@ namespace SquishyBump.App
                     Visual = go.GetComponentInChildren<RollVisual>(),
                 };
                 fighters.Add(f);
+                Hud.Register(id, f.Motor.transform, go.GetComponent<SphereCollider>().radius + 0.5f);
+                Hud.SetWobble(id, 0, true);
                 resolver.Register(f.Id, f.Motor);
                 fighterPhysics.Add(f.Id, f.Motor);
                 if (i > 0 && i < humans.Count) inboxes[id] = new InputInbox();
@@ -217,6 +232,8 @@ namespace SquishyBump.App
                 Mathf.RoundToInt(balance.TimeLimitSeconds), bounds);
 
             if (cameraRig != null) cameraRig.Follow(fighters[0].Motor.transform);
+            Hud.SetFruit(fighters[0].Motor.GetComponent<FighterProfileApplier>()?.Fruit);
+            Hud.SetRemaining(fighters.Count, fighters.Count);
             resolver.WobbleChanged += Director.SetWobble;
             resolver.Hit += OnHit;
             foreach (var f in fighters)
@@ -299,6 +316,11 @@ namespace SquishyBump.App
                 fighterPhysics.Remove(f.Id);
             }
 
+            Hud.SetClock(Director.ElapsedTicks * dt);
+            Hud.SetRemaining(Director.AliveFighters.Count, fighters.Count);
+            Hud.SetDash(fighters[0].Motor.DashCooldownTicks * dt);
+            foreach (var f in fighters) Hud.SetWobble(f.Id, resolver.GetWobble(f.Id), !f.Out);
+
             if (tick % snapshotEveryTicks == 0) bootstrap.Sync.BroadcastSnapshot(Snapshot(tick));
         }
 
@@ -310,8 +332,22 @@ namespace SquishyBump.App
             var wobble = (byte)Mathf.Clamp(resolver.GetWobble(f.Id), 0, byte.MaxValue);
             var lastInput = inboxes.TryGetValue(f.Id, out var inbox) ? inbox.LastProcessed : 0u;
             return new FighterSnapshot(f.Id, f.Fruit, body.position, body.linearVelocity, wobble, (byte)(f.Out ? 0 : 1),
-                flags, lastInput);
+                flags, lastInput, (ushort)f.Motor.DashCooldownTicks);
         }).ToArray());
+
+        private void RefreshClientHud(WorldSnapshot snapshot)
+        {
+            if (bootstrap.Session.State != SessionState.Joined) return;
+            hudSnapshot = snapshot;
+            Hud.SetClock(snapshot.GoTick == 0 ? 0 : (snapshot.HostTick - snapshot.GoTick) / balance.FixedStepHz);
+            Hud.SetRemaining(snapshot.Fighters.Count(f => (f.Flags & FighterFlags.Out) == 0), snapshot.Fighters.Count);
+            foreach (var f in snapshot.Fighters)
+            {
+                Hud.SetWobble(f.Id, f.Wobble, (f.Flags & FighterFlags.Out) == 0);
+                if (f.Id == (ushort)Unity.Netcode.NetworkManager.Singleton.LocalClientId)
+                    Hud.SetDash(f.DashCooldownTicks / balance.FixedStepHz);
+            }
+        }
 
         private void OnHit(FighterHit hit)
         {
@@ -409,6 +445,7 @@ namespace SquishyBump.App
                 bootstrap.Events.HazardRaised -= OnHazard;
                 bootstrap.Events.MatchRaised -= OnMatchEvent;
                 bootstrap.Sync.InputReceived -= OnRemoteInput;
+                bootstrap.Sync.SnapshotReceived -= RefreshClientHud;
             }
             if (pausesGame) Time.timeScale = 1f;
             clientView?.Dispose();
