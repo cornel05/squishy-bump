@@ -143,7 +143,7 @@ and [`gdd/ids.md`](gdd/ids.md). Update a row whenever the test is run (date, bui
 | T08 | Đạt trong PlayMode | 15/11/2026 | Nhánh SB-16 | Minh Nhật | `SurvivalArenaTests.T08_LastTwoFallOnSameTick_DrawAndRetrySameSeed` đưa hai quả qua kill plane L1 cùng tick. Cả hai hạng 1, chơi lại cùng roster và seed. |
 | T09 | not run | | | | |
 | T10 | not run | | | | |
-| T11 | not run | | | | |
+| T11 | Một phần — Survival loopback đạt | 21/11/2026 | SB-30, base `c293fe1` | Codex | Peer gửi input rồi rớt; loại ở tick host xử lý, motor dừng, trận tiếp tục, lobby mở lại admission. Rank/điểm và LAN riêng máy chưa chạy. |
 | T12 | pass (PlayMode loopback) | 21/11/2026 | SB-20 recovery, base `39bfc7f` | Codex | Client L1 về MainMenu và hiện thông báo khi host đóng phiên. |
 | T13 | not run | | | | |
 | T14 | not run | | | | |
@@ -153,3 +153,45 @@ and [`gdd/ids.md`](gdd/ids.md). Update a row whenever the test is run (date, bui
 | T18 | not run | | | | |
 | T19 | not run | | | | |
 | T20 | not run | | | | |
+# SB-30 — triển khai và kiểm chứng 21/11/2026
+
+**Cập nhật sau khi giữ Unity Hub/licensing client chạy ở nền:**
+`tools/verify.ps1 -PlayMode` → **VERIFY: PASS**, EditMode **171/171**, PlayMode
+**37/37**, 0 skipped, 0 compiler errors/warnings. `python tools/check_repo.py` →
+PASS (0 problems), `git diff --check` sạch. XML/log tại `TestResults/EditMode.*`
+và `TestResults/PlayMode.*` là lượt Native mới, không phải runner .NET bổ sung.
+
+`tools/build-windows.ps1` → **BUILD: PASS**, Windows x64, version **0.1.0**,
+Unity 6000.3.28f1; BuildScript Succeeded, **0 errors**, **100 MB**, 2 phút 15 giây.
+Đây là build nhánh SB-30 trên base c293fe1, không phải nghiệm thu toàn bộ MVP.
+
+`MenuFlowTests.T11_ClientLeaves_RemoteInputStopsAndLobbyReopensAdmission` đã đạt
+trên hai NGO peer cùng tiến trình qua loopback: nhận input trước khi rớt, commit
+elimination đúng tick, dừng motor và vào lại sau khi test nạp scene Lobby.
+T12 host-loss hiện hữu cũng đạt lại trong bộ 37 PlayMode. Chưa có LAN riêng máy,
+Rank points/reconnect identity hoặc luồng result→lobby tự động. Giữ tiêu chí issue
+chưa đủ bằng chứng mở; PR dùng Refs #28 để không đóng issue trước phần còn thiếu.
+
+## Lượt trước khi license hoạt động
+
+Nhánh `feat/SB-30-disconnect-elimination`, base `c293fe1`: PeerLeft khóa input,
+xoá inbox, dừng motor/collider/force adapter; host đưa disconnect vào lần commit
+tick mô phỏng đầu tiên xử lý nó. Model gom cùng mọi ring-out của tick để giữ shared
+rank. Không tạo ring-out hoặc tính điểm khi chỉ mất kết nối. Intro/countdown cũng
+loại peer, kể cả tick FinishIntro; kết quả đã xác nhận không đổi.
+
+Roslyn compile source module/Editor/test đạt. Runner ngoài Unity: **13 assertion
+cases đạt**, gồm Survival regression, tick/duplicate/authority/boundary/tie và
+admission đóng giữa trận, mở tại lobby. Đây không phải Unity NUnit/T11.
+`check_repo` PASS (0 problems), diff sạch, không thêm file Assets cần meta mới.
+
+`MenuFlowTests.T11_ClientLeaves_RemoteInputStopsAndLobbyReopensAdmission` đã viết:
+hai peer loopback, gửi input thật trước khi rớt, kiểm tra tick/elimination, motor
+đứng yên và join lại sau khi test chuyển scene Lobby. Chưa chạy. Đây chưa chứng
+minh tự chuyển result→lobby; luồng đó còn thuộc SB-26/SB-29 và runtime lobby SB-25.
+Điểm Rank/ScoreService còn cần tích hợp SB-27. Không tick tiêu chí giữ điểm hoặc T11.
+
+`tools/verify.ps1 -PlayMode` FAIL: EditMode/PlayMode exit198, không XML;
+`No valid Unity Editor license found`. Dòng Compile OK của wrapper không chứng
+minh Unity đã import/compile. Phần host loss/T12 của PR #91 giữ bằng chứng đồng đội
+đã ghi trước đây; chưa coi T11/T12 trên toàn luồng mới đã đạt. Chưa commit/push/PR.

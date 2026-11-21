@@ -69,7 +69,8 @@ namespace SquishyBump.App
         public void LoadLevel(int number)
         {
             var level = setup.Levels.First(l => l.LevelNumber == number);
-            var sceneManager = NetworkManager.Singleton != null ? NetworkManager.Singleton.SceneManager : null;
+            var manager = bootstrap.GetComponent<NetworkManager>();
+            var sceneManager = manager.NetworkConfig.EnableSceneManagement ? manager.SceneManager : null;
             if (bootstrap.Session.CanSimulateGameplay && sceneManager != null)
                 sceneManager.LoadScene(level.ScenePath, LoadSceneMode.Single);
             else
@@ -101,6 +102,8 @@ namespace SquishyBump.App
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            if (scene.path == "Assets/_Project/Scenes/Lobby.unity" && bootstrap.Session.CanSimulateGameplay &&
+                bootstrap.Session is ISessionAdmission admission) admission.AcceptingJoins = true;
             if (scene.path == setup.MainMenuScene) BuildMenu(scene);
             var level = setup.Levels.FirstOrDefault(l => l.ScenePath == scene.path);
             if (level == null) return;

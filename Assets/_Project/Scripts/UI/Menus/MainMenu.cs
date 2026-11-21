@@ -125,6 +125,7 @@ namespace SquishyBump.UI.Menus
             SessionEndReason.ConnectFailed => "Không tới được host. Kiểm tra IP và kết nối LAN.",
             SessionEndReason.HostLost => "Host đã rời phòng hoặc mất kết nối.",
             SessionEndReason.StartFailed => "Không thể mở kết nối. Hãy thử lại.",
+            SessionEndReason.MatchInProgress => "Trận đang diễn ra. Hãy vào lại khi host trở về lobby.",
             _ => "",
         };
 

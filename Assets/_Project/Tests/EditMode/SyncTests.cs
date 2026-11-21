@@ -9,6 +9,18 @@ namespace SquishyBump.Tests.EditMode
     /// <summary>SB-21: wire formats, host input validation and the 100 ms interpolation buffer (GDD 10.4).</summary>
     public sealed class SyncTests
     {
+        [Test]
+        public void Admission_RejectsMidMatchAndAllowsLobbyAgainWithSpecificReason()
+        {
+            var payload = System.Text.Encoding.UTF8.GetBytes("build-4");
+            Assert.That(SquishyBump.Net.Session.StubSessionService.CheckJoin(payload, "build-4", 2, SessionMode.Lan, false),
+                Is.EqualTo(SessionEndReason.MatchInProgress));
+            Assert.That(SquishyBump.Net.Session.StubSessionService.CheckJoin(payload, "build-4", 2, SessionMode.Lan, true),
+                Is.EqualTo(SessionEndReason.None));
+            Assert.That(SquishyBump.Net.Session.StubSessionService.ReadRejection("SB:MatchInProgress"),
+                Is.EqualTo(SessionEndReason.MatchInProgress));
+            Assert.That(SquishyBump.UI.Menus.MainMenu.ErrorText(SessionEndReason.MatchInProgress), Does.Contain("lobby"));
+        }
         [TestCase(1, SessionEndReason.None)]
         [TestCase(5, SessionEndReason.None)]
         [TestCase(6, SessionEndReason.RoomFull)]

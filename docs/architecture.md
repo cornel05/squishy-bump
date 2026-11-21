@@ -131,3 +131,24 @@ nối trong các issue tương ứng.
 `Scenes/Boot` (build index 0), `MainMenu`, `Lobby`, `Levels/L1…L5` are shared: edited by their owner
 (L1, L4, L5 Nhật; L2, L3 Duy) or through prefabs. `Scenes/Sandbox/Test_Duy` and `Test_Nhat` are personal and
 never built. Scene list is set by `SquishyBump.Editor.ProjectScaffold.Run`.
+# SB-30 — disconnect (đã kiểm tra Survival loopback, chưa đủ Rank/session)
+
+Core bổ sung ISessionAdmission và SessionEndReason.MatchInProgress. StubSessionService
+reset nhận người lúc Host, kiểm tra admission trong approval và trả mã từ chối
+cụ thể. CheckJoin overload 4 tham số giữ tương thích; overload 5 thêm khóa nhận.
+App MatchHost đóng admission khi bắt đầu trận, LevelLauncher mở khi scene Lobby
+được nạp. Không mở tạm giữa hai scene level. LAN revision nhánh này là 4; cần một
+revision mới chung khi tích hợp các thay đổi wire của SB-17/SB-24/SB-25.
+
+MatchHost nhận PeerLeft, xoá input queue và ngừng motor/hazard force ngay, đưa
+ReportDisconnect vào host tick kế tiếp. Đây là tick mô phỏng thực sự xử lý network
+event, không lấy thời gian client. MatchDirector commit disconnect với ring-out của
+cùng tick, ghi DisconnectedAt và giữ placement trong kết quả. Không xem disconnect
+là ring-out có last-touch credit. Model còn kiểm tra host authority và idempotency.
+
+FighterDisconnected được App chuyển thành Elimination Core event; khi tích hợp
+SB-24 cần giữ đúng **một** nguồn phát elimination cho mỗi fighter/tick, gỡ phát trùng
+nếu MatchDirector đã có generic event sink. Rank cần nối terminal elimination vào
+SB-27: không respawn, không xoá tổng điểm đã có. Chưa có bằng chứng đường Rank này.
+Reconnect mới dùng NGO client ID mới; việc map roster/session qua lobby phải được
+đối chiếu trong SB-25/SB-29, không suy diễn test admission thành kiểm chứng toàn session.

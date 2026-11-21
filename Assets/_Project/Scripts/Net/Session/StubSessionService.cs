@@ -10,13 +10,13 @@ using UnityEngine;
 namespace SquishyBump.Net.Session
 {
     /// <summary>Phiên LAN NGO; giữ tên stub để tương thích composition root đã có từ SB-06.</summary>
-    public sealed class StubSessionService : ISessionService, IDisposable
+    public sealed class StubSessionService : ISessionService, ISessionAdmission, IDisposable
     {
         private const string Loopback = "127.0.0.1";
         private const ushort LanPort = 7777;
         public const int MaxPlayers = 6;
         // Phiên bản hợp đồng mạng, độc lập Application.version; đổi khi wire format thay đổi.
-        public const string Protocol = "SquishyBump-LAN-1";
+        public const string Protocol = "SquishyBump-LAN-4";
         private readonly NetworkManager manager;
         private readonly UnityTransport transport;
         private readonly List<ulong> peers = new();
@@ -37,6 +37,7 @@ namespace SquishyBump.Net.Session
 
         public SessionState State { get; private set; }
         public bool CanSimulateGameplay => State == SessionState.Hosting && manager.IsHost;
+        public bool AcceptingJoins { get; set; } = true;
         public event Action<SessionState> StateChanged;
         public SessionEndReason LastEndReason { get; private set; }
         public IReadOnlyList<ulong> Peers => peers;
@@ -50,6 +51,7 @@ namespace SquishyBump.Net.Session
                 return false;
 
             hostMode = mode;
+            AcceptingJoins = true;
             manager.NetworkConfig.ConnectionApproval = true;
             manager.NetworkConfig.ConnectionData = Encoding.UTF8.GetBytes(buildVersion);
             pendingEndReason = SessionEndReason.None;
@@ -121,7 +123,7 @@ namespace SquishyBump.Net.Session
             NetworkManager.ConnectionApprovalResponse response)
         {
             var reason = request.ClientNetworkId == NetworkManager.ServerClientId ? SessionEndReason.None :
-                CheckJoin(request.Payload, buildVersion, manager.ConnectedClientsIds.Count, hostMode);
+                CheckJoin(request.Payload, buildVersion, manager.ConnectedClientsIds.Count, hostMode, AcceptingJoins);
             response.Approved = reason == SessionEndReason.None;
             response.CreatePlayerObject = false;
             response.Pending = false;
@@ -130,11 +132,15 @@ namespace SquishyBump.Net.Session
 
         /// <summary>Host kiểm tra payload có giới hạn trước khi cấp slot; không nhận gameplay state từ client.</summary>
         public static SessionEndReason CheckJoin(byte[] payload, string expectedVersion, int connected, SessionMode mode)
+            => CheckJoin(payload, expectedVersion, connected, mode, true);
+
+        public static SessionEndReason CheckJoin(byte[] payload, string expectedVersion, int connected, SessionMode mode, bool acceptingJoins)
         {
             if (payload == null || payload.Length == 0 || payload.Length > 128 ||
                 !string.Equals(Encoding.UTF8.GetString(payload), expectedVersion, StringComparison.Ordinal))
                 return SessionEndReason.VersionMismatch;
             if (mode != SessionMode.Lan || connected >= MaxPlayers) return SessionEndReason.RoomFull;
+            if (!acceptingJoins) return SessionEndReason.MatchInProgress;
             return SessionEndReason.None;
         }
 
@@ -142,6 +148,7 @@ namespace SquishyBump.Net.Session
         {
             "SB:VersionMismatch" => SessionEndReason.VersionMismatch,
             "SB:RoomFull" => SessionEndReason.RoomFull,
+            "SB:MatchInProgress" => SessionEndReason.MatchInProgress,
             _ => SessionEndReason.ConnectFailed,
         };
 

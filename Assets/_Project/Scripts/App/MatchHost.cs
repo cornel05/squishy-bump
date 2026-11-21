@@ -60,6 +60,8 @@ namespace SquishyBump.App
         private readonly HashSet<Collider> nearBoxes = new();
         private bool hitStopping;
         private bool pausesGame;
+        private readonly HashSet<ulong> pendingDisconnects = new();
+        private readonly HashSet<ulong> disconnected = new();
 
         public MatchDirector Director { get; private set; }
         public IReadOnlyList<Fighter> Fighters => fighters;
@@ -188,6 +190,7 @@ namespace SquishyBump.App
         public void StartMatch()
         {
             if (Started || !bootstrap.Session.CanSimulateGameplay) return;
+            if (bootstrap.Session is ISessionAdmission admission) admission.AcceptingJoins = false;
             resolver = gameObject.AddComponent<CollisionResolver>();
             resolver.Configure(balance);
             fighterPhysics = new FighterPhysicsAdapter(resolver);
@@ -218,6 +221,8 @@ namespace SquishyBump.App
 
             if (cameraRig != null) cameraRig.Follow(fighters[0].Motor.transform);
             resolver.WobbleChanged += Director.SetWobble;
+            Director.FighterDisconnected += OnFighterDisconnected;
+            bootstrap.Session.PeerLeft += OnPeerLeft;
             resolver.Hit += OnHit;
             foreach (var f in fighters)
                 if (f.Visual != null) f.Visual.TookOff += OnTookOff;
@@ -259,12 +264,31 @@ namespace SquishyBump.App
         // Host only: a client's commands steer only that client's own fighter.
         private void OnRemoteInput(ulong client, IReadOnlyList<InputCommand> commands)
         {
+            if (disconnected.Contains(client)) return;
             if (inboxes.TryGetValue(client, out var inbox)) inbox.Offer(commands);
         }
+
+        private void OnPeerLeft(ulong id)
+        {
+            if (!bootstrap.Session.CanSimulateGameplay || !disconnected.Add(id)) return;
+            inboxes.Remove(id);
+            var fighter = fighters.FirstOrDefault(f => f.Id == id);
+            if (fighter == null || fighter.Out) return;
+            pendingDisconnects.Add(id);
+            // Đóng input/physics ngay; thứ hạng được commit cùng mọi lần rơi ở tick kế tiếp.
+            fighter.Motor.enabled = false;
+            var body = fighter.Motor.GetComponent<Rigidbody>(); body.linearVelocity = Vector3.zero; body.isKinematic = true;
+            foreach (var collider in fighter.Motor.GetComponentsInChildren<Collider>()) collider.enabled = false;
+            fighterPhysics.Remove(id);
+        }
+        private void OnFighterDisconnected(ulong id, uint tick, int rank) => bootstrap.EventSink.Publish(
+            MatchEvent.Elimination(bootstrap.EventSink.NextEventId(), tick, id, rank));
 
         private void OnTick(uint tick)
         {
             var dt = Time.fixedDeltaTime;
+            foreach (var id in pendingDisconnects) Director.ReportDisconnect(id, tick);
+            pendingDisconnects.Clear();
             introStartTick ??= tick;
             if (Director.Phase == MatchPhase.Intro && tick - introStartTick.Value >= Mathf.RoundToInt(introSeconds / dt))
                 Director.FinishIntro(tick);
@@ -273,7 +297,7 @@ namespace SquishyBump.App
 
             foreach (var f in fighters)
             {
-                if (f.Out) continue;
+                if (f.Out || disconnected.Contains(f.Id)) continue;
                 var input = f.Id == 0 ? local : inboxes.TryGetValue(f.Id, out var inbox) ? inbox.Take() : default;
                 // Countdown and idle slots send an empty command; motors still integrate gravity and traction.
                 if (!playing || f.Id >= FirstBotId)
@@ -409,7 +433,9 @@ namespace SquishyBump.App
                 bootstrap.Events.HazardRaised -= OnHazard;
                 bootstrap.Events.MatchRaised -= OnMatchEvent;
                 bootstrap.Sync.InputReceived -= OnRemoteInput;
+                bootstrap.Session.PeerLeft -= OnPeerLeft;
             }
+            if (Director != null) Director.FighterDisconnected -= OnFighterDisconnected;
             if (pausesGame) Time.timeScale = 1f;
             clientView?.Dispose();
             localInput?.Dispose();
