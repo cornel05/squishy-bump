@@ -44,6 +44,23 @@ Text of this GDD was drafted with the help of an AI assistant (Claude) and revie
 
 ## C.2 Asset groups
 
+### HUD procedural của SB-17 (bản kiểm thử 21/11/2026)
+
+`UI/HUD/MatchHud.cs` tạo vòng cooldown 64 × 64 pixel bằng C#/Texture2D lúc chạy,
+uGUI Filled Radial360; không có tệp ảnh nhập ngoài. Panel/chữ dùng `UiFactory` và
+font LegacyRuntime tích hợp Unity. Công cụ: Unity 6000.3.28f1, code có Codex hỗ trợ;
+yêu cầu nguồn: HUD GDD 11.2 (đồng hồ, số quả, dash, hạng cân và Wobble). Không dùng
+seed hoặc model sinh ảnh; không có prompt gốc ngoài yêu cầu issue #15 và mã trong Git.
+Sử dụng trong trận qua `App/MatchHost`; phiên bản SB-17 v1. Phần code/ảnh procedural do
+dự án tạo; repo chưa có LICENSE chung, thành phần uGUI/font theo điều khoản Unity.
+Native EditMode 165/165 và PlayMode 38/38 đã đạt; xem bằng chứng build/bố cục trong
+`docs/testing.md`. Đây là bản kiểm thử, chưa ghi asset đã được nhóm duyệt.
+
+| ID | Nội dung runtime | Nguồn và vị trí dùng |
+|---|---|---|
+| ICO-HUD-DASH01 | Texture và Sprite vòng cooldown 64 × 64 | `Assets/_Project/Scripts/UI/HUD/MatchHud.cs`; HUD dưới trái |
+| ICO-HUD-CLASS01 | Huy hiệu chữ hạng cân và kg, nền uGUI tương phản | Cùng mã nguồn; HUD dưới trái, dữ liệu từ `FruitDefinition.Class` |
+
 ### Asset greybox L1 của SB-14
 
 Các tệp dưới đây thuộc phiên bản greybox SB-14 v1, tạo bằng C# và Unity

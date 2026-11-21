@@ -39,6 +39,46 @@ Không có `EditMode.xml`, chưa chạy compile/test; dòng `Compile: OK (0 warn
 không phải bằng chứng biên dịch trong lượt này. Chưa chạy PlayMode Credits hoặc build Windows.
 Không đổi trạng thái T01–T20 vì lượt kiểm tra bị chặn trước khi thực thi test.
 
+## SB-17 — kiểm tra source bổ sung 20/11/2026
+
+Nhánh `feat/SB-17-basic-hud` đã qua compiler Roslyn đi kèm Unity 6000.3.28f1 với DLL
+đang có: source module và test biên dịch được; **không chạy test hoặc build Unity**.
+Lệnh từ project cha: `python scratch/compile_unity_sources.py squishy-bump-sb17`.
+Log bổ sung tại `../scratch/csc/squishy-bump-sb17/`. Unity thực tế còn thiếu license,
+batch exit 198; verify nhận lockfile còn sót là Editor mở dù không có Unity.exe.
+Chưa import/sinh meta cho MatchHud.cs/MatchHudTests.cs, chưa xác nhận bố cục hình ảnh
+hoặc hành vi runtime. Các checklist issue và T-test không đổi từ kiểm tra source này.
+
+## SB-17 — kiểm thử Native 21/11/2026
+
+Nhánh `feat/SB-17-basic-hud`, base `c293fe1`, Unity 6000.3.28f1.
+`tools/verify.ps1 -PlayMode` đạt **VERIFY: PASS**, EditMode **165/165**, PlayMode
+**38/38**, không lỗi, không warning C#, không test bị bỏ qua. Unity đã sinh meta
+cho HUD và test; giữ bản stash WIP trước khi cập nhật main.
+
+- `MatchHudTests`: đồng hồ đỏ ở 10 giây cuối; L1 đổi sang lần rụng vành kế tiếp;
+  số quả, tên quả/huy hiệu class và kg, vòng dash 1,5/3 giây và READY, Wobble ×5 đỏ.
+- Hồi quy mốc L1 135 giây đã được chạy **đỏ trước khi sửa**:
+  `TestResults/HudClockRegression.xml` ghi 1 đạt/1 lỗi vì nhận `Time 15 s` thay
+  `Ring 0 s`. Lượt verify cuối xác nhận ca này đã đạt.
+- `SyncTests` kiểm tra round-trip cooldown host; snapshot sáu quả là 225 byte.
+  Protocol approval tăng thành `LAN-5`; các build khác revision bị từ chối.
+- Kết quả XML/log Native: `TestResults/EditMode.*`, `TestResults/PlayMode.*`.
+- `tools/build-windows.ps1` đạt **BUILD: PASS**: Windows x64 v0.1.0, 100 MB,
+  0 lỗi, 2 phút 33 giây. `python tools/check_repo.py`: PASS (0 problems);
+  `git diff --check`: sạch.
+- Build tại `Builds/Windows/SquishyBump.exe`. SHA-256 của executable:
+  `FBD073CA59C4918EDBC6704F5393CF59021173AF11714C00DB4212C50117492B`;
+  `SquishyBump_Data/Managed/SquishyBump.UI.dll`:
+  `312D40D9405A9ED4B830014D8B1B852FF18A158FE0ECDD4B917280EB3F0DC46A`.
+  Hash assembly phân biệt code HUD; executable Unity có thể giống build khác.
+- Chưa quan sát được HUD trong Windows player: công cụ mở ứng dụng không phản hồi
+  và hết phiên thao tác. Kiểm tra anchor trong PlayMode chỉ chứng minh vị trí cấu
+  hình ở cạnh màn hình, chưa chứng minh khả năng đọc, chồng lấn hoặc các tỉ lệ khác.
+
+Các ca này chưa chứng minh LAN nhiều máy, toàn bộ Rank, hoặc bố cục trên mọi tỉ lệ
+màn hình; không nâng trạng thái T07/T15 từ bằng chứng HUD.
+
 ## Commands
 
 | What | Command | Output |

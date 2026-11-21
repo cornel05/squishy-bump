@@ -16,7 +16,7 @@ namespace SquishyBump.Net.Session
         private const ushort LanPort = 7777;
         public const int MaxPlayers = 6;
         // Phiên bản hợp đồng mạng, độc lập Application.version; đổi khi wire format thay đổi.
-        public const string Protocol = "SquishyBump-LAN-1";
+        public const string Protocol = "SquishyBump-LAN-5";
         private readonly NetworkManager manager;
         private readonly UnityTransport transport;
         private readonly List<ulong> peers = new();
