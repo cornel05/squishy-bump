@@ -10,7 +10,8 @@
         "SquishyBump.Presentation",
         "SquishyBump.Hazards",
         "SquishyBump.Net",
-        "SquishyBump.App"
+        "SquishyBump.App",
+        "SquishyBump.UI"
     ],
     "includePlatforms": [
         "Editor"

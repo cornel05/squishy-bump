@@ -31,6 +31,8 @@ namespace SquishyBump.Match
         private readonly Dictionary<ulong, int> wobble = new();
         private readonly List<ulong[]> eliminations = new();
         private readonly HashSet<ulong> pendingFalls = new();
+        private readonly Dictionary<ulong, uint> pendingDisconnects = new();
+        private readonly Dictionary<ulong, uint> disconnectedAt = new();
         private uint lastTick;
         private int countdownRemaining;
         private int elapsedTicks;
@@ -69,6 +71,8 @@ namespace SquishyBump.Match
         public int ElapsedTicks => elapsedTicks;
         public event Action<MatchPhase> PhaseChanged;
         public event Action<IReadOnlyList<SurvivalPlacement>> ResultConfirmed;
+        public event Action<ulong, uint, int> FighterDisconnected;
+        public uint? DisconnectedAt(ulong id) => disconnectedAt.TryGetValue(id, out var tick) ? tick : null;
 
         private bool CanSimulate => !disposed && hasHostAuthority();
 
@@ -76,6 +80,7 @@ namespace SquishyBump.Match
         {
             if (!CanSimulate || Phase != MatchPhase.Intro)
                 return;
+            CommitRemovals(hostTick, true);
             lastTick = hostTick;
             countdownRemaining = countdownTicks;
             SetPhase(MatchPhase.Countdown);
@@ -93,6 +98,15 @@ namespace SquishyBump.Match
                 pendingFalls.Add(fighterId);
         }
 
+        /// <summary>Host áp dụng mất kết nối ở tick mô phỏng nhận sự kiện. Không phải ring-out được tính điểm.</summary>
+        public bool ReportDisconnect(ulong fighterId, uint hostTick)
+        {
+            if (!CanSimulate || Phase == MatchPhase.Result || !wobble.ContainsKey(fighterId) ||
+                (Phase != MatchPhase.Intro && !IsNextTick(hostTick)) || hostTick == 0 ||
+                pendingDisconnects.ContainsKey(fighterId)) return false;
+            pendingDisconnects.Add(fighterId, hostTick); return true;
+        }
+
         public void SampleArena(ulong fighterId, uint hostTick, UnityEngine.Vector3 worldCenter)
         {
             if (bounds != null && CanSimulate && Phase == MatchPhase.Playing && IsNextTick(hostTick)
@@ -103,27 +117,22 @@ namespace SquishyBump.Match
         // Host gọi sau khi đã báo mọi ring-out của tick này, kể cả tick cuối.
         public void CompleteTick(uint hostTick)
         {
-            if (!CanSimulate || Phase == MatchPhase.Intro || Phase == MatchPhase.Result || !IsNextTick(hostTick))
+            if (!CanSimulate || Phase == MatchPhase.Result)
                 return;
+            if (Phase == MatchPhase.Intro) { CommitRemovals(hostTick, true); return; }
+            if (!IsNextTick(hostTick)) return;
             lastTick = hostTick;
 
             if (Phase == MatchPhase.Countdown)
             {
+                CommitRemovals(hostTick, true);
                 if (--countdownRemaining == 0)
                     SetPhase(MatchPhase.Playing);
                 return;
             }
 
             elapsedTicks++;
-            if (pendingFalls.Count != 0)
-            {
-                var group = roster.Where(pendingFalls.Contains).ToArray();
-                foreach (var fighter in group)
-                    wobble.Remove(fighter);
-                eliminations.Add(group);
-                pendingFalls.Clear();
-                lastEliminationAt = elapsedTicks;
-            }
+            CommitRemovals(hostTick, false);
 
             if (wobble.Count <= 1)
             {
@@ -174,6 +183,7 @@ namespace SquishyBump.Match
             wobble.Clear();
             eliminations.Clear();
             pendingFalls.Clear();
+            pendingDisconnects.Clear(); disconnectedAt.Clear();
             Placements = Array.Empty<SurvivalPlacement>();
             foreach (var fighter in roster)
             {
@@ -193,6 +203,22 @@ namespace SquishyBump.Match
             Placements = result.AsReadOnly();
             SetPhase(MatchPhase.Result);
             ResultConfirmed?.Invoke(Placements);
+        }
+
+        private void CommitRemovals(uint tick, bool disconnectOnly)
+        {
+            var disconnects = pendingDisconnects.Where(p => p.Value == tick).Select(p => p.Key).ToHashSet();
+            var group = roster.Where(id => wobble.ContainsKey(id) && (disconnects.Contains(id) ||
+                (!disconnectOnly && pendingFalls.Contains(id)))).ToArray();
+            if (!disconnectOnly) pendingFalls.Clear();
+            if (group.Length == 0) return;
+            foreach (var id in group) wobble.Remove(id);
+            eliminations.Add(group); lastEliminationAt = elapsedTicks;
+            foreach (var id in disconnects)
+            {
+                pendingDisconnects.Remove(id); disconnectedAt[id] = tick;
+                FighterDisconnected?.Invoke(id, tick, wobble.Count + 1);
+            }
         }
 
         private static void AppendGroup(List<SurvivalPlacement> results, IEnumerable<ulong> fighters)
