@@ -38,6 +38,41 @@ chạy ngoài sandbox nhưng thoát 198: `No valid Unity Editor license found`.
 Không có `EditMode.xml`, chưa chạy compile/test; dòng `Compile: OK (0 warnings)` của script
 không phải bằng chứng biên dịch trong lượt này. Chưa chạy PlayMode Credits hoặc build Windows.
 Không đổi trạng thái T01–T20 vì lượt kiểm tra bị chặn trước khi thực thi test.
+## SB-18 — kiểm tra source bổ sung 20/11/2026
+
+Nhánh `feat/SB-18-bot-fsm`: source module và source test đã biên dịch bằng Roslyn đi
+kèm Unity 6000.3.28f1 với DLL đang có ở checkout chính. Lệnh từ project cha:
+`python scratch/compile_unity_sources.py squishy-bump-sb18`; log tại
+`../scratch/csc/squishy-bump-sb18/`. Đây không phải lượt test Unity.
+Đã bổ sung 6 ca EditMode cho FSM/authority, delay/seed/retarget, anti-stuck, tiến độ
+thực không bị hiểu nhầm là kẹt, né mép và charge/recover. Chưa chạy các ca này.
+Unity thiếu license, chưa sinh hai meta hoặc chạy ProjectScaffold để nối D1 vào
+MatchSetup. Chưa có PlayMode bot hoặc build Windows; không đánh dấu SB-18 hay T13 đạt.
+
+## SB-18 — kiểm thử Native 21/11/2026
+
+Nhánh `feat/SB-18-bot-fsm`, base `c293fe1`, Unity 6000.3.28f1. Editor entry
+`SquishyBump.Editor.ProjectScaffold.ConfigureBotDefaults` chạy thành công, nối D1 vào
+MatchSetup qua SerializedObject/AssetDatabase và sinh meta. Không sửa GUID/asset bằng tay.
+
+`tools/verify.ps1 -PlayMode` đạt **VERIFY: PASS**, **171 EditMode / 37 PlayMode**,
+0 failed, 0 skipped, 0 warning C#. Kết quả tại `TestResults/EditMode.*` và
+`TestResults/PlayMode.*`.
+
+- Sáu `BotBrainTests` kiểm tra authority, bảy state, delay 0,5 s, seed, retarget đủ
+  chu kỳ 4 s, anti-stuck, phân biệt tiến độ thật, edge margin D1 và Charge/Recover.
+- `BotArenaTests.SinglePlayer_D1BotsMoveThroughPlayerMotorAndEnterEliminatedOnFall`
+  chạy Boot → L1, tạo 1 người/5 bot D1 từ MatchSetup thật, chờ GO, đo chuyển động ngang
+  từng bot sau 2 s (> 0,15 m), xác nhận Rigidbody động và PlayerMotor; đưa một bot qua
+  kill plane rồi kiểm tra Out + state Eliminated. Ca đạt trong 9,261878 s thực.
+- `python tools/check_repo.py`: PASS (0 problems); `git diff --check`: sạch.
+- `tools/build-windows.ps1`: **BUILD: PASS**, Windows x64 v0.1.0, 100 MB, 0 lỗi,
+  1 phút 47 giây. Build tại `Builds/Windows/SquishyBump.exe`; SHA-256 của assembly
+  `SquishyBump_Data/Managed/SquishyBump.AI.dll`:
+  `900EC2CA68AB21D5330ABA18C15238F9C3B4D968C8442D3D0BB600649FB70F81`.
+
+Đây là kiểm chứng khung D1 và tích hợp input/motor, không phải bài ổn định 120 s,
+thống kê AI-1–AI-6 hay T13 đầy đủ năm bậc. Không nâng các test đó thành đạt.
 
 ## Commands
 
