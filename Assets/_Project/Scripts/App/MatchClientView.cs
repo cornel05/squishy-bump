@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SquishyBump.Core;
 using SquishyBump.Net.Sync;
 using SquishyBump.Presentation;
@@ -77,6 +78,8 @@ namespace SquishyBump.App
                     if (f.Id == own && cameraRig != null) cameraRig.Follow(view.transform);
                 }
                 if (buffer.TrySample(f.Id, now, out var position, out _)) view.transform.position = position;
+                view.SetActive((f.Flags & FighterFlags.Out) == 0 &&
+                    !bootstrap.MatchState.OutFighters.Contains((ulong)f.Id) && !bootstrap.MatchState.Eliminated.ContainsKey(f.Id));
             }
         }
 

@@ -22,6 +22,7 @@ namespace SquishyBump.Net.Sync
         public const string InputMessage = "SB.Input";
         public const string SnapshotMessage = "SB.Snapshot";
         public const string HazardMessage = "SB.Hazard";
+        public const string MatchMessage = "SB.Match";
 
         // Largest legal payload is a full snapshot (9 + 8 × 34 bytes); anything bigger is rejected unread.
         private const int MaxPayloadBytes = 512;
@@ -38,6 +39,8 @@ namespace SquishyBump.Net.Sync
         public event Action<WorldSnapshot> SnapshotReceived;
         /// <summary>Client: a hazard event from the host.</summary>
         public event Action<HazardEvent> HazardReceived;
+        /// <summary>Client: sự kiện trận từ host, reliable sequenced; EventHub bỏ ID trùng.</summary>
+        public event Action<MatchEvent> MatchReceived;
         public int RejectedPackets { get; private set; }
 
         public void Poll()
@@ -49,6 +52,7 @@ namespace SquishyBump.Net.Sync
             messaging.RegisterNamedMessageHandler(InputMessage, OnInput);
             messaging.RegisterNamedMessageHandler(SnapshotMessage, OnSnapshot);
             messaging.RegisterNamedMessageHandler(HazardMessage, OnHazard);
+            messaging.RegisterNamedMessageHandler(MatchMessage, OnMatch);
             registeredOn = messaging;
         }
 
@@ -84,6 +88,21 @@ namespace SquishyBump.Net.Sync
             foreach (var id in manager.ConnectedClientsIds)
                 if (id != NetworkManager.ServerClientId) remote.Add(id);
             return remote;
+        }
+
+        public void BroadcastMatch(MatchEvent gameEvent)
+        {
+            var remote = RemoteClients();
+            if (remote.Count == 0) return;
+            Send(SyncCodec.WriteMatch(gameEvent), w => manager.CustomMessagingManager.SendNamedMessage(
+                MatchMessage, remote, w, NetworkDelivery.ReliableSequenced));
+        }
+
+        private void OnMatch(ulong sender, FastBufferReader reader)
+        {
+            if (manager.IsServer || sender != NetworkManager.ServerClientId) return;
+            if (SyncCodec.TryReadMatch(Receive(reader), out var gameEvent)) MatchReceived?.Invoke(gameEvent);
+            else RejectedPackets++;
         }
 
         private void OnHazard(ulong sender, FastBufferReader reader)
@@ -132,6 +151,7 @@ namespace SquishyBump.Net.Sync
             registeredOn.UnregisterNamedMessageHandler(InputMessage);
             registeredOn.UnregisterNamedMessageHandler(SnapshotMessage);
             registeredOn.UnregisterNamedMessageHandler(HazardMessage);
+            registeredOn.UnregisterNamedMessageHandler(MatchMessage);
             registeredOn = null;
         }
 

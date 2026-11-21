@@ -154,6 +154,71 @@ namespace SquishyBump.Net.Sync
 
         const int HazardBytes = 4 + 4 + 1 + 4 + 12 + 1;
 
+        // Header: id/tick/kind/fighter/credit/value/count. Tối đa 6 dòng, mỗi dòng 24 byte.
+        private const int MatchHeaderBytes = 30;
+        private const int StandingBytes = 24;
+        private const int MatchFighterLimit = 6;
+
+        public static byte[] WriteMatch(MatchEvent e)
+        {
+            if (!ValidMatch(e)) throw new ArgumentException("Payload match không hợp lệ.", nameof(e));
+            using var stream = new MemoryStream(MatchHeaderBytes + e.Standings.Count * StandingBytes);
+            using var w = new BinaryWriter(stream);
+            w.Write(e.EventId); w.Write(e.HostTick); w.Write((byte)e.Kind);
+            w.Write(e.FighterId); w.Write(e.CreditedFighterId); w.Write(e.Value); w.Write((byte)e.Standings.Count);
+            foreach (var s in e.Standings)
+            { w.Write(s.FighterId); w.Write(s.Rank); w.Write(s.Points); w.Write(s.Lives); w.Write(s.SurvivalTicks); }
+            return stream.ToArray();
+        }
+
+        public static bool TryReadMatch(byte[] data, out MatchEvent gameEvent)
+        {
+            gameEvent = default;
+            if (data == null || data.Length < MatchHeaderBytes) return false;
+            var count = data[MatchHeaderBytes - 1];
+            if (count > MatchFighterLimit || data.Length != MatchHeaderBytes + count * StandingBytes) return false;
+            using var r = new BinaryReader(new MemoryStream(data));
+            var id = r.ReadUInt32(); var tick = r.ReadUInt32(); var kind = (MatchEventKind)r.ReadByte();
+            var fighter = r.ReadUInt64(); var credit = r.ReadUInt64(); var value = r.ReadInt32(); r.ReadByte();
+            var rows = new MatchStanding[count];
+            for (var i = 0; i < count; i++) rows[i] = new MatchStanding(r.ReadUInt64(), r.ReadInt32(), r.ReadInt32(), r.ReadInt32(), r.ReadInt32());
+            switch (kind)
+            {
+                case MatchEventKind.Countdown: gameEvent = MatchEvent.Countdown(id, tick, value); break;
+                case MatchEventKind.RingOut: gameEvent = MatchEvent.RingOut(id, tick, fighter, credit); break;
+                case MatchEventKind.Respawn: gameEvent = MatchEvent.Respawn(id, tick, fighter); break;
+                case MatchEventKind.Elimination: gameEvent = MatchEvent.Elimination(id, tick, fighter, value); break;
+                case MatchEventKind.MatchResult: gameEvent = MatchEvent.MatchResult(id, tick, rows); break;
+                case MatchEventKind.Scoreboard: gameEvent = MatchEvent.Scoreboard(id, tick, rows); break;
+                default: return false;
+            }
+            // Không cho packet có trường không dùng giả dạng payload hợp lệ sau khi factory bỏ chúng.
+            if (gameEvent.FighterId != fighter || gameEvent.CreditedFighterId != credit ||
+                gameEvent.Value != value || gameEvent.Standings.Count != count || !ValidMatch(gameEvent))
+            { gameEvent = default; return false; }
+            return true;
+        }
+
+        private static bool ValidMatch(MatchEvent e)
+        {
+            if (e.EventId == 0 || !Enum.IsDefined(typeof(MatchEventKind), e.Kind)) return false;
+            var table = e.Kind == MatchEventKind.Scoreboard || e.Kind == MatchEventKind.MatchResult;
+            if (table)
+            {
+                if (e.Standings.Count < 2 || e.Standings.Count > MatchFighterLimit) return false;
+                var ids = new HashSet<ulong>();
+                foreach (var s in e.Standings)
+                    if (s.FighterId == MatchEvent.NoFighter || !ids.Add(s.FighterId) || s.Rank < 1 ||
+                        s.Rank > e.Standings.Count || s.Points < 0 || s.Lives < 0 || s.Lives > 3 || s.SurvivalTicks < 0) return false;
+                return true;
+            }
+            if (e.Standings.Count != 0) return false;
+            if (e.Kind == MatchEventKind.Countdown) return e.Value >= 0;
+            if (e.FighterId == MatchEvent.NoFighter) return false;
+            if (e.Kind == MatchEventKind.RingOut) return e.FighterId != e.CreditedFighterId;
+            return e.Kind != MatchEventKind.Elimination || (e.Value >= 1 && e.Value <= MatchFighterLimit);
+        }
+
         public static byte[] WriteHazard(HazardEvent e)
         {
             using var stream = new MemoryStream(HazardBytes);
