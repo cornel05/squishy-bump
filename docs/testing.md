@@ -204,3 +204,38 @@ Sau sửa: verifier Native **179 EditMode + 40 PlayMode đạt**, 0 lỗi/skip/c
 compile từ code dự án; ca mới đạt 0.327111 s. Build lại Windows x64 **100 MB,
 0 errors**, 25.63 s. Repo/diff checks đạt. Wire format và revision LAN-7 không đổi.
 Đây là kiểm chứng logic replay/collider, chưa phải LAN nhiều PC hoặc quan sát hình ảnh.
+
+### SB-45 — L5 Chaos Core Native, 21/11/2026
+
+Nhánh `feat/SB-45-chaos-core`, base `85b3c9c` của PR #102 (SB-44), Unity
+6000.3.28f1. `IceSceneBuilder.BuildL5` tạo scene qua Editor Native, exit 0;
+log `TestResults/SB45-BuildL5.log`, meta test do Unity sinh. Chỉ sửa L5 và đường
+Editor dùng chung; scene L2/L3 và thuật toán Cannon/H06 giữ từ nhánh phụ thuộc.
+
+`tools/verify.ps1 -PlayMode` → **VERIFY: PASS**, **179 EditMode + 41 PlayMode**,
+0 lỗi, 0 skip, 0 cảnh báo compile từ code dự án. Hai ca L5 trong
+`TestResults/PlayMode.xml`:
+
+- `L5_RealSceneReuses61IceTilesAndWestAirEastFire_AllSpawnsHaveFloor`: nạp L5 thật,
+  61 collider ô, một pháo Air ở tây x=-9.9 và một Fire ở đông x=+9.9; không có
+  MovingGround/RingDrop; raycast cả sáu spawn bán kính 6 m xuống đúng sàn H06,
+  ma sát 0.3. Đây là kiểm tra hình học/collider, không phải đánh giá camera hoặc hình ảnh.
+- `L5_150Seconds_IceWavesEvery210TicksAndCannonsEvery240Ticks`: gọi cả H06 và Cannons
+  trên host 9.000 tick × 1/60 s, seed 18, không quả. Ghi nhận **42 đợt nứt** đúng
+  mỗi 210 tick, 2 ô trước mốc 45 s và 3 ô sau đó, cảnh báo nứt 90 tick. **37 phát
+  mỗi pháo**, mỗi cặp phát liên tiếp cách 240 tick, tất cả có CannonAim trước
+  60 tick. Mỗi tick kiểm tra ≥37 ô Solid dự trữ, BFS liên thông và collider đúng
+  trạng thái. Giữ stagger 1.25 s của Cannons hiện có (Air đầu 4 s, Fire đầu 5.25 s).
+
+Các ca này chạy 150 giây thời gian gameplay mô phỏng, không phải quan sát 150 giây
+hình ảnh hoặc trận đủ sáu quả. Chưa kiểm chứng: cảnh báo chồng nhau có dễ đọc,
+đường né thực tế/AI, Windows player và LAN nhiều PC. Không dùng bằng chứng này
+để đánh dấu T07, T04/T05 đầy đủ, LD07 hoặc AI-2 đạt. Cần merge PR #102 trước,
+sau đó merge main vào nhánh SB-45, chuyển base PR về main và xác minh lại.
+
+Lượt cuối sau khi đưa bản sửa replay SB-44 `c918aa6` vào nền: **179 EditMode +
+42 PlayMode đạt**, 0 lỗi/skip/cảnh báo compile; build lại Windows x64 v0.1.0
+**100 MB, 0 errors, 22.14 s**. Verifier và build đều exit 0. Ca hồi quy client
+render trước tick hồi cũng chạy trong bộ 42 ca. Repo/diff checks đạt. Base PR L5
+là `feat/SB-44-frost-ring` tại c918aa6; chỉ delta SB-45 so với nhánh đó được commit.
+Stash trước tích hợp c918aa6 được giữ, không xóa backup WIP.

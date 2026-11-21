@@ -155,3 +155,13 @@ Replay H06 lưu các chuyển trạng thái của cả match, kể cả các chu
 chọn trạng thái theo đúng thời gian đang render, hỗ trợ nội suy lùi nhẹ. Nhận Solid
 và Warning của chu kỳ tiếp theo cùng tick không được xóa Fading của tick trước đó.
 Lịch sử sống trong scene match tối đa 150 s; đổi scene giải phóng cùng IceTiles.
+
+## L5 Chaos Core / SB-45
+
+`IceSceneBuilder.BuildL5` dùng chung đường dựng sàn/bounds/spawn của L4, bật chế độ
+chaos trên IceTiles và Cannons. L5 dùng cùng IceProfile/BalanceProfile/HazardProfile;
+không chép lại thuật toán H06, lực gió hoặc đạn đạo. Hai mount: Air 270° (tây,
+x=-9.9), Fire 90° (đông, x=+9.9). Mỗi pháo có chu kỳ 4 s từ HazardProfile;
+giữ cơ chế stagger 1.25 s hiện có của Cannons. Sóng ô 3.5 s, 2 ô trước 45 s,
+3 ô sau đó từ IceRules.FromProfile(chaos:true). Không có MovingGround hoặc RingDrop.
+Không đổi Core/App hay hợp đồng mạng so với nhánh phụ thuộc SB-44.
