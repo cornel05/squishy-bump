@@ -10,6 +10,8 @@ namespace SquishyBump.Core
         TurntableReversal,
         PusherDeparture,
         CannonAim,
+        IceTileFading,
+        IceTileSolid,
     }
 
     /// <summary>Sự kiện hazard truyền tin cậy (GDD 10.4). HostTick là tick có hiệu lực.</summary>

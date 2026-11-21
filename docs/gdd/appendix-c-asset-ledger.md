@@ -1,4 +1,4 @@
-# Appendix C. Asset and AI-generation ledger
+﻿# Appendix C. Asset and AI-generation ledger
 
 > **In this chapter:** Every asset with its generator, licence and AI declaration.
 
@@ -108,3 +108,16 @@ The group codes below organise content; each file gets its own ID to track versi
 | Retired | Replaced or removed from the current version |
 
 When an asset is replaced, its version, path and usage are updated and the old record is kept for comparison. Changes that affect the design or production scope are also logged in Appendix D.
+
+## C.5 H06 procedural — SB-44, 21/11/2026
+
+| Trường | Ghi nhận |
+|---|---|
+| Asset ID | H06-PROC-001 |
+| Loại, phiên bản | Mesh hex prism, màu băng và vết nứt LineRenderer runtime; source v2, đã kiểm tra Native hành vi ô; hiển thị chưa nghiệm thu |
+| Nguồn/vị trí | Nhóm 18; `Assets/_Project/Scripts/Hazards/IceTiles.cs`, cấu hình `Core/IceProfile.cs` |
+| Công cụ/phương pháp | C# Unity Mesh API và LineRenderer, có hỗ trợ AI Codex; không dùng ảnh/texture/mô hình tải ngoài |
+| Prompt/seed | Yêu cầu triển khai issue SB-44 theo GDD 7.4, 9.2.4; không có prompt image generation. Hình học không ngẫu nhiên; chọn ô dùng seed trận do host truyền |
+| Sử dụng | Scene L4 qua `Editor/IceSceneBuilder.cs`; scene, IceProfile.asset và meta đã được Editor Native sinh |
+| Giấy phép/attribution | Source nội bộ trong repo; shader URP từ package Unity hiện hữu. Không suy diễn giấy phép riêng hoặc nguồn bên ngoài |
+| Trạng thái | Native IceArenaTests 3/3; danh mục nguồn ở CREDITS.md và docs/asset-ledger.csv. Chưa quan sát hình ảnh player hoặc LAN nhiều máy |
