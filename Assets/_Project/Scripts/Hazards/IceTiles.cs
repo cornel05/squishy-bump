@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using SquishyBump.Core;
 using UnityEngine;
 
@@ -23,7 +24,10 @@ namespace SquishyBump.Hazards
         private Renderer[] renderers;
         private LineRenderer[] cracks;
         private IceStage[] visibleStages;
-        private float[] started, clientFallAt, clientFadeAt, clientSolidAt;
+        private float[] started;
+        // Giữ chuyển trạng thái qua các chu kỳ: client có thể render trước event mới nhất.
+        // Lịch sử chỉ sống trong một match (tối đa 150 s), không tích lũy qua session.
+        private List<(IceStage Stage, float At)>[] clientTransitions;
         private MaterialPropertyBlock tint;
         private int playingTick;
         public IceField Field => field;
@@ -59,10 +63,10 @@ namespace SquishyBump.Hazards
             floors = new MeshCollider[field.Count]; visuals = new Transform[field.Count];
             renderers = new Renderer[field.Count]; cracks = new LineRenderer[field.Count];
             visibleStages = new IceStage[field.Count]; started = new float[field.Count];
-            clientFallAt = new float[field.Count]; clientFadeAt = new float[field.Count]; clientSolidAt = new float[field.Count];
+            clientTransitions = new List<(IceStage Stage, float At)>[field.Count];
             for (var i = 0; i < field.Count; i++)
             {
-                clientFallAt[i] = clientFadeAt[i] = clientSolidAt[i] = float.PositiveInfinity;
+                clientTransitions[i] = new List<(IceStage Stage, float At)>();
                 var tile = new GameObject($"Ice {i} ({field.Cells[i].Q},{field.Cells[i].R})");
                 tile.transform.SetParent(transform, false); tile.transform.position = TileCenter(i);
                 floors[i] = tile.AddComponent<MeshCollider>(); floors[i].sharedMesh = mesh; floors[i].sharedMaterial = friction;
@@ -142,10 +146,11 @@ namespace SquishyBump.Hazards
             var i = e.Index;
             if (e.Kind == HazardEventKind.IceTileWarning)
             {
-                clientFallAt[i] = effectiveSeconds; clientFadeAt[i] = clientSolidAt[i] = float.PositiveInfinity;
+                clientTransitions[i].Add((IceStage.Cracking, effectiveSeconds - profile.CrackSeconds));
+                clientTransitions[i].Add((IceStage.Fallen, effectiveSeconds));
             }
-            else if (e.Kind == HazardEventKind.IceTileFading) clientFadeAt[i] = effectiveSeconds;
-            else if (e.Kind == HazardEventKind.IceTileSolid) clientSolidAt[i] = effectiveSeconds;
+            else if (e.Kind == HazardEventKind.IceTileFading) clientTransitions[i].Add((IceStage.Fading, effectiveSeconds));
+            else if (e.Kind == HazardEventKind.IceTileSolid) clientTransitions[i].Add((IceStage.Solid, effectiveSeconds));
         }
         public void ShowAt(float seconds)
         {
@@ -153,10 +158,8 @@ namespace SquishyBump.Hazards
             for (var i = 0; i < TileCount; i++)
             {
                 var stage = IceStage.Solid; var at = 0f;
-                if (seconds >= clientFallAt[i] - profile.CrackSeconds) { stage = IceStage.Cracking; at = clientFallAt[i] - profile.CrackSeconds; }
-                if (seconds >= clientFallAt[i]) { stage = IceStage.Fallen; at = clientFallAt[i]; }
-                if (seconds >= clientFadeAt[i]) { stage = IceStage.Fading; at = clientFadeAt[i]; }
-                if (seconds >= clientSolidAt[i]) { stage = IceStage.Solid; at = clientSolidAt[i]; }
+                foreach (var transition in clientTransitions[i])
+                    if (seconds >= transition.At) { stage = transition.Stage; at = transition.At; }
                 visibleStages[i] = stage; started[i] = at;
                 // Client không mô phỏng vật lý, nhưng collider vẫn phản ánh đúng sàn để query trình bày.
                 floors[i].enabled = stage == IceStage.Solid || stage == IceStage.Cracking;

@@ -189,3 +189,18 @@ Không thay đổi trạng thái các test đó bằng bằng chứng T10.
 
 Build Windows x64 v0.1.0 qua `tools/build-windows.ps1` đạt, Unity trả exit 0;
 `Logs/build-windows.log` lưu BuildScript report. Build không chứng minh hình ảnh đã được quan sát.
+
+#### SB-44 bổ sung — replay qua hai chu kỳ khi client render trễ
+
+`ClientRenderingBeforeRestore_QueuedNextWarningKeepsOldTileUnwalkable` đã chạy Native
+**0 đạt / 1 lỗi** trước sửa (`TestResults/SB44-ClientHistoryBeforeFix.xml/log`):
+client nhận Solid tại 18 s và Warning cho lần rơi 19.5 s, nhưng render 17.9 s lại bật
+collider trong khi ô vẫn đang Fading. Đây là tình huống ô chờ hết overlap rồi bị chọn
+lại ngay, client nội suy sau host. Sửa IceTiles giữ lịch sử chuyển trạng thái của
+một match; warning mới không xóa trạng thái chu kỳ cũ. Ca hồi quy còn kiểm tra các
+mốc 18/19.5 s và rewind về 17.9 s.
+
+Sau sửa: verifier Native **179 EditMode + 40 PlayMode đạt**, 0 lỗi/skip/cảnh báo
+compile từ code dự án; ca mới đạt 0.327111 s. Build lại Windows x64 **100 MB,
+0 errors**, 25.63 s. Repo/diff checks đạt. Wire format và revision LAN-7 không đổi.
+Đây là kiểm chứng logic replay/collider, chưa phải LAN nhiều PC hoặc quan sát hình ảnh.

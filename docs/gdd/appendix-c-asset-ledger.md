@@ -121,3 +121,7 @@ When an asset is replaced, its version, path and usage are updated and the old r
 | Sử dụng | Scene L4 qua `Editor/IceSceneBuilder.cs`; scene, IceProfile.asset và meta đã được Editor Native sinh |
 | Giấy phép/attribution | Source nội bộ trong repo; shader URP từ package Unity hiện hữu. Không suy diễn giấy phép riêng hoặc nguồn bên ngoài |
 | Trạng thái | Native IceArenaTests 3/3; danh mục nguồn ở CREDITS.md và docs/asset-ledger.csv. Chưa quan sát hình ảnh player hoặc LAN nhiều máy |
+
+Lịch sử H06-PROC-001: source v2 tại commit `85b3c9c`, SHA-256 `a9325e57f3b192414997d3bd1389f57ba17ae93082b54610be1e3ad3455391a2`;
+source v3 sửa replay qua nhiều chu kỳ, SHA mới trong CSV. Giữ đường mesh/material
+và thông số; không bổ sung asset bên ngoài hoặc thay thiết kế. Bản v2 vẫn truy vết qua commit trên.

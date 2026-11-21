@@ -93,6 +93,27 @@ namespace SquishyBump.Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator ClientRenderingBeforeRestore_QueuedNextWarningKeepsOldTileUnwalkable()
+        {
+            yield return SceneManager.LoadSceneAsync("L4", LoadSceneMode.Single);
+            var client = Object.FindFirstObjectByType<IceTiles>();
+            client.ApplyEvent(new HazardEvent(1, 270, HazardEventKind.IceTileWarning, 0), 4.5f);
+            client.ApplyEvent(new HazardEvent(2, 870, HazardEventKind.IceTileFading, 0), 14.5f);
+            // Quả chồng lên ô khiến Solid phải đợi tới 18 s, đúng lúc host chọn ô này lần nữa.
+            client.ApplyEvent(new HazardEvent(3, 1080, HazardEventKind.IceTileSolid, 0), 18f);
+            client.ApplyEvent(new HazardEvent(4, 1170, HazardEventKind.IceTileWarning, 0), 19.5f);
+            client.ShowAt(17.9f);
+            Assert.That(client.TileCollider(0).enabled, Is.False,
+                "Client còn render trước tick Solid; Warning của chu kỳ sau không được xóa trạng thái Fading cũ.");
+            client.ShowAt(18f);
+            Assert.That(client.TileCollider(0).enabled, Is.True);
+            client.ShowAt(19.5f);
+            Assert.That(client.TileCollider(0).enabled, Is.False);
+            client.ShowAt(17.9f);
+            Assert.That(client.TileCollider(0).enabled, Is.False, "Replay vẫn đúng khi thời gian nội suy lùi nhẹ.");
+        }
+
+        [UnityTest]
         public IEnumerator HostEventsThroughCodec_ClientFloorMatchesEveryTransitionAndWaitsForSolidEvent()
         {
             yield return SceneManager.LoadSceneAsync("L4", LoadSceneMode.Single);

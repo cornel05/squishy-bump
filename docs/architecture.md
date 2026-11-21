@@ -150,3 +150,8 @@ MaterialPropertyBlock cũng phải khởi tạo ở Awake, không ở field init
 Protocol LAN-7 từ chối peer cũ không biết hai loại sự kiện mới. Revision này riêng nhánh
 SB-44; khi tích hợp các PR song song phải giữ toàn bộ hợp đồng và chọn revision chung mới.
 Kiểm thử collider và thuật toán không thay thế kiểm tra hình ảnh/cảnh báo trên Windows player.
+
+Replay H06 lưu các chuyển trạng thái của cả match, kể cả các chu kỳ cũ. Client
+chọn trạng thái theo đúng thời gian đang render, hỗ trợ nội suy lùi nhẹ. Nhận Solid
+và Warning của chu kỳ tiếp theo cùng tick không được xóa Fading của tick trước đó.
+Lịch sử sống trong scene match tối đa 150 s; đổi scene giải phóng cùng IceTiles.

@@ -73,3 +73,7 @@ Khai báo dùng AI không đồng nghĩa mỗi dòng đã được người th�
   shader URP thuộc package Unity hiện hữu, theo điều khoản nhà cung cấp.
 - Native kiểm tra hành vi/collider, không thay thế kiểm tra hình ảnh, khả năng đọc cảnh báo
   hoặc LAN trên các PC riêng. Bản ghi CSV lưu hash và vị trí cụ thể của từng nguồn.
+
+H06-PROC-001 source v3: bổ sung lịch sử chuyển trạng thái theo thời gian host để
+client nội suy không hiện sàn hồi quá sớm khi nhận warning chu kỳ mới. Source v2
+và hash cũ được giữ trong lịch sử Phụ lục C; không đổi asset/nguồn bên ngoài.
