@@ -17,6 +17,7 @@ Phân công hiện hành nằm trong `AGENTS.md`; tác giả và các lượt s�
 | L1 và vật liệu greybox | Mesh/material dưới `Data/TrainingRing/`, `ProjectScaffold` và dữ liệu mesh đã commit (script tạo mesh ban đầu không có trong checkout); Phụ lục C đã ghi nguồn SB-14 | C# và Unity 6000.3.28f1 với Codex hỗ trợ. Không dùng seed ngẫu nhiên hay model tạo ảnh. |
 | L2/L3 và hình hazard | `LevelSceneBuilder`, `MovingGround`, `PusherBlocks`, `Cannons`, `AnnulusMesh`, `RingDrop` | Primitive, mesh và màu tạo bằng C#/Unity với AI hỗ trợ code. Không có texture, model hoặc sample tải ngoài trong nhóm này. |
 | Giao diện | `UI/Menus/UiFactory.cs` tạo panel và chữ bằng uGUI | Font thực tế là `Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf")` từ Unity. Không có tệp Baloo 2/Fredoka trong Assets tại mốc kiểm kê. |
+| Lobby runtime SB-25 | `App/LobbyController.cs`, `UI/LobbyPanel.cs`, `Data/LobbyProfile.asset` · 21/11/2026 | Codex hỗ trợ C#/Unity primitive sphere/material URP cho avatar trung tính, uGUI/LegacyRuntime cho info/controls, nhãn khóa kệ và quầy host. Avatar đã chọn/display dùng lại sáu prefab/GLB nêu trên. Không có ảnh AI, model/font tải ngoài hoặc seed hình học; nguồn yêu cầu là issue #23, GDD 8.5/11.1. |
 | Nhạc | Không tìm thấy clip nhạc trong `Assets/` | Chưa nhập nhạc. Không gán tác giả/giấy phép cho nội dung chưa có. |
 
 Danh sách từng tệp, hash SHA-256, nguồn, vị trí dùng và giới hạn thông tin nằm tại

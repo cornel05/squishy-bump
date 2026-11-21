@@ -8,6 +8,7 @@ namespace SquishyBump.App
     public sealed class MatchSetup : ScriptableObject
     {
         [SerializeField] private BalanceProfile balance;
+        [SerializeField] private LobbyProfile lobby;
         [SerializeField] private SquishyBump.Presentation.PresentationProfile presentation;
         [SerializeField] private LevelDefinition[] levels;
         [Tooltip("Roster slots in order: host player, remote players, then idle slots.")]
@@ -24,6 +25,7 @@ namespace SquishyBump.App
         [SerializeField] private float finalWarningSeconds;
 
         public BalanceProfile Balance => balance;
+        public LobbyProfile Lobby => lobby;
         public SquishyBump.Presentation.PresentationProfile Presentation => presentation;
         public LevelDefinition[] Levels => levels;
         public GameObject[] Roster => roster;

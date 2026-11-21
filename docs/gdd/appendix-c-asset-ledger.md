@@ -108,3 +108,19 @@ The group codes below organise content; each file gets its own ID to track versi
 | Retired | Replaced or removed from the current version |
 
 When an asset is replaced, its version, path and usage are updated and the old record is kept for comparison. Changes that affect the design or production scope are also logged in Appendix D.
+
+## Lobby runtime — SB-25, bản kiểm thử 21/11/2026
+
+| ID | Nguồn/phương pháp | Vị trí và trạng thái |
+|---|---|---|
+| LOB-PROC-002 | Nhóm 18, C# có hỗ trợ AI Codex, Unity primitive sphere/material URP; avatar trung tính chưa chọn trái | `App/LobbyController.cs`; kiểm thử Native theo `docs/testing.md` |
+| LOB-UI-002 | Nhóm 18, C# có hỗ trợ AI Codex, uGUI/LegacyRuntime.ttf builtin; info/controls, nhãn khóa kệ world-space và desk/ready overlay | `UI/LobbyPanel.cs`; Native kiểm tra nội dung/trạng thái, chưa duyệt glyph/đọc được từ camera |
+| LOB-CONFIG-001 | `LobbyProfile.asset` được Editor API tạo/gán walking class, spawn, desk reach và countdown | `Data/LobbyProfile.asset`; hash/nguồn trong CSV |
+
+Yêu cầu: nối runtime lobby 3D theo issue #23 và GDD 8.5/11.1 trên greybox PR #95.
+Không có ảnh AI, prompt imagegen hay seed hình học. Display và avatar đã chọn tái
+sử dụng sáu prefab/GLB hiện hữu, không tạo bản model tải ngoài. Shader/font builtin
+theo package Unity hiện có; không suy diễn giấy phép ngoài repo. Ledger tổng hợp
+`docs/asset-ledger.csv` đã bổ sung ba bản ghi này, phiên bản SB-25 v1.1 ngày 21/11/2026.
+Mã nhóm tạo chưa có LICENSE chung; thành phần Unity theo điều khoản nhà cung cấp.
+Không có bản prompt gốc riêng ngoài yêu cầu issue và mã trong Git. Chưa ghi approved.

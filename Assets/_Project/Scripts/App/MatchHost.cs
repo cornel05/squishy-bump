@@ -194,7 +194,7 @@ namespace SquishyBump.App
             snapshotEveryTicks = Mathf.Max(1, Mathf.RoundToInt(balance.InputRateHz / balance.SnapshotRateHz));
 
             var humans = new List<ulong> { 0 };
-            humans.AddRange(bootstrap.Session.Peers.Take(fighterPrefabs.Length - 1));
+            humans.AddRange(bootstrap.Session.Peers.OrderBy(id => id).Take(fighterPrefabs.Length - 1));
             var spawns = bounds.SpawnPoints;
             for (var i = 0; i < fighterPrefabs.Length; i++)
             {

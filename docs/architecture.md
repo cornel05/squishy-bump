@@ -131,3 +131,38 @@ nối trong các issue tương ứng.
 `Scenes/Boot` (build index 0), `MainMenu`, `Lobby`, `Levels/L1…L5` are shared: edited by their owner
 (L1, L4, L5 Nhật; L2, L3 Duy) or through prefabs. `Scenes/Sandbox/Test_Duy` and `Test_Nhat` are personal and
 never built. Scene list is set by `SquishyBump.Editor.ProjectScaffold.Run`.
+# Lobby SB-25 đang nối tiếp PR #95
+
+Base `ea46852` cung cấp LobbyRoom host-owned và greybox LOB01. Phần nối tiếp dùng
+Core `LobbyState` bất biến và `ILobbyChannel`, Net.Session `LobbyCodec`/`LobbySync`
+(reliable sequenced), App `LobbyCoordinator`. Client không gửi lựa chọn fruit hoặc
+rule/Lk: việc claim phải do adapter kiểm tra vị trí trên host. Client gửi một byte
+ready và sender ID lấy từ NGO. Codec từ chối hai người cùng fruit, ID trùng, ready
+chưa chọn fruit hoặc countdown khi chưa đủ hai người ready.
+
+Coordinator theo dõi join/leave và clock host, phát countdown một lần mỗi giây và
+StartRequested đúng một lần. Peer rời giải phóng fruit/cancel countdown; dispose
+tháo mọi handler. Client chỉ thay bản đọc khi revision mới hơn. Bootstrap poll
+LobbySync suốt phiên để handler sẵn trước khi scene lobby hoạt động.
+Revision LAN của nhánh này là 3 để từ chối build main cũ chưa hiểu lobby. Nhánh
+SB-24 dùng revision 2 cho match event; khi tích hợp cả hai và snapshot SB-17 phải
+chọn revision mới chung, không để hai wire format khác nhau cùng revision.
+
+LobbyController tạo avatar trung tính hoặc prefab trái đã chọn, gửi input qua
+NetSync, host dùng InputInbox/PlayerMotor và snapshot 30 Hz, client nội suy bằng
+SnapshotBuffer. Chỉ host xét tâm quả trong pick volume rồi claim. Không gửi lệnh
+claim từ client. Host phải tới gần desk mới đổi rule/Lk; info/controls dùng canvas
+world-space, nút ready/leave và desk ở overlay. LobbyProfile chứa vị trí spawn,
+class mặc định, khoảng cách desk và countdown 5 giây; Editor scaffold gán SO.
+
+Bootstrap giữ LobbySelection qua scene, LevelLauncher tạo roster theo ID/fruit
+đã xác nhận (LAN không thêm bot/idle), Single chọn trái đầu rồi đủ năm trái còn lại.
+Single luôn đi qua lobby tới L1; nút chọn tắt màn và nút Start bỏ qua ready đã gỡ.
+Progression Lk ở các trận sau thuộc tích hợp SB-26/SB-29, chưa được chứng minh.
+Native verify đạt 179 EditMode/37 PlayMode, gồm input đi lại qua NGO, chọn/khóa trái,
+quầy host theo vị trí, info, ready/countdown và roster hai người. LobbySync kiểm tra
+`reader.Length - reader.Position`: NGO đã đọc hash tên message trước handler.
+Chưa duyệt hình ảnh/glyph trong Windows player hoặc LAN nhiều PC; xem `docs/testing.md`.
+PR nối tiếp lấy base `feat/SB-25-lobby-foundation`; merge #95 trước, sau đó merge
+origin/main vào nhánh nối tiếp, chuyển base PR về main và verify lại; không force-push
+hoặc tự merge PR để đổi việc.

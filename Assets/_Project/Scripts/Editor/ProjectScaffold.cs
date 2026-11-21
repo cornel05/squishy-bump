@@ -226,11 +226,31 @@ namespace SquishyBump.Editor
             Object.DestroyImmediate(root);
         }
 
+        /// <summary>Tạo/nối cấu hình lobby bằng Editor API, không dựng lại toàn bộ prefab.</summary>
+        [MenuItem("Squishy Bump/Configure Lobby Defaults")]
+        public static void ConfigureLobbyDefaults()
+        {
+            EnsureMatchSetup();
+            AssetDatabase.SaveAssets();
+        }
+
         // SB-31: the scene flow's data asset, and the Boot bootstrap pointing at it. Fills only empty slots.
         static void EnsureMatchSetup()
         {
             var setup = EnsureAsset<MatchSetup>(MatchSetupPath);
             var so = new SerializedObject(setup);
+            var lobby = EnsureAsset<LobbyProfile>($"{DataRoot}/LobbyProfile.asset");
+            var lobbyData = new SerializedObject(lobby);
+            if (lobbyData.FindProperty("walkingClass").objectReferenceValue == null)
+            {
+                lobbyData.FindProperty("walkingClass").objectReferenceValue = AssetDatabase.LoadAssetAtPath<ClassProfile>($"{DataRoot}/Classes/Normal.asset");
+                lobbyData.ApplyModifiedPropertiesWithoutUndo(); EditorUtility.SetDirty(lobby);
+            }
+            if (so.FindProperty("lobby").objectReferenceValue == null)
+            {
+                so.FindProperty("lobby").objectReferenceValue = lobby;
+                so.ApplyModifiedPropertiesWithoutUndo(); EditorUtility.SetDirty(setup);
+            }
             if (so.FindProperty("balance").objectReferenceValue == null)
             {
                 so.FindProperty("balance").objectReferenceValue =
