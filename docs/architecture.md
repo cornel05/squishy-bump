@@ -90,7 +90,7 @@ sẽ nối vào các hợp đồng này trong các issue tiếp theo.
 
 `StubSessionService` giữ tên để tương thích SB-06, thực hiện Host/Join bằng NGO và
 UnityTransport. LAN mặc định UDP 7777, tối đa 6 người gồm host; Single Player nghe loopback
-và từ chối client từ xa. Client gửi payload UTF-8 `SquishyBump-LAN-1:<Application.version>`.
+và từ chối client từ xa. Nhánh Rank gửi payload UTF-8 `SquishyBump-LAN-6:<Application.version>`.
 Host kiểm tra độ dài tối đa 128 byte và so khớp chính xác trước khi cấp slot; chưa có xác thực
 tài khoản hoặc Relay. Khi thay wire format phải đổi revision Protocol trên tất cả peer.
 
@@ -100,6 +100,45 @@ UI đọc các lý do Core để báo sai build/phòng đầy/host không tới 
 `InvalidAddress` báo ngay khi IPv4/port không hợp lệ; `StartFailed` khi NGO không mở được kết nối.
 Hợp đồng `ISessionService` chỉ thêm giá trị enum và port mặc định, không thêm quyền mô phỏng cho client.
 Chưa xác nhận LAN nhiều PC hoặc các test mới cho tới khi Unity compile/PlayMode và build chạy được.
+### Luật Rank và điểm session (SB-27)
+
+`MatchDirector` giữ luồng Intro/Countdown/Playing/Result cho cả hai luật; constructor
+giữ mặc định Survival để tương thích caller cũ. Rank lấy `RankRules.FromProfile` từ
+BalanceProfile ở đầu match: 3 mạng, 120 tick chờ hồi sinh, 90 tick bảo vệ ở 60 Hz.
+`RankRules` chỉ là bản chụp bất biến của dữ liệu SO, không phải bộ số mặc định thứ hai.
+Model thuần có thể nhận cấu hình trong fixture để kiểm thử chính sách không cần scene.
+
+Quả đang chờ hồi sinh vẫn tính vào số ứng viên thắng, nên một quả tạm còn trên sàn
+không làm match kết thúc sớm. Khi cửa sổ đóng (L1: tick ứng với lần rụng vành thứ ba;
+L2–L5: time limit), các lượt chờ chưa đặt lại được bị kết thúc. Ring-out cùng tick chỉ
+trừ một mạng, các lượt loại cùng tick chia hạng. Hết giờ Rank xét mạng còn rồi Wobble;
+điểm đã ghi không bị mất. Mỗi tick sống chỉ tăng khi quả đang trên sàn, không tăng trong
+thời gian chờ hồi sinh. Host chốt tổng mạng và thời gian sống một lần theo match ID.
+
+`ScoreService` tồn tại qua các match trong LevelLauncher, cộng điểm cho người chạm
+cuối trong cửa sổ 3 s (gồm biên đúng 3 s), bỏ tự chạm/chạm ngoài roster, chống ghi trùng
+theo tick và nạn nhân. `CollisionResolver.Contact` báo mọi tiếp xúc, kể cả dưới ngưỡng
+30 N·s; `Hit` vẫn chỉ phục vụ Wobble/stun/feedback. Sau khi hồi sinh, credit cũ được xóa.
+Session xếp tổng điểm → tổng mạng còn → tổng tick sống; bằng cả ba thì đồng hạng.
+
+App đặt lại bằng RespawnPicker đã có từ SB-28, kiểm tra raycast còn sàn dưới điểm chọn,
+loại vùng hazard/collider hộp và reset vận tốc, input buffer, dash/stun, Wobble. Không có
+điểm an toàn thì giữ chờ trong cửa sổ, không chọn một spawn nguy hiểm. Core chỉ thêm
+interface đọc `IHazardZones`; Cannons trả vùng cảnh báo/đang tác động. Nón gió được bao
+bằng hình tròn bảo thủ để chọn spawn, không thay hình/công thức nón trong gameplay.
+
+Trong 1.5 s bảo vệ, motor vẫn nhận điều khiển và va chạm sàn; quả không tham gia
+va chạm quả-quả, không nhận impulse/Wobble từ hazard. Tự đi khỏi sàn vẫn là ring-out.
+Hiển thị chớp tối đa 2 Hz; chỉ toggle renderer vốn bật lúc spawn, không bật lại sphere
+placeholder ẩn. Snapshot giữ số mạng và cờ Respawning/Invulnerable; event Rank dùng kênh
+reliable của PR #99. Scoreboard mang điểm/mạng/tick sống và gồm cả quả chờ hồi sinh;
+result không được bỏ quả duy nhất còn quyền chơi dù đang chờ. ResetForRespawn đặt cả
+Transform và Rigidbody trước khi bật lại đối tượng để PhysX không khôi phục pose cũ.
+LAN và dữ liệu cuối session vẫn phải kiểm tra qua các issue liên quan.
+
+Unity đã sinh meta và chạy Native, gồm regression result/respawn đã tái hiện lỗi trước
+khi sửa; bằng chứng cuối trong `docs/testing.md`. T05 toàn run Rank L1–L5 và T07 đủ
+năm scene vẫn chưa đạt chỉ từ các ca chính sách và physics L1 này.
 
 ### L1 Training Ring (SB-14)
 
@@ -138,7 +177,8 @@ ServerClientId và payload >512 byte. Codec chứa EventId, HostTick, loại, fi
 last toucher và tối đa 6 dòng (ID, rank, points, lives, survivalTicks); một bảng 6
 dòng là 174 byte trước prefix độ dài. Client không tính lại điểm hoặc thứ hạng.
 Codec từ chối sai chiều dài, enum lạ, trường không dùng, ID trùng trong bảng, rank
-không hợp lệ, điểm âm hoặc mạng ngoài 0–3. Contract LAN tăng revision 1 → 2.
+không hợp lệ, điểm âm hoặc mạng ngoài 0–3. PR #99 dùng LAN-2; nhánh Rank nối tiếp
+dùng LAN-6 để phân biệt build có các cờ/hành vi Rank, không trộn với Lobby LAN-3/HUD LAN-5.
 
 GameplayBootstrap nối host EventHub → NetSync và NetSync client → EventHub, dùng
 high-water EventId theo stream để bỏ bản nhận trùng/cũ. `MatchReplica` giữ bản đọc
@@ -149,8 +189,8 @@ MatchDirector Survival phát countdown 3/2/1/GO, ring-out, elimination (giữ sh
 rank), scoreboard và kết quả đã xác nhận. Overlay hiển thị trực tiếp các dòng host;
 client ẩn quả out và chờ respawn/snapshot mới. LevelLauncher đợi NGO báo hoàn tất
 load scene trước khi cho host bắt đầu intro/countdown, tránh bắt đầu event khi
-client còn tải sàn. SB-27 vẫn phải nối dữ liệu Rank/ScoreService vào các event này;
-hiện codec và replay respawn/score table đã qua Native, chưa có nghiệm thu Rank.
+client còn tải sàn. Nhánh SB-27 nối Rank/ScoreService vào các event này;
+codec và producer Rank đã qua Native, chưa có nghiệm thu full run Rank hoặc LAN nhiều PC.
 
 Native verify đã đạt 176 EditMode/37 PlayMode, gồm hai NGO peer loopback truyền sáu
 event và result lặp, so sánh replica/overlay. Chưa chạy LAN riêng máy, scene-load

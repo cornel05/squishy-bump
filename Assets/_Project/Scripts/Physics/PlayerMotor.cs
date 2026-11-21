@@ -53,6 +53,19 @@ namespace SquishyBump.Physics
         public bool IsDashing => state.DashStateTicks > 0;
         public bool IsStunned => state.StunTicks > 0;
         public bool DashReady => state.DashCooldownTicks == 0;
+        /// <summary>Host cập nhật từ cửa sổ bảo vệ hồi sinh; không đổi input hay di chuyển.</summary>
+        public bool Invulnerable { get; set; }
+
+        public void ResetForRespawn(Vector3 position)
+        {
+            state = default;
+            // Khi GameObject tắt, PhysX chưa có actor; OnEnable sẽ tạo lại từ Transform.
+            // Cập nhật cả hai để không khôi phục pose cũ dưới kill plane khi bật lại.
+            transform.position = position;
+            body.position = position;
+            body.linearVelocity = Vector3.zero;
+            body.angularVelocity = Vector3.zero;
+        }
 
         private void Awake()
         {

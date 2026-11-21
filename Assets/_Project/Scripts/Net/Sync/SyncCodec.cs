@@ -13,6 +13,8 @@ namespace SquishyBump.Net.Sync
         Dashing = 1,
         Stunned = 2,
         Out = 4,
+        Invulnerable = 8,
+        Respawning = 16,
     }
 
     /// <summary>One fighter in a world snapshot (GDD 10.4).</summary>
