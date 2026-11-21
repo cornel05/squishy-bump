@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a32044a8a9301241ae9b1af317b70cc, type: 3}
+  m_Name: IceProfile
+  m_EditorClassIdentifier: SquishyBump.Core::SquishyBump.Core.IceProfile
+  rings: 4
+  flatToFlat: 2
+  minimumSolid: 37
+  waveSeconds: 3
+  chaosWaveSeconds: 3.5
+  secondPhaseSeconds: 30
+  thirdPhaseSeconds: 60
+  chaosPhaseSeconds: 45
+  firstWaveCount: 2
+  secondWaveCount: 3
+  thirdWaveCount: 4
+  fighterWeight: 1.5
+  crackSeconds: 1.5
+  returnSeconds: 10
+  fadeSeconds: 1
+  thickness: 0.25
+  shakeMeters: 0.025
