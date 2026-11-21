@@ -134,3 +134,13 @@ L4 và L5, Cannons/HazardProfile từ main cho H04/H05. Không sinh bitmap/model
 không có prompt image generation hoặc seed của hình học. Seed chọn ô do host cấp.
 Vị trí, nguồn công cụ và giới hạn giấy phép theo CREDITS.md. Native tests không
 chứng minh chất lượng hiển thị, khả năng đọc cảnh báo hoặc LAN nhiều máy.
+
+## C.7 SB-46 — hint navigation, 22/11/2026
+
+Các component hazard chỉ thêm API cấp dữ liệu bot, không thêm hình ảnh/model/vật liệu.
+H06-PROC-001 tại c918aa6 có hash `17f59ffce25a69f7b385b94c677bcf2128507386fc6293c80feff122da4a59e9`;
+phiên bản có hint mới lưu hash trong CSV. Giữ c918aa6 để truy vết source v3 trước
+thay đổi. Công cụ C#/Unity 6000.3.28f1, có hỗ trợ AI Codex theo issue SB-46 và GDD
+A.3/A.4; không có prompt image generation hoặc asset tải ngoài. RNG bot dùng seed
+trận/ID; hình học không đổi. Nguồn/giấy phép giữ theo CREDITS.md, không suy diễn
+giấy phép chung của repo. Native test hành vi không thay thế kiểm tra hình ảnh.

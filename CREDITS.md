@@ -87,3 +87,11 @@ trên main (H04/H05); không thêm ảnh, texture, âm thanh hoặc model bên n
 và hình học không dùng RNG; chọn ô dùng seed trận do host cung cấp. Source nội bộ
 chưa có LICENSE chung; shader/package Unity theo điều khoản nhà cung cấp.
 Bằng chứng Native và phần hiển thị/LAN chưa kiểm chứng được ghi trong docs/testing.md.
+
+## Bổ sung SB-46 — dữ liệu navigation, 22/11/2026
+
+Hazard hiện có chỉ bổ sung hint sàn/cảnh báo cho AI qua Core, với hỗ trợ AI Codex
+(C#, Unity 6000.3.28f1, GDD A.3/A.4); không thêm ảnh/model/font/âm thanh hoặc vật liệu.
+Hình học H01–H07 giữ nguyên; source H06 có hash mới trong CSV vì thêm API chỉ đọc,
+hash/commit trước đó được ghi ở Phụ lục C. Bot dùng seed trận/ID cho RNG; không có
+prompt image generation. Nguồn và giới hạn giấy phép của asset tái dùng không đổi.

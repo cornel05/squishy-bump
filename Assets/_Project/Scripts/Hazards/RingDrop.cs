@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using SquishyBump.Core;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace SquishyBump.Hazards
     /// collider turns off so a fruit on it falls with it. Telegraph and fall visuals run on every peer from
     /// <see cref="BeginWarning"/>, which App wires to the <see cref="HazardEventKind.RingDropWarning"/> event.
     /// </summary>
-    public sealed class RingDrop : MonoBehaviour, IHazard
+    public sealed class RingDrop : MonoBehaviour, IHazard, IBotHazardHints
     {
         [SerializeField] private BalanceProfile balance;
         [SerializeField] private HazardProfile hazards;
@@ -46,6 +47,19 @@ namespace SquishyBump.Hazards
         public void Bind(IGameEventSink eventSink) => sink = eventSink;
 
         public void Bind(IGameEventSink eventSink, IFighterPhysics fighters) => sink = eventSink;
+
+        public void CollectBotWarnings(List<BotHazardWarning> warnings, int playingTicks, float dt)
+        {
+            for (var i = 0; i < BandCount; i++)
+            {
+                var remaining = (DropTick(i, balance, dt) - playingTicks) * dt;
+                if (!warned[i] || dropped[i] || remaining < 0) continue;
+                warnings.Add(new BotHazardWarning(BotAwareness.RingDrop, BotHazardShape.Annulus,
+                    new Vector2(transform.position.x, transform.position.z),
+                    new Vector2((BandCount - i - 1) * balance.RingWidthMeters,
+                        (BandCount - i) * balance.RingWidthMeters), 0, remaining));
+            }
+        }
 
         // Clients follow the RingDropWarning event instead (BeginWarning), so there is nothing to pose here.
         public void ShowAt(float playingSeconds) { }
