@@ -134,3 +134,12 @@ When an asset is replaced, its version, path and usage are updated and the old r
 Lịch sử H06-PROC-001: source v2 tại commit `85b3c9c`, SHA-256 `a9325e57f3b192414997d3bd1389f57ba17ae93082b54610be1e3ad3455391a2`;
 source v3 sửa replay qua nhiều chu kỳ, SHA mới trong CSV. Giữ đường mesh/material
 và thông số; không bổ sung asset bên ngoài hoặc thay thiết kế. Bản v2 vẫn truy vết qua commit trên.
+
+## C.6 L5 tái dùng asset — SB-45, 21/11/2026
+
+ENV-L5-001 là scene L5 do Editor Native tạo bằng IceSceneBuilder.BuildL5 với hỗ trợ
+AI Codex; danh mục CSV ghi hash scene. Tái dùng H06-PROC-001/H06-CONFIG-001 cho cả
+L4 và L5, Cannons/HazardProfile từ main cho H04/H05. Không sinh bitmap/model mới;
+không có prompt image generation hoặc seed của hình học. Seed chọn ô do host cấp.
+Vị trí, nguồn công cụ và giới hạn giấy phép theo CREDITS.md. Native tests không
+chứng minh chất lượng hiển thị, khả năng đọc cảnh báo hoặc LAN nhiều máy.

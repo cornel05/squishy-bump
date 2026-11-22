@@ -78,3 +78,13 @@ Khai báo dùng AI không đồng nghĩa mỗi dòng đã được người th�
 H06-PROC-001 source v3: bổ sung lịch sử chuyển trạng thái theo thời gian host để
 client nội suy không hiện sàn hồi quá sớm khi nhận warning chu kỳ mới. Source v2
 và hash cũ được giữ trong lịch sử Phụ lục C; không đổi asset/nguồn bên ngoài.
+
+## Bổ sung SB-45 — L5 Chaos Core, 21/11/2026
+
+`ENV-L5-001`: scene `Assets/_Project/Scenes/Levels/L5.unity` được Unity 6000.3.28f1
+sinh qua `Editor/IceSceneBuilder.BuildL5`, có hỗ trợ AI Codex theo issue SB-45 và GDD
+7.5/9.2.5. Tái dùng H06-PROC-001/H06-CONFIG-001 của L4 và Cannons/HazardProfile có sẵn
+trên main (H04/H05); không thêm ảnh, texture, âm thanh hoặc model bên ngoài. Mount
+và hình học không dùng RNG; chọn ô dùng seed trận do host cung cấp. Source nội bộ
+chưa có LICENSE chung; shader/package Unity theo điều khoản nhà cung cấp.
+Bằng chứng Native và phần hiển thị/LAN chưa kiểm chứng được ghi trong docs/testing.md.

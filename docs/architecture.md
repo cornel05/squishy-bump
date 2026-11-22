@@ -172,6 +172,16 @@ chọn trạng thái theo đúng thời gian đang render, hỗ trợ nội suy 
 và Warning của chu kỳ tiếp theo cùng tick không được xóa Fading của tick trước đó.
 Lịch sử sống trong scene match tối đa 150 s; đổi scene giải phóng cùng IceTiles.
 
+## L5 Chaos Core / SB-45
+
+`IceSceneBuilder.BuildL5` dùng chung đường dựng sàn/bounds/spawn của L4, bật chế độ
+chaos trên IceTiles và Cannons. L5 dùng cùng IceProfile/BalanceProfile/HazardProfile;
+không chép lại thuật toán H06, lực gió hoặc đạn đạo. Hai mount: Air 270° (tây,
+x=-9.9), Fire 90° (đông, x=+9.9). Mỗi pháo có chu kỳ 4 s từ HazardProfile;
+giữ cơ chế stagger 1.25 s hiện có của Cannons. Sóng ô 3.5 s, 2 ô trước 45 s,
+3 ô sau đó từ IceRules.FromProfile(chaos:true). Không có MovingGround hoặc RingDrop.
+Không đổi Core/App hay hợp đồng mạng so với nhánh phụ thuộc SB-44.
+
 # SB-24 — đồng bộ sự kiện trận (đang triển khai, 21/11/2026)
 
 `SB.Match` dùng NGO `ReliableSequenced`, chỉ host gửi. NetSync từ chối nguồn khác
