@@ -234,6 +234,7 @@ namespace SquishyBump.App
                 // Best Single Player Survival run: the player won this level outright.
                 if (pausesGame && Director.GetSinglePlayerOutcome(0) != SurvivalOutcome.Retry) bootstrap.RecordSurvival(level);
             };
+            foreach (var ice in hazardList.OfType<IceTiles>()) ice.SetSeed(seed);
             foreach (var h in hazardList) h.Bind(bootstrap.EventSink, fighterPhysics);
             bootstrap.Sync.InputReceived += OnRemoteInput;
             bootstrap.Clock.Ticked += OnTick;
@@ -414,6 +415,10 @@ namespace SquishyBump.App
 
         private void OnHazard(HazardEvent e)
         {
+            if ((e.Kind == HazardEventKind.IceTileWarning || e.Kind == HazardEventKind.IceTileFading ||
+                e.Kind == HazardEventKind.IceTileSolid) && clientView?.Buffer.Newest is { GoTick: > 0 } iceGo)
+                foreach (var ice in hazardList.OfType<IceTiles>())
+                    ice.ApplyEvent(e, (e.HostTick - iceGo.GoTick) * Time.fixedDeltaTime);
             // Clients replay pusher departures from the host tick they were scheduled for.
             if (e.Kind == HazardEventKind.PusherDeparture && clientView?.Buffer.Newest is { GoTick: > 0 } newest)
                 foreach (var p in hazardList.OfType<PusherBlocks>())
