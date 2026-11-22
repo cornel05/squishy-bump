@@ -226,11 +226,26 @@ namespace SquishyBump.Editor
             Object.DestroyImmediate(root);
         }
 
+        /// <summary>Gán D1 vào MatchSetup hiện có mà không dựng lại toàn bộ prefab/scene.</summary>
+        [MenuItem("Squishy Bump/Configure D1 Bots")]
+        public static void ConfigureBotDefaults()
+        {
+            EnsureMatchSetup();
+            AssetDatabase.SaveAssets();
+        }
+
         // SB-31: the scene flow's data asset, and the Boot bootstrap pointing at it. Fills only empty slots.
         static void EnsureMatchSetup()
         {
             var setup = EnsureAsset<MatchSetup>(MatchSetupPath);
             var so = new SerializedObject(setup);
+            if (so.FindProperty("defaultBotProfile").objectReferenceValue == null)
+            {
+                so.FindProperty("defaultBotProfile").objectReferenceValue =
+                    AssetDatabase.LoadAssetAtPath<BotProfile>($"{DataRoot}/Bots/D1.asset");
+                so.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(setup);
+            }
             if (so.FindProperty("balance").objectReferenceValue == null)
             {
                 so.FindProperty("balance").objectReferenceValue =
