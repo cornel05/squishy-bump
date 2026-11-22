@@ -59,7 +59,8 @@ namespace SquishyBump.Hazards
             material.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
             material.SetFloat("_ZWrite", 0f); material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
             material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-            lineMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+            // URP/Unlit is stripped from the player (Shader.Find → null aborted Awake: no floor); Sprites/Default ships, like RingDrop.
+            lineMaterial = new Material(Shader.Find("Sprites/Default"));
             floors = new MeshCollider[field.Count]; visuals = new Transform[field.Count];
             renderers = new Renderer[field.Count]; cracks = new LineRenderer[field.Count];
             visibleStages = new IceStage[field.Count]; started = new float[field.Count];
