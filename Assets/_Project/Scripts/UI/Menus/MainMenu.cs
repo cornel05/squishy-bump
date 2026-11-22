@@ -113,6 +113,7 @@ namespace SquishyBump.UI.Menus
         {
             SessionEndReason.VersionMismatch => "Sai phiên bản build. Hãy dùng cùng bản với host.",
             SessionEndReason.RoomFull => "Phòng đã đủ 6 người hoặc không nhận kết nối.",
+            SessionEndReason.MatchInProgress => "Phòng đang trong phiên đấu.",
             SessionEndReason.InvalidAddress => "Địa chỉ IPv4 hoặc port không hợp lệ.",
             SessionEndReason.ConnectFailed => "Không tới được host. Kiểm tra IP và kết nối LAN.",
             SessionEndReason.HostLost => "Host đã rời phòng hoặc mất kết nối.",

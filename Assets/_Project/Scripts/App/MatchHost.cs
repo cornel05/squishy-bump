@@ -8,6 +8,7 @@ using SquishyBump.Net.Sync;
 using SquishyBump.Physics;
 using SquishyBump.Presentation;
 using SquishyBump.UI.Menus;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace SquishyBump.App
@@ -47,6 +48,7 @@ namespace SquishyBump.App
         private CollisionResolver resolver;
         private LocalPlayerInput localInput;
         private MatchClientView clientView;
+        private NetworkManager networkManager;
         private int snapshotEveryTicks;
         private PauseMenu pause;
         private readonly List<IHazard> hazardList = new();
@@ -61,6 +63,12 @@ namespace SquishyBump.App
         private readonly HashSet<Collider> nearBoxes = new();
         private bool hitStopping;
         private bool pausesGame;
+        private bool lanSurvival;
+        private bool survivalResult;
+        private bool sessionFinished;
+        private IReadOnlyList<LobbyPlayer> survivalRoster;
+        private ushort? cameraFighter;
+        private System.Action leaveCompletedSession;
         private ScoreService sessionScores;
         private uint matchId, simulationTick;
         public void ConfigureRank(ScoreService scores, uint id) { sessionScores = scores; matchId = id; }
@@ -76,6 +84,7 @@ namespace SquishyBump.App
         public IReadOnlyList<Fighter> Fighters => fighters;
         public MatchClientView ClientView => clientView;
         public bool Started => Director != null;
+        internal bool Initialized => localInput != null;
         public IReadOnlyList<IHazard> Hazards => hazardList;
         /// <summary>Set by the launcher: start the match on the first frame after Start (host only).</summary>
         public bool StartWhenReady { get; set; }
@@ -92,6 +101,13 @@ namespace SquishyBump.App
             fighterPrefabs = roster;
             level = levelNumber;
             this.autoHost = autoHost;
+        }
+
+        public void ConfigureLanSurvival(IReadOnlyList<LobbyPlayer> contestants, System.Action leave)
+        {
+            lanSurvival = true;
+            survivalRoster = contestants;
+            leaveCompletedSession = leave;
         }
 
         /// <summary>Esc menu: pauses in Single Player, overlay only in Multiplayer (GDD 3.4).</summary>
@@ -141,9 +157,9 @@ namespace SquishyBump.App
 
         private void OnPauseChanged(bool open)
         {
-            localInput.Suspended = open;
+            localInput.Suspended = open || survivalResult;
             if (pausesGame) Time.timeScale = open ? 0f : 1f;
-            Cursor.lockState = open ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.lockState = open || survivalResult ? CursorLockMode.None : CursorLockMode.Locked;
         }
 
         private void ApplySettings(GameSettings settings)
@@ -168,6 +184,7 @@ namespace SquishyBump.App
         private void Start()
         {
             if (bootstrap == null) bootstrap = FindAnyObjectByType<GameplayBootstrap>();
+            networkManager = bootstrap.GetComponent<NetworkManager>();
             localInput = new LocalPlayerInput(cameraRig, bootstrap.Saved.Bindings);
             // Every hazard of this level scene (H01 floor, moving ground, cannons…).
             foreach (var root in gameObject.scene.GetRootGameObjects())
@@ -206,17 +223,18 @@ namespace SquishyBump.App
             fighterPhysics = new FighterPhysicsAdapter(resolver);
             snapshotEveryTicks = Mathf.Max(1, Mathf.RoundToInt(balance.InputRateHz / balance.SnapshotRateHz));
 
-            var humans = new List<ulong> { 0 };
-            humans.AddRange(bootstrap.Session.Peers.OrderBy(id => id).Take(fighterPrefabs.Length - 1));
+            var roster = survivalRoster ?? DefaultRoster();
             var spawns = bounds.SpawnPoints;
-            for (var i = 0; i < fighterPrefabs.Length; i++)
+            for (var i = 0; i < roster.Count; i++)
             {
-                var id = i < humans.Count ? (ushort)humans[i] : (ushort)(FirstBotId + i);
+                var slot = roster[i];
+                var id = (ushort)slot.Id;
                 var spawn = spawns[i % spawns.Count];
-                var go = Instantiate(fighterPrefabs[i], spawn.position + Vector3.up * SpawnLift(fighterPrefabs[i]), Quaternion.identity);
+                var prefab = fighterPrefabs[slot.Fruit];
+                var go = Instantiate(prefab, spawn.position + Vector3.up * SpawnLift(prefab), Quaternion.identity);
                 var f = new Fighter
                 {
-                    Id = id, Fruit = (byte)i, Motor = go.GetComponent<PlayerMotor>(),
+                    Id = id, Fruit = (byte)slot.Fruit, Motor = go.GetComponent<PlayerMotor>(),
                     Visual = go.GetComponentInChildren<RollVisual>(),
                     VisibleRenderers = go.GetComponentsInChildren<Renderer>().Where(r => r.enabled).ToArray(),
                 };
@@ -224,7 +242,7 @@ namespace SquishyBump.App
                 if (id >= FirstBotId && botProfile != null) bots[id] = new BotBrain(botProfile, id, seed);
                 resolver.Register(f.Id, f.Motor);
                 fighterPhysics.Add(f.Id, f.Motor);
-                if (i > 0 && i < humans.Count) inboxes[id] = new InputInbox();
+                if (id != 0 && id < FirstBotId) inboxes[id] = new InputInbox();
             }
 
             Director = new MatchDirector(() => bootstrap.Session.CanSimulateGameplay, fighters.Select(f => (ulong)f.Id), level,
@@ -253,15 +271,25 @@ namespace SquishyBump.App
             bootstrap.Clock.Ticked += OnTick;
         }
 
+        private IReadOnlyList<LobbyPlayer> DefaultRoster()
+        {
+            var humans = new List<ulong> { 0 };
+            humans.AddRange(bootstrap.Session.Peers.OrderBy(id => id).Take(fighterPrefabs.Length - 1));
+            return Enumerable.Range(0, fighterPrefabs.Length).Select(i =>
+                new LobbyPlayer(i < humans.Count ? humans[i] : (ulong)(FirstBotId + i), i, false)).ToArray();
+        }
+
         private static float SpawnLift(GameObject prefab) => prefab.GetComponent<SphereCollider>().radius;
 
         private void Update()
         {
+            if (bootstrap == null) return;
             if (StartWhenReady && !Started) StartMatch();
             if (pause != null && localInput != null && localInput.MenuPressed) pause.Toggle();
             localInput?.UpdateLook();
             UpdateSounds();
             clientView?.Update(Time.time);
+            if (lanSurvival && (Started || clientView != null)) UpdateSurvivalCamera();
             foreach (var f in fighters)
             {
                 if (f.Out) continue;
@@ -272,12 +300,44 @@ namespace SquishyBump.App
                 foreach (var h in hazardList) h.ShowAt(seconds);
             else if (Started) seconds = Director.ElapsedTicks * Time.fixedDeltaTime;
             else seconds = 0f;
-            if (overlay != null && !finalWarningShown &&
+            if (overlay != null && !survivalResult && !finalWarningShown &&
                 FinalWarningDue(level, seconds, balance.TimeLimitSeconds, finalWarningSeconds))
             {
                 finalWarningShown = true;
                 overlay.ShowBanner($"{finalWarningSeconds:0} seconds left!", bannerSeconds);
             }
+        }
+
+        private void UpdateSurvivalCamera()
+        {
+            if (cameraRig == null) return;
+            var own = (ushort)networkManager.LocalClientId;
+            var views = clientView != null ? clientView.Views : null;
+            var ownView = views != null ? (views.TryGetValue(own, out var view) ? view : null) :
+                fighters.FirstOrDefault(f => f.Id == own)?.Motor.gameObject;
+            if (ownView != null && ownView.activeSelf)
+            {
+                FollowFighter(own, ownView);
+                overlay?.ShowSpectating(false);
+                return;
+            }
+
+            var available = views != null
+                ? views.Where(pair => pair.Value.activeSelf).OrderBy(pair => pair.Key).ToArray()
+                : fighters.Where(f => !f.Out).Select(f => new KeyValuePair<ushort, GameObject>(f.Id, f.Motor.gameObject)).ToArray();
+            overlay?.ShowSpectating(available.Length > 0);
+            if (available.Length == 0) return;
+            var current = System.Array.FindIndex(available, pair => pair.Key == cameraFighter);
+            var index = current < 0 ? 0 : (current + localInput.SpectatorCycle + available.Length) % available.Length;
+            var target = available[index];
+            FollowFighter(target.Key, target.Value);
+        }
+
+        private void FollowFighter(ushort id, GameObject target)
+        {
+            if (cameraFighter == id) return;
+            cameraFighter = id;
+            cameraRig.Follow(target.transform);
         }
 
         private void FixedUpdate() => clientView?.FixedUpdate();
@@ -290,6 +350,7 @@ namespace SquishyBump.App
 
         private void OnTick(uint tick)
         {
+            if (lanSurvival && (sessionFinished || Director.Phase == MatchPhase.Result)) return;
             simulationTick = tick;
             var dt = Time.fixedDeltaTime;
             introStartTick ??= tick;
@@ -316,6 +377,11 @@ namespace SquishyBump.App
             foreach (var f in fighters)
             {
                 if (f.Out) continue;
+                if (lanSurvival && f.Id != 0 && !bootstrap.Session.Peers.Contains(f.Id))
+                {
+                    if (playing) Director.ReportRingOut(f.Id, tick);
+                    continue;
+                }
                 f.Motor.Invulnerable = Director.IsInvulnerable(f.Id, 1);
                 var input = f.Id == 0 ? local : inboxes.TryGetValue(f.Id, out var inbox) ? inbox.Take() : default;
                 if (bots.TryGetValue(f.Id, out var brain))
@@ -420,10 +486,24 @@ namespace SquishyBump.App
             if (e.Kind == MatchEventKind.Countdown)
                 overlay.ShowBanner(e.Value == 0 ? "GO!" : e.Value.ToString(), 1f);
             if (e.Kind == MatchEventKind.MatchResult) overlay.ShowResult(e.Standings, FighterLabel);
+            if (!lanSurvival || (e.Kind != MatchEventKind.MatchResult && e.Kind != MatchEventKind.SessionResult)) return;
+
+            survivalResult = true;
+            localInput.Suspended = true;
+            Cursor.lockState = CursorLockMode.None;
+            if (e.Kind == MatchEventKind.SessionResult)
+            {
+                sessionFinished = true;
+                overlay.ShowSessionResult(e.Standings, FighterLabel);
+                overlay.OfferResultAction("Về menu", leaveCompletedSession);
+            }
         }
 
         private string FighterLabel(ulong id)
         {
+            if (lanSurvival && bootstrap.LobbySelection != null)
+                foreach (var player in bootstrap.LobbySelection.Players)
+                    if (player.Id == id) return fighterPrefabs[player.Fruit].name;
             var hostFighter = fighters.FirstOrDefault(f => f.Id == id);
             if (hostFighter != null) return fighterPrefabs[hostFighter.Fruit].name;
             if (clientView != null && clientView.Views.TryGetValue((ushort)id, out var view) && view != null)
@@ -448,7 +528,7 @@ namespace SquishyBump.App
         private Vector3 LocalFighterPosition()
         {
             if (clientView != null)
-                return clientView.Views.TryGetValue((ushort)Unity.Netcode.NetworkManager.Singleton.LocalClientId, out var v) && v != null
+                return clientView.Views.TryGetValue((ushort)networkManager.LocalClientId, out var v) && v != null
                     ? v.transform.position : Vector3.zero;
             return fighters.Count > 0 ? fighters[0].Motor.transform.position : Vector3.zero;
         }

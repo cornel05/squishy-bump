@@ -28,6 +28,7 @@ namespace SquishyBump.App
         public NetSync Sync => sync;
         public MatchReplica MatchState { get; } = new();
         public LobbySync LobbySync => lobbySync;
+        internal void LockLanRoster() => session.AcceptingPlayers = false;
         public LobbyState LobbySelection { get; private set; }
         public void SetLobbySelection(LobbyState state)
         {

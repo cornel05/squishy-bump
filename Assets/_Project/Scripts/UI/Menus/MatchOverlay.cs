@@ -17,6 +17,11 @@ namespace SquishyBump.UI.Menus
         private Text cardTitle, cardLine, banner;
         private float cardUntil, bannerUntil;
         private Text result;
+        private Text actionText, spectating;
+        private Button resultButton;
+        private Action resultAction;
+        private float resultReadyAt;
+        private const float ResultReadSeconds = 3f; // GDD 11.3
         public string ResultText => result != null && result.gameObject.activeSelf ? result.text : "";
 
         public bool CardVisible => card.gameObject.activeSelf;
@@ -48,6 +53,22 @@ namespace SquishyBump.UI.Menus
             resultRect.sizeDelta = new Vector2(1000, 600);
             result.raycastTarget = false;
             result.gameObject.SetActive(false);
+
+            resultButton = UiFactory.Button(canvas, "", () => resultAction?.Invoke());
+            actionText = resultButton.GetComponentInChildren<Text>();
+            var actionRect = (RectTransform)resultButton.transform;
+            actionRect.anchorMin = actionRect.anchorMax = new Vector2(0.5f, 0.5f);
+            actionRect.anchoredPosition = new Vector2(0f, -245f);
+            actionRect.sizeDelta = new Vector2(340f, 72f);
+            resultButton.gameObject.SetActive(false);
+
+            spectating = UiFactory.Label(canvas, "ĐANG QUAN SÁT · ← → đổi góc nhìn", 26);
+            var spectatorRect = (RectTransform)spectating.transform;
+            spectatorRect.anchorMin = spectatorRect.anchorMax = new Vector2(0.5f, 0f);
+            spectatorRect.anchoredPosition = new Vector2(0f, 78f);
+            spectatorRect.sizeDelta = new Vector2(700f, 45f);
+            spectating.raycastTarget = false;
+            spectating.gameObject.SetActive(false);
         }
 
         public void ShowCard(string title, string line, float seconds)
@@ -68,17 +89,43 @@ namespace SquishyBump.UI.Menus
         /// <summary>Chỉ trình bày kết quả đã được host xác nhận; không tự xếp lại thứ hạng.</summary>
         public void ShowResult(IReadOnlyList<MatchStanding> standings, Func<ulong, string> label)
         {
+            ShowResultText("KẾT QUẢ\n" + string.Join("\n", standings.Select(s =>
+                $"{s.Rank}. {label(s.FighterId)} — {s.Points} điểm · {s.Lives} mạng")));
+        }
+
+        public void ShowSessionResult(IReadOnlyList<MatchStanding> standings, Func<ulong, string> label)
+        {
+            var headline = standings.Count(s => s.Rank == 1) == 1
+                ? $"VÔ ĐỊCH · {label(standings[0].FighterId)}"
+                : "PHIÊN ĐÃ KẾT THÚC";
+            ShowResultText(headline + "\n" + string.Join("\n", standings.Select(s => $"{s.Rank}. {label(s.FighterId)}")));
+        }
+
+        public void OfferResultAction(string caption, Action onClick)
+        {
+            actionText.text = caption;
+            resultAction = onClick;
+        }
+
+        public void ShowSpectating(bool visible) => spectating.gameObject.SetActive(visible && !result.gameObject.activeSelf);
+
+        private void ShowResultText(string content)
+        {
             card.gameObject.SetActive(false);
             banner.gameObject.SetActive(false);
-            result.text = "KẾT QUẢ\n" + string.Join("\n", standings.Select(s =>
-                $"{s.Rank}. {label(s.FighterId)} — {s.Points} điểm · {s.Lives} mạng"));
+            result.text = content;
             result.gameObject.SetActive(true);
+            resultReadyAt = Time.unscaledTime + ResultReadSeconds;
+            resultAction = null;
+            resultButton.gameObject.SetActive(false);
         }
 
         private void Update()
         {
             if (card.gameObject.activeSelf && Time.unscaledTime >= cardUntil) card.gameObject.SetActive(false);
             if (banner.gameObject.activeSelf && Time.unscaledTime >= bannerUntil) banner.gameObject.SetActive(false);
+            var actionReady = resultAction != null && Time.unscaledTime >= resultReadyAt;
+            if (resultButton.gameObject.activeSelf != actionReady) resultButton.gameObject.SetActive(actionReady);
         }
     }
 }

@@ -192,6 +192,7 @@ namespace SquishyBump.Net.Sync
                 case MatchEventKind.Elimination: gameEvent = MatchEvent.Elimination(id, tick, fighter, value); break;
                 case MatchEventKind.MatchResult: gameEvent = MatchEvent.MatchResult(id, tick, rows); break;
                 case MatchEventKind.Scoreboard: gameEvent = MatchEvent.Scoreboard(id, tick, rows); break;
+                case MatchEventKind.SessionResult: gameEvent = MatchEvent.SessionResult(id, tick, rows); break;
                 default: return false;
             }
             // Không cho packet có trường không dùng giả dạng payload hợp lệ sau khi factory bỏ chúng.
@@ -204,7 +205,8 @@ namespace SquishyBump.Net.Sync
         private static bool ValidMatch(MatchEvent e)
         {
             if (e.EventId == 0 || !Enum.IsDefined(typeof(MatchEventKind), e.Kind)) return false;
-            var table = e.Kind == MatchEventKind.Scoreboard || e.Kind == MatchEventKind.MatchResult;
+            var table = e.Kind == MatchEventKind.Scoreboard || e.Kind == MatchEventKind.MatchResult ||
+                e.Kind == MatchEventKind.SessionResult;
             if (table)
             {
                 if (e.Standings.Count < 2 || e.Standings.Count > MatchFighterLimit) return false;

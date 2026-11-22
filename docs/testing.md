@@ -508,3 +508,11 @@ SB-26/SB-29/SB-18 khi tích hợp. Không nâng T06/T07 hoặc bài LAN nhiều 
 `SquishyBump_Data/Managed/`: App.dll
 `C033BC93CEDF1A179D7F341EE30D46244CE1C57D6C0E10432C3B97A3A8372F88`, UI.dll
 `B939A2A79D66B37A6DA6FA008D91D1C51551DCBC8DE2D09C5EB79C915EDB7F6B`.
+
+## 23/11/2026 · SB-29 Survival LAN, T18
+
+- Tái hiện trước sửa (`TestResults/SB29-red.xml`): client nhận kết quả L1, host không có nút **Tiếp tục**.
+- PlayMode sau sửa (`TestResults/PlayMode.xml`): hai peer qua L1 → L5, giữ nguyên ID/trái và nhận cùng kết quả phiên. Ca ba người loại host ở L1, host spectate L2 và client còn lại nhận kết quả khi đối thủ rời. Ca hòa ở màn cuối tải lại cùng màn, roster và seed rồi chốt một vô địch.
+- EditMode kiểm công thức với 6 người/5 màn và 4 người/3 màn, phòng 2 người, hòa cắt ngưỡng và bỏ cuộc. Phần PlayMode dùng NGO loopback cùng tiến trình, tắt NGO scene management và nạp scene ở host. T18 nhiều người trên các máy riêng còn chưa kiểm chứng.
+- `tools/verify.ps1 -PlayMode` → PASS, 260 EditMode và 62 PlayMode, 0 failed/skipped, 0 cảnh báo C#. `python tools/check_repo.py` → PASS.
+- Windows x64 → BUILD PASS, 101 MB, 0 lỗi. Hai tiến trình build mới Host/Join `127.0.0.1` vào cùng lobby. Chuyển L1 → L2 trên hai cửa sổ còn cần kiểm thủ công vì điều khiển tự động bị timeout khi đi tới kệ trái.

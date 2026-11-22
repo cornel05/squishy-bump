@@ -16,13 +16,14 @@ namespace SquishyBump.Net.Session
         private const ushort LanPort = 7777;
         public const int MaxPlayers = 6;
         // Phiên bản hợp đồng mạng, độc lập Application.version; đổi khi wire format thay đổi.
-        public const string Protocol = "SquishyBump-LAN-9";
+        public const string Protocol = "SquishyBump-LAN-10";
         private readonly NetworkManager manager;
         private readonly UnityTransport transport;
         private readonly List<ulong> peers = new();
         private SessionMode hostMode;
         private readonly string buildVersion;
         private SessionEndReason pendingEndReason;
+        public bool AcceptingPlayers { get; set; } = true;
 
         public StubSessionService(NetworkManager manager, UnityTransport transport, string version = null)
         {
@@ -50,6 +51,7 @@ namespace SquishyBump.Net.Session
                 return false;
 
             hostMode = mode;
+            AcceptingPlayers = true;
             manager.NetworkConfig.ConnectionApproval = true;
             manager.NetworkConfig.ConnectionData = Encoding.UTF8.GetBytes(buildVersion);
             pendingEndReason = SessionEndReason.None;
@@ -122,6 +124,8 @@ namespace SquishyBump.Net.Session
         {
             var reason = request.ClientNetworkId == NetworkManager.ServerClientId ? SessionEndReason.None :
                 CheckJoin(request.Payload, buildVersion, manager.ConnectedClientsIds.Count, hostMode);
+            if (request.ClientNetworkId != NetworkManager.ServerClientId && reason == SessionEndReason.None && !AcceptingPlayers)
+                reason = SessionEndReason.MatchInProgress;
             response.Approved = reason == SessionEndReason.None;
             response.CreatePlayerObject = false;
             response.Pending = false;
@@ -142,6 +146,7 @@ namespace SquishyBump.Net.Session
         {
             "SB:VersionMismatch" => SessionEndReason.VersionMismatch,
             "SB:RoomFull" => SessionEndReason.RoomFull,
+            "SB:MatchInProgress" => SessionEndReason.MatchInProgress,
             _ => SessionEndReason.ConnectFailed,
         };
 

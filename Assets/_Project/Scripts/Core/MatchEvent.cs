@@ -11,6 +11,7 @@ namespace SquishyBump.Core
         Elimination,
         MatchResult,
         Scoreboard,
+        SessionResult,
     }
 
     /// <summary>Một dòng của kết quả trận hoặc bảng điểm phiên.</summary>
@@ -89,5 +90,8 @@ namespace SquishyBump.Core
 
         public static MatchEvent Scoreboard(uint eventId, uint hostTick, IReadOnlyList<MatchStanding> standings) =>
             new MatchEvent(eventId, hostTick, MatchEventKind.Scoreboard, NoFighter, NoFighter, 0, standings);
+
+        public static MatchEvent SessionResult(uint eventId, uint hostTick, IReadOnlyList<MatchStanding> standings) =>
+            new MatchEvent(eventId, hostTick, MatchEventKind.SessionResult, NoFighter, NoFighter, 0, standings);
     }
 }

@@ -15,6 +15,7 @@ namespace SquishyBump.App
         public IReadOnlyDictionary<ulong, int> Eliminated => eliminated;
         public IReadOnlyList<MatchStanding> Result { get; private set; } = Array.Empty<MatchStanding>();
         public IReadOnlyList<MatchStanding> Scoreboard { get; private set; } = Array.Empty<MatchStanding>();
+        public IReadOnlyList<MatchStanding> SessionResult { get; private set; } = Array.Empty<MatchStanding>();
         public event Action<MatchEvent> Changed;
         public void Apply(MatchEvent e)
         {
@@ -28,13 +29,14 @@ namespace SquishyBump.App
                 case MatchEventKind.Elimination: eliminated[e.FighterId] = e.Value; break;
                 case MatchEventKind.MatchResult: Result = e.Standings; HasResult = true; break;
                 case MatchEventKind.Scoreboard: Scoreboard = e.Standings; break;
+                case MatchEventKind.SessionResult: SessionResult = e.Standings; break;
             }
             Changed?.Invoke(e);
         }
         public void Reset()
         {
             CountdownSeconds = -1; HasResult = false; outFighters.Clear(); eliminated.Clear();
-            Result = Scoreboard = Array.Empty<MatchStanding>();
+            Result = Scoreboard = SessionResult = Array.Empty<MatchStanding>();
         }
     }
 }
