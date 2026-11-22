@@ -11,6 +11,7 @@ namespace SquishyBump.App
         private readonly CollisionResolver resolver;
         private readonly Dictionary<Collider, ulong> byCollider = new();
         private readonly Dictionary<ulong, Rigidbody> bodies = new();
+        private readonly Dictionary<ulong, PlayerMotor> motors = new();
 
         public FighterPhysicsAdapter(CollisionResolver resolver) => this.resolver = resolver;
 
@@ -18,12 +19,14 @@ namespace SquishyBump.App
         {
             byCollider[motor.GetComponent<SphereCollider>()] = id;
             bodies[id] = motor.GetComponent<Rigidbody>();
+            motors[id] = motor;
         }
 
         public void Remove(ulong id)
         {
             if (!bodies.Remove(id, out var body)) return;
             byCollider.Remove(body.GetComponent<SphereCollider>());
+            motors.Remove(id);
         }
 
         public IReadOnlyCollection<ulong> FighterIds => bodies.Keys;
@@ -36,9 +39,13 @@ namespace SquishyBump.App
 
         public void AddImpulse(ulong fighterId, Vector3 impulse)
         {
-            if (bodies.TryGetValue(fighterId, out var body)) body.linearVelocity += impulse / body.mass;
+            if (bodies.TryGetValue(fighterId, out var body) && !motors[fighterId].Invulnerable)
+                body.linearVelocity += impulse / body.mass;
         }
 
-        public void AddWobble(ulong fighterId, int amount) => resolver.AddWobble(fighterId, amount);
+        public void AddWobble(ulong fighterId, int amount)
+        {
+            if (motors.TryGetValue(fighterId, out var motor) && !motor.Invulnerable) resolver.AddWobble(fighterId, amount);
+        }
     }
 }

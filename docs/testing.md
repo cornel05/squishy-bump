@@ -38,6 +38,29 @@ chạy ngoài sandbox nhưng thoát 198: `No valid Unity Editor license found`.
 Không có `EditMode.xml`, chưa chạy compile/test; dòng `Compile: OK (0 warnings)` của script
 không phải bằng chứng biên dịch trong lượt này. Chưa chạy PlayMode Credits hoặc build Windows.
 Không đổi trạng thái T01–T20 vì lượt kiểm tra bị chặn trước khi thực thi test.
+## SB-27 — kiểm chứng bổ sung 20/11/2026, chưa nghiệm thu
+
+Base `b856485`, nhánh `feat/SB-27-rank-scoring`. Compiler Roslyn đi kèm Unity 6000.3.28f1
+đã biên dịch source các module và source test theo asmdef với reference DLL hiện có ở
+checkout chính (chế độ source Editor; assembly AI rỗng dùng một đơn vị compile rỗng).
+Đây không phải `tools/verify.ps1`, không import asset và không kiểm tra build Player.
+
+Các method assertion thuần trong ScoreServiceTests, RankMatchTests và SurvivalMatchTests
+được gọi bằng runner .NET ngoài Unity tại `../scratch/run_score_tests.py`. Ca đọc
+BalanceProfile được gắn `UnityAsset` và không chạy ở runner này. Ca PlayMode
+`RankArenaTests.T05_ContactWithoutWobble_CreditsFall_RespawnsAndProtectsFighter` đã viết
+nhưng chưa chạy. Kết quả chi tiết và số ca bổ sung được lưu ngoài Assets ở
+`../scratch/csc/squishy-bump-sb27/ScoreServiceStandalone.log`.
+
+Kết quả lượt cuối: **28 ca đạt, 0 thất bại** (8 ScoreService, 13 Rank/picker, 7 Survival).
+Một ca `UnityAsset` không chạy ở runner bổ sung; đây không phải số pass từ Unity EditMode.
+
+Unity batch thực tế vẫn thoát 198 (`No valid Unity Editor license found`) ở lượt kiểm tra
+trên SB-17 trong cùng buổi. `verify.ps1` còn nhận lockfile tồn dư như Editor mở; đã xác nhận
+không có Unity.exe rồi gọi batch helper trực tiếp, kết quả vẫn 198. Không xóa cache/lockfile
+hoặc hạ gate. SB-27 còn thiếu meta cho bốn script mới; `check_repo` chưa đạt vì các meta đó.
+T05 và T07 không đổi trạng thái; cần chạy Unity thật và Windows build trước khi nghiệm thu.
+
 ## SB-18 — kiểm tra source bổ sung 20/11/2026
 
 Nhánh `feat/SB-18-bot-fsm`: source module và source test đã biên dịch bằng Roslyn đi
@@ -181,7 +204,7 @@ and [`gdd/ids.md`](gdd/ids.md). Update a row whenever the test is run (date, bui
 | T02 | pass | 16/11/2026 | PR SB-12 | Đình Duy | `CollisionResolverTests.HeadOn_KnownSpeeds_MatchesImpulseFormula` and `CollisionTests.HeadOn_KnownSpeeds_MatchesFormulaWithinTwoPercent`: Normal vs Normal at +5 / −3 m/s → −1.4 / +3.4 m/s, within 2%. |
 | T03 | not run | | | | |
 | T04 | not run | | | | |
-| T05 | not run | | | | |
+| T05 | pass (PlayMode tự động) | 22/11/2026 | PR #101, gameplay `c1824dd` | Codex | `RankRunTests` 8/8. Chạy riêng từng level, số lần rơi/hồi sinh/điểm: L1 18/12/7, L2 15/10/6, L3 17/12/13, L4 17/12/3, L5 17/11/4. Cả năm đạt mục 1–4, 6a (hạng trận), 6b (hạng phiên) và 7, kết thúc trước mốc đóng hồi sinh. Ca 2 quả kiểm mục 5: L1 rơi tick 6301 sau mốc 6300, L2 rơi tick 9000 cùng tick hết giờ. Cả hai ca xác nhận hồi sinh trước mốc, loại cả quả còn mạng sau khi cửa đóng và đồng hạng trận khi rơi cùng tick. Một host đi L1→L5 qua `LevelLauncher.LoadLevel`, đạt 6a mỗi màn và 6b sau L5, tổng 84/56/35 trong lượt verify. Fixture gọi loader giữa các trận. Đồng hạng phiên và xếp hạng nhiều quả sống khi hết giờ được kiểm bằng EditMode. L3/L5 chưa có lượt rơi do chạm đã hết hạn. Bằng chứng `TestResults/T05.xml`, `T05-L*.log`, `T05-Session*.log`, `T05-Close-L*.log`. Verify 223 EditMode, 54 PlayMode, 0 cảnh báo C#. Check repo PASS. |
 | T06 | not run | | | | |
 | T07 | Một phần | 15/11/2026 | Nhánh SB-16 | Minh Nhật | EditMode kiểm chứng chính sách Survival L2–L5 tại 150 giây. L1 dùng mẫu rơi được cấp trong PlayMode. Chờ chạy đủ năm scene với cả hai luật và H01. |
 | T08 | Đạt trong PlayMode | 15/11/2026 | Nhánh SB-16 | Minh Nhật | `SurvivalArenaTests.T08_LastTwoFallOnSameTick_DrawAndRetrySameSeed` đưa hai quả qua kill plane L1 cùng tick. Cả hai hạng 1, chơi lại cùng roster và seed. |
@@ -326,3 +349,42 @@ x64 v0.1.0, 100 MB, 0 lỗi, 2 phút 26 giây. Thư mục `Builds/Windows/`; SHA
 
 Chưa kiểm tra scene-load barrier với nhiều PC, kết quả trên LAN vật lý, hoặc event
 Rank từ ScoreService của SB-27. Chưa nâng T06/T11/T18 hoặc nghiệm thu toàn bộ hai luật.
+
+## SB-27 — Native Rank nối PR #99, 21/11/2026
+
+Nhánh `feat/SB-27-rank-scoring`, base `43eb004` của PR #99; WIP cũ giữ trong stash
+`7190f3a012144da1a2a0508649814836b8557278`. Đã đối chiếu GDD VI v1.3 trang 9,
+mục 3.6: tổng điểm → tổng mạng còn → tổng thời gian sống cho session; match Rank
+hết giờ xét mạng rồi Wobble. Meta bốn script mới do Unity sinh.
+
+`tools/verify.ps1 -PlayMode` cuối: **VERIFY: PASS**, **199 EditMode/38 PlayMode**,
+0 failed/skipped, 0 warning C#. `python tools/check_repo.py`: PASS (0 problems).
+XML/log tại `TestResults/EditMode.*`, `TestResults/PlayMode.*`.
+
+- Chính sách Native kiểm tra 3 mạng, 120 tick hồi sinh, 90 tick bảo vệ, Wobble về 0,
+  chạm cuối trong 180 tick (gồm đúng biên), hazard/tự chạm không cho điểm; cửa sổ L1
+  đóng tại 105 s, L2–L5 tại 150 s; kết quả/tie và tổng session không cộng lại lần hai.
+- Regression `SoleEligibleFruitWaitingToRespawn_RemainsTheWinnerInTheReplicatedResult`
+  đã đỏ trong `RankPendingWinnerBeforeFix.xml` (198 đạt/1 lỗi): result bỏ quả còn mạng
+  đang chờ hồi sinh khiến codec từ chối payload. Sau sửa, cả quả đó và quả bị loại đều
+  có đúng ID/rank/mạng trong result round-trip, không còn hàng chờ hồi sinh sau chốt.
+- PlayMode đã bắt lỗi đặt Rigidbody khi object tắt không cập nhật pose dùng lúc bật
+  lại: `RankRespawnDiagnostic.xml` ghi body/transform vẫn xấp xỉ y=-6. Sửa
+  PlayerMotor.ResetForRespawn cập nhật cả Transform và Rigidbody, giữ state/dash/stun reset.
+  `RankRespawnFix.xml` đạt sau sửa (2,720783 s); suite cuối cũng đạt.
+- `RankArenaTests.T05_Partial_ContactWithoutWobble_CreditsFall_RespawnsAndProtectsFighter`
+  chạy physics trên scene L1 với ba fighter, timeScale 4: tiếp xúc dưới ngưỡng Wobble
+  vẫn cho +1 khi rơi, mất một mạng, ẩn khi chờ rồi về vị trí trên sàn, Wobble/dash/stun
+  reset; impulse/Wobble bị chặn khi bảo vệ, nhận impulse lại khi hết bảo vệ và không rơi lặp.
+- Producer Rank đã nối Scoreboard/Respawn/Elimination/Result vào EventHub của PR #99.
+  Bảng gồm cả quả chờ, mang points/lives/survivalTicks; protocol nhánh là LAN-6.
+
+Đây **chưa phải T05 đầy đủ**: chưa chạy Single Rank L1–L5 với progression/roster bot,
+chưa có LAN nhiều PC hoặc kiểm tra hình ảnh blink. T05 giữ "Một phần", T07 không nâng.
+Không dùng case physics L1 hay test domain để ghi nghiệm thu toàn session.
+
+`tools/build-windows.ps1` đạt **BUILD: PASS**, Windows x64 v0.1.0, 100 MB, 0 lỗi,
+2 phút 29 giây. Build tại `Builds/Windows/SquishyBump.exe`; SHA-256 assembly trong
+`SquishyBump_Data/Managed/`: Match.dll
+`F299F04CD55473524F801920BFEF173BE774FEDCDAED9253E260461BFA148696`, Physics.dll
+`A71CB7F2D461F44EF1F9D9C0EF12969668B312553C69D7BD0FA5B7ACB7DD5FC5`.

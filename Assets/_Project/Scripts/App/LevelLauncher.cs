@@ -26,6 +26,15 @@ namespace SquishyBump.App
         private double perfSeconds;
         private NetworkSceneManager loadingThrough;
         private string pendingScene;
+        private ScoreService scores;
+        private uint matchSequence;
+
+        private void ResetRankSession()
+        {
+            scores = new ScoreService(() => bootstrap.Session.CanSimulateGameplay,
+                Mathf.RoundToInt(setup.Balance.LastTouchWindowSeconds * setup.Balance.FixedStepHz), setup.Balance.PointsPerRingOut);
+            matchSequence = 0;
+        }
 
         public MainMenu Menu { get; private set; }
         public MatchHost Match { get; private set; }
@@ -53,6 +62,7 @@ namespace SquishyBump.App
         public void StartSinglePlayer(int level = 1)
         {
             singlePlayer = true;
+            ResetRankSession();
             if (bootstrap.Session.State == SessionState.Idle && !bootstrap.Session.Host(SessionMode.SinglePlayer)) return;
             LoadLevel(level);
         }
@@ -60,6 +70,7 @@ namespace SquishyBump.App
         public bool HostLan()
         {
             singlePlayer = false;
+            ResetRankSession();
             return bootstrap.Session.Host(SessionMode.Lan);
         }
 
@@ -175,6 +186,7 @@ namespace SquishyBump.App
             Match = hostObject.AddComponent<MatchHost>();
             Match.Configure(bootstrap, setup.Balance, bounds, FindInScene<RingDrop>(scene), rig, setup.Roster,
                 level.LevelNumber, autoHost: false);
+            Match.ConfigureRank(scores, ++matchSequence);
             Match.ConfigureBots(setup.DefaultBotProfile);
             Pause = hostObject.AddComponent<PauseMenu>();
             Pause.Init(bootstrap.Settings, singlePlayer);

@@ -18,6 +18,12 @@ namespace SquishyBump.Core
         void ShowAt(float playingSeconds);
     }
 
+    /// <summary>Vùng đang tác động/cảnh báo cho bộ chọn điểm hồi sinh; không cấp quyền sửa hazard.</summary>
+    public interface IHazardZones
+    {
+        System.Collections.Generic.IReadOnlyList<HazardZone> ThreatenedZones(int playingTick, float dt);
+    }
+
     /// <summary>Host-side access to fighters for hazards, without a Physics dependency (ADR-0003).</summary>
     public interface IFighterPhysics
     {
