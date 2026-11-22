@@ -1,4 +1,4 @@
-# Testing
+﻿# Testing
 
 ## Lượt thử SB-20 ngày 21/11/2026 — phục hồi phiên LAN
 
@@ -209,7 +209,7 @@ and [`gdd/ids.md`](gdd/ids.md). Update a row whenever the test is run (date, bui
 | T07 | Một phần | 15/11/2026 | Nhánh SB-16 | Minh Nhật | EditMode kiểm chứng chính sách Survival L2–L5 tại 150 giây. L1 dùng mẫu rơi được cấp trong PlayMode. Chờ chạy đủ năm scene với cả hai luật và H01. |
 | T08 | Đạt trong PlayMode | 15/11/2026 | Nhánh SB-16 | Minh Nhật | `SurvivalArenaTests.T08_LastTwoFallOnSameTick_DrawAndRetrySameSeed` đưa hai quả qua kill plane L1 cùng tick. Cả hai hạng 1, chơi lại cùng roster và seed. |
 | T09 | not run | | | | |
-| T10 | not run | | | | |
+| T10 | pass (Native PlayMode, 120 s mô phỏng) | 21/11/2026 | SB-44 / base `c293fe1` | Codex | 61 collider thật; kiểm tra từng tick ≥37 và BFS; xem bằng chứng bên dưới. |
 | T11 | not run | | | | |
 | T12 | pass (PlayMode loopback) | 21/11/2026 | SB-20 recovery, base `39bfc7f` | Codex | Client L1 về MainMenu và hiện thông báo khi host đóng phiên. |
 | T13 | not run | | | | |
@@ -220,6 +220,93 @@ and [`gdd/ids.md`](gdd/ids.md). Update a row whenever the test is run (date, bui
 | T18 | not run | | | | |
 | T19 | not run | | | | |
 | T20 | not run | | | | |
+
+### SB-44 — L4/H06 Native, 21/11/2026
+
+Nền `c293fe1`, nhánh `feat/SB-44-frost-ring`, Unity 6000.3.28f1. Editor entry
+`SquishyBump.Editor.IceSceneBuilder.BuildL4` đã tạo scene L4 thật, IceProfile và meta
+(exit 0, `TestResults/SB44-BuildL4.log`). Lượt đầu verifier lỗi license exit 198;
+sau khi Hub/Licensing Client hoạt động, Editor tự xử lý lockfile và kiểm thử Native chạy được.
+
+- `tools/verify.ps1 -PlayMode` → **VERIFY: PASS**: **179 EditMode + 39 PlayMode**,
+  0 lỗi, 0 skip, 0 cảnh báo compile từ code dự án. XML/log ở `TestResults/EditMode.*`,
+  `TestResults/PlayMode.*` trong worktree SB-44; tệp sinh không đưa vào Git.
+- T10 `IceArenaTests.T10_L4WithoutFruits120SimulatedSeconds_PreservesRealFloor`:
+  scene L4 thật, không quả, seed 18, gọi đủ **7.200 tick × 1/60 s**; kiểm tra từng tick
+  61 MeshCollider rộng 2 m, μ=0.3, collider bật đúng Solid/Cracking, ≥37 ô đứng được,
+  BFS không tách vùng. Đây là 120 giây thời gian gameplay mô phỏng, không phải 120 giây quan sát hình ảnh.
+  `IceFieldTests` mở rộng 8 seed × 7.200 tick, gồm cả dự trữ toàn nhóm nứt; kiểm tra
+  mốc 30/60 s, trọng số 1+1.5×occupants và chu kỳ nứt/rơi/fade.
+- `ReturningTile_RealFighterColliderDelaysSolidUntilClear`: SphereCollider layer Fighter
+  thật chồng lên ô đã rơi; sau fade vẫn không bật collider, chuyển quả đi mới hồi Solid;
+  raycast sau hồi chạm đúng tile. Không dùng callback overlap giả để chứng minh ca này.
+- `HostEventsThroughCodec_ClientFloorMatchesEveryTransitionAndWaitsForSolidEvent`:
+  host và replica 61 ô, từng event đi qua SyncCodec; collider khớp mỗi tick trong 120 giây.
+  Replica vẫn không bật sàn khi chỉ biết Warning mà chưa nhận Solid. Ca này không tạo
+  NGO peer hoặc mô phỏng trễ mạng, không chứng minh LAN nhiều máy.
+- Hồi quy đã thấy đỏ trước sửa: Native đầu **36 đạt / 3 lỗi** do tạo
+  MaterialPropertyBlock trong field initializer khi Unity deserialize IceTiles
+  (`TestResults/SB44-BeforeAwakeFix.xml/log`). Chuyển tạo vào Awake; ba ca trên
+  **3/3 đạt**, sau đó toàn bộ **179/39 đạt**. `TestResults/SB44-IceFix.xml/log`
+  lưu lượt kiểm tra riêng sau sửa.
+
+Chưa kiểm chứng: quan sát player Windows (màu/material, crack/shake/fade, đọc cảnh báo),
+đo trượt thực tế cùng hạng cân, LAN trên PC riêng, AI-2/LD06, T07 đủ năm level/cả hai luật.
+Không thay đổi trạng thái các test đó bằng bằng chứng T10.
+
+Build Windows x64 v0.1.0 qua `tools/build-windows.ps1` đạt, Unity trả exit 0;
+`Logs/build-windows.log` lưu BuildScript report. Build không chứng minh hình ảnh đã được quan sát.
+
+#### SB-44 bổ sung — replay qua hai chu kỳ khi client render trễ
+
+`ClientRenderingBeforeRestore_QueuedNextWarningKeepsOldTileUnwalkable` đã chạy Native
+**0 đạt / 1 lỗi** trước sửa (`TestResults/SB44-ClientHistoryBeforeFix.xml/log`):
+client nhận Solid tại 18 s và Warning cho lần rơi 19.5 s, nhưng render 17.9 s lại bật
+collider trong khi ô vẫn đang Fading. Đây là tình huống ô chờ hết overlap rồi bị chọn
+lại ngay, client nội suy sau host. Sửa IceTiles giữ lịch sử chuyển trạng thái của
+một match; warning mới không xóa trạng thái chu kỳ cũ. Ca hồi quy còn kiểm tra các
+mốc 18/19.5 s và rewind về 17.9 s.
+
+Sau sửa: verifier Native **179 EditMode + 40 PlayMode đạt**, 0 lỗi/skip/cảnh báo
+compile từ code dự án; ca mới đạt 0.327111 s. Build lại Windows x64 **100 MB,
+0 errors**, 25.63 s. Repo/diff checks đạt. Wire format và revision LAN-7 không đổi.
+Đây là kiểm chứng logic replay/collider, chưa phải LAN nhiều PC hoặc quan sát hình ảnh.
+
+### SB-45 — L5 Chaos Core Native, 21/11/2026
+
+Nhánh `feat/SB-45-chaos-core`, base `85b3c9c` của PR #102 (SB-44), Unity
+6000.3.28f1. `IceSceneBuilder.BuildL5` tạo scene qua Editor Native, exit 0;
+log `TestResults/SB45-BuildL5.log`, meta test do Unity sinh. Chỉ sửa L5 và đường
+Editor dùng chung; scene L2/L3 và thuật toán Cannon/H06 giữ từ nhánh phụ thuộc.
+
+`tools/verify.ps1 -PlayMode` → **VERIFY: PASS**, **179 EditMode + 41 PlayMode**,
+0 lỗi, 0 skip, 0 cảnh báo compile từ code dự án. Hai ca L5 trong
+`TestResults/PlayMode.xml`:
+
+- `L5_RealSceneReuses61IceTilesAndWestAirEastFire_AllSpawnsHaveFloor`: nạp L5 thật,
+  61 collider ô, một pháo Air ở tây x=-9.9 và một Fire ở đông x=+9.9; không có
+  MovingGround/RingDrop; raycast cả sáu spawn bán kính 6 m xuống đúng sàn H06,
+  ma sát 0.3. Đây là kiểm tra hình học/collider, không phải đánh giá camera hoặc hình ảnh.
+- `L5_150Seconds_IceWavesEvery210TicksAndCannonsEvery240Ticks`: gọi cả H06 và Cannons
+  trên host 9.000 tick × 1/60 s, seed 18, không quả. Ghi nhận **42 đợt nứt** đúng
+  mỗi 210 tick, 2 ô trước mốc 45 s và 3 ô sau đó, cảnh báo nứt 90 tick. **37 phát
+  mỗi pháo**, mỗi cặp phát liên tiếp cách 240 tick, tất cả có CannonAim trước
+  60 tick. Mỗi tick kiểm tra ≥37 ô Solid dự trữ, BFS liên thông và collider đúng
+  trạng thái. Giữ stagger 1.25 s của Cannons hiện có (Air đầu 4 s, Fire đầu 5.25 s).
+
+Các ca này chạy 150 giây thời gian gameplay mô phỏng, không phải quan sát 150 giây
+hình ảnh hoặc trận đủ sáu quả. Chưa kiểm chứng: cảnh báo chồng nhau có dễ đọc,
+đường né thực tế/AI, Windows player và LAN nhiều PC. Không dùng bằng chứng này
+để đánh dấu T07, T04/T05 đầy đủ, LD07 hoặc AI-2 đạt. Cần merge PR #102 trước,
+sau đó merge main vào nhánh SB-45, chuyển base PR về main và xác minh lại.
+
+Lượt cuối sau khi đưa bản sửa replay SB-44 `c918aa6` vào nền: **179 EditMode +
+42 PlayMode đạt**, 0 lỗi/skip/cảnh báo compile; build lại Windows x64 v0.1.0
+**100 MB, 0 errors, 22.14 s**. Verifier và build đều exit 0. Ca hồi quy client
+render trước tick hồi cũng chạy trong bộ 42 ca. Repo/diff checks đạt. Base PR L5
+là `feat/SB-44-frost-ring` tại c918aa6; chỉ delta SB-45 so với nhánh đó được commit.
+Stash trước tích hợp c918aa6 được giữ, không xóa backup WIP.
+
 # SB-24 — kiểm tra bổ sung 21/11/2026
 
 Nhánh `feat/SB-24-match-events`, base `c293fe1`: Roslyn đi kèm Editor 6000.3.28f1

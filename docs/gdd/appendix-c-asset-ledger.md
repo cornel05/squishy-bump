@@ -1,4 +1,4 @@
-# Appendix C. Asset and AI-generation ledger
+﻿# Appendix C. Asset and AI-generation ledger
 
 > **In this chapter:** Every asset with its generator, licence and AI declaration.
 
@@ -117,3 +117,29 @@ The group codes below organise content; each file gets its own ID to track versi
 | Retired | Replaced or removed from the current version |
 
 When an asset is replaced, its version, path and usage are updated and the old record is kept for comparison. Changes that affect the design or production scope are also logged in Appendix D.
+
+## C.5 H06 procedural — SB-44, 21/11/2026
+
+| Trường | Ghi nhận |
+|---|---|
+| Asset ID | H06-PROC-001 |
+| Loại, phiên bản | Mesh hex prism, màu băng và vết nứt LineRenderer runtime; source v2, đã kiểm tra Native hành vi ô; hiển thị chưa nghiệm thu |
+| Nguồn/vị trí | Nhóm 18; `Assets/_Project/Scripts/Hazards/IceTiles.cs`, cấu hình `Core/IceProfile.cs` |
+| Công cụ/phương pháp | C# Unity Mesh API và LineRenderer, có hỗ trợ AI Codex; không dùng ảnh/texture/mô hình tải ngoài |
+| Prompt/seed | Yêu cầu triển khai issue SB-44 theo GDD 7.4, 9.2.4; không có prompt image generation. Hình học không ngẫu nhiên; chọn ô dùng seed trận do host truyền |
+| Sử dụng | Scene L4 qua `Editor/IceSceneBuilder.cs`; scene, IceProfile.asset và meta đã được Editor Native sinh |
+| Giấy phép/attribution | Source nội bộ trong repo; shader URP từ package Unity hiện hữu. Không suy diễn giấy phép riêng hoặc nguồn bên ngoài |
+| Trạng thái | Native IceArenaTests 3/3; danh mục nguồn ở CREDITS.md và docs/asset-ledger.csv. Chưa quan sát hình ảnh player hoặc LAN nhiều máy |
+
+Lịch sử H06-PROC-001: source v2 tại commit `85b3c9c`, SHA-256 `a9325e57f3b192414997d3bd1389f57ba17ae93082b54610be1e3ad3455391a2`;
+source v3 sửa replay qua nhiều chu kỳ, SHA mới trong CSV. Giữ đường mesh/material
+và thông số; không bổ sung asset bên ngoài hoặc thay thiết kế. Bản v2 vẫn truy vết qua commit trên.
+
+## C.6 L5 tái dùng asset — SB-45, 21/11/2026
+
+ENV-L5-001 là scene L5 do Editor Native tạo bằng IceSceneBuilder.BuildL5 với hỗ trợ
+AI Codex; danh mục CSV ghi hash scene. Tái dùng H06-PROC-001/H06-CONFIG-001 cho cả
+L4 và L5, Cannons/HazardProfile từ main cho H04/H05. Không sinh bitmap/model mới;
+không có prompt image generation hoặc seed của hình học. Seed chọn ô do host cấp.
+Vị trí, nguồn công cụ và giới hạn giấy phép theo CREDITS.md. Native tests không
+chứng minh chất lượng hiển thị, khả năng đọc cảnh báo hoặc LAN nhiều máy.

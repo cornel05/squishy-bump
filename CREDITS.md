@@ -1,4 +1,4 @@
-# Credits và khai báo AI
+﻿# Credits và khai báo AI
 
 Kiểm kê ngày 20/11/2026 trên main `b856485`, phục vụ SB-61 #48, GDD 15.2 và Phụ lục C.
 Đây là hồ sơ nguồn của checkout, chưa xác nhận nội dung của một build phát hành.
@@ -61,3 +61,30 @@ Khai báo dùng AI không đồng nghĩa mỗi dòng đã được người th�
 - Nếu đưa hình/font từ bộ GDD vào runtime, bổ sung tệp nguồn, license và prompt gốc khi nguồn cung cấp.
 - Chạy compile/PlayMode và build Windows sau khi khôi phục license Unity; lượt ngày 20/11 thoát 198,
   `No valid Unity Editor license found`, chưa có kết quả kiểm thử mới.
+
+## Bổ sung SB-44 — H06 Frost Ring, 21/11/2026
+
+- `H06-PROC-001`: mesh hex prism 2 m, màu băng trong suốt và vết nứt trắng lan dần bằng
+  Unity Mesh API, MaterialPropertyBlock, LineRenderer; runtime tại `Scripts/Hazards/IceTiles.cs`.
+  Nhóm 18 tạo với hỗ trợ AI Codex theo SB-44, GDD 7.4/9.2.4; không dùng ảnh hoặc model bên ngoài.
+  Hình học không dùng RNG; lựa chọn ô dùng seed trận do host cung cấp.
+- `H06-CONFIG-001`: `Data/Hazards/IceProfile.asset` và scene `Scenes/Levels/L4.unity`
+  do Unity Editor 6000.3.28f1 sinh qua `Editor/IceSceneBuilder.BuildL4`; thông số từ GDD.
+  Không có prompt image generation hoặc seed asset. Không khai nhận giấy phép chung của repo;
+  shader URP thuộc package Unity hiện hữu, theo điều khoản nhà cung cấp.
+- Native kiểm tra hành vi/collider, không thay thế kiểm tra hình ảnh, khả năng đọc cảnh báo
+  hoặc LAN trên các PC riêng. Bản ghi CSV lưu hash và vị trí cụ thể của từng nguồn.
+
+H06-PROC-001 source v3: bổ sung lịch sử chuyển trạng thái theo thời gian host để
+client nội suy không hiện sàn hồi quá sớm khi nhận warning chu kỳ mới. Source v2
+và hash cũ được giữ trong lịch sử Phụ lục C; không đổi asset/nguồn bên ngoài.
+
+## Bổ sung SB-45 — L5 Chaos Core, 21/11/2026
+
+`ENV-L5-001`: scene `Assets/_Project/Scenes/Levels/L5.unity` được Unity 6000.3.28f1
+sinh qua `Editor/IceSceneBuilder.BuildL5`, có hỗ trợ AI Codex theo issue SB-45 và GDD
+7.5/9.2.5. Tái dùng H06-PROC-001/H06-CONFIG-001 của L4 và Cannons/HazardProfile có sẵn
+trên main (H04/H05); không thêm ảnh, texture, âm thanh hoặc model bên ngoài. Mount
+và hình học không dùng RNG; chọn ô dùng seed trận do host cung cấp. Source nội bộ
+chưa có LICENSE chung; shader/package Unity theo điều khoản nhà cung cấp.
+Bằng chứng Native và phần hiển thị/LAN chưa kiểm chứng được ghi trong docs/testing.md.

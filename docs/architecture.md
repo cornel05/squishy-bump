@@ -1,4 +1,4 @@
-# Architecture
+﻿# Architecture
 
 Design source: GDD 10 (technology and architecture) and 13.2. This page is the code-side map.
 
@@ -91,6 +91,8 @@ sẽ nối vào các hợp đồng này trong các issue tiếp theo.
 `StubSessionService` giữ tên để tương thích SB-06, thực hiện Host/Join bằng NGO và
 UnityTransport. LAN mặc định UDP 7777, tối đa 6 người gồm host; Single Player nghe loopback
 và từ chối client từ xa. Nhánh Rank gửi payload UTF-8 `SquishyBump-LAN-6:<Application.version>`.
+
+và từ chối client từ xa. Client gửi payload UTF-8 `SquishyBump-LAN-7:<Application.version>`.
 Host kiểm tra độ dài tối đa 128 byte và so khớp chính xác trước khi cấp slot; chưa có xác thực
 tài khoản hoặc Relay. Khi thay wire format phải đổi revision Protocol trên tất cả peer.
 
@@ -187,6 +189,41 @@ nối trong các issue tương ứng.
 `Scenes/Boot` (build index 0), `MainMenu`, `Lobby`, `Levels/L1…L5` are shared: edited by their owner
 (L1, L4, L5 Nhật; L2, L3 Duy) or through prefabs. `Scenes/Sandbox/Test_Duy` and `Test_Nhat` are personal and
 never built. Scene list is set by `SquishyBump.Editor.ProjectScaffold.Run`.
+## H06 / SB-44
+
+`Core.IceProfile` chứa balance GDD 7.4–7.5; `Hazards.IceRules` chụp dữ liệu thành tick.
+`IceField` sở hữu RNG theo seed trận, trạng thái ô và BFS lục giác. Các ô đang nứt
+được dự trữ cùng nhóm trước khi chọn tiếp, nên khi nhóm rụng vẫn còn ≥37 ô liên thông.
+Ô hồi chỉ trở lại Solid sau fade, có hàng xóm Solid và không overlap quả.
+
+`IceTiles` tạo mesh prism 2 m và PhysicsMaterial μ từ BalanceProfile, chỉ host gọi
+Step/chọn ô/quyết định collider. App truyền seed và replay `IceTileWarning` (HostTick là lúc
+rơi), `IceTileFading`, `IceTileSolid` theo thời gian GO của host. Hai event mới nối cuối
+enum, không đổi số event cũ. Client không tự quyết định ô đã đứng được khi hết 10 giây.
+Snapshot/catch-up và kiểm thử LAN đầy đủ còn phải đối chiếu SB-24; chưa kiểm chứng.
+
+Editor menu `Squishy Bump/Build Level L4 (Frost Ring)` tạo SO/scene qua Unity API.
+Editor Native đã tạo IceProfile.asset, scene L4 và meta. Mesh/collider được tạo ở Awake;
+MaterialPropertyBlock cũng phải khởi tạo ở Awake, không ở field initializer khi Unity deserialize.
+Protocol LAN-7 từ chối peer cũ không biết hai loại sự kiện mới. Revision này riêng nhánh
+SB-44; khi tích hợp các PR song song phải giữ toàn bộ hợp đồng và chọn revision chung mới.
+Kiểm thử collider và thuật toán không thay thế kiểm tra hình ảnh/cảnh báo trên Windows player.
+
+Replay H06 lưu các chuyển trạng thái của cả match, kể cả các chu kỳ cũ. Client
+chọn trạng thái theo đúng thời gian đang render, hỗ trợ nội suy lùi nhẹ. Nhận Solid
+và Warning của chu kỳ tiếp theo cùng tick không được xóa Fading của tick trước đó.
+Lịch sử sống trong scene match tối đa 150 s; đổi scene giải phóng cùng IceTiles.
+
+## L5 Chaos Core / SB-45
+
+`IceSceneBuilder.BuildL5` dùng chung đường dựng sàn/bounds/spawn của L4, bật chế độ
+chaos trên IceTiles và Cannons. L5 dùng cùng IceProfile/BalanceProfile/HazardProfile;
+không chép lại thuật toán H06, lực gió hoặc đạn đạo. Hai mount: Air 270° (tây,
+x=-9.9), Fire 90° (đông, x=+9.9). Mỗi pháo có chu kỳ 4 s từ HazardProfile;
+giữ cơ chế stagger 1.25 s hiện có của Cannons. Sóng ô 3.5 s, 2 ô trước 45 s,
+3 ô sau đó từ IceRules.FromProfile(chaos:true). Không có MovingGround hoặc RingDrop.
+Không đổi Core/App hay hợp đồng mạng so với nhánh phụ thuộc SB-44.
+
 # SB-24 — đồng bộ sự kiện trận (đang triển khai, 21/11/2026)
 
 `SB.Match` dùng NGO `ReliableSequenced`, chỉ host gửi. NetSync từ chối nguồn khác
