@@ -5,6 +5,7 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "SquishyBump.Core",
+        "SquishyBump.AI",
         "SquishyBump.Match",
         "SquishyBump.Physics",
         "SquishyBump.Presentation",

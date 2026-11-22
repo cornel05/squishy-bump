@@ -100,6 +100,22 @@ UI đọc các lý do Core để báo sai build/phòng đầy/host không tới 
 `InvalidAddress` báo ngay khi IPv4/port không hợp lệ; `StartFailed` khi NGO không mở được kết nối.
 Hợp đồng `ISessionService` chỉ thêm giá trị enum và port mặc định, không thêm quyền mô phỏng cho client.
 Chưa xác nhận LAN nhiều PC hoặc các test mới cho tới khi Unity compile/PlayMode và build chạy được.
+### Khung bot D1 (SB-18)
+
+`AI/BotBrain` nhận mẫu cảm nhận bất biến từ App và trả `InputCommand`; không tham chiếu
+Physics/Match/Net hoặc ghi Rigidbody. App chạy bot chỉ khi host và chuyển lệnh vào cùng
+`GameplayBootstrap.TrySimulate`/PlayerMotor như người chơi. Mỗi bot có RNG theo seed và ID.
+FSM có Countdown, Roam, Chase, Charge, Evade, Recover, Eliminated; D1 đọc BotProfile
+(4 Hz, phản xạ 0.5 s, margin 0.5 m, aim noise 25°, alignment 35°, speed factor 0.85).
+Cảm nhận được xếp hàng để dùng mẫu cũ theo reaction delay, chọn mục tiêu ngẫu nhiên mỗi 4 s;
+anti-stuck khi tiến dưới 0.5 m trong 2 s về Roam với điểm an toàn ngẫu nhiên. Chưa triển khai
+danger grid/A*/utility ở đây (SB-46). H01 được App đưa vào bán kính an toàn từ khi telegraph.
+
+`MatchSetup.defaultBotProfile` đã nối tới `Data/Bots/D1.asset` qua Editor API
+`ProjectScaffold.ConfigureBotDefaults`. Entry này chỉ điền slot trống của MatchSetup,
+không dựng lại toàn bộ prefab. Unity đã sinh meta; Native 171 EditMode và 37 PlayMode
+đạt, gồm ca năm bot di chuyển bằng PlayerMotor trên L1 và bị loại khi rơi. Bằng chứng
+build và giới hạn nghiệm thu nằm ở `docs/testing.md`; chưa coi AI-1–AI-6/T13 đạt.
 
 ### L1 Training Ring (SB-14)
 
@@ -165,3 +181,28 @@ x=-9.9), Fire 90° (đông, x=+9.9). Mỗi pháo có chu kỳ 4 s từ HazardPro
 giữ cơ chế stagger 1.25 s hiện có của Cannons. Sóng ô 3.5 s, 2 ô trước 45 s,
 3 ô sau đó từ IceRules.FromProfile(chaos:true). Không có MovingGround hoặc RingDrop.
 Không đổi Core/App hay hợp đồng mạng so với nhánh phụ thuộc SB-44.
+
+# SB-24 — đồng bộ sự kiện trận (đang triển khai, 21/11/2026)
+
+`SB.Match` dùng NGO `ReliableSequenced`, chỉ host gửi. NetSync từ chối nguồn khác
+ServerClientId và payload >512 byte. Codec chứa EventId, HostTick, loại, fighter,
+last toucher và tối đa 6 dòng (ID, rank, points, lives, survivalTicks); một bảng 6
+dòng là 174 byte trước prefix độ dài. Client không tính lại điểm hoặc thứ hạng.
+Codec từ chối sai chiều dài, enum lạ, trường không dùng, ID trùng trong bảng, rank
+không hợp lệ, điểm âm hoặc mạng ngoài 0–3. Contract LAN tăng revision 1 → 2.
+
+GameplayBootstrap nối host EventHub → NetSync và NetSync client → EventHub, dùng
+high-water EventId theo stream để bỏ bản nhận trùng/cũ. `MatchReplica` giữ bản đọc
+cho UI trên cả hai peer, reset khi bắt đầu phiên/match mới, không mô phỏng luật.
+`MatchStanding` sao chép danh sách khi tạo payload để caller không sửa kết quả đã phát.
+
+MatchDirector Survival phát countdown 3/2/1/GO, ring-out, elimination (giữ shared
+rank), scoreboard và kết quả đã xác nhận. Overlay hiển thị trực tiếp các dòng host;
+client ẩn quả out và chờ respawn/snapshot mới. LevelLauncher đợi NGO báo hoàn tất
+load scene trước khi cho host bắt đầu intro/countdown, tránh bắt đầu event khi
+client còn tải sàn. SB-27 vẫn phải nối dữ liệu Rank/ScoreService vào các event này;
+hiện codec và replay respawn/score table đã qua Native, chưa có nghiệm thu Rank.
+
+Native verify đã đạt 176 EditMode/37 PlayMode, gồm hai NGO peer loopback truyền sáu
+event và result lặp, so sánh replica/overlay. Chưa chạy LAN riêng máy, scene-load
+barrier nhiều PC hoặc Rank tích hợp; không suy rộng test protocol thành nghiệm thu đó.

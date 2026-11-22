@@ -21,4 +21,4 @@ Closes #
 - [ ] Acceptance checkboxes in the issue ticked with evidence
 - [ ] `docs/testing.md` updated if T-tests ran
 - [ ] Design changed → `design-change` issue + entry in `docs/design-changelog.md`
-- [ ] Core/App changed → teammate told (review is optional)
+- [ ] Core/App changed → teammate told
