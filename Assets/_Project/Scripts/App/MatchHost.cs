@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SquishyBump.Core;
+using SquishyBump.AI;
 using SquishyBump.Hazards;
 using SquishyBump.Match;
 using SquishyBump.Net.Sync;
@@ -60,6 +61,10 @@ namespace SquishyBump.App
         private readonly HashSet<Collider> nearBoxes = new();
         private bool hitStopping;
         private bool pausesGame;
+        private BotProfile botProfile;
+        private readonly Dictionary<ushort, BotBrain> bots = new();
+        public IReadOnlyDictionary<ushort, BotBrain> Bots => bots;
+        public void ConfigureBots(BotProfile profile) => botProfile = profile;
 
         public MatchDirector Director { get; private set; }
         public IReadOnlyList<Fighter> Fighters => fighters;
@@ -166,6 +171,7 @@ namespace SquishyBump.App
             bootstrap.Settings.Changed += ApplySettings;
             bootstrap.Session.StateChanged += OnSessionState;
             bootstrap.Events.HazardRaised += OnHazard;
+            bootstrap.Events.MatchRaised += OnMatchEvent;
             if (autoHost && bootstrap.Session.State == SessionState.Idle) bootstrap.Session.Host(SessionMode.SinglePlayer);
             if (autoHost && bootstrap.Session.State == SessionState.Hosting) StartMatch();
             if (bootstrap.Session.State == SessionState.Joined) OnSessionState(SessionState.Joined);
@@ -207,6 +213,7 @@ namespace SquishyBump.App
                     Visual = go.GetComponentInChildren<RollVisual>(),
                 };
                 fighters.Add(f);
+                if (id >= FirstBotId && botProfile != null) bots[id] = new BotBrain(botProfile, id, seed);
                 resolver.Register(f.Id, f.Motor);
                 fighterPhysics.Add(f.Id, f.Motor);
                 if (i > 0 && i < humans.Count) inboxes[id] = new InputInbox();
@@ -214,7 +221,7 @@ namespace SquishyBump.App
 
             Director = new MatchDirector(() => bootstrap.Session.CanSimulateGameplay, fighters.Select(f => (ulong)f.Id), level,
                 seed, Mathf.RoundToInt(1f / Time.fixedDeltaTime), countdownSeconds, resultConfirmSeconds,
-                Mathf.RoundToInt(balance.TimeLimitSeconds), bounds);
+                Mathf.RoundToInt(balance.TimeLimitSeconds), bounds, bootstrap.EventSink);
 
             if (cameraRig != null) cameraRig.Follow(fighters[0].Motor.transform);
             resolver.WobbleChanged += Director.SetWobble;
@@ -227,7 +234,6 @@ namespace SquishyBump.App
                 // Best Single Player Survival run: the player won this level outright.
                 if (pausesGame && Director.GetSinglePlayerOutcome(0) != SurvivalOutcome.Retry) bootstrap.RecordSurvival(level);
             };
-            bootstrap.Events.MatchRaised += OnMatchEvent;
             foreach (var ice in hazardList.OfType<IceTiles>()) ice.SetSeed(seed);
             foreach (var h in hazardList) h.Bind(bootstrap.EventSink, fighterPhysics);
             bootstrap.Sync.InputReceived += OnRemoteInput;
@@ -271,13 +277,25 @@ namespace SquishyBump.App
                 Director.FinishIntro(tick);
             var playing = Director.Phase == MatchPhase.Playing;
             var local = localInput.Sample();
+            var sensedFighters = fighters.Select(f => new BotFighter(f.Id, f.Motor.transform.position,
+                f.Motor.GetComponent<Rigidbody>().linearVelocity, !f.Out)).ToArray();
+            var radius = bounds.OuterRadius;
+            if (ringDrop != null && goTick != 0)
+            {
+                var dropped = balance.RingDropSeconds.Count(at => Director.ElapsedTicks * dt + balance.RingDropWarningSeconds >= at);
+                radius *= 1f - dropped / (float)balance.RingDropSeconds.Count;
+            }
 
             foreach (var f in fighters)
             {
                 if (f.Out) continue;
                 var input = f.Id == 0 ? local : inboxes.TryGetValue(f.Id, out var inbox) ? inbox.Take() : default;
+                if (bots.TryGetValue(f.Id, out var brain))
+                    input = brain.Step(bootstrap.Session.CanSimulateGameplay, playing, !f.Out,
+                        f.Motor.IsDashing, f.Motor.DashReady, f.Motor.transform.position,
+                        f.Motor.transform.eulerAngles.y, bounds.transform.position, radius, sensedFighters, dt);
                 // Countdown and idle slots send an empty command; motors still integrate gravity and traction.
-                if (!playing || f.Id >= FirstBotId)
+                if (!playing || (f.Id >= FirstBotId && !bots.ContainsKey(f.Id)))
                     input = new InputCommand(input.Sequence, Vector2.zero, false, false, input.YawDegrees);
                 bootstrap.TrySimulate(f.Motor, input);
             }
@@ -295,6 +313,9 @@ namespace SquishyBump.App
             foreach (var f in fighters.Where(f => !f.Out && !Director.AliveFighters.Contains(f.Id)))
             {
                 f.Out = true;
+                if (bots.TryGetValue(f.Id, out var eliminatedBot))
+                    eliminatedBot.Step(true, playing, false, false, false, f.Motor.transform.position, 0,
+                        bounds.transform.position, radius, sensedFighters, dt);
                 Sound(Sfx.FallOff, f.Motor.transform.position);
                 resolver.Unregister(f.Id);
                 fighterPhysics.Remove(f.Id);
@@ -327,6 +348,19 @@ namespace SquishyBump.App
         private void OnMatchEvent(MatchEvent e)
         {
             if (e.Kind == MatchEventKind.Respawn) Sound(Sfx.Respawn, LocalFighterPosition());
+            if (overlay == null) return;
+            if (e.Kind == MatchEventKind.Countdown)
+                overlay.ShowBanner(e.Value == 0 ? "GO!" : e.Value.ToString(), 1f);
+            if (e.Kind == MatchEventKind.MatchResult) overlay.ShowResult(e.Standings, FighterLabel);
+        }
+
+        private string FighterLabel(ulong id)
+        {
+            var hostFighter = fighters.FirstOrDefault(f => f.Id == id);
+            if (hostFighter != null) return fighterPrefabs[hostFighter.Fruit].name;
+            if (clientView != null && clientView.Views.TryGetValue((ushort)id, out var view) && view != null)
+                return view.name.Replace("(Clone)", "");
+            return $"Fruit {id}";
         }
 
         private void PlayHazardSound(HazardEvent e)
