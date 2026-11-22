@@ -82,6 +82,15 @@ method `<Scenario>_<Expected>`, arrange/act/assert.
 | `FighterVisualTests` (18) | SB-11: each of the six fighter prefabs has its A15 .glb (`tools/models/make_fruits.py`, Blender 4.2) under `Visual/Body/Model`, the placeholder sphere hidden; the only collider is the root sphere at the class radius; the model body is 2r wide (oval fruits within 15%) |
 | `HitStopTests` (1) | SB-21 LAN bug: a hit-stop that lands while the host's Esc menu is open (LAN, does not pause) gives time back; before the fix the host stayed at `timeScale` 0 and both windows froze when two fruits touched. Seen failing (`Expected 1, But was 0`) before the fix |
 
+## SB-25 lobby foundation (#23)
+
+21/11/2026 · `feat/SB-25-lobby-foundation`, base `c293fe1`.
+`LobbyRoomTests` checks exclusive fruit claims, the six-player cap, host-only
+settings, a five-second countdown at 60 Hz, cancellation when readiness changes,
+and the six pick volumes in the greybox scene. `tools/verify.ps1 -PlayMode` passed
+169 EditMode and 36 PlayMode tests with zero compile warnings. Networked lobby
+movement, live boards, and transition into a match are pending.
+
 ## L3 frame-time baseline for SB-52 (#43)
 
 21/11/2026 · Codex · Windows x64 v0.1.0, commit `2bf7cc3` · Intel Core i7-12700H,
