@@ -11,9 +11,10 @@
         "SquishyBump.Hazards",
         "SquishyBump.Net",
         "SquishyBump.UI",
+        "UnityEngine.UI",
         "SquishyBump.App",
-        "Unity.Netcode.Runtime",
-        "UnityEngine.UI"
+        "SquishyBump.AI",
+        "Unity.Netcode.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

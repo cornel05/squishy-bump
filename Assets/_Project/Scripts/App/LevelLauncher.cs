@@ -175,6 +175,7 @@ namespace SquishyBump.App
             Match = hostObject.AddComponent<MatchHost>();
             Match.Configure(bootstrap, setup.Balance, bounds, FindInScene<RingDrop>(scene), rig, setup.Roster,
                 level.LevelNumber, autoHost: false);
+            Match.ConfigureBots(setup.DefaultBotProfile);
             Pause = hostObject.AddComponent<PauseMenu>();
             Pause.Init(bootstrap.Settings, singlePlayer);
             Match.AttachPause(Pause, singlePlayer, LeaveToMenu);
