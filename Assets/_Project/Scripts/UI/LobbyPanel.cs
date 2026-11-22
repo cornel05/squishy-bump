@@ -19,7 +19,8 @@ namespace SquishyBump.UI
         private readonly Dictionary<int, (Text Label, string Fruit, string Class)> stands = new();
         public string BoardText => board.text;
         public event Action<bool> ReadyRequested;
-        public event Action<MatchRule, int> ConfigureRequested;
+        /// <summary>Host desk: null = keep the room's current value (the panel's snapshot can be a tick old).</summary>
+        public event Action<MatchRule?, int?> ConfigureRequested;
         public event Action LeaveRequested, StartSingleRequested, LookRequested;
         public void Init(Transform infoBoard, Transform controlsBoard, bool isSingle)
         {
@@ -39,11 +40,11 @@ namespace SquishyBump.UI
             settings.anchorMin = settings.anchorMax = new Vector2(1, 0.5f); settings.pivot = new Vector2(1, 0.5f);
             settings.anchoredPosition = new Vector2(-20, 0);
             UiFactory.Label(settings, "QUẦY HOST", 32);
-            UiFactory.Button(settings, "Survival", () => ConfigureRequested?.Invoke(MatchRule.Survival, state?.FinalLevel ?? 5));
-            UiFactory.Button(settings, "Rank", () => ConfigureRequested?.Invoke(MatchRule.Rank, state?.FinalLevel ?? 5));
+            UiFactory.Button(settings, "Survival", () => ConfigureRequested?.Invoke(MatchRule.Survival, null));
+            UiFactory.Button(settings, "Rank", () => ConfigureRequested?.Invoke(MatchRule.Rank, null));
             if (!single)
                 for (var i = 1; i <= 5; i++)
-                { var level = i; UiFactory.Button(settings, $"L1 → L{level}", () => ConfigureRequested?.Invoke(state?.Rule ?? MatchRule.Survival, level)); }
+                { var level = i; UiFactory.Button(settings, $"L1 → L{level}", () => ConfigureRequested?.Invoke(null, level)); }
             settings.gameObject.SetActive(false);
         }
         public void Show(LobbyState value, ulong localId, string hostAddress, int tickRate, Func<int, string> fruitName, bool atDesk)

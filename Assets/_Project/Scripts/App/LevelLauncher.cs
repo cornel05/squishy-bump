@@ -62,12 +62,23 @@ namespace SquishyBump.App
                 bootstrap.Session.StateChanged -= OnSessionStateChanged;
         }
 
+        /// <summary>Menu path (GDD 3.5): Single Player always goes lobby → L1.</summary>
+        public void EnterSinglePlayerLobby()
+        {
+            if (BeginSinglePlayer()) LoadLobby();
+        }
+
+        /// <summary>Direct start of one level, no lobby (tests and tools).</summary>
         public void StartSinglePlayer(int level = 1)
+        {
+            if (BeginSinglePlayer()) LoadLevel(level);
+        }
+
+        private bool BeginSinglePlayer()
         {
             singlePlayer = true;
             ResetRankSession();
-            if (bootstrap.Session.State == SessionState.Idle && !bootstrap.Session.Host(SessionMode.SinglePlayer)) return;
-            LoadLobby();
+            return bootstrap.Session.State != SessionState.Idle || bootstrap.Session.Host(SessionMode.SinglePlayer);
         }
 
         public bool HostLan()
@@ -206,7 +217,7 @@ namespace SquishyBump.App
             Menu.Init(bootstrap.Session, bootstrap.Settings, $"v{Application.version}", setup.Levels);
             if (bootstrap.Session.LastEndReason == SessionEndReason.HostLost)
                 Menu.ShowPage("Multiplayer");
-            Menu.SinglePlayerRequested += StartSinglePlayer;
+            Menu.SinglePlayerRequested += _ => EnterSinglePlayerLobby();
             Menu.HostRequested += () => HostLan();
             Menu.JoinRequested += address => Join(address);
             Menu.QuitRequested += Application.Quit;

@@ -70,7 +70,7 @@ namespace SquishyBump.Tests.PlayMode
             Assert.That(picks, Does.Contain("Vào lobby"));
             Assert.That(picks.Any(t => t.StartsWith("L2")), Is.False);
 
-            app.Launcher.StartSinglePlayer();
+            app.Launcher.EnterSinglePlayerLobby();
             yield return WaitFor(() => app.Launcher.Lobby != null && app.Launcher.Lobby.Coordinator != null && app.Launcher.Lobby.Motors.Count == 1);
             var lobby = app.Launcher.Lobby;
             var layout = SceneManager.GetActiveScene().GetRootGameObjects().Single(g => g.name == "Store aisle").transform;

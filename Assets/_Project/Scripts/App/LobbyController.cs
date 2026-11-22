@@ -190,7 +190,12 @@ namespace SquishyBump.App
         }
         private bool AtDesk() => app.Session.CanSimulateGameplay && avatars.TryGetValue(0, out var avatar) &&
             Vector3.Distance(avatar.Body.position, desk.position) <= setup.Lobby.DeskReach;
-        private void ConfigureAtDesk(MatchRule rule, int level) { if (!launching && AtDesk()) coordinator.Configure(rule, single ? 5 : level); }
+        private void ConfigureAtDesk(MatchRule? rule, int? level)
+        {
+            if (launching || !AtDesk()) return;
+            var current = coordinator.State;
+            coordinator.Configure(rule ?? current.Rule, single ? 5 : level ?? current.FinalLevel);
+        }
         private void StartSingle()
         { if (single && app.Session.CanSimulateGameplay && coordinator.State.Players[0].Fruit >= 0) Launch(coordinator.State); }
         private void Launch(LobbyState state)
