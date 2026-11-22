@@ -26,6 +26,7 @@ namespace SquishyBump.App
         public GameEventHub EventHub => events;
         /// <summary>Input up / snapshot down streams of this peer.</summary>
         public NetSync Sync => sync;
+        public MatchReplica MatchState { get; } = new();
         public LobbySync LobbySync => lobbySync;
         public LobbyState LobbySelection { get; private set; }
         public void SetLobbySelection(LobbyState state)
@@ -81,6 +82,9 @@ namespace SquishyBump.App
             // Hazard events: the host's hub forwards each one reliably; a client's hub receives them (dedup by EventId).
             events.HazardRaised += ForwardHazard;
             sync.HazardReceived += events.Deliver;
+            events.MatchRaised += MatchState.Apply;
+            events.MatchRaised += ForwardMatch;
+            sync.MatchReceived += events.Deliver;
         }
 
         private void Start()
@@ -118,6 +122,11 @@ namespace SquishyBump.App
             if (session.CanSimulateGameplay) sync.BroadcastHazard(gameEvent);
         }
 
+        private void ForwardMatch(MatchEvent gameEvent)
+        {
+            if (session.CanSimulateGameplay) sync.BroadcastMatch(gameEvent);
+        }
+
         private void OnSessionStateChanged(SessionState state)
         {
             // A client starts a fresh EventId stream when it joins.
@@ -134,6 +143,7 @@ namespace SquishyBump.App
             Tick = 0;
             LobbySelection = null; lobbySync.Reset();
             events.Reset();
+            MatchState.Reset();
         }
 
         private void OnDestroy()
@@ -144,6 +154,9 @@ namespace SquishyBump.App
             session.StateChanged -= OnSessionStateChanged;
             events.HazardRaised -= ForwardHazard;
             sync.HazardReceived -= events.Deliver;
+            events.MatchRaised -= ForwardMatch;
+            events.MatchRaised -= MatchState.Apply;
+            sync.MatchReceived -= events.Deliver;
             sync.Dispose();
             lobbySync.Dispose();
             lobbySync.StateReceived -= SetLobbySelection;

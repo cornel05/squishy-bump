@@ -1,4 +1,4 @@
-# Architecture
+﻿# Architecture
 
 Design source: GDD 10 (technology and architecture) and 13.2. This page is the code-side map.
 
@@ -90,7 +90,9 @@ sẽ nối vào các hợp đồng này trong các issue tiếp theo.
 
 `StubSessionService` giữ tên để tương thích SB-06, thực hiện Host/Join bằng NGO và
 UnityTransport. LAN mặc định UDP 7777, tối đa 6 người gồm host; Single Player nghe loopback
-và từ chối client từ xa. Client gửi payload UTF-8 `SquishyBump-LAN-1:<Application.version>`.
+và từ chối client từ xa. Nhánh Rank gửi payload UTF-8 `SquishyBump-LAN-6:<Application.version>`.
+
+và từ chối client từ xa. Client gửi payload UTF-8 `SquishyBump-LAN-7:<Application.version>`.
 Host kiểm tra độ dài tối đa 128 byte và so khớp chính xác trước khi cấp slot; chưa có xác thực
 tài khoản hoặc Relay. Khi thay wire format phải đổi revision Protocol trên tất cả peer.
 
@@ -100,6 +102,62 @@ UI đọc các lý do Core để báo sai build/phòng đầy/host không tới 
 `InvalidAddress` báo ngay khi IPv4/port không hợp lệ; `StartFailed` khi NGO không mở được kết nối.
 Hợp đồng `ISessionService` chỉ thêm giá trị enum và port mặc định, không thêm quyền mô phỏng cho client.
 Chưa xác nhận LAN nhiều PC hoặc các test mới cho tới khi Unity compile/PlayMode và build chạy được.
+### Luật Rank và điểm session (SB-27)
+
+`MatchDirector` giữ luồng Intro/Countdown/Playing/Result cho cả hai luật; constructor
+giữ mặc định Survival để tương thích caller cũ. Rank lấy `RankRules.FromProfile` từ
+BalanceProfile ở đầu match: 3 mạng, 120 tick chờ hồi sinh, 90 tick bảo vệ ở 60 Hz.
+`RankRules` chỉ là bản chụp bất biến của dữ liệu SO, không phải bộ số mặc định thứ hai.
+Model thuần có thể nhận cấu hình trong fixture để kiểm thử chính sách không cần scene.
+
+Quả đang chờ hồi sinh vẫn tính vào số ứng viên thắng, nên một quả tạm còn trên sàn
+không làm match kết thúc sớm. Khi cửa sổ đóng (L1: tick ứng với lần rụng vành thứ ba;
+L2–L5: time limit), các lượt chờ chưa đặt lại được bị kết thúc. Ring-out cùng tick chỉ
+trừ một mạng, các lượt loại cùng tick chia hạng. Hết giờ Rank xét mạng còn rồi Wobble;
+điểm đã ghi không bị mất. Mỗi tick sống chỉ tăng khi quả đang trên sàn, không tăng trong
+thời gian chờ hồi sinh. Host chốt tổng mạng và thời gian sống một lần theo match ID.
+
+`ScoreService` tồn tại qua các match trong LevelLauncher, cộng điểm cho người chạm
+cuối trong cửa sổ 3 s (gồm biên đúng 3 s), bỏ tự chạm/chạm ngoài roster, chống ghi trùng
+theo tick và nạn nhân. `CollisionResolver.Contact` báo mọi tiếp xúc, kể cả dưới ngưỡng
+30 N·s; `Hit` vẫn chỉ phục vụ Wobble/stun/feedback. Sau khi hồi sinh, credit cũ được xóa.
+Session xếp tổng điểm → tổng mạng còn → tổng tick sống; bằng cả ba thì đồng hạng.
+
+App đặt lại bằng RespawnPicker đã có từ SB-28, kiểm tra raycast còn sàn dưới điểm chọn,
+loại vùng hazard/collider hộp và reset vận tốc, input buffer, dash/stun, Wobble. Không có
+điểm an toàn thì giữ chờ trong cửa sổ, không chọn một spawn nguy hiểm. Core chỉ thêm
+interface đọc `IHazardZones`; Cannons trả vùng cảnh báo/đang tác động. Nón gió được bao
+bằng hình tròn bảo thủ để chọn spawn, không thay hình/công thức nón trong gameplay.
+
+Trong 1.5 s bảo vệ, motor vẫn nhận điều khiển và va chạm sàn; quả không tham gia
+va chạm quả-quả, không nhận impulse/Wobble từ hazard. Tự đi khỏi sàn vẫn là ring-out.
+Hiển thị chớp tối đa 2 Hz; chỉ toggle renderer vốn bật lúc spawn, không bật lại sphere
+placeholder ẩn. Snapshot giữ số mạng và cờ Respawning/Invulnerable; event Rank dùng kênh
+reliable của PR #99. Scoreboard mang điểm/mạng/tick sống và gồm cả quả chờ hồi sinh;
+result không được bỏ quả duy nhất còn quyền chơi dù đang chờ. ResetForRespawn đặt cả
+Transform và Rigidbody trước khi bật lại đối tượng để PhysX không khôi phục pose cũ.
+LAN và dữ liệu cuối session vẫn phải kiểm tra qua các issue liên quan.
+
+Unity đã sinh meta và chạy Native, gồm regression result/respawn đã tái hiện lỗi trước
+khi sửa; bằng chứng cuối trong `docs/testing.md`. T05 toàn run Rank L1–L5 và T07 đủ
+năm scene vẫn chưa đạt chỉ từ các ca chính sách và physics L1 này.
+
+### Khung bot D1 (SB-18)
+
+`AI/BotBrain` nhận mẫu cảm nhận bất biến từ App và trả `InputCommand`; không tham chiếu
+Physics/Match/Net hoặc ghi Rigidbody. App chạy bot chỉ khi host và chuyển lệnh vào cùng
+`GameplayBootstrap.TrySimulate`/PlayerMotor như người chơi. Mỗi bot có RNG theo seed và ID.
+FSM có Countdown, Roam, Chase, Charge, Evade, Recover, Eliminated; D1 đọc BotProfile
+(4 Hz, phản xạ 0.5 s, margin 0.5 m, aim noise 25°, alignment 35°, speed factor 0.85).
+Cảm nhận được xếp hàng để dùng mẫu cũ theo reaction delay, chọn mục tiêu ngẫu nhiên mỗi 4 s;
+anti-stuck khi tiến dưới 0.5 m trong 2 s về Roam với điểm an toàn ngẫu nhiên. Chưa triển khai
+danger grid/A*/utility ở đây (SB-46). H01 được App đưa vào bán kính an toàn từ khi telegraph.
+
+`MatchSetup.defaultBotProfile` đã nối tới `Data/Bots/D1.asset` qua Editor API
+`ProjectScaffold.ConfigureBotDefaults`. Entry này chỉ điền slot trống của MatchSetup,
+không dựng lại toàn bộ prefab. Unity đã sinh meta; Native 171 EditMode và 37 PlayMode
+đạt, gồm ca năm bot di chuyển bằng PlayerMotor trên L1 và bị loại khi rơi. Bằng chứng
+build và giới hạn nghiệm thu nằm ở `docs/testing.md`; chưa coi AI-1–AI-6/T13 đạt.
 
 ### L1 Training Ring (SB-14)
 
@@ -131,6 +189,104 @@ nối trong các issue tương ứng.
 `Scenes/Boot` (build index 0), `MainMenu`, `Lobby`, `Levels/L1…L5` are shared: edited by their owner
 (L1, L4, L5 Nhật; L2, L3 Duy) or through prefabs. `Scenes/Sandbox/Test_Duy` and `Test_Nhat` are personal and
 never built. Scene list is set by `SquishyBump.Editor.ProjectScaffold.Run`.
+## H06 / SB-44
+
+`Core.IceProfile` chứa balance GDD 7.4–7.5; `Hazards.IceRules` chụp dữ liệu thành tick.
+`IceField` sở hữu RNG theo seed trận, trạng thái ô và BFS lục giác. Các ô đang nứt
+được dự trữ cùng nhóm trước khi chọn tiếp, nên khi nhóm rụng vẫn còn ≥37 ô liên thông.
+Ô hồi chỉ trở lại Solid sau fade, có hàng xóm Solid và không overlap quả.
+
+`IceTiles` tạo mesh prism 2 m và PhysicsMaterial μ từ BalanceProfile, chỉ host gọi
+Step/chọn ô/quyết định collider. App truyền seed và replay `IceTileWarning` (HostTick là lúc
+rơi), `IceTileFading`, `IceTileSolid` theo thời gian GO của host. Hai event mới nối cuối
+enum, không đổi số event cũ. Client không tự quyết định ô đã đứng được khi hết 10 giây.
+Snapshot/catch-up và kiểm thử LAN đầy đủ còn phải đối chiếu SB-24; chưa kiểm chứng.
+
+Editor menu `Squishy Bump/Build Level L4 (Frost Ring)` tạo SO/scene qua Unity API.
+Editor Native đã tạo IceProfile.asset, scene L4 và meta. Mesh/collider được tạo ở Awake;
+MaterialPropertyBlock cũng phải khởi tạo ở Awake, không ở field initializer khi Unity deserialize.
+Protocol LAN-7 từ chối peer cũ không biết hai loại sự kiện mới. Revision này riêng nhánh
+SB-44; khi tích hợp các PR song song phải giữ toàn bộ hợp đồng và chọn revision chung mới.
+Kiểm thử collider và thuật toán không thay thế kiểm tra hình ảnh/cảnh báo trên Windows player.
+
+Replay H06 lưu các chuyển trạng thái của cả match, kể cả các chu kỳ cũ. Client
+chọn trạng thái theo đúng thời gian đang render, hỗ trợ nội suy lùi nhẹ. Nhận Solid
+và Warning của chu kỳ tiếp theo cùng tick không được xóa Fading của tick trước đó.
+Lịch sử sống trong scene match tối đa 150 s; đổi scene giải phóng cùng IceTiles.
+
+## L5 Chaos Core / SB-45
+
+`IceSceneBuilder.BuildL5` dùng chung đường dựng sàn/bounds/spawn của L4, bật chế độ
+chaos trên IceTiles và Cannons. L5 dùng cùng IceProfile/BalanceProfile/HazardProfile;
+không chép lại thuật toán H06, lực gió hoặc đạn đạo. Hai mount: Air 270° (tây,
+x=-9.9), Fire 90° (đông, x=+9.9). Mỗi pháo có chu kỳ 4 s từ HazardProfile;
+giữ cơ chế stagger 1.25 s hiện có của Cannons. Sóng ô 3.5 s, 2 ô trước 45 s,
+3 ô sau đó từ IceRules.FromProfile(chaos:true). Không có MovingGround hoặc RingDrop.
+Không đổi Core/App hay hợp đồng mạng so với nhánh phụ thuộc SB-44.
+
+# SB-24 — đồng bộ sự kiện trận (đang triển khai, 21/11/2026)
+
+`SB.Match` dùng NGO `ReliableSequenced`, chỉ host gửi. NetSync từ chối nguồn khác
+ServerClientId và payload >512 byte. Codec chứa EventId, HostTick, loại, fighter,
+last toucher và tối đa 6 dòng (ID, rank, points, lives, survivalTicks); một bảng 6
+dòng là 174 byte trước prefix độ dài. Client không tính lại điểm hoặc thứ hạng.
+Codec từ chối sai chiều dài, enum lạ, trường không dùng, ID trùng trong bảng, rank
+không hợp lệ, điểm âm hoặc mạng ngoài 0–3. PR #99 dùng LAN-2; nhánh Rank nối tiếp
+dùng LAN-6 để phân biệt build có các cờ/hành vi Rank, không trộn với Lobby LAN-3/HUD LAN-5.
+
+GameplayBootstrap nối host EventHub → NetSync và NetSync client → EventHub, dùng
+high-water EventId theo stream để bỏ bản nhận trùng/cũ. `MatchReplica` giữ bản đọc
+cho UI trên cả hai peer, reset khi bắt đầu phiên/match mới, không mô phỏng luật.
+`MatchStanding` sao chép danh sách khi tạo payload để caller không sửa kết quả đã phát.
+
+MatchDirector Survival phát countdown 3/2/1/GO, ring-out, elimination (giữ shared
+rank), scoreboard và kết quả đã xác nhận. Overlay hiển thị trực tiếp các dòng host;
+client ẩn quả out và chờ respawn/snapshot mới. LevelLauncher đợi NGO báo hoàn tất
+load scene trước khi cho host bắt đầu intro/countdown, tránh bắt đầu event khi
+client còn tải sàn. Nhánh SB-27 nối Rank/ScoreService vào các event này;
+codec và producer Rank đã qua Native, chưa có nghiệm thu full run Rank hoặc LAN nhiều PC.
+
+Native verify đã đạt 176 EditMode/37 PlayMode, gồm hai NGO peer loopback truyền sáu
+event và result lặp, so sánh replica/overlay. Chưa chạy LAN riêng máy, scene-load
+barrier nhiều PC hoặc Rank tích hợp; không suy rộng test protocol thành nghiệm thu đó.
+
+## SB-46 — cảm nhận sàn, danger map, A* và utility
+
+Core.BotNavigation định nghĩa ảnh chụp IBotNavigationSnapshot, BotTerrainCell và
+BotHazardWarning; các hazard triển khai IBotHazardHints chỉ đọc trạng thái đã cảnh
+báo/đang tác động. App.BotNavigationWorld raycast lưới 1 m (tối đa 26×26), loại layer
+Fighter và ô ngoài arena, nhận collider H06 để gắn cờ băng. Ô rơi/fade không có
+collider nên không đứng được. Khoảng cách mép lấy min của biên tròn và biên các ô
+lưới không có sàn; đây là xấp xỉ theo độ phân giải 1 m, không phải navmesh liên tục.
+Ảnh chụp được chia sẻ cho các bot; mỗi bot giữ dữ liệu theo reaction delay của profile.
+AI không tìm scene singleton, không gọi vật lý hoặc ghi Transform/Rigidbody.
+
+DangerMap lấy max của mép và các vùng telegraph có trong awareness, dùng đúng
+1−τ/2 s, clamp [0,1]; margin băng ×1.5 theo dữ liệu profile từ D3. RingDrop cấp vành
+đang báo; H06 cấp ô đang nứt; Cannons cấp cone khí, marker khi đạn đã bay và vùng
+cháy; MovingGround cấp cảnh báo đổi chiều/hộp đang thấy; PusherBlocks cấp làn đã
+có lịch xuất bến. Không lộ điểm rơi H05 trước lúc marker hiện. TimeToImpact cho phép
+hint hộp ở vị trí dự đoán 1 s từ chuyển động nhìn thấy; chưa chứng minh toàn bộ chiến
+thuật D5 của SB-47 bằng hint này.
+
+GridPathfinder dùng heap tái sử dụng, tám hàng xóm, cost vào ô 1+8D, không cắt góc
+qua ô bị chặn. Heuristic Euclid/sqrt(2) là cận dưới phù hợp vì bước chéo cũng cost 1;
+không tăng giá bước chéo hoặc đổi công thức GDD. Replan ở mỗi quyết định di chuyển,
+giữ waypoint giữa các quyết định và điều khiển theo vị trí bản thân hiện tại. Dữ liệu
+đối thủ/hazard vẫn theo ảnh chụp cảm nhận trễ. Hướng nhìn đuổi mục tiêu tách khỏi
+hướng di chuyển theo path; InputCommand đổi vector thế giới về hệ yaw-local như trước.
+
+Utility theo đúng A.3, xét đường tới mục tiêu, Wobble và khối lượng tương đối; không
+có cờ ưu tiên người thật. Giữ mục tiêu trừ khi ứng viên hơn ít nhất 0.15 (có xử lý
+sai số float tại biên); U<0.4 quay về Roam. D1 vẫn chọn ngẫu nhiên mỗi 4 s. Điểm tiếp
+cận ở phía xa mép của nạn nhân. Evade chọn ô an toàn tới được, cost rẻ nhất trong
+4 m bằng một lượt Dijkstra cùng graph/cost; anti-stuck chỉ chấp nhận mục tiêu ngẫu
+nhiên có đường tới. BotBrain chỉ xuất InputCommand, host vẫn dùng PlayerMotor và
+CollisionResolver hiện hữu. Hợp đồng mạng LAN-7 giữ nguyên từ nhánh phụ thuộc.
+
+SB-47 còn phải nối/kiểm chứng đầy đủ hành vi D1–D5, jump, xử lý băng, chiến thuật
+hạng cân, AI-1–AI-6 và profiler. SB-46 không chứng minh các kịch bản đó đã đạt.
+
 # Lobby SB-25 đang nối tiếp PR #95
 
 Base `ea46852` cung cấp LobbyRoom host-owned và greybox LOB01. Phần nối tiếp dùng

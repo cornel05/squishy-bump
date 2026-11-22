@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Collections.Generic;
 using SquishyBump.Core;
 using SquishyBump.Hazards;
 using SquishyBump.Match;
@@ -24,6 +25,17 @@ namespace SquishyBump.App
         private MatchSetup setup;
         private bool singlePlayer;
         private double perfSeconds;
+        private NetworkSceneManager loadingThrough;
+        private string pendingScene;
+        private ScoreService scores;
+        private uint matchSequence;
+
+        private void ResetRankSession()
+        {
+            scores = new ScoreService(() => bootstrap.Session.CanSimulateGameplay,
+                Mathf.RoundToInt(setup.Balance.LastTouchWindowSeconds * setup.Balance.FixedStepHz), setup.Balance.PointsPerRingOut);
+            matchSequence = 0;
+        }
         private string joinedAddress;
 
         public MainMenu Menu { get; private set; }
@@ -44,6 +56,7 @@ namespace SquishyBump.App
 
         private void OnDestroy()
         {
+            StopWaitingForScene();
             SceneManager.sceneLoaded -= OnSceneLoaded;
             if (bootstrap != null)
                 bootstrap.Session.StateChanged -= OnSessionStateChanged;
@@ -52,6 +65,7 @@ namespace SquishyBump.App
         public void StartSinglePlayer(int level = 1)
         {
             singlePlayer = true;
+            ResetRankSession();
             if (bootstrap.Session.State == SessionState.Idle && !bootstrap.Session.Host(SessionMode.SinglePlayer)) return;
             LoadLobby();
         }
@@ -59,6 +73,7 @@ namespace SquishyBump.App
         public bool HostLan()
         {
             singlePlayer = false;
+            ResetRankSession();
             var hosted = bootstrap.Session.Host(SessionMode.Lan);
             if (hosted) LoadLobby();
             return hosted;
@@ -109,13 +124,33 @@ namespace SquishyBump.App
         /// <summary>Host: every peer loads the level; the match starts when it is loaded here.</summary>
         public void LoadLevel(int number)
         {
+            StopWaitingForScene();
             var level = setup.Levels.First(l => l.LevelNumber == number);
             var manager = bootstrap.GetComponent<NetworkManager>();
             var sceneManager = manager.NetworkConfig.EnableSceneManagement ? manager.SceneManager : null;
             if (bootstrap.Session.CanSimulateGameplay && sceneManager != null)
+            {
+                bootstrap.MatchState.Reset();
+                loadingThrough = sceneManager;
+                pendingScene = System.IO.Path.GetFileNameWithoutExtension(level.ScenePath);
+                loadingThrough.OnLoadEventCompleted += OnLevelReady;
                 sceneManager.LoadScene(level.ScenePath, LoadSceneMode.Single);
+            }
             else
                 SceneManager.LoadScene(level.ScenePath, LoadSceneMode.Single);
+        }
+
+        private void OnLevelReady(string sceneName, LoadSceneMode mode, List<ulong> completed, List<ulong> timedOut)
+        {
+            if (sceneName != pendingScene) return;
+            StopWaitingForScene();
+            // Không mở scene event khác trong callback NGO. Chỉ cho phép vòng Update bắt đầu trận.
+            if (Match != null && bootstrap.Session.CanSimulateGameplay) Match.StartWhenReady = true;
+        }
+        private void StopWaitingForScene()
+        {
+            if (loadingThrough != null) loadingThrough.OnLoadEventCompleted -= OnLevelReady;
+            loadingThrough = null; pendingScene = null;
         }
 
         public void LeaveToMenu()
@@ -201,6 +236,8 @@ namespace SquishyBump.App
             Match = hostObject.AddComponent<MatchHost>();
             Match.Configure(bootstrap, setup.Balance, bounds, FindInScene<RingDrop>(scene), rig, MatchRoster(),
                 level.LevelNumber, autoHost: false);
+            Match.ConfigureRank(scores, ++matchSequence);
+            Match.ConfigureBots(setup.DefaultBotProfile);
             Pause = hostObject.AddComponent<PauseMenu>();
             Pause.Init(bootstrap.Settings, singlePlayer);
             Match.AttachPause(Pause, singlePlayer, LeaveToMenu);
@@ -216,7 +253,7 @@ namespace SquishyBump.App
                 hostObject.AddComponent<FrameStatsRecorder>().Configure(setup.Presentation, perfSeconds);
             hostObject.SetActive(true);
             // Host starts on its first frame (after Start); clients only show snapshots.
-            Match.StartWhenReady = bootstrap.Session.CanSimulateGameplay;
+            Match.StartWhenReady = bootstrap.Session.CanSimulateGameplay && loadingThrough == null;
         }
 
         private static T FindInScene<T>(Scene scene) where T : Component =>

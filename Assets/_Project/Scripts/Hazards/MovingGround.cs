@@ -11,7 +11,7 @@ namespace SquishyBump.Hazards
     /// v_surface = ω × r_c so the motor's traction rule carries fruits. A box touching a fruit gives
     /// J_b = 50 N·s · K(h) · normalize(t̂ + 0.5 r̂) and +1 Wobble, once per 0.5 s per fruit and box.
     /// </summary>
-    public sealed class MovingGround : MonoBehaviour, IHazard
+    public sealed class MovingGround : MonoBehaviour, IHazard, IBotHazardHints
     {
         // Detection skin around a box: a fruit resting against it still counts as touching.
         private const float ContactSkinMeters = 0.05f;
@@ -114,6 +114,31 @@ namespace SquishyBump.Hazards
         {
             sink = eventSink;
             fighters = fighterPhysics;
+        }
+
+        public void CollectBotWarnings(List<BotHazardWarning> warnings, int playingTicks, float dt)
+        {
+            var t = playingTicks * dt;
+            if (InReversalWarning(t, hazards))
+            {
+                var next = (Mathf.FloorToInt(t / hazards.TurntableReversalSeconds) + 1) * hazards.TurntableReversalSeconds;
+                warnings.Add(new BotHazardWarning(BotAwareness.TurntableReversal, BotHazardShape.Circle,
+                    new Vector2(transform.position.x, transform.position.z), new Vector2(hazards.TurntableRadius, 0),
+                    0, next - t));
+            }
+            foreach (var box in boxes)
+            {
+                var center = box.transform.TransformPoint(box.center);
+                var size = Vector3.Scale(box.size, box.transform.lossyScale) * 0.5f;
+                warnings.Add(new BotHazardWarning(BotAwareness.ObstacleBoxes, BotHazardShape.Box,
+                    new Vector2(center.x, center.z), new Vector2(size.x, size.z), box.transform.eulerAngles.y, 0));
+                // D5 có TimeToImpact: dự đoán 1 s từ chuyển động hộp đang nhìn thấy, không đọc lịch chưa cảnh báo.
+                var futureAngle = RingAngle(t + 1f, hazards);
+                var future = transform.TransformPoint(Quaternion.Euler(0, futureAngle, 0) * box.transform.localPosition);
+                warnings.Add(new BotHazardWarning(BotAwareness.TimeToImpact, BotHazardShape.Box,
+                    new Vector2(future.x, future.z), new Vector2(size.x, size.z),
+                    transform.eulerAngles.y + futureAngle + box.transform.localEulerAngles.y, 1f));
+            }
         }
 
         public void StepOnHost(int playingTicks, uint hostTick, float dt)

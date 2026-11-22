@@ -226,6 +226,14 @@ namespace SquishyBump.Editor
             Object.DestroyImmediate(root);
         }
 
+        /// <summary>Gán D1 vào MatchSetup hiện có mà không dựng lại toàn bộ prefab/scene.</summary>
+        [MenuItem("Squishy Bump/Configure D1 Bots")]
+        public static void ConfigureBotDefaults()
+        {
+            EnsureMatchSetup();
+            AssetDatabase.SaveAssets();
+        }
+
         /// <summary>Tạo/nối cấu hình lobby bằng Editor API, không dựng lại toàn bộ prefab.</summary>
         [MenuItem("Squishy Bump/Configure Lobby Defaults")]
         public static void ConfigureLobbyDefaults()
@@ -239,6 +247,13 @@ namespace SquishyBump.Editor
         {
             var setup = EnsureAsset<MatchSetup>(MatchSetupPath);
             var so = new SerializedObject(setup);
+            if (so.FindProperty("defaultBotProfile").objectReferenceValue == null)
+            {
+                so.FindProperty("defaultBotProfile").objectReferenceValue =
+                    AssetDatabase.LoadAssetAtPath<BotProfile>($"{DataRoot}/Bots/D1.asset");
+                so.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(setup);
+            }
             var lobby = EnsureAsset<LobbyProfile>($"{DataRoot}/LobbyProfile.asset");
             var lobbyData = new SerializedObject(lobby);
             if (lobbyData.FindProperty("walkingClass").objectReferenceValue == null)

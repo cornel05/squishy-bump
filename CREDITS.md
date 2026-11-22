@@ -1,4 +1,4 @@
-# Credits và khai báo AI
+﻿# Credits và khai báo AI
 
 Kiểm kê ngày 20/11/2026 trên main `b856485`, phục vụ SB-61 #48, GDD 15.2 và Phụ lục C.
 Đây là hồ sơ nguồn của checkout, chưa xác nhận nội dung của một build phát hành.
@@ -17,6 +17,8 @@ Phân công hiện hành nằm trong `AGENTS.md`; tác giả và các lượt s�
 | L1 và vật liệu greybox | Mesh/material dưới `Data/TrainingRing/`, `ProjectScaffold` và dữ liệu mesh đã commit (script tạo mesh ban đầu không có trong checkout); Phụ lục C đã ghi nguồn SB-14 | C# và Unity 6000.3.28f1 với Codex hỗ trợ. Không dùng seed ngẫu nhiên hay model tạo ảnh. |
 | L2/L3 và hình hazard | `LevelSceneBuilder`, `MovingGround`, `PusherBlocks`, `Cannons`, `AnnulusMesh`, `RingDrop` | Primitive, mesh và màu tạo bằng C#/Unity với AI hỗ trợ code. Không có texture, model hoặc sample tải ngoài trong nhóm này. |
 | Giao diện | `UI/Menus/UiFactory.cs` tạo panel và chữ bằng uGUI | Font thực tế là `Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf")` từ Unity. Không có tệp Baloo 2/Fredoka trong Assets tại mốc kiểm kê. |
+| Kết quả SB-24 | `UI/Menus/MatchOverlay.cs`, 21/11/2026 | Codex hỗ trợ code trình bày standings host bằng uGUI/LegacyRuntime; không thêm ảnh, font tải ngoài hoặc model sinh ảnh. Yêu cầu: issue #22, GDD 10.4/11.3; không dùng seed. |
+
 | Lobby runtime SB-25 | `App/LobbyController.cs`, `UI/LobbyPanel.cs`, `Data/LobbyProfile.asset` · 21/11/2026 | Codex hỗ trợ C#/Unity primitive sphere/material URP cho avatar trung tính, uGUI/LegacyRuntime cho info/controls, nhãn khóa kệ và quầy host. Avatar đã chọn/display dùng lại sáu prefab/GLB nêu trên. Không có ảnh AI, model/font tải ngoài hoặc seed hình học; nguồn yêu cầu là issue #23, GDD 8.5/11.1. |
 | Nhạc | Không tìm thấy clip nhạc trong `Assets/` | Chưa nhập nhạc. Không gán tác giả/giấy phép cho nội dung chưa có. |
 
@@ -61,3 +63,38 @@ Khai báo dùng AI không đồng nghĩa mỗi dòng đã được người th�
 - Nếu đưa hình/font từ bộ GDD vào runtime, bổ sung tệp nguồn, license và prompt gốc khi nguồn cung cấp.
 - Chạy compile/PlayMode và build Windows sau khi khôi phục license Unity; lượt ngày 20/11 thoát 198,
   `No valid Unity Editor license found`, chưa có kết quả kiểm thử mới.
+
+## Bổ sung SB-44 — H06 Frost Ring, 21/11/2026
+
+- `H06-PROC-001`: mesh hex prism 2 m, màu băng trong suốt và vết nứt trắng lan dần bằng
+  Unity Mesh API, MaterialPropertyBlock, LineRenderer; runtime tại `Scripts/Hazards/IceTiles.cs`.
+  Nhóm 18 tạo với hỗ trợ AI Codex theo SB-44, GDD 7.4/9.2.4; không dùng ảnh hoặc model bên ngoài.
+  Hình học không dùng RNG; lựa chọn ô dùng seed trận do host cung cấp.
+- `H06-CONFIG-001`: `Data/Hazards/IceProfile.asset` và scene `Scenes/Levels/L4.unity`
+  do Unity Editor 6000.3.28f1 sinh qua `Editor/IceSceneBuilder.BuildL4`; thông số từ GDD.
+  Không có prompt image generation hoặc seed asset. Không khai nhận giấy phép chung của repo;
+  shader URP thuộc package Unity hiện hữu, theo điều khoản nhà cung cấp.
+- Native kiểm tra hành vi/collider, không thay thế kiểm tra hình ảnh, khả năng đọc cảnh báo
+  hoặc LAN trên các PC riêng. Bản ghi CSV lưu hash và vị trí cụ thể của từng nguồn.
+
+H06-PROC-001 source v3: bổ sung lịch sử chuyển trạng thái theo thời gian host để
+client nội suy không hiện sàn hồi quá sớm khi nhận warning chu kỳ mới. Source v2
+và hash cũ được giữ trong lịch sử Phụ lục C; không đổi asset/nguồn bên ngoài.
+
+## Bổ sung SB-45 — L5 Chaos Core, 21/11/2026
+
+`ENV-L5-001`: scene `Assets/_Project/Scenes/Levels/L5.unity` được Unity 6000.3.28f1
+sinh qua `Editor/IceSceneBuilder.BuildL5`, có hỗ trợ AI Codex theo issue SB-45 và GDD
+7.5/9.2.5. Tái dùng H06-PROC-001/H06-CONFIG-001 của L4 và Cannons/HazardProfile có sẵn
+trên main (H04/H05); không thêm ảnh, texture, âm thanh hoặc model bên ngoài. Mount
+và hình học không dùng RNG; chọn ô dùng seed trận do host cung cấp. Source nội bộ
+chưa có LICENSE chung; shader/package Unity theo điều khoản nhà cung cấp.
+Bằng chứng Native và phần hiển thị/LAN chưa kiểm chứng được ghi trong docs/testing.md.
+
+## Bổ sung SB-46 — dữ liệu navigation, 22/11/2026
+
+Hazard hiện có chỉ bổ sung hint sàn/cảnh báo cho AI qua Core, với hỗ trợ AI Codex
+(C#, Unity 6000.3.28f1, GDD A.3/A.4); không thêm ảnh/model/font/âm thanh hoặc vật liệu.
+Hình học H01–H07 giữ nguyên; source H06 có hash mới trong CSV vì thêm API chỉ đọc,
+hash/commit trước đó được ghi ở Phụ lục C. Bot dùng seed trận/ID cho RNG; không có
+prompt image generation. Nguồn và giới hạn giấy phép của asset tái dùng không đổi.
