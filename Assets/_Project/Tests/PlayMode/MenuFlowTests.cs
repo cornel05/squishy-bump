@@ -63,14 +63,20 @@ namespace SquishyBump.Tests.PlayMode
                 Assert.That(menu.CurrentPage, Is.EqualTo(page));
             }
 
-            // The level picker lists every level of the match setup.
+            // Single đi qua lobby rồi bắt đầu L1, không có đường chọn tắt L2–L5.
             menu.ShowPage("Single Player");
             var picks = menu.GetComponentsInChildren<UnityEngine.UI.Button>()
-                .Select(b => b.GetComponentInChildren<UnityEngine.UI.Text>().text).Where(t => t.StartsWith("L")).ToArray();
-            Assert.That(picks, Has.Length.EqualTo(5));
-            Assert.That(picks[1], Does.StartWith("L2"));
+                .Select(b => b.GetComponentInChildren<UnityEngine.UI.Text>().text).ToArray();
+            Assert.That(picks, Does.Contain("Vào lobby"));
+            Assert.That(picks.Any(t => t.StartsWith("L2")), Is.False);
 
-            app.Launcher.StartSinglePlayer();
+            app.Launcher.EnterSinglePlayerLobby();
+            yield return WaitFor(() => app.Launcher.Lobby != null && app.Launcher.Lobby.Coordinator != null && app.Launcher.Lobby.Motors.Count == 1);
+            var lobby = app.Launcher.Lobby;
+            var layout = SceneManager.GetActiveScene().GetRootGameObjects().Single(g => g.name == "Store aisle").transform;
+            lobby.Motors[0].GetComponent<Rigidbody>().position = layout.Find("Fruit stands/Stand 1/Pick volume").GetComponent<BoxCollider>().bounds.center;
+            yield return WaitFor(() => lobby.Coordinator.State.Players[0].Fruit == 0);
+            lobby.GetComponentsInChildren<UnityEngine.UI.Button>().Single(b => b.GetComponentInChildren<UnityEngine.UI.Text>().text == "Bắt đầu").onClick.Invoke();
             yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
             var match = app.Launcher.Match;
             Assert.That(app.Launcher.Overlay.CardVisible, Is.True, "arena card (B02) before the countdown");
