@@ -52,8 +52,7 @@ Run from the repo root. Scripts work in Windows PowerShell 5.1 and pwsh 7.
 3. Small commits, subject `SB-xx: <imperative>` (or `chore:` / `docs:`). The commit-msg hook enforces it.
 4. `tools/verify.ps1` + `python tools/check_repo.py` green. Skill: `verify`.
 5. PR from `.github/pull_request_template.md` with `Closes #n`. Skill: `issue-finish`.
-6. **Squash merge** your own PR once step 4 is green. Review is optional: ask the teammate (skill `review-pr`)
-   when you want a second look. Nothing on GitHub checks the PR (CI is disabled), so step 4 is the only gate.
+6. **Squash merge** after step 4 is green. PRs by `ZteHahah` need `cornel05` approval (skill `review-pr`), including stacked PRs before merging. For PRs by `cornel05`, do not request `ZteHahah` review. Only `cornel05` may use the review ruleset's PR bypass for their own PRs. CI is disabled, so run step 4 locally.
 Detail for humans: `CONTRIBUTING.md`.
 
 ## Unity rules for agents
@@ -88,7 +87,7 @@ Detail for humans: `CONTRIBUTING.md`.
 - `python tools/check_repo.py` → `PASS`. Metas committed. No new magic numbers.
 - Tests added or updated for new logic; `docs/testing.md` updated if a T-test ran.
 - Design change → `docs/design-changelog.md` entry + `design-change` issue.
-- PR squash-merged into `main` ("done" = merged). Teammate review is optional.
+- PR squash-merged into `main` ("done" = merged), with the approval required in step 6.
 
 ## Ownership
 | Area | Owner |
@@ -98,7 +97,7 @@ Detail for humans: `CONTRIBUTING.md`.
 | AI (BotBrain, A*), Match (MatchDirector, ScoreService), Hazards/IceTiles (H06), Net/Session, UI/HUD (HUD, lobby, results, tutorial), scenes L1 L4 L5 | Minh Nhật `ZteHahah` |
 Issue `area:` label → module: physics→Physics, hazard→Hazards, ai→AI, rules→Match, network→Net, ui→UI/Presentation, level→Scenes.
 | Build + README | Duy · Credits, change log, test record, playtest report: Nhật |
-`.github/CODEOWNERS` only suggests a reviewer; no approval is required to merge. Per-module detail: `Assets/_Project/Scripts/<Module>/AGENTS.md`.
+`.github/CODEOWNERS` identifies the GitHub merge reviewer. Per-module development ownership is documented in `Assets/_Project/Scripts/<Module>/AGENTS.md`.
 
 ## Where design truth lives
 | Question | Look in |

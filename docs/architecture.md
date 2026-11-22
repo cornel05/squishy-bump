@@ -140,6 +140,23 @@ Unity đã sinh meta và chạy Native, gồm regression result/respawn đã tá
 khi sửa; bằng chứng cuối trong `docs/testing.md`. T05 toàn run Rank L1–L5 và T07 đủ
 năm scene vẫn chưa đạt chỉ từ các ca chính sách và physics L1 này.
 
+### Khung bot D1 (SB-18)
+
+`AI/BotBrain` nhận mẫu cảm nhận bất biến từ App và trả `InputCommand`; không tham chiếu
+Physics/Match/Net hoặc ghi Rigidbody. App chạy bot chỉ khi host và chuyển lệnh vào cùng
+`GameplayBootstrap.TrySimulate`/PlayerMotor như người chơi. Mỗi bot có RNG theo seed và ID.
+FSM có Countdown, Roam, Chase, Charge, Evade, Recover, Eliminated; D1 đọc BotProfile
+(4 Hz, phản xạ 0.5 s, margin 0.5 m, aim noise 25°, alignment 35°, speed factor 0.85).
+Cảm nhận được xếp hàng để dùng mẫu cũ theo reaction delay, chọn mục tiêu ngẫu nhiên mỗi 4 s;
+anti-stuck khi tiến dưới 0.5 m trong 2 s về Roam với điểm an toàn ngẫu nhiên. Chưa triển khai
+danger grid/A*/utility ở đây (SB-46). H01 được App đưa vào bán kính an toàn từ khi telegraph.
+
+`MatchSetup.defaultBotProfile` đã nối tới `Data/Bots/D1.asset` qua Editor API
+`ProjectScaffold.ConfigureBotDefaults`. Entry này chỉ điền slot trống của MatchSetup,
+không dựng lại toàn bộ prefab. Unity đã sinh meta; Native 171 EditMode và 37 PlayMode
+đạt, gồm ca năm bot di chuyển bằng PlayerMotor trên L1 và bị loại khi rơi. Bằng chứng
+build và giới hạn nghiệm thu nằm ở `docs/testing.md`; chưa coi AI-1–AI-6/T13 đạt.
+
 ### L1 Training Ring (SB-14)
 
 Scene L1 có bốn collider độc lập, mỗi collider ứng với một dải sàn rộng 3 m.
