@@ -171,6 +171,7 @@ namespace SquishyBump.App
             bootstrap.Settings.Changed += ApplySettings;
             bootstrap.Session.StateChanged += OnSessionState;
             bootstrap.Events.HazardRaised += OnHazard;
+            bootstrap.Events.MatchRaised += OnMatchEvent;
             if (autoHost && bootstrap.Session.State == SessionState.Idle) bootstrap.Session.Host(SessionMode.SinglePlayer);
             if (autoHost && bootstrap.Session.State == SessionState.Hosting) StartMatch();
             if (bootstrap.Session.State == SessionState.Joined) OnSessionState(SessionState.Joined);
@@ -220,7 +221,7 @@ namespace SquishyBump.App
 
             Director = new MatchDirector(() => bootstrap.Session.CanSimulateGameplay, fighters.Select(f => (ulong)f.Id), level,
                 seed, Mathf.RoundToInt(1f / Time.fixedDeltaTime), countdownSeconds, resultConfirmSeconds,
-                Mathf.RoundToInt(balance.TimeLimitSeconds), bounds);
+                Mathf.RoundToInt(balance.TimeLimitSeconds), bounds, bootstrap.EventSink);
 
             if (cameraRig != null) cameraRig.Follow(fighters[0].Motor.transform);
             resolver.WobbleChanged += Director.SetWobble;
@@ -233,7 +234,6 @@ namespace SquishyBump.App
                 // Best Single Player Survival run: the player won this level outright.
                 if (pausesGame && Director.GetSinglePlayerOutcome(0) != SurvivalOutcome.Retry) bootstrap.RecordSurvival(level);
             };
-            bootstrap.Events.MatchRaised += OnMatchEvent;
             foreach (var h in hazardList) h.Bind(bootstrap.EventSink, fighterPhysics);
             bootstrap.Sync.InputReceived += OnRemoteInput;
             bootstrap.Clock.Ticked += OnTick;
@@ -347,6 +347,19 @@ namespace SquishyBump.App
         private void OnMatchEvent(MatchEvent e)
         {
             if (e.Kind == MatchEventKind.Respawn) Sound(Sfx.Respawn, LocalFighterPosition());
+            if (overlay == null) return;
+            if (e.Kind == MatchEventKind.Countdown)
+                overlay.ShowBanner(e.Value == 0 ? "GO!" : e.Value.ToString(), 1f);
+            if (e.Kind == MatchEventKind.MatchResult) overlay.ShowResult(e.Standings, FighterLabel);
+        }
+
+        private string FighterLabel(ulong id)
+        {
+            var hostFighter = fighters.FirstOrDefault(f => f.Id == id);
+            if (hostFighter != null) return fighterPrefabs[hostFighter.Fruit].name;
+            if (clientView != null && clientView.Views.TryGetValue((ushort)id, out var view) && view != null)
+                return view.name.Replace("(Clone)", "");
+            return $"Fruit {id}";
         }
 
         private void PlayHazardSound(HazardEvent e)

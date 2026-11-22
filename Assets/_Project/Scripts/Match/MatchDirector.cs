@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SquishyBump.Core;
 
 namespace SquishyBump.Match
 {
@@ -28,6 +29,8 @@ namespace SquishyBump.Match
         private readonly int countdownTicks;
         private readonly int confirmationTicks;
         private readonly int limitTicks;
+        private readonly int tickRate;
+        private readonly IGameEventSink eventSink;
         private readonly Dictionary<ulong, int> wobble = new();
         private readonly List<ulong[]> eliminations = new();
         private readonly HashSet<ulong> pendingFalls = new();
@@ -39,7 +42,7 @@ namespace SquishyBump.Match
 
         public MatchDirector(Func<bool> hasHostAuthority, IEnumerable<ulong> roster, int level, uint seed,
             int tickRate, int countdownSeconds, float confirmationSeconds, int limitSeconds,
-            TrainingRingBounds bounds = null)
+            TrainingRingBounds bounds = null, IGameEventSink eventSink = null)
         {
             this.hasHostAuthority = hasHostAuthority ?? throw new ArgumentNullException(nameof(hasHostAuthority));
             this.roster = roster.ToArray();
@@ -50,6 +53,8 @@ namespace SquishyBump.Match
                 throw new ArgumentException("Cấu hình thời gian hoặc level không hợp lệ.");
 
             Level = level;
+            this.eventSink = eventSink;
+            this.tickRate = tickRate;
             Seed = seed;
             countdownTicks = checked(countdownSeconds * tickRate);
             confirmationTicks = checked((int)Math.Ceiling(confirmationSeconds * tickRate));
@@ -79,6 +84,7 @@ namespace SquishyBump.Match
             lastTick = hostTick;
             countdownRemaining = countdownTicks;
             SetPhase(MatchPhase.Countdown);
+            PublishCountdown();
         }
 
         public void SetWobble(ulong fighterId, int value)
@@ -109,8 +115,13 @@ namespace SquishyBump.Match
 
             if (Phase == MatchPhase.Countdown)
             {
-                if (--countdownRemaining == 0)
+                --countdownRemaining;
+                if (countdownRemaining % tickRate == 0) PublishCountdown();
+                if (countdownRemaining == 0)
+                {
                     SetPhase(MatchPhase.Playing);
+                    PublishScoreboard();
+                }
                 return;
             }
 
@@ -119,10 +130,17 @@ namespace SquishyBump.Match
             {
                 var group = roster.Where(pendingFalls.Contains).ToArray();
                 foreach (var fighter in group)
+                {
                     wobble.Remove(fighter);
+                    if (eventSink != null) eventSink.Publish(MatchEvent.RingOut(eventSink.NextEventId(), lastTick, fighter));
+                }
+                foreach (var fighter in group)
+                    if (eventSink != null) eventSink.Publish(MatchEvent.Elimination(eventSink.NextEventId(), lastTick,
+                        fighter, wobble.Count + 1));
                 eliminations.Add(group);
                 pendingFalls.Clear();
                 lastEliminationAt = elapsedTicks;
+                PublishScoreboard();
             }
 
             if (wobble.Count <= 1)
@@ -192,7 +210,31 @@ namespace SquishyBump.Match
                 AppendGroup(result, eliminations[i]);
             Placements = result.AsReadOnly();
             SetPhase(MatchPhase.Result);
+            if (eventSink != null)
+            {
+                var rows = Standings(result);
+                eventSink.Publish(MatchEvent.Scoreboard(eventSink.NextEventId(), lastTick, rows));
+                eventSink.Publish(MatchEvent.MatchResult(eventSink.NextEventId(), lastTick, rows));
+            }
             ResultConfirmed?.Invoke(Placements);
+        }
+
+        private MatchStanding[] Standings(IEnumerable<SurvivalPlacement> placements) => placements.Select(p =>
+            new MatchStanding(p.FighterId, p.Rank, 0, wobble.ContainsKey(p.FighterId) ? 1 : 0)).ToArray();
+
+        private void PublishCountdown()
+        {
+            if (eventSink != null) eventSink.Publish(MatchEvent.Countdown(eventSink.NextEventId(), lastTick,
+                (countdownRemaining + tickRate - 1) / tickRate));
+        }
+        private void PublishScoreboard()
+        {
+            if (eventSink == null) return;
+            var result = new List<SurvivalPlacement>();
+            foreach (var group in wobble.OrderBy(f => f.Value).GroupBy(f => f.Value))
+                AppendGroup(result, group.Select(f => f.Key));
+            for (var i = eliminations.Count - 1; i >= 0; i--) AppendGroup(result, eliminations[i]);
+            eventSink.Publish(MatchEvent.Scoreboard(eventSink.NextEventId(), lastTick, Standings(result)));
         }
 
         private static void AppendGroup(List<SurvivalPlacement> results, IEnumerable<ulong> fighters)

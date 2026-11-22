@@ -147,3 +147,27 @@ nối trong các issue tương ứng.
 `Scenes/Boot` (build index 0), `MainMenu`, `Lobby`, `Levels/L1…L5` are shared: edited by their owner
 (L1, L4, L5 Nhật; L2, L3 Duy) or through prefabs. `Scenes/Sandbox/Test_Duy` and `Test_Nhat` are personal and
 never built. Scene list is set by `SquishyBump.Editor.ProjectScaffold.Run`.
+# SB-24 — đồng bộ sự kiện trận (đang triển khai, 21/11/2026)
+
+`SB.Match` dùng NGO `ReliableSequenced`, chỉ host gửi. NetSync từ chối nguồn khác
+ServerClientId và payload >512 byte. Codec chứa EventId, HostTick, loại, fighter,
+last toucher và tối đa 6 dòng (ID, rank, points, lives, survivalTicks); một bảng 6
+dòng là 174 byte trước prefix độ dài. Client không tính lại điểm hoặc thứ hạng.
+Codec từ chối sai chiều dài, enum lạ, trường không dùng, ID trùng trong bảng, rank
+không hợp lệ, điểm âm hoặc mạng ngoài 0–3. Contract LAN tăng revision 1 → 2.
+
+GameplayBootstrap nối host EventHub → NetSync và NetSync client → EventHub, dùng
+high-water EventId theo stream để bỏ bản nhận trùng/cũ. `MatchReplica` giữ bản đọc
+cho UI trên cả hai peer, reset khi bắt đầu phiên/match mới, không mô phỏng luật.
+`MatchStanding` sao chép danh sách khi tạo payload để caller không sửa kết quả đã phát.
+
+MatchDirector Survival phát countdown 3/2/1/GO, ring-out, elimination (giữ shared
+rank), scoreboard và kết quả đã xác nhận. Overlay hiển thị trực tiếp các dòng host;
+client ẩn quả out và chờ respawn/snapshot mới. LevelLauncher đợi NGO báo hoàn tất
+load scene trước khi cho host bắt đầu intro/countdown, tránh bắt đầu event khi
+client còn tải sàn. SB-27 vẫn phải nối dữ liệu Rank/ScoreService vào các event này;
+hiện codec và replay respawn/score table đã qua Native, chưa có nghiệm thu Rank.
+
+Native verify đã đạt 176 EditMode/37 PlayMode, gồm hai NGO peer loopback truyền sáu
+event và result lặp, so sánh replica/overlay. Chưa chạy LAN riêng máy, scene-load
+barrier nhiều PC hoặc Rank tích hợp; không suy rộng test protocol thành nghiệm thu đó.

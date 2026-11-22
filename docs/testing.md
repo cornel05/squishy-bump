@@ -197,3 +197,45 @@ and [`gdd/ids.md`](gdd/ids.md). Update a row whenever the test is run (date, bui
 | T18 | not run | | | | |
 | T19 | not run | | | | |
 | T20 | not run | | | | |
+# SB-24 — kiểm tra bổ sung 21/11/2026
+
+Nhánh `feat/SB-24-match-events`, base `c293fe1`: Roslyn đi kèm Editor 6000.3.28f1
+compile source các module, Editor và test. Runner .NET ngoài Unity gọi assertion
+`MatchEventTests` + `SurvivalMatchTests`: **18 ca đạt, 0 lỗi**. Phạm vi: sáu loại
+event qua codec, payload sai/truncated/extra, bảng điểm và tie, dữ liệu bất biến,
+luồng MatchDirector → codec → hai replica, ID trùng/cũ và Survival regression.
+Không phải NUnit Test Runner của Unity, không phải T06/T11/T12/T18 đạt.
+
+`MatchEventNetworkTests.ReliableEvents_LoopbackReplicasAndResultTextAgreeAndDuplicateIsIgnored`
+đã viết nhưng chưa chạy: tạo hai NGO peer loopback, gửi đủ sáu loại event, truyền lại
+result cùng ID, kiểm tra đúng một lần và nội dung kết quả giống nhau. Còn phải chạy
+scene-load barrier với LAN thật, đồng bộ Rank sau tích hợp SB-27, các sàn và hai luật.
+
+`tools/verify.ps1 -PlayMode` dừng Unity exit **198**, không sinh XML; log EditMode/PlayMode
+ghi `No valid Unity Editor license found`. Dòng `Compile: OK` của wrapper không chứng
+minh Unity đã import/compile. Repo gate còn thiếu ba `.meta` do Editor chưa sinh.
+Không viết GUID tay, chưa commit/push/PR, không đánh dấu tiêu chí issue #22.
+
+## SB-24 — bằng chứng Native sau khi khôi phục license 21/11/2026
+
+Unity 6000.3.28f1 đã import nhánh `feat/SB-24-match-events` (base `c293fe1`), sinh đủ
+ba meta. `tools/verify.ps1 -PlayMode`: **VERIFY: PASS**, **176 EditMode/37 PlayMode**,
+0 failed, 0 skipped, 0 warning C#. XML/log tại `TestResults/EditMode.*`,
+`TestResults/PlayMode.*`; lượt import đầu tại `TestResults/MatchEventInitialImport.*`.
+
+- `MatchEventTests`: round-trip sáu loại, payload lỗi, bất biến standings, shared
+  rank và Director Survival → codec → replica, không áp lại ID trùng/cũ.
+- `MatchEventNetworkTests.ReliableEvents_LoopbackReplicasAndResultTextAgreeAndDuplicateIsIgnored`
+  đạt trong **0,321320 s**: hai NGO peer qua 127.0.0.1:7777, scene management tắt;
+  host phát countdown, ring-out, respawn, elimination, scoreboard, result; phát lại
+  result cùng ID. Client nhận đúng sáu event, replica và chữ kết quả khớp host.
+  Đây là dữ liệu event được fixture cấp, không phải một match Rank đã chơi.
+- `python tools/check_repo.py`: PASS (0 problems); `git diff --check`: sạch.
+
+Build của lượt Native SB-24: `tools/build-windows.ps1` đạt **BUILD: PASS**, Windows
+x64 v0.1.0, 100 MB, 0 lỗi, 2 phút 26 giây. Thư mục `Builds/Windows/`; SHA-256 của
+`SquishyBump_Data/Managed/SquishyBump.Net.dll`:
+`CA93A3602457B5EE0B8F9F15C2404C98043D9B4EFA916ADEB4EB0E0D1BD6F83D`.
+
+Chưa kiểm tra scene-load barrier với nhiều PC, kết quả trên LAN vật lý, hoặc event
+Rank từ ScoreService của SB-27. Chưa nâng T06/T11/T18 hoặc nghiệm thu toàn bộ hai luật.
