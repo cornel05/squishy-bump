@@ -66,6 +66,9 @@ namespace SquishyBump.App
         public void ConfigureRank(ScoreService scores, uint id) { sessionScores = scores; matchId = id; }
         private BotProfile botProfile;
         private readonly Dictionary<ushort, BotBrain> bots = new();
+        private BotNavigationWorld navigationWorld;
+        private uint nextNavigationTick;
+        public IBotNavigationSnapshot BotNavigation { get; private set; }
         public IReadOnlyDictionary<ushort, BotBrain> Bots => bots;
         public void ConfigureBots(BotProfile profile) => botProfile = profile;
 
@@ -245,6 +248,7 @@ namespace SquishyBump.App
             };
             foreach (var ice in hazardList.OfType<IceTiles>()) ice.SetSeed(seed);
             foreach (var h in hazardList) h.Bind(bootstrap.EventSink, fighterPhysics);
+            if (bots.Count > 0) navigationWorld = new BotNavigationWorld(bounds.transform.position, balance, hazardList);
             bootstrap.Sync.InputReceived += OnRemoteInput;
             bootstrap.Clock.Ticked += OnTick;
         }
@@ -294,12 +298,19 @@ namespace SquishyBump.App
             var playing = Director.Phase == MatchPhase.Playing;
             var local = localInput.Sample();
             var sensedFighters = fighters.Select(f => new BotFighter(f.Id, f.Motor.transform.position,
-                f.Motor.GetComponent<Rigidbody>().linearVelocity, !f.Out)).ToArray();
+                f.Motor.GetComponent<Rigidbody>().linearVelocity, !f.Out,
+                f.Motor.GetComponent<Rigidbody>().mass, resolver.GetWobble(f.Id))).ToArray();
             var radius = bounds.OuterRadius;
             if (ringDrop != null && goTick != 0)
             {
                 var dropped = balance.RingDropSeconds.Count(at => Director.ElapsedTicks * dt + balance.RingDropWarningSeconds >= at);
                 radius *= 1f - dropped / (float)balance.RingDropSeconds.Count;
+            }
+            if (playing && navigationWorld != null && (BotNavigation == null || tick >= nextNavigationTick))
+            {
+                BotNavigation = navigationWorld.Capture(bounds.OuterRadius, Director.ElapsedTicks, dt);
+                var fastest = bots.Values.Max(b => b.DecisionRateHz);
+                nextNavigationTick = tick + (uint)Mathf.Max(1, Mathf.RoundToInt(1f / (fastest * dt)));
             }
 
             foreach (var f in fighters)
@@ -310,7 +321,7 @@ namespace SquishyBump.App
                 if (bots.TryGetValue(f.Id, out var brain))
                     input = brain.Step(bootstrap.Session.CanSimulateGameplay, playing, !f.Out,
                         f.Motor.IsDashing, f.Motor.DashReady, f.Motor.transform.position,
-                        f.Motor.transform.eulerAngles.y, bounds.transform.position, radius, sensedFighters, dt);
+                        f.Motor.transform.eulerAngles.y, bounds.transform.position, radius, sensedFighters, dt, BotNavigation);
                 // Countdown and idle slots send an empty command; motors still integrate gravity and traction.
                 if (!playing || (f.Id >= FirstBotId && !bots.ContainsKey(f.Id)))
                     input = new InputCommand(input.Sequence, Vector2.zero, false, false, input.YawDegrees);

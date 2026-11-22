@@ -6,7 +6,7 @@ using UnityEngine;
 namespace SquishyBump.Hazards
 {
     /// <summary>Sàn H06. Chỉ host chọn ô và bật collider; client trình bày sự kiện tin cậy.</summary>
-    public sealed class IceTiles : MonoBehaviour, IHazard
+    public sealed class IceTiles : MonoBehaviour, IHazard, IBotHazardHints
     {
         [SerializeField] private IceProfile profile;
         [SerializeField] private BalanceProfile balance;
@@ -98,6 +98,18 @@ namespace SquishyBump.Hazards
         }
         public void Bind(IGameEventSink eventSink, IFighterPhysics physics)
         { sink = eventSink; fighters = physics; }
+        public void CollectBotWarnings(List<BotHazardWarning> warnings, int playingTicks, float dt)
+        {
+            for (var i = 0; i < field.Count; i++)
+            {
+                if (field.Stage(i) != IceStage.Cracking) continue;
+                var center = TileCenter(i);
+                var remaining = profile.CrackSeconds - (playingTicks - field.ChangedAt(i)) * dt;
+                warnings.Add(new BotHazardWarning(BotAwareness.IceTiles, BotHazardShape.Hex,
+                    new Vector2(center.x, center.z), new Vector2(profile.FlatToFlat, 0),
+                    transform.eulerAngles.y, Mathf.Max(0, remaining)));
+            }
+        }
         private uint currentHostTick;
         public void StepOnHost(int ticks, uint hostTick, float dt)
         {

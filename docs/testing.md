@@ -388,3 +388,54 @@ Không dùng case physics L1 hay test domain để ghi nghiệm thu toàn sessio
 `SquishyBump_Data/Managed/`: Match.dll
 `F299F04CD55473524F801920BFEF173BE774FEDCDAED9253E260461BFA148696`, Physics.dll
 `A71CB7F2D461F44EF1F9D9C0EF12969668B312553C69D7BD0FA5B7ACB7DD5FC5`.
+
+Nền PR #98 (BotBrain D1, 53966b7) cùng PR #103 (L4/L5, 2e87aa8), Unity
+6000.3.28f1: tools/verify.ps1 -PlayMode đạt **185 EditMode + 43 PlayMode**,
+0 lỗi/skip/cảnh báo compile; repo check đạt. Xung đột asmdef đã giữ cả AI và uGUI,
+không lặp tham chiếu. Đây chỉ là kiểm tra nền phụ thuộc; chưa chứng minh các tiêu
+chí danger map, A* hoặc utility của SB-46. Chưa có build Windows cho nền ghép này.
+
+### SB-46 — navigation/utility Native, 22/11/2026
+
+Nhánh feat/SB-46-danger-navigation, nền tích hợp dd89fbd (PR #98 BotBrain và PR #103
+L4/L5); main vẫn c293fe1 khi fetch lại. Unity 6000.3.28f1. Bộ cuối
+`tools/verify.ps1 -PlayMode` → **VERIFY: PASS: 204 EditMode + 47 PlayMode**,
+0 lỗi/skip/cảnh báo compile từ code dự án. `tools/build-windows.ps1` đạt Windows x64
+v0.1.0, **101 MB, 0 errors, 25.25 s**. XML/log ở TestResults/EditMode.*, PlayMode.*;
+build log ở Logs/build-windows.log trong worktree SB-46, không đưa thư mục sinh vào Git.
+
+- NavigationTests: giới hạn 1 m/26×26, max edge/telegraph, awareness, margin băng,
+  vùng circle/annulus/box/cone/hex có xoay, ô rơi bị chặn, chặn cắt góc, đường né vùng
+  nguy hiểm và replan khi sàn đổi. **50 lưới ngẫu nhiên seed 0–49** đối chiếu A* với
+  oracle Dijkstra O(V²) độc lập, gồm chi phí và trường hợp không có đường.
+- Công thức utility kiểm tra riêng từng hạng cân; ngưỡng U≥0.4 và hysteresis 0.15.
+  Chưa có đánh giá tỷ lệ thắng hoặc cân bằng người/bot từ các ca toán học này.
+- NavigationArenaTests: L4 thật trước/sau 2 ô nứt rồi rơi, trước còn đường/sau bị
+  chặn; đặt collider Fighter thật trên lỗ vẫn không bị nhận nhầm làm sàn. L3 chỉ lộ
+  marker sau lúc phóng đạn, nhận cone khí và patch từ trạng thái thật. L2 chạy thời
+  gian tiến 30 s, lấy cảnh báo đổi chiều ở 13 s, kiểm tra hộp/làn pusher và ngân sách
+  lưới. Những ca gọi Step trực tiếp kiểm tra dữ liệu cảm nhận, không phải playtest
+  bot né hazard hoặc kiểm tra chất lượng hiển thị.
+- BotArenaTests: năm D1 trong match L1 dùng navigation/replan và đều di chuyển
+  >0.15 m qua PlayerMotor/Rigidbody thật trong 2 s; fall đổi Eliminated. Ca D2 nạp
+  profile D2 trước StartMatch, năm bot thật chọn mục tiêu utility/lập đường và có
+  dash tới PlayerMotor trong cửa sổ 6 s gameplay. D2 chạy Time.timeScale=4 để rút
+  thời gian chờ; physics vẫn fixed 1/60 s. Đây không phải T04/T05 hoặc AI-1–AI-6.
+
+Ba hồi quy đã thấy đỏ trước sửa, giữ XML/log riêng:
+
+1. SB46-UtilityBoundaryBeforeFix: **201 đạt/1 lỗi**, 0.75f−0.60f bị coi nhỏ hơn 0.15f.
+   So sánh biên có xét sai số float; không hạ ngưỡng thiết kế.
+2. SB46-ApproachFacingBeforeFix: **202 đạt/1 lỗi**; bot tới điểm tiếp cận nhưng nhìn
+   waypoint nên không charge. Tách yaw nhìn mục tiêu khỏi vector di chuyển theo path.
+   Fixture tích phân InputCommand là kiểm tra ý định, không được tính là PlayerMotor;
+   ca D2 Native ở trên kiểm chứng riêng luồng motor thật.
+3. SB46-EvadeReachabilityBeforeFix: **203 đạt/1 lỗi**; chọn ô gần bị ngăn bởi khe rồi
+   đứng lại. Chuyển sang tìm ô an toàn tới được có cost thấp nhất trong 4 m.
+
+Các ca trên đều xanh trong bộ cuối 204/47. Repo/diff checks phải sạch trước commit.
+Chưa kiểm chứng: quan sát path/debug trong player, hiệu năng năm D5, AI-1–AI-6,
+trượt/né hazard của các bậc trên đủ năm sàn, T04/T05/T07 đầy đủ hoặc LAN nhiều máy.
+Không đổi trạng thái các test đó dựa vào bằng chứng này. PR phụ thuộc #98 và #103;
+cần tích hợp các PR phụ thuộc trước, merge main vào nhánh này, chuyển base về main
+và xác minh lại; không tự merge PR trong đợt làm việc này.

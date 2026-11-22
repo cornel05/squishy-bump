@@ -37,6 +37,42 @@ namespace SquishyBump.Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator SinglePlayer_D2UtilityBots_UseNavigationAndDashThroughRealMotor()
+        {
+            yield return SceneManager.LoadSceneAsync($"{Root}/Scenes/Boot.unity", LoadSceneMode.Single);
+            app = Object.FindObjectsByType<GameplayBootstrap>(FindObjectsSortMode.None)
+                .First(b => b.Launcher != null);
+            var profile = UnityEditor.AssetDatabase.LoadAssetAtPath<SquishyBump.Core.BotProfile>(
+                $"{Root}/Data/Bots/D2.asset");
+            UnityEngine.Events.UnityAction<Scene, LoadSceneMode> configure = (scene, mode) =>
+            {
+                if (scene.name == "L1") app.Launcher.Match.ConfigureBots(profile);
+            };
+            SceneManager.sceneLoaded += configure;
+            try
+            {
+                Time.timeScale = 4;
+                app.Launcher.StartSinglePlayer(1);
+                yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
+                var match = app.Launcher.Match;
+                Assert.That(match.Bots.Count, Is.EqualTo(5));
+                Assert.That(match.Bots.Values.All(b => b.DecisionRateHz == profile.DecisionRateHz), Is.True);
+                yield return WaitFor(() => match.Director.Phase == MatchPhase.Playing);
+                var deadline = Time.time + 6;
+                var sawTarget = false; var sawDash = false;
+                while (Time.time < deadline)
+                {
+                    sawTarget |= match.Bots.Values.Any(b => b.Target.HasValue && b.Replans > 0);
+                    sawDash |= match.Fighters.Any(f => match.Bots.ContainsKey(f.Id) && f.Motor.IsDashing);
+                    yield return null;
+                }
+                Assert.That(sawTarget, Is.True, "D2 chọn mục tiêu utility và có đường đi trong match thật.");
+                Assert.That(sawDash, Is.True, "Input dash của D2 phải tới PlayerMotor thật, không chỉ đổi trạng thái FSM.");
+            }
+            finally { SceneManager.sceneLoaded -= configure; }
+        }
+
+        [UnityTest]
         public IEnumerator SinglePlayer_D1BotsMoveThroughPlayerMotorAndEnterEliminatedOnFall()
         {
             yield return SceneManager.LoadSceneAsync($"{Root}/Scenes/Boot.unity", LoadSceneMode.Single);
@@ -53,6 +89,9 @@ namespace SquishyBump.Tests.PlayMode
             var bots = match.Fighters.Where(f => match.Bots.ContainsKey(f.Id)).ToArray();
             var starts = bots.ToDictionary(f => f.Id, f => f.Motor.transform.position);
             yield return new WaitForSeconds(2);
+            Assert.That(match.BotNavigation, Is.Not.Null, "Host thực sự chụp sàn/hazard cho bot.");
+            Assert.That(match.Bots.Values.All(b => b.Navigation != null && b.Replans > 0), Is.True,
+                "Mỗi bot phải dùng danger map và A*, không chỉ di chuyển bằng FSM cũ.");
             foreach (var bot in bots)
             {
                 Assert.That(bot.Motor, Is.TypeOf<PlayerMotor>());
