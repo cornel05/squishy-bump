@@ -1,6 +1,6 @@
 ---
 name: issue-finish
-description: Finish a Squishy Bump issue - run verify and repo checks, tick satisfied acceptance checkboxes, update docs/testing.md, and open the PR with Closes #n (teammate review is optional). Use when the code for an issue is complete on its feat/SB-xx branch. Do not use to start an issue (issue-start) or to review someone else's PR (review-pr).
+description: Finish a Squishy Bump issue - run verify and repo checks, tick satisfied acceptance checkboxes, update docs/testing.md, and open the PR with Closes #n. Use when the code for an issue is complete on its feat/SB-xx branch. Do not use to start an issue (issue-start) or to review someone else's PR (review-pr).
 ---
 
 # issue-finish
@@ -19,8 +19,7 @@ Input: issue number `n` (default: from the branch name `feat/SB-xx-*`, resolved 
 6. Open the PR from the template:
    `gh pr create --title "SB-xx: <summary>" --body-file pr.md`
    where `pr.md` follows `.github/pull_request_template.md`, contains `Closes #n` on its own line,
-   the commands run with their result lines, and the GDD refs. For an optional review add `--reviewer <teammate>`: `ZteHahah` if you are
-   `cornel05`, else `cornel05` (`gh api user -q .login`).
+   the commands run with their result lines, and the GDD refs. PRs by `ZteHahah` require `cornel05` approval before merging. GitHub requests `cornel05` for ready PRs into `main`. For stacked PRs by `ZteHahah`, explicitly request `--reviewer cornel05` when ready. Do not request `ZteHahah` review on PRs by `cornel05`.
 7. Design deviated? Make sure the `design-change` skill was run and the D-entry is in this PR.
 
 Output: PR URL, ticked/unticked criteria with the reason for any unticked one.
