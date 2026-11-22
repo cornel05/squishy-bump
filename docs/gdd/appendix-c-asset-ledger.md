@@ -44,6 +44,15 @@ Text of this GDD was drafted with the help of an AI assistant (Claude) and revie
 
 ## C.2 Asset groups
 
+### Cập nhật UI runtime SB-24 (21/11/2026)
+
+Bản ghi `RT-UI` trong `docs/asset-ledger.csv` bổ sung kết quả trận được tạo bằng
+`UI/Menus/MatchOverlay.cs`. Công cụ Unity 6000.3.28f1, C#/uGUI và font LegacyRuntime
+tích hợp; Codex hỗ trợ sửa code. Không thêm ảnh, font, model bên ngoài, không dùng
+seed/model sinh ảnh; nguồn yêu cầu là issue #22 và GDD 10.4/11.3. Nội dung do nhóm
+tạo chưa có LICENSE chung, thành phần Unity theo điều khoản nhà cung cấp. Native
+loopback xác nhận nội dung chữ hai peer khớp; bố cục chưa được nhóm duyệt.
+
 ### Asset greybox L1 của SB-14
 
 Các tệp dưới đây thuộc phiên bản greybox SB-14 v1, tạo bằng C# và Unity

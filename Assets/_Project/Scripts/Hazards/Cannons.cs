@@ -17,7 +17,7 @@ namespace SquishyBump.Hazards
     /// with fixed-step gravity; blast R 3 m, J = J₀(1 − d/R)·K(h) outward with 30% up, +2 Wobble; burning patch
     /// 2 m for 3 s, +1 Wobble per full second inside.
     /// </summary>
-    public sealed class Cannons : MonoBehaviour, IHazard, IBotHazardHints
+    public sealed class Cannons : MonoBehaviour, IHazard, IHazardZones, IBotHazardHints
     {
         [Serializable]
         public struct Mount
@@ -66,6 +66,28 @@ namespace SquishyBump.Hazards
         public int LockedFireTick(int i) => cannons[i].FireTick;
         public bool BallFlying(int i) => cannons[i].Flying;
         public Vector3 BallPosition(int i) => cannons[i].BallPosition;
+
+        public IReadOnlyList<HazardZone> ThreatenedZones(int playingTick, float dt)
+        {
+            var zones = new List<HazardZone>();
+            foreach (var c in cannons)
+            {
+                if (c.PatchUntilTick >= playingTick) zones.Add(new HazardZone(c.PatchCentre, hazards.PatchRadius));
+                if (c.Flying || c.Mount.Kind == CannonKind.Fire && c.FireTick >= playingTick)
+                    zones.Add(new HazardZone(c.Aim, hazards.BlastRadius));
+                if (c.Mount.Kind == CannonKind.Air && c.FireTick >= 0 &&
+                    playingTick >= c.FireTick - Mathf.RoundToInt(hazards.CannonTelegraphSeconds / dt) &&
+                    playingTick <= c.FireTick + Mathf.RoundToInt(hazards.AirGustSeconds / dt))
+                {
+                    // Bao tròn bảo thủ nón gió: không chọn một điểm đang nằm trong nón làm điểm hồi sinh.
+                    var direction = (c.Aim - c.Muzzle).normalized;
+                    var half = hazards.AirRange * 0.5f;
+                    var width = hazards.AirRange * Mathf.Tan(hazards.AirConeHalfAngle * Mathf.Deg2Rad);
+                    zones.Add(new HazardZone(c.Muzzle + direction * half, Mathf.Sqrt(half * half + width * width)));
+                }
+            }
+            return zones;
+        }
 
         /// <summary>For cannons built at runtime: call on an inactive object, before Awake.</summary>
         public void Configure(BalanceProfile balanceProfile, HazardProfile hazardProfile, Mount[] layout, bool chaos)

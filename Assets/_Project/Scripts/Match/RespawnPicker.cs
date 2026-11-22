@@ -36,7 +36,7 @@ namespace SquishyBump.Match
         /// False when no floor or every point lies in a hazard.
         /// </summary>
         public static bool TryPick(Vector3 center, float safeRadius, IReadOnlyList<Vector3> otherFruits,
-            IReadOnlyList<HazardZone> hazards, out Vector3 point)
+            IReadOnlyList<HazardZone> hazards, out Vector3 point, System.Predicate<Vector3> validFloor = null)
         {
             point = center;
             if (safeRadius < 0f) return false;
@@ -50,6 +50,7 @@ namespace SquishyBump.Match
                 var offset = new Vector3(ix * SampleSpacingMeters, 0f, iz * SampleSpacingMeters);
                 if (offset.sqrMagnitude > safeRadius * safeRadius) continue;
                 var candidate = center + offset;
+                if (validFloor != null && !validFloor(candidate)) continue;
                 var score = Clearance(candidate, otherFruits, hazards);
                 // Ties (e.g. an empty arena) go to the point nearest the centre.
                 if (score < 0f || score < best || score == best && offset.sqrMagnitude >= (point - center).sqrMagnitude)

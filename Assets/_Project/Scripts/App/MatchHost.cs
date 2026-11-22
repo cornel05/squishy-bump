@@ -61,6 +61,9 @@ namespace SquishyBump.App
         private readonly HashSet<Collider> nearBoxes = new();
         private bool hitStopping;
         private bool pausesGame;
+        private ScoreService sessionScores;
+        private uint matchId, simulationTick;
+        public void ConfigureRank(ScoreService scores, uint id) { sessionScores = scores; matchId = id; }
         private BotProfile botProfile;
         private readonly Dictionary<ushort, BotBrain> bots = new();
         private BotNavigationWorld navigationWorld;
@@ -158,6 +161,7 @@ namespace SquishyBump.App
             public byte Fruit;
             public PlayerMotor Motor;
             public RollVisual Visual;
+            public Renderer[] VisibleRenderers;
             public bool Out;
         }
 
@@ -174,6 +178,7 @@ namespace SquishyBump.App
             bootstrap.Settings.Changed += ApplySettings;
             bootstrap.Session.StateChanged += OnSessionState;
             bootstrap.Events.HazardRaised += OnHazard;
+            bootstrap.Events.MatchRaised += OnMatchEvent;
             if (autoHost && bootstrap.Session.State == SessionState.Idle) bootstrap.Session.Host(SessionMode.SinglePlayer);
             if (autoHost && bootstrap.Session.State == SessionState.Hosting) StartMatch();
             if (bootstrap.Session.State == SessionState.Joined) OnSessionState(SessionState.Joined);
@@ -213,6 +218,7 @@ namespace SquishyBump.App
                 {
                     Id = id, Fruit = (byte)i, Motor = go.GetComponent<PlayerMotor>(),
                     Visual = go.GetComponentInChildren<RollVisual>(),
+                    VisibleRenderers = go.GetComponentsInChildren<Renderer>().Where(r => r.enabled).ToArray(),
                 };
                 fighters.Add(f);
                 if (id >= FirstBotId && botProfile != null) bots[id] = new BotBrain(botProfile, id, seed);
@@ -223,20 +229,23 @@ namespace SquishyBump.App
 
             Director = new MatchDirector(() => bootstrap.Session.CanSimulateGameplay, fighters.Select(f => (ulong)f.Id), level,
                 seed, Mathf.RoundToInt(1f / Time.fixedDeltaTime), countdownSeconds, resultConfirmSeconds,
-                Mathf.RoundToInt(balance.TimeLimitSeconds), bounds);
+                Mathf.RoundToInt(balance.TimeLimitSeconds), bounds, bootstrap.Settings.Rule, balance, sessionScores, matchId, bootstrap.EventSink);
+            Director.TryPlaceRespawn = TryRespawn;
 
             if (cameraRig != null) cameraRig.Follow(fighters[0].Motor.transform);
             resolver.WobbleChanged += Director.SetWobble;
             resolver.Hit += OnHit;
+            resolver.Contact += OnContact;
             foreach (var f in fighters)
                 if (f.Visual != null) f.Visual.TookOff += OnTookOff;
             Director.ResultConfirmed += _ =>
             {
                 Sound(Sfx.Win, cameraRig != null ? cameraRig.transform.position : Vector3.zero);
                 // Best Single Player Survival run: the player won this level outright.
-                if (pausesGame && Director.GetSinglePlayerOutcome(0) != SurvivalOutcome.Retry) bootstrap.RecordSurvival(level);
+                if (pausesGame && Director.Rule == MatchRule.Survival && Director.GetSinglePlayerOutcome(0) != SurvivalOutcome.Retry)
+                    bootstrap.RecordSurvival(level);
+                if (pausesGame && Director.Rule == MatchRule.Rank && level == 5) bootstrap.RecordRank(Director.Scores.Points(0));
             };
-            bootstrap.Events.MatchRaised += OnMatchEvent;
             foreach (var ice in hazardList.OfType<IceTiles>()) ice.SetSeed(seed);
             foreach (var h in hazardList) h.Bind(bootstrap.EventSink, fighterPhysics);
             if (bots.Count > 0) navigationWorld = new BotNavigationWorld(bounds.transform.position, balance, hazardList);
@@ -253,6 +262,12 @@ namespace SquishyBump.App
             localInput?.UpdateLook();
             UpdateSounds();
             clientView?.Update(Time.time);
+            foreach (var f in fighters)
+            {
+                if (f.Out) continue;
+                var visible = Director == null || !Director.IsInvulnerable(f.Id) || Mathf.Repeat(Time.time, 0.5f) < 0.25f;
+                foreach (var renderer in f.VisibleRenderers) renderer.enabled = visible;
+            }
             if (clientView != null && clientView.TryPlayingSeconds(Time.time, out var seconds))
                 foreach (var h in hazardList) h.ShowAt(seconds);
             else if (Started) seconds = Director.ElapsedTicks * Time.fixedDeltaTime;
@@ -275,6 +290,7 @@ namespace SquishyBump.App
 
         private void OnTick(uint tick)
         {
+            simulationTick = tick;
             var dt = Time.fixedDeltaTime;
             introStartTick ??= tick;
             if (Director.Phase == MatchPhase.Intro && tick - introStartTick.Value >= Mathf.RoundToInt(introSeconds / dt))
@@ -300,6 +316,7 @@ namespace SquishyBump.App
             foreach (var f in fighters)
             {
                 if (f.Out) continue;
+                f.Motor.Invulnerable = Director.IsInvulnerable(f.Id, 1);
                 var input = f.Id == 0 ? local : inboxes.TryGetValue(f.Id, out var inbox) ? inbox.Take() : default;
                 if (bots.TryGetValue(f.Id, out var brain))
                     input = brain.Step(bootstrap.Session.CanSimulateGameplay, playing, !f.Out,
@@ -330,6 +347,7 @@ namespace SquishyBump.App
                 Sound(Sfx.FallOff, f.Motor.transform.position);
                 resolver.Unregister(f.Id);
                 fighterPhysics.Remove(f.Id);
+                f.Motor.gameObject.SetActive(false);
             }
 
             if (tick % snapshotEveryTicks == 0) bootstrap.Sync.BroadcastSnapshot(Snapshot(tick));
@@ -339,12 +357,51 @@ namespace SquishyBump.App
         {
             var body = f.Motor.GetComponent<Rigidbody>();
             var flags = (f.Motor.IsDashing ? FighterFlags.Dashing : 0) | (f.Motor.IsStunned ? FighterFlags.Stunned : 0)
-                | (f.Out ? FighterFlags.Out : 0);
+                | (f.Out ? FighterFlags.Out : 0) | (Director.IsRespawning(f.Id) ? FighterFlags.Respawning : 0)
+                | (Director.IsInvulnerable(f.Id) ? FighterFlags.Invulnerable : 0);
             var wobble = (byte)Mathf.Clamp(resolver.GetWobble(f.Id), 0, byte.MaxValue);
             var lastInput = inboxes.TryGetValue(f.Id, out var inbox) ? inbox.LastProcessed : 0u;
-            return new FighterSnapshot(f.Id, f.Fruit, body.position, body.linearVelocity, wobble, (byte)(f.Out ? 0 : 1),
+            return new FighterSnapshot(f.Id, f.Fruit, body.position, body.linearVelocity, wobble, (byte)Director.Lives(f.Id),
                 flags, lastInput);
         }).ToArray());
+
+        private void OnContact(ulong a, ulong b)
+        {
+            Director.RecordTouch(a, b, simulationTick);
+            Director.RecordTouch(b, a, simulationTick);
+        }
+
+        private bool TryRespawn(ulong id)
+        {
+            if (!bootstrap.Session.CanSimulateGameplay) return false;
+            var f = fighters.FirstOrDefault(candidate => candidate.Id == id);
+            if (f == null) return false;
+            var sphere = f.Motor.GetComponent<SphereCollider>();
+            var others = fighters.Where(other => other.Id != id && !other.Out).Select(other => other.Motor.transform.position).ToArray();
+            var zones = new List<HazardZone>();
+            foreach (var provider in hazardList.OfType<IHazardZones>())
+                foreach (var zone in provider.ThreatenedZones(Director.ElapsedTicks, Time.fixedDeltaTime))
+                    zones.Add(new HazardZone(zone.Center, zone.Radius + sphere.radius));
+            foreach (var ground in hazardList.OfType<MovingGround>())
+                foreach (var box in ground.Boxes)
+                    zones.Add(new HazardZone(box.bounds.center, new Vector2(box.bounds.extents.x, box.bounds.extents.z).magnitude + sphere.radius));
+            foreach (var pusher in hazardList.OfType<PusherBlocks>())
+                foreach (var box in pusher.GetComponentsInChildren<BoxCollider>())
+                    zones.Add(new HazardZone(box.bounds.center, new Vector2(box.bounds.extents.x, box.bounds.extents.z).magnitude + sphere.radius));
+            var safeRadius = RespawnPicker.SafeRadius(bounds.OuterRadius, Director.ElapsedTicks, balance, Time.fixedDeltaTime, ringDrop != null);
+            var floorMask = UnityEngine.Physics.DefaultRaycastLayers & ~(1 << CollisionResolver.FighterLayer);
+            bool HasFloor(Vector3 point) => UnityEngine.Physics.Raycast(point + Vector3.up * (sphere.radius + 0.1f),
+                Vector3.down, out var hit, 2 * (sphere.radius + 0.1f), floorMask, QueryTriggerInteraction.Ignore) && hit.normal.y > 0.5f;
+            if (!RespawnPicker.TryPick(bounds.transform.position, safeRadius, others, zones, out var position, HasFloor)) return false;
+            f.Motor.ResetForRespawn(position + Vector3.up * sphere.radius);
+            f.Motor.Invulnerable = true;
+            f.Motor.gameObject.SetActive(true);
+            f.Out = false;
+            resolver.Register(f.Id, f.Motor);
+            resolver.ResetWobble(f.Id);
+            fighterPhysics.Add(f.Id, f.Motor);
+            return true;
+        }
 
         private void OnHit(FighterHit hit)
         {
@@ -359,6 +416,19 @@ namespace SquishyBump.App
         private void OnMatchEvent(MatchEvent e)
         {
             if (e.Kind == MatchEventKind.Respawn) Sound(Sfx.Respawn, LocalFighterPosition());
+            if (overlay == null) return;
+            if (e.Kind == MatchEventKind.Countdown)
+                overlay.ShowBanner(e.Value == 0 ? "GO!" : e.Value.ToString(), 1f);
+            if (e.Kind == MatchEventKind.MatchResult) overlay.ShowResult(e.Standings, FighterLabel);
+        }
+
+        private string FighterLabel(ulong id)
+        {
+            var hostFighter = fighters.FirstOrDefault(f => f.Id == id);
+            if (hostFighter != null) return fighterPrefabs[hostFighter.Fruit].name;
+            if (clientView != null && clientView.Views.TryGetValue((ushort)id, out var view) && view != null)
+                return view.name.Replace("(Clone)", "");
+            return $"Fruit {id}";
         }
 
         private void PlayHazardSound(HazardEvent e)
