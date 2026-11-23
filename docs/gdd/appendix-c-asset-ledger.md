@@ -1,4 +1,4 @@
-﻿# Appendix C. Asset and AI-generation ledger
+# Appendix C. Asset and AI-generation ledger
 
 > **In this chapter:** Every asset with its generator, licence and AI declaration.
 
@@ -44,6 +44,22 @@ Text of this GDD was drafted with the help of an AI assistant (Claude) and revie
 
 ## C.2 Asset groups
 
+### HUD procedural của SB-17 (bản kiểm thử 21/11/2026)
+
+`UI/HUD/MatchHud.cs` tạo vòng cooldown 64 × 64 pixel bằng C#/Texture2D lúc chạy,
+uGUI Filled Radial360; không có tệp ảnh nhập ngoài. Panel/chữ dùng `UiFactory` và
+font LegacyRuntime tích hợp Unity. Công cụ: Unity 6000.3.28f1, code có Codex hỗ trợ;
+yêu cầu nguồn: HUD GDD 11.2 (đồng hồ, số quả, dash, hạng cân và Wobble). Không dùng
+seed hoặc model sinh ảnh; không có prompt gốc ngoài yêu cầu issue #15 và mã trong Git.
+Sử dụng trong trận qua `App/MatchHost`; phiên bản SB-17 v1. Phần code/ảnh procedural do
+dự án tạo; repo chưa có LICENSE chung, thành phần uGUI/font theo điều khoản Unity.
+Native EditMode 165/165 và PlayMode 38/38 đã đạt; xem bằng chứng build/bố cục trong
+`docs/testing.md`. Đây là bản kiểm thử, chưa ghi asset đã được nhóm duyệt.
+
+| ID | Nội dung runtime | Nguồn và vị trí dùng |
+|---|---|---|
+| ICO-HUD-DASH01 | Texture và Sprite vòng cooldown 64 × 64 | `Assets/_Project/Scripts/UI/HUD/MatchHud.cs`; HUD dưới trái |
+| ICO-HUD-CLASS01 | Huy hiệu chữ hạng cân và kg, nền uGUI tương phản | Cùng mã nguồn; HUD dưới trái, dữ liệu từ `FruitDefinition.Class` |
 ### Cập nhật UI runtime SB-24 (21/11/2026)
 
 Bản ghi `RT-UI` trong `docs/asset-ledger.csv` bổ sung kết quả trận được tạo bằng
@@ -154,6 +170,15 @@ A.3/A.4; không có prompt image generation hoặc asset tải ngoài. RNG bot d
 trận/ID; hình học không đổi. Nguồn/giấy phép giữ theo CREDITS.md, không suy diễn
 giấy phép chung của repo. Native test hành vi không thay thế kiểm tra hình ảnh.
 
+
+## SB-17 — nguồn HUD v2 và bằng chứng review, 23/11/2026
+
+Giữ hình vòng cooldown và badge procedural của v1; v2 sửa bố cục Wobble trong
+Assets/_Project/Scripts/UI/HUD/MatchHud.cs với hỗ trợ AI Codex, theo issue #15/GDD11.2.
+Không dùng model sinh ảnh, prompt ảnh hoặc RNG. Tám PNG trong
+docs/testing/sb17-hud-review là ScreenCapture Windows Player Direct3D12 nguyên bản,
+không phải ảnh AI hay asset runtime mới. Hash nguồn và bằng chứng trong manifest.json.
+Nguồn nhóm tạo chưa có LICENSE chung; font/uGUI theo điều khoản Unity hiện hữu.
 ## Lobby runtime — SB-25, bản kiểm thử 21/11/2026
 
 | ID | Nguồn/phương pháp | Vị trí và trạng thái |

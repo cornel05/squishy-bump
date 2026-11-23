@@ -53,6 +53,7 @@ namespace SquishyBump.Physics
         public bool IsDashing => state.DashStateTicks > 0;
         public bool IsStunned => state.StunTicks > 0;
         public bool DashReady => state.DashCooldownTicks == 0;
+        public int DashCooldownTicks => state.DashCooldownTicks;
         /// <summary>Host cập nhật từ cửa sổ bảo vệ hồi sinh; không đổi input hay di chuyển.</summary>
         public bool Invulnerable { get; set; }
 
