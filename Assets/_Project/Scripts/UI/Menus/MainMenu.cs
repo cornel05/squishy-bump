@@ -39,12 +39,19 @@ namespace SquishyBump.UI.Menus
             canvas.SetParent(transform, false);
 
             main = UiFactory.Page(canvas, "Main");
-            UiFactory.Label(main, "SQUISHY BUMP", 64);
+            UiFactory.Label(main, "SQUISHY BUMP", 56);
             UiFactory.Button(main, "Single Player", () => Show(levels));
-            UiFactory.Button(main, "Multiplayer", () => Show(multiplayer));
+            UiFactory.Toggle(main, "Rank (off: Survival)", settings.Rule == MatchRule.Rank, on =>
+            {
+                settings.Rule = on ? MatchRule.Rank : MatchRule.Survival;
+                settings.NotifyChanged();
+            });
+            // Create Server hosts, then shows the page that holds the host status and Start match.
+            UiFactory.Button(main, "Create Server", () => { HostRequested?.Invoke(); Show(multiplayer); });
+            UiFactory.Button(main, "Find Server", () => Show(multiplayer));
             UiFactory.Button(main, "Settings", () => Show(options));
-            UiFactory.Button(main, "Credits", () => Show(credits));
-            UiFactory.Button(main, "Quit", () => QuitRequested?.Invoke());
+            UiFactory.Button(main, "Credit", () => Show(credits));
+            UiFactory.Button(main, "Exit Game", () => QuitRequested?.Invoke());
             UiFactory.Label(main, version, 20);
 
             levels = UiFactory.Page(canvas, "Single Player");
@@ -57,13 +64,7 @@ namespace SquishyBump.UI.Menus
             UiFactory.Button(levels, "Back", () => Show(main));
 
             multiplayer = UiFactory.Page(canvas, "Multiplayer");
-            UiFactory.Label(multiplayer, "Multiplayer (LAN)", 44);
-            UiFactory.Toggle(multiplayer, "Rank rule (off = Survival)", settings.Rule == MatchRule.Rank, on =>
-            {
-                settings.Rule = on ? MatchRule.Rank : MatchRule.Survival;
-                settings.NotifyChanged();
-            });
-            UiFactory.Button(multiplayer, "Host game", () => HostRequested?.Invoke());
+            UiFactory.Label(multiplayer, "Find Server (LAN)", 44);
             UiFactory.Label(multiplayer, "Host IP address", 26);
             address = UiFactory.InputField(multiplayer, "127.0.0.1");
             UiFactory.Button(multiplayer, "Join", () => JoinRequested?.Invoke(address.text.Trim()));
@@ -77,7 +78,7 @@ namespace SquishyBump.UI.Menus
             UiFactory.Label(credits, "Credits", 44);
             UiFactory.Label(credits,
                 "BKU Group 18\nĐình Duy · Minh Nhật\nUnity 6 · URP · Netcode · glTFast\n" +
-                "Font: Unity LegacyRuntime\n6 model: Blender / script nhóm\n12 SFX: Python / script nhóm\n" +
+                "Font: Sleeping (Darrell Flood) · UI kit: nhóm\n6 model: Blender / script nhóm\n12 SFX: Python / script nhóm\n" +
                 "Nhạc: chưa có\nAI hỗ trợ code và asset: Claude / Codex\nChi tiết nguồn: CREDITS.md", 24)
                 .GetComponent<LayoutElement>().minHeight = 400;
             UiFactory.Button(credits, "Back", () => Show(main));
@@ -89,7 +90,7 @@ namespace SquishyBump.UI.Menus
         public static RectTransform BuildSettings(Transform canvas, GameSettings settings, Action back)
         {
             var page = UiFactory.Page(canvas, "Settings");
-            UiFactory.Label(page, "Settings", 44);
+            UiFactory.Title(page, "Settings");
             UiFactory.Slider(page, "Mouse sensitivity", MinSensitivity, MaxSensitivity, settings.MouseSensitivity,
                 v => { settings.MouseSensitivity = v; settings.NotifyChanged(); });
             UiFactory.Slider(page, "Camera distance", MinDistance, MaxDistance, settings.CameraDistance,

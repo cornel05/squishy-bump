@@ -16,8 +16,8 @@ Phân công hiện hành nằm trong `AGENTS.md`; tác giả và các lượt s�
 | 12 SFX `.wav` | `tools/audio/make_sfx.py`, Python stdlib; commit `3d22d10`, PR #78; `AudioDirector` / `PresentationProfile` | Tổng hợp bằng code có Claude hỗ trợ, seed 18, 44.1 kHz mono PCM 16-bit. Placeholder, không lấy sample âm thanh ngoài. |
 | L1 và vật liệu greybox | Mesh/material dưới `Data/TrainingRing/`, `ProjectScaffold` và dữ liệu mesh đã commit (script tạo mesh ban đầu không có trong checkout); Phụ lục C đã ghi nguồn SB-14 | C# và Unity 6000.3.28f1 với Codex hỗ trợ. Không dùng seed ngẫu nhiên hay model tạo ảnh. |
 | L2/L3 và hình hazard | `LevelSceneBuilder`, `MovingGround`, `PusherBlocks`, `Cannons`, `AnnulusMesh`, `RingDrop` | Primitive, mesh và màu tạo bằng C#/Unity với AI hỗ trợ code. Không có texture, model hoặc sample tải ngoài trong nhóm này. |
-| Giao diện | `UI/Menus/UiFactory.cs` tạo panel và chữ bằng uGUI | Font thực tế là `Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf")` từ Unity. Không có tệp Baloo 2/Fredoka trong Assets tại mốc kiểm kê. |
-| Kết quả SB-24 | `UI/Menus/MatchOverlay.cs`, 21/11/2026 | Codex hỗ trợ code trình bày standings host bằng uGUI/LegacyRuntime; không thêm ảnh, font tải ngoài hoặc model sinh ảnh. Yêu cầu: issue #22, GDD 10.4/11.3; không dùng seed. |
+| Giao diện | `UI/Menus/UiFactory.cs` tạo panel và chữ bằng uGUI | Font chính là Sleeping (Darrell Flood, `Assets/ThirdParty/Fonts/Sleeping/`; miễn phí cho mục đích cá nhân, cần mua giấy phép nếu thương mại hóa). Sleeping thiếu dấu tiếng Việt nên Arial/Segoe UI làm font dự phòng. Sprite UI cắt từ bộ UI kit của nhóm (Drive: Buttons.ai, icon game.ai) bằng `tools/ui/slice_kit.py`. |
+| Kết quả SB-24 | `UI/Menus/MatchOverlay.cs`, 21/11/2026 | Codex hỗ trợ code trình bày standings host bằng uGUI (từ SB-74 dùng sprite/font UI kit); không thêm ảnh, font tải ngoài hoặc model sinh ảnh. Yêu cầu: issue #22, GDD 10.4/11.3; không dùng seed. |
 | Nhạc | Không tìm thấy clip nhạc trong `Assets/` | Chưa nhập nhạc. Không gán tác giả/giấy phép cho nội dung chưa có. |
 
 Danh sách từng tệp, hash SHA-256, nguồn, vị trí dùng và giới hạn thông tin nằm tại
