@@ -89,7 +89,7 @@ namespace SquishyBump.Tests.PlayMode
             lobby.Coordinator.SetReady(true); client.LobbySync.SendReady(true);
             yield return WaitFor(() => lobby.Coordinator.State.RemainingTicks > 0, "host countdown");
             yield return WaitFor(() => client.LobbySelection != null && client.LobbySelection.RemainingTicks > 0, "client nhận countdown");
-            Assert.That(panel.BoardText, Does.Contain("Watermelon").And.Contain("Pineapple").And.Contain("READY").And.Contain("IP host:"));
+            Assert.That(panel.BoardText, Does.Contain("Bear").And.Contain("Pig").And.Contain("READY").And.Contain("IP host:"));
             Assert.That(host.LobbySync.RejectedPackets, Is.Zero);
             Assert.That(client.LobbySync.RejectedPackets, Is.Zero);
             Assert.That(host.Launcher.Match, Is.Null, "Chưa được bỏ qua countdown 5 giây.");
@@ -98,8 +98,8 @@ namespace SquishyBump.Tests.PlayMode
             Assert.That(host.Launcher.Match.Fighters, Has.Count.EqualTo(2), "LAN không có idle/bot slots phụ.");
             Assert.That(host.LobbySelection.FinalLevel, Is.EqualTo(3));
             Assert.That(host.Launcher.Match.Fighters.Select(f => (ulong)f.Id), Is.EquivalentTo(new[] { 0UL, peer }));
-            Assert.That(host.Launcher.Match.Fighters[0].Motor.name, Does.StartWith("Watermelon"));
-            Assert.That(host.Launcher.Match.Fighters[1].Motor.name, Does.StartWith("Pineapple"));
+            Assert.That(host.Launcher.Match.Fighters[0].Motor.name, Does.StartWith("Bear"));
+            Assert.That(host.Launcher.Match.Fighters[1].Motor.name, Does.StartWith("Pig"));
         }
 
         [UnityTest]
@@ -112,8 +112,8 @@ namespace SquishyBump.Tests.PlayMode
                 yield return WaitFor(() => IsPlaying(level), $"L{level} bắt đầu");
                 var match = host.Launcher.Match;
                 Assert.That(match.Fighters.Select(f => (ulong)f.Id), Is.EquivalentTo(new[] { 0UL, peer }));
-                Assert.That(match.Fighters.Single(f => f.Id == 0).Motor.name, Does.StartWith("Pineapple"));
-                Assert.That(match.Fighters.Single(f => f.Id == peer).Motor.name, Does.StartWith("Watermelon"));
+                Assert.That(match.Fighters.Single(f => f.Id == 0).Motor.name, Does.StartWith("Pig"));
+                Assert.That(match.Fighters.Single(f => f.Id == peer).Motor.name, Does.StartWith("Bear"));
                 var roomResultCount = 0;
                 System.Action<MatchEvent> onResult = e => { if (e.Kind == MatchEventKind.MatchResult) roomResultCount++; };
                 client.Events.MatchRaised += onResult;
@@ -130,7 +130,7 @@ namespace SquishyBump.Tests.PlayMode
             yield return WaitFor(() => client.MatchState.SessionResult.Count == 2, "client nhận bảng xếp hạng phiên");
             Assert.That(client.MatchState.SessionResult.Select(row => (row.FighterId, row.Rank)),
                 Is.EqualTo(new[] { (0UL, 1), (peer, 2) }));
-            Assert.That(host.Launcher.Overlay.ResultText, Does.Contain("VÔ ĐỊCH · Pineapple"));
+            Assert.That(host.Launcher.Overlay.ResultText, Does.Contain("VÔ ĐỊCH · Pig"));
         }
 
         [UnityTest]

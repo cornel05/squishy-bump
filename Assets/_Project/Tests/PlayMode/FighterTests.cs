@@ -50,7 +50,7 @@ namespace SquishyBump.Tests.PlayMode
 
         [UnityTest]
         public IEnumerator Spawn_AppliesClassOfTheFruit(
-            [Values("Watermelon", "Pineapple", "Apple", "Mangosteen", "Peach", "Blueberry")] string fruit)
+            [Values("Bear", "Pig", "Cat", "Penguin", "Chick", "Frog")] string fruit)
         {
             var motor = Spawn(fruit);
             var definition = fighter.GetComponent<FighterProfileApplier>().Fruit;
@@ -66,7 +66,7 @@ namespace SquishyBump.Tests.PlayMode
 
             // The class stays for the session: a second pick is ignored.
             var other = AssetDatabase.LoadAssetAtPath<FruitDefinition>(
-                $"{Root}/Data/Fruits/{(fruit == "Apple" ? "Peach" : "Apple")}.asset");
+                $"{Root}/Data/Fruits/{(fruit == "Cat" ? "Chick" : "Cat")}.asset");
             fighter.GetComponent<FighterProfileApplier>().Apply(other);
             Assert.That(body.mass, Is.EqualTo(definition.Class.Mass));
 
@@ -78,7 +78,7 @@ namespace SquishyBump.Tests.PlayMode
         [UnityTest]
         public IEnumerator Jump_FromFloor_ReachesApexAndLands()
         {
-            var motor = Spawn("Apple");
+            var motor = Spawn("Cat");
             var body = fighter.GetComponent<Rigidbody>();
             yield return Steps(motor, 60, default);
             var restY = body.position.y;
@@ -102,7 +102,7 @@ namespace SquishyBump.Tests.PlayMode
         [UnityTest]
         public IEnumerator Dash_OnFloor_RespectsCooldown()
         {
-            var motor = Spawn("Apple");
+            var motor = Spawn("Cat");
             var body = fighter.GetComponent<Rigidbody>();
             var dash = new InputCommand(0, Vector2.zero, false, true, 0f);
             yield return Steps(motor, 60, default);

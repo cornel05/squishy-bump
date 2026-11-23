@@ -15,6 +15,11 @@ MonoBehaviour:
   squashScale: {x: 1.15, y: 0.85}
   squashSeconds: 0.12
   landingSpeed: 2
+  upright: 1
+  turnDegreesPerSecond: 720
+  leanMaxDegrees: 14
+  leanFullSpeed: 6
+  faceMinSpeed: 0.3
   cameraDistance: 9
   pitchMinDegrees: 15
   pitchMaxDegrees: 60
@@ -26,8 +31,6 @@ MonoBehaviour:
   squishPitch: {x: 0.9, y: 1.5}
   squishTopImpulse: 200
   whooshDistance: 2
-  perfMedianFps: 60
-  perfP95Milliseconds: 25
   sfx:
   - {fileID: 8300000, guid: 33f4015ab20853e4994446d26b300264, type: 3}
   - {fileID: 8300000, guid: 0af52f55047e5954886efd111741a6e3, type: 3}
@@ -41,3 +44,5 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 0cfe870157eb93548b9018e7422aea80, type: 3}
   - {fileID: 8300000, guid: 18a611c92918caa4a8de296d8a872ed3, type: 3}
   - {fileID: 8300000, guid: 844c39acfc2f7c94ab4e58745f79da0f, type: 3}
+  perfMedianFps: 60
+  perfP95Milliseconds: 25

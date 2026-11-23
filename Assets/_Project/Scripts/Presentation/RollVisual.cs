@@ -3,8 +3,8 @@ using UnityEngine;
 namespace SquishyBump.Presentation
 {
     /// <summary>
-    /// Sits on the fighter's Visual child (GDD 6.2). Rolls the Body child without slipping, ω = (ŷ × v)/r,
-    /// and squashes on landings and hits. The physics root and its collider never rotate or scale.
+    /// Sits on the fighter's Visual child (GDD 6.2). Rolls the Body child without slipping, ω = (ŷ × v)/r
+    /// (or, in the profile's upright mode, turns it to face the velocity and leans it), and squashes on landings and hits. The physics root and its collider never rotate or scale.
     /// Velocity comes from the root's motion, so it works the same on host and clients.
     /// </summary>
     public sealed class RollVisual : MonoBehaviour
@@ -20,6 +20,7 @@ namespace SquishyBump.Presentation
         private Vector3 lastPosition;
         private float lastVerticalSpeed;
         private float squashElapsed = float.PositiveInfinity;
+        private float yaw;
 
         public Transform Body => body;
         /// <summary>Visual jump detection, on every peer (for the jump sound).</summary>
@@ -30,6 +31,7 @@ namespace SquishyBump.Presentation
             baseScale = transform.localScale;
             basePosition = transform.localPosition;
             lastPosition = transform.parent != null ? transform.parent.position : transform.position;
+            if (body != null) yaw = body.eulerAngles.y;
         }
 
         public void Configure(PresentationProfile presentationProfile, float rollRadius)
@@ -50,7 +52,13 @@ namespace SquishyBump.Presentation
             var velocity = (position - lastPosition) / dt;
             lastPosition = position;
 
-            if (body != null && radius > 0f)
+            if (body != null && profile.Upright)
+            {
+                var flat = new Vector3(velocity.x, 0f, velocity.z);
+                yaw = FacingYaw(yaw, flat, profile.FaceMinSpeed, profile.TurnDegreesPerSecond * dt);
+                body.rotation = UprightRotation(yaw, flat.magnitude, profile.LeanMaxDegrees, profile.LeanFullSpeed);
+            }
+            else if (body != null && radius > 0f)
             {
                 var omega = AngularVelocity(velocity, radius);
                 var degrees = omega.magnitude * Mathf.Rad2Deg * dt;
@@ -75,6 +83,17 @@ namespace SquishyBump.Presentation
         /// <summary>Rolling without slipping: ω = (ŷ × v) / r (GDD 6.2).</summary>
         public static Vector3 AngularVelocity(Vector3 velocity, float radius) =>
             Vector3.Cross(Vector3.up, velocity) / radius;
+
+        /// <summary>Yaw (degrees) turned toward the horizontal velocity by at most <paramref name="maxStep"/>; kept when too slow.</summary>
+        public static float FacingYaw(float yaw, Vector3 flatVelocity, float minSpeed, float maxStep)
+        {
+            if (flatVelocity.magnitude <= minSpeed) return yaw;
+            return Mathf.MoveTowardsAngle(yaw, Mathf.Atan2(flatVelocity.x, flatVelocity.z) * Mathf.Rad2Deg, maxStep);
+        }
+
+        /// <summary>Upright pose: facing <paramref name="yaw"/>, pitched forward in proportion to speed.</summary>
+        public static Quaternion UprightRotation(float yaw, float speed, float leanMaxDegrees, float leanFullSpeed) =>
+            Quaternion.Euler(leanFullSpeed > 0f ? leanMaxDegrees * Mathf.Clamp01(speed / leanFullSpeed) : 0f, yaw, 0f);
 
         /// <summary>Scale factor: the peak squash at 0, easing back to 1 at <paramref name="seconds"/>.</summary>
         public static Vector3 SquashFactor(float elapsed, Vector2 peak, float seconds)

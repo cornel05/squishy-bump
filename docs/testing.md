@@ -590,3 +590,13 @@ Không nâng T05/T07/LAN từ fixture hình ảnh này. Giữ draft chờ cornel
 - Test mới: `UiKitTests` (sprite, viền 9-slice, kích thước console), `MatchHudTests.Board_SortsByValueAndKeepsOrderOnTies`, `MatchOverlayTests` (tim xám khi mất mạng, banner Round n, chỉ hàng của mình không bị phủ xám, bục top 3).
 - `tools/verify.ps1 -PlayMode` → PASS, 308 EditMode và 68 PlayMode (1 skip Windows-only có sẵn), 0 cảnh báo C#. `python tools/check_repo.py` → PASS.
 - Chưa kiểm: bản build Windows và LAN hai máy thật (WINNER chỉ xem qua fixture).
+
+## SB-76 · 23/11/2026 · Animal characters + claw-machine lobby
+
+- Six animals (Bear, Pig, Cat, Penguin, Chick, Frog) replace the fruits, same slots/classes/GUIDs; `Squishy Bump/Swap To Animals` (`AnimalSwap`) renames assets and fits `Visual/Body/Model` (width 2 × radius, feet at −radius).
+- Fighters stay upright: `PresentationProfile.upright` → `RollVisual` turns the body to the velocity (720°/s), leans up to 14° at 6 m/s, keeps squash. Physics untouched.
+- Avatars: `Squishy Bump/Render Avatars` writes `avatar_0..5.png` ([avatars](testing/sb76/avatars.png)).
+- Lobby: `Squishy Bump/Build Lobby` places `Art/Lobby/Lobby.glb` (×3, turned 180°), pedestals → `Stand n`, prize-chute button → `Host desk`, colliders for floor/walls ([follow view](testing/sb76/lobby_follow.png), [overview](testing/sb76/lobby_high.png)); roster check: [six animals](testing/sb76/roster.png).
+- Tests: `FighterVisualTests` (model from `Art/Characters`, width from renderer bounds, single sphere collider), `PresentationTests` (`FacingYaw`, `UprightRotation`), `PresentationPlayTests.Upright_FacesVelocityWithoutRolling`; names updated in other tests.
+- `tools/verify.ps1 -PlayMode` → PASS, 310 EditMode and 68 PlayMode (1 skip Windows-only), 0 C# warnings. `python tools/check_repo.py` → PASS.
+- Not checked: screenshots are Editor renders (camera pose of the lobby follow view), not Play Mode captures; lobby claim/desk flow is covered by `LobbyPlayTests`, not eyeballed; Windows build size (+34 MB GLB) not measured; Sketchfab licences pending (see CREDITS.md).

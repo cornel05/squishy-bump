@@ -59,9 +59,9 @@ namespace SquishyBump.Tests.PlayMode
             var prefabs = so.FindProperty("fighterPrefabs");
             prefabs.arraySize = 2;
             prefabs.GetArrayElementAtIndex(0).objectReferenceValue =
-                AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Fighters/Apple.prefab");
+                AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Fighters/Cat.prefab");
             prefabs.GetArrayElementAtIndex(1).objectReferenceValue =
-                AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Fighters/Watermelon.prefab");
+                AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Fighters/Bear.prefab");
             so.ApplyModifiedPropertiesWithoutUndo();
             var profile = AssetDatabase.LoadAssetAtPath<PresentationProfile>($"{Root}/Data/Presentation/PresentationProfile.asset");
             var audio = hostObject.AddComponent<AudioDirector>();

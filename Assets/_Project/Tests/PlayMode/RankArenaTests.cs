@@ -54,7 +54,7 @@ namespace SquishyBump.Tests.PlayMode
             matchObject = new GameObject("Rank runtime test");
             matchObject.SetActive(false);
             var host = matchObject.AddComponent<MatchHost>();
-            var roster = new[] { "Apple", "Watermelon", "Peach" }.Select(name =>
+            var roster = new[] { "Cat", "Bear", "Chick" }.Select(name =>
                 AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Fighters/{name}.prefab")).ToArray();
             host.Configure(app, balance, bounds, Object.FindAnyObjectByType<RingDrop>(), null, roster, 1, true);
             matchObject.SetActive(true);

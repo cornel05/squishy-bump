@@ -44,7 +44,7 @@ namespace SquishyBump.Tests.PlayMode
             drop.Bind(sink);
             var onOuter = new Vector3(10.5f, 0.5f, 0f);
             var onInner = new Vector3(4.5f, 0.5f, 0f);
-            fighter = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Fighters/Apple.prefab"),
+            fighter = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Fighters/Cat.prefab"),
                 onOuter, Quaternion.identity);
             var inner = Object.Instantiate(fighter, onInner, Quaternion.identity);
             var dt = Time.fixedDeltaTime;

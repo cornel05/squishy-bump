@@ -24,6 +24,29 @@ namespace SquishyBump.Tests.EditMode
             Assert.That(p.PitchDefaultDegrees, Is.EqualTo(35f));
             Assert.That(p.LandingSpeed, Is.GreaterThan(0f));
             Assert.That(p.ShakePerImpulse, Is.GreaterThan(0f));
+            Assert.That(p.Upright, Is.True, "animals stay upright");
+            Assert.That(p.TurnDegreesPerSecond, Is.GreaterThan(0f));
+            Assert.That(p.LeanMaxDegrees, Is.GreaterThan(0f));
+            Assert.That(p.LeanFullSpeed, Is.GreaterThan(0f));
+        }
+
+        [Test]
+        public void FacingYaw_TurnsTowardVelocityAtMostMaxStep()
+        {
+            Assert.That(RollVisual.FacingYaw(0f, Vector3.right * 4f, 0.5f, 30f), Is.EqualTo(30f).Within(1e-4f));
+            Assert.That(RollVisual.FacingYaw(80f, Vector3.right * 4f, 0.5f, 30f), Is.EqualTo(90f).Within(1e-4f));
+            Assert.That(RollVisual.FacingYaw(10f, Vector3.right * 0.1f, 0.5f, 30f), Is.EqualTo(10f), "too slow: keeps facing");
+        }
+
+        [Test]
+        public void UprightRotation_LeansForwardWithSpeedAndKeepsYaw()
+        {
+            var rotation = RollVisual.UprightRotation(90f, 2f, 20f, 4f);
+
+            Assert.That(rotation.eulerAngles.x, Is.EqualTo(10f).Within(1e-3f));
+            Assert.That(rotation.eulerAngles.y, Is.EqualTo(90f).Within(1e-3f));
+            Assert.That(rotation.eulerAngles.z, Is.EqualTo(0f).Within(1e-3f), "no roll");
+            Assert.That(RollVisual.UprightRotation(0f, 99f, 20f, 4f).eulerAngles.x, Is.EqualTo(20f).Within(1e-3f), "lean is capped");
         }
 
         [Test]
