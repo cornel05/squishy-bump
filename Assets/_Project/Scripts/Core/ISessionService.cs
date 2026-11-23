@@ -5,7 +5,7 @@ namespace SquishyBump.Core
 {
     public enum SessionMode { SinglePlayer, Lan }
     public enum SessionState { Idle, Hosting, Joining, Joined, Leaving }
-    public enum SessionEndReason { None, LocalLeave, ConnectFailed, HostLost, VersionMismatch, RoomFull, InvalidAddress, StartFailed }
+    public enum SessionEndReason { None, LocalLeave, ConnectFailed, HostLost, VersionMismatch, RoomFull, InvalidAddress, StartFailed, MatchInProgress }
 
     public interface ISessionService
     {

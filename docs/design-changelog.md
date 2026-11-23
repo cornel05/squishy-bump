@@ -49,3 +49,5 @@ Các mục chưa triển khai/kiểm chứng (L4/L5, Rank, LAN nhiều PC, playt
 font Baloo 2/VI) là khoảng thiếu triển khai, không tự coi là quyết định cắt scope.
 3D lobby và chiến thuật bot chưa bị cắt bởi các entry hiện có. Không ghi pass test hoặc
 hoàn thành feature từ trạng thái issue/PR đơn thuần. Hồ sơ này cần đối chiếu tiếp khi main thay đổi.
+
+**D38 · 23/11/2026** · Survival LAN giữ ít nhất hai người trước màn cuối do host chọn. Nếu đồng hạng cắt ngang ngưỡng loại, đấu lại cùng màn, roster đủ điều kiện, trái và seed. Quy tắc này áp dụng cả khi hòa hạng nhất ở màn cuối. · Scope: GDD 3.5, 3.6, 14.3 T18 · Issue: #106

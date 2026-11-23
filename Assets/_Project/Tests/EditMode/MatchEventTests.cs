@@ -21,13 +21,15 @@ namespace SquishyBump.Tests.EditMode
                 case MatchEventKind.Respawn: return MatchEvent.Respawn(1, 60, 2);
                 case MatchEventKind.Elimination: return MatchEvent.Elimination(1, 60, 2, 2);
                 case MatchEventKind.MatchResult: return MatchEvent.MatchResult(1, 60, Rows);
+                case MatchEventKind.SessionResult: return MatchEvent.SessionResult(1, 60, Rows);
                 default: return MatchEvent.Scoreboard(1, 60, Rows);
             }
         }
         [TestCase(MatchEventKind.Countdown)] [TestCase(MatchEventKind.RingOut)]
         [TestCase(MatchEventKind.Respawn)] [TestCase(MatchEventKind.Elimination)]
         [TestCase(MatchEventKind.MatchResult)] [TestCase(MatchEventKind.Scoreboard)]
-        public void SixKinds_RoundTripWithoutChangingTiesLivesOrPoints(MatchEventKind kind)
+        [TestCase(MatchEventKind.SessionResult)]
+        public void MatchEvents_RoundTripWithoutChangingTiesLivesOrPoints(MatchEventKind kind)
         {
             var original = Event(kind);
             Assert.That(SyncCodec.TryReadMatch(SyncCodec.WriteMatch(original), out var actual), Is.True);

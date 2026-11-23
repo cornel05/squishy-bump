@@ -29,6 +29,10 @@ namespace SquishyBump.App
         private string pendingScene;
         private ScoreService scores;
         private uint matchSequence;
+        private LanSurvivalRun survivalRun;
+        private LanSurvivalRun.Decision survivalDecision;
+        private bool survivalLaunchPending, survivalLoadPending, survivalFinished;
+        private int evaluatedPeers = -1;
 
         private void ResetRankSession()
         {
@@ -107,7 +111,50 @@ namespace SquishyBump.App
         private void LaunchLobby(LobbyState state)
         {
             if (!bootstrap.Session.CanSimulateGameplay) return;
-            bootstrap.SetLobbySelection(state); LoadLevel(1);
+            bootstrap.SetLobbySelection(state);
+            if (!singlePlayer && state.Rule == MatchRule.Survival)
+            {
+                bootstrap.LockLanRoster();
+                survivalRun = new LanSurvivalRun(state.FinalLevel, state.Players.Select(player => player.Id));
+                survivalLaunchPending = true;
+                return;
+            }
+            LoadLevel(1);
+        }
+
+        private void Update()
+        {
+            if (survivalRun == null || survivalFinished || !bootstrap.Session.CanSimulateGameplay) return;
+            if (survivalLaunchPending)
+            {
+                survivalLaunchPending = !TryLoadLevel(1);
+                return;
+            }
+            if (survivalLoadPending || loadingThrough != null || Match == null || !Match.Initialized) return;
+
+            var peers = bootstrap.Session.Peers;
+            var result = Match.Director?.Phase == MatchPhase.Result ? Match.Director.Placements : null;
+            if (evaluatedPeers == peers.Count && (result == null || survivalDecision != null)) return;
+            evaluatedPeers = peers.Count;
+            survivalDecision = survivalRun.Evaluate(peers, result);
+            if (survivalDecision == null) return;
+            if (survivalDecision.NextLevel == null)
+            {
+                survivalFinished = true;
+                var sink = bootstrap.EventSink;
+                sink.Publish(MatchEvent.SessionResult(sink.NextEventId(), bootstrap.Tick, survivalDecision.Standings));
+                return;
+            }
+            Overlay.OfferResultAction(survivalDecision.NextLevel == survivalRun.Level ? "Đấu lại" : "Tiếp tục", ContinueSurvival);
+        }
+
+        private void ContinueSurvival()
+        {
+            if (survivalLoadPending || survivalFinished || !bootstrap.Session.CanSimulateGameplay ||
+                survivalDecision?.NextLevel == null || evaluatedPeers != bootstrap.Session.Peers.Count) return;
+            if (!TryLoadLevel(survivalDecision.NextLevel.Value)) return;
+            survivalRun.Advance(survivalDecision);
+            survivalLoadPending = true;
         }
         private string HostAddress()
         {
@@ -133,28 +180,43 @@ namespace SquishyBump.App
         }
 
         /// <summary>Host: every peer loads the level; the match starts when it is loaded here.</summary>
-        public void LoadLevel(int number)
+        public void LoadLevel(int number) => TryLoadLevel(number);
+
+        private bool TryLoadLevel(int number)
         {
-            StopWaitingForScene();
+            if (loadingThrough != null) return false;
             var level = setup.Levels.First(l => l.LevelNumber == number);
             var manager = bootstrap.GetComponent<NetworkManager>();
             var sceneManager = manager.NetworkConfig.EnableSceneManagement ? manager.SceneManager : null;
             if (bootstrap.Session.CanSimulateGameplay && sceneManager != null)
             {
-                bootstrap.MatchState.Reset();
                 loadingThrough = sceneManager;
                 pendingScene = System.IO.Path.GetFileNameWithoutExtension(level.ScenePath);
                 loadingThrough.OnLoadEventCompleted += OnLevelReady;
-                sceneManager.LoadScene(level.ScenePath, LoadSceneMode.Single);
+                var status = sceneManager.LoadScene(level.ScenePath, LoadSceneMode.Single);
+                if (status != SceneEventProgressStatus.Started)
+                {
+                    StopWaitingForScene();
+                    if (status != SceneEventProgressStatus.SceneEventInProgress)
+                        Debug.LogError($"[LevelLauncher] Could not load {level.ScenePath}: {status}");
+                    return false;
+                }
             }
             else
                 SceneManager.LoadScene(level.ScenePath, LoadSceneMode.Single);
+            return true;
         }
 
         private void OnLevelReady(string sceneName, LoadSceneMode mode, List<ulong> completed, List<ulong> timedOut)
         {
             if (sceneName != pendingScene) return;
             StopWaitingForScene();
+            if (survivalRun != null && bootstrap.Session.CanSimulateGameplay)
+            {
+                var manager = bootstrap.GetComponent<NetworkManager>();
+                foreach (var id in timedOut)
+                    if (bootstrap.Session.Peers.Contains(id)) manager.DisconnectClient(id);
+            }
             // Không mở scene event khác trong callback NGO. Chỉ cho phép vòng Update bắt đầu trận.
             if (Match != null && bootstrap.Session.CanSimulateGameplay) Match.StartWhenReady = true;
         }
@@ -179,6 +241,14 @@ namespace SquishyBump.App
 
         private void OnSessionStateChanged(SessionState state)
         {
+            if (state == SessionState.Idle)
+            {
+                StopWaitingForScene();
+                survivalRun = null;
+                survivalDecision = null;
+                survivalLaunchPending = survivalLoadPending = survivalFinished = false;
+                evaluatedPeers = -1;
+            }
             if (state != SessionState.Idle || bootstrap.Session.LastEndReason == SessionEndReason.LocalLeave)
                 return;
 
@@ -225,6 +295,10 @@ namespace SquishyBump.App
 
         private void BuildMatch(Scene scene, LevelDefinition level)
         {
+            bootstrap.MatchState.Reset();
+            survivalLoadPending = false;
+            survivalDecision = null;
+            evaluatedPeers = -1;
             var bounds = FindInScene<TrainingRingBounds>(scene);
             if (bounds == null)
             {
@@ -245,8 +319,16 @@ namespace SquishyBump.App
             hostObject.SetActive(false);
             SceneManager.MoveGameObjectToScene(hostObject, scene);
             Match = hostObject.AddComponent<MatchHost>();
-            Match.Configure(bootstrap, setup.Balance, bounds, FindInScene<RingDrop>(scene), rig, MatchRoster(),
+            var lanSurvival = !singlePlayer && bootstrap.LobbySelection?.Rule == MatchRule.Survival;
+            var roster = lanSurvival ? setup.Roster : MatchRoster();
+            Match.Configure(bootstrap, setup.Balance, bounds, FindInScene<RingDrop>(scene), rig, roster,
                 level.LevelNumber, autoHost: false);
+            if (lanSurvival)
+            {
+                var contestants = survivalRun == null ? null : bootstrap.LobbySelection.Players
+                    .Where(player => survivalRun.Active.Contains(player.Id)).OrderBy(player => player.Id).ToArray();
+                Match.ConfigureLanSurvival(contestants, LeaveToMenu);
+            }
             Match.ConfigureRank(scores, ++matchSequence);
             Match.ConfigureBots(setup.DefaultBotProfile);
             Pause = hostObject.AddComponent<PauseMenu>();

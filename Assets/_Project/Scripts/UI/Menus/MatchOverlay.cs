@@ -17,6 +17,11 @@ namespace SquishyBump.UI.Menus
         private Text cardTitle, cardLine, banner;
         private float cardUntil, bannerUntil;
         private Text result;
+        private Text actionText, spectating;
+        private Button resultButton;
+        private Action resultAction;
+        private float resultReadyAt;
+        private const float ResultReadSeconds = 3f; // GDD 11.3
         private RectTransform resultPage, hud;
         private Text livesText;
         private int shownLives = -1, shownMax = -1;
@@ -54,6 +59,23 @@ namespace SquishyBump.UI.Menus
             result.raycastTarget = false;
             result.enabled = false; // the kit rows below are what the player sees; the text stays as the accessible summary
             result.gameObject.SetActive(false);
+
+            resultButton = UiFactory.Button(canvas, "", () => resultAction?.Invoke());
+            actionText = resultButton.GetComponentInChildren<Text>();
+            var actionRect = (RectTransform)resultButton.transform;
+            actionRect.anchorMin = actionRect.anchorMax = new Vector2(0.5f, 0.5f);
+            actionRect.anchorMin = actionRect.anchorMax = new Vector2(0.5f, 0f);
+            actionRect.anchoredPosition = new Vector2(0f, 70f);
+            actionRect.sizeDelta = new Vector2(340f, 88f);
+            resultButton.gameObject.SetActive(false);
+
+            spectating = UiFactory.Label(canvas, "ĐANG QUAN SÁT · ← → đổi góc nhìn", 26);
+            var spectatorRect = (RectTransform)spectating.transform;
+            spectatorRect.anchorMin = spectatorRect.anchorMax = new Vector2(0.5f, 0f);
+            spectatorRect.anchoredPosition = new Vector2(0f, 78f);
+            spectatorRect.sizeDelta = new Vector2(700f, 45f);
+            spectating.raycastTarget = false;
+            spectating.gameObject.SetActive(false);
         }
 
         public void ShowCard(string title, string line, float seconds)
@@ -111,30 +133,61 @@ namespace SquishyBump.UI.Menus
         }
 
         /// <summary>Chỉ trình bày kết quả đã được host xác nhận; không tự xếp lại thứ hạng.</summary>
-        public void ShowResult(IReadOnlyList<MatchStanding> standings, Func<ulong, string> label,
-            Func<ulong, int> fruit = null, Action onNext = null)
+        public void ShowResult(IReadOnlyList<MatchStanding> standings, Func<ulong, string> label, Func<ulong, int> fruit = null)
+        {
+            BuildResultPage("KẾT QUẢ", standings, label, fruit, s => $"SCORE: {s.Points} · {s.Lives} mạng");
+            ShowResultText("KẾT QUẢ\n" + string.Join("\n", standings.Select(s =>
+                $"{s.Rank}. {label(s.FighterId)} — {s.Points} điểm · {s.Lives} mạng")));
+        }
+
+        public void ShowSessionResult(IReadOnlyList<MatchStanding> standings, Func<ulong, string> label, Func<ulong, int> fruit = null)
+        {
+            var headline = standings.Count(s => s.Rank == 1) == 1
+                ? $"VÔ ĐỊCH · {label(standings[0].FighterId)}"
+                : "PHIÊN ĐÃ KẾT THÚC";
+            BuildResultPage(headline, standings, label, fruit, _ => "");
+            ShowResultText(headline + "\n" + string.Join("\n", standings.Select(s => $"{s.Rank}. {label(s.FighterId)}")));
+        }
+
+        public void OfferResultAction(string caption, Action onClick)
+        {
+            // A kit button exists for some captions ("Next"); the rest keep the plain panel look with their own text.
+            var art = UiFactory.Kit("btn_" + UiFactory.Slug(caption));
+            var image = resultButton.GetComponent<Image>();
+            if (art != null) { image.sprite = art; image.type = Image.Type.Simple; image.preserveAspect = true; }
+            else UiFactory.Slice(image, "panel_box");
+            actionText.enabled = art == null;
+            actionText.text = caption;
+            resultAction = onClick;
+        }
+
+        public void ShowSpectating(bool visible) => spectating.gameObject.SetActive(visible && !result.gameObject.activeSelf);
+
+        private void ShowResultText(string content)
         {
             card.gameObject.SetActive(false);
             banner.gameObject.SetActive(false);
+            result.text = content;
             if (hud != null) hud.gameObject.SetActive(false);
-            BuildResultPage(standings, label, fruit, onNext);
-            result.text = "KẾT QUẢ\n" + string.Join("\n", standings.Select(s =>
-                $"{s.Rank}. {label(s.FighterId)} — {s.Points} điểm · {s.Lives} mạng"));
             result.gameObject.SetActive(true);
+            resultReadyAt = Time.unscaledTime + ResultReadSeconds;
+            resultAction = null;
+            resultButton.gameObject.SetActive(false);
         }
 
-        private void BuildResultPage(IReadOnlyList<MatchStanding> standings, Func<ulong, string> label, Func<ulong, int> fruit, Action onNext)
+        private void BuildResultPage(string headline, IReadOnlyList<MatchStanding> standings, Func<ulong, string> label,
+            Func<ulong, int> fruit, Func<MatchStanding, string> detail)
         {
             if (resultPage != null) Destroy(resultPage.gameObject);
             resultPage = UiFactory.Page(canvasRoot, "Results");
-            resultPage.sizeDelta = new Vector2(1000, 940);
-            UiFactory.Label(resultPage, "KẾT QUẢ", 56);
+            resultPage.sizeDelta = new Vector2(1000, 840);
+            UiFactory.Label(resultPage, headline, 56);
             foreach (var s in standings.Take(6))
             {
                 var row = new GameObject("Row " + s.Rank, typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
                 row.transform.SetParent(resultPage, false);
                 UiFactory.Slice(row.GetComponent<Image>(), "row_result");
-                row.GetComponent<LayoutElement>().minHeight = 110;
+                row.GetComponent<LayoutElement>().minHeight = 96;
                 var layout = row.GetComponent<HorizontalLayoutGroup>();
                 layout.padding = new RectOffset(24, 24, 8, 8);
                 layout.spacing = 16;
@@ -148,17 +201,18 @@ namespace SquishyBump.UI.Menus
                 }
                 var index = fruit != null ? fruit(s.FighterId) : (int)(s.FighterId % 6);
                 UiFactory.Icon(row.transform, "avatar_" + Mathf.Abs(index) % 6, new Vector2(84, 84));
-                var text = UiFactory.Label(row.transform, $"{label(s.FighterId).ToUpperInvariant()}\nSCORE: {s.Points} · {s.Lives} mạng", 30);
+                var text = UiFactory.Label(row.transform, label(s.FighterId).ToUpperInvariant() + (detail(s) is { Length: > 0 } d ? "\n" + d : ""), 30);
                 text.alignment = TextAnchor.MiddleLeft;
                 ((RectTransform)text.transform).sizeDelta = new Vector2(620, 90);
             }
-            if (onNext != null) UiFactory.Button(resultPage, "Next", onNext);
         }
 
         private void Update()
         {
             if (card.gameObject.activeSelf && Time.unscaledTime >= cardUntil) card.gameObject.SetActive(false);
             if (banner.gameObject.activeSelf && Time.unscaledTime >= bannerUntil) banner.gameObject.SetActive(false);
+            var actionReady = resultAction != null && Time.unscaledTime >= resultReadyAt;
+            if (resultButton.gameObject.activeSelf != actionReady) resultButton.gameObject.SetActive(actionReady);
         }
     }
 }

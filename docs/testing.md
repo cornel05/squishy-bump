@@ -574,3 +574,11 @@ chủ đích; chạy riêng Windows Player Direct3D12 đạt **1/1**, cả 8 ả
 `tools/build-windows.ps1` → **BUILD: PASS, 101 MB, 0 errors, 51,49 s**.
 [XML cuối và manifest](testing/sb17-hud-review/manifest.json). Repo check và diff sạch.
 Không nâng T05/T07/LAN từ fixture hình ảnh này. Giữ draft chờ cornel05 review.
+
+## 23/11/2026 · SB-29 Survival LAN, T18
+
+- Tái hiện trước sửa (`TestResults/SB29-red.xml`): client nhận kết quả L1, host không có nút **Tiếp tục**.
+- PlayMode sau sửa (`TestResults/PlayMode.xml`): hai peer qua L1 → L5, giữ nguyên ID/trái và nhận cùng kết quả phiên. Ca ba người loại host ở L1, host spectate L2 và client còn lại nhận kết quả khi đối thủ rời. Ca hòa ở màn cuối tải lại cùng màn, roster và seed rồi chốt một vô địch.
+- EditMode kiểm công thức với 6 người/5 màn và 4 người/3 màn, phòng 2 người, hòa cắt ngưỡng và bỏ cuộc. Phần PlayMode dùng NGO loopback cùng tiến trình, tắt NGO scene management và nạp scene ở host. T18 nhiều người trên các máy riêng còn chưa kiểm chứng.
+- `tools/verify.ps1 -PlayMode` → PASS, 260 EditMode và 62 PlayMode, 0 failed/skipped, 0 cảnh báo C#. `python tools/check_repo.py` → PASS.
+- Windows x64 → BUILD PASS, 101 MB, 0 lỗi. Hai tiến trình build mới Host/Join `127.0.0.1` vào cùng lobby. Chuyển L1 → L2 trên hai cửa sổ còn cần kiểm thủ công vì điều khiển tự động bị timeout khi đi tới kệ trái.
