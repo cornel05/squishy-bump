@@ -94,11 +94,11 @@ namespace SquishyBump.App
             return hosted;
         }
 
-        public bool Join(string address)
+        public bool Join(string address, string password = null)
         {
             singlePlayer = false;
             joinedAddress = address;
-            return bootstrap.Session.Join(address, LanPort);
+            return bootstrap.Session.Join(address, LanPort, password);
         }
 
         private void LoadLobby()
@@ -284,12 +284,12 @@ namespace SquishyBump.App
             var go = new GameObject("Main Menu");
             SceneManager.MoveGameObjectToScene(go, scene);
             Menu = go.AddComponent<MainMenu>();
-            Menu.Init(bootstrap.Session, bootstrap.Settings, $"v{Application.version}", setup.Levels);
+            Menu.Init(bootstrap.Session, bootstrap.Settings, $"v{Application.version}", setup.Levels, bootstrap.Discovery);
             if (bootstrap.Session.LastEndReason == SessionEndReason.HostLost)
                 Menu.ShowPage("Multiplayer");
             Menu.SinglePlayerRequested += _ => EnterSinglePlayerLobby();
             Menu.HostRequested += () => HostLan();
-            Menu.JoinRequested += address => Join(address);
+            Menu.JoinRequested += (address, password) => Join(address, password);
             Menu.QuitRequested += Application.Quit;
         }
 

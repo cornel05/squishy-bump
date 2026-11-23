@@ -15,6 +15,8 @@ uGUI + TextMeshPro screens: main menu, host/join, settings, HUD, 3D lobby, resul
 - Input comes from `SquishyControls` UI/Gameplay maps.
 - Menu/Settings and HUD/Lobby/Results are separate subfolders per owner.
 
+- Console art (`console_lobby`, `console_rooms`) is placed by pixel box of the sprite (`UiFactory.PxRect`); re-importing art with other dimensions needs the boxes in `LobbyConsole` and `MainMenu` updated (`UiKitTests` guards the sizes).
+
 ## Public API surface
 Screen controllers listening to Core events.
 

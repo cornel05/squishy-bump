@@ -23,7 +23,9 @@ namespace SquishyBump.Tests.EditMode
             public void Remove(ulong id) { peers.Remove(id); PeerLeft?.Invoke(id); }
             public void Add(ulong id) { peers.Add(id); PeerJoined?.Invoke(id); }
             public bool Host(SessionMode mode) => false;
-            public bool Join(string address, ushort port = 7777) => false;
+            public bool Join(string address, ushort port = 7777, string password = null) => false;
+            public int Capacity { get; set; } = 6;
+            public string Password { get; set; }
             public void Leave() { }
         }
         private sealed class Clock : IHostClock
@@ -88,7 +90,7 @@ namespace SquishyBump.Tests.EditMode
             var state = new LobbyState(10, MatchRule.Rank, 5, size == 1 ? 0 : 300, false,
                 Enumerable.Range(0, size).Select(i => new LobbyPlayer((ulong)i, i, true)));
             var data = LobbyCodec.Write(state);
-            Assert.That(data.Length, Is.EqualTo(13 + size * 10));
+            Assert.That(data.Length, Is.EqualTo(15 + size * 10));
             Assert.That(LobbyCodec.TryRead(data, out var result), Is.True);
             Assert.That(result.Revision, Is.EqualTo(10)); Assert.That(result.Rule, Is.EqualTo(MatchRule.Rank));
             Assert.That(result.FinalLevel, Is.EqualTo(5)); Assert.That(result.RemainingTicks, Is.EqualTo(size == 1 ? 0 : 300));
@@ -142,6 +144,44 @@ namespace SquishyBump.Tests.EditMode
             room.TryRemove(7); Check(); room.TryAdd(8); room.TryClaim(8, 4); room.TrySetReady(8, true);
             for (var tick = 0; tick <= 300; tick++) { room.Advance(); Check(); }
             Assert.That(room.Started, Is.True);
+        }
+
+        [Test]
+        public void RoundTrip_KeepsCapacityAndPublicFlag()
+        {
+            var state = new LobbyState(3, MatchRule.Survival, 2, 0, false,
+                new[] { new LobbyPlayer(0, 1, false), new LobbyPlayer(1, -1, false) }, 3, false);
+
+            Assert.That(LobbyCodec.TryRead(LobbyCodec.Write(state), out var read), Is.True);
+
+            Assert.That((read.Capacity, read.Public), Is.EqualTo((3, false)));
+        }
+
+        [Test]
+        public void TryRead_RejectsBadCapacityOrFlagBytes()
+        {
+            var state = new LobbyState(3, MatchRule.Survival, 2, 0, false,
+                new[] { new LobbyPlayer(0, 1, false), new LobbyPlayer(1, -1, false) }, 4, true);
+            var data = LobbyCodec.Write(state);
+
+            foreach (var capacity in new byte[] { 0, 1, 7, 255 })
+            {
+                var bad = (byte[])data.Clone(); bad[13] = capacity;
+                Assert.That(LobbyCodec.TryRead(bad, out _), Is.False, $"capacity {capacity}");
+            }
+            var below = (byte[])data.Clone(); below[13] = 1;
+            Assert.That(LobbyCodec.TryRead(below, out _), Is.False, "below the two players inside");
+            var flag = (byte[])data.Clone(); flag[14] = 2;
+            Assert.That(LobbyCodec.TryRead(flag, out _), Is.False);
+        }
+
+        [Test]
+        public void Write_RejectsMorePlayersThanCapacity()
+        {
+            var state = new LobbyState(1, MatchRule.Survival, 1, 0, false,
+                new[] { new LobbyPlayer(0, -1, false), new LobbyPlayer(1, -1, false), new LobbyPlayer(2, -1, false) }, 2, true);
+
+            Assert.Throws<ArgumentException>(() => LobbyCodec.Write(state));
         }
     }
 }

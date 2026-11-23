@@ -75,14 +75,14 @@ namespace SquishyBump.Tests.PlayMode
             lobby.Motors[peer].GetComponent<Rigidbody>().position = pick1;
             yield return WaitFor(() => lobby.Coordinator.Room.Players[peer].Fruit == 1, "client chọn kệ 1");
             var hostDesk = lobby.GetComponentsInChildren<RectTransform>(true).Single(t => t.name == "Host desk");
-            var length3 = hostDesk.GetComponentsInChildren<Button>(true).Single(b => b.GetComponentInChildren<Text>().text == "L1 → L3");
+            var length3 = hostDesk.GetComponentsInChildren<Button>(true).Single(b => b.name == "Map 3");
             length3.onClick.Invoke();
             Assert.That(lobby.Coordinator.State.FinalLevel, Is.EqualTo(5), "Không đổi cấu hình từ xa quầy.");
             lobby.Motors[0].GetComponent<Rigidbody>().position = layout.Find("Host desk").position + Vector3.back * 2;
             yield return WaitFor(() => hostDesk.gameObject.activeSelf, "host tới quầy");
-            hostDesk.GetComponentsInChildren<Button>().Single(b => b.GetComponentInChildren<Text>().text == "Rank").onClick.Invoke();
+            SetRule(lobby, hostDesk, MatchRule.Rank);
             Assert.That(lobby.Coordinator.State.Rule, Is.EqualTo(MatchRule.Rank));
-            hostDesk.GetComponentsInChildren<Button>().Single(b => b.GetComponentInChildren<Text>().text == "Survival").onClick.Invoke();
+            SetRule(lobby, hostDesk, MatchRule.Survival);
             length3.onClick.Invoke();
             Assert.That(lobby.Coordinator.State.Rule, Is.EqualTo(MatchRule.Survival));
             Assert.That(lobby.Coordinator.State.FinalLevel, Is.EqualTo(3));
@@ -195,13 +195,20 @@ namespace SquishyBump.Tests.PlayMode
             lobby.Motors[0].GetComponent<Rigidbody>().position = layout.Find("Host desk").position + Vector3.back * 2;
             var hostDesk = lobby.GetComponentsInChildren<RectTransform>(true).Single(t => t.name == "Host desk");
             yield return WaitFor(() => hostDesk.gameObject.activeSelf, "host tới quầy");
-            hostDesk.GetComponentsInChildren<Button>().Single(b => b.GetComponentInChildren<Text>().text == "Survival").onClick.Invoke();
-            hostDesk.GetComponentsInChildren<Button>().Single(b => b.GetComponentInChildren<Text>().text == $"L1 → L{finalLevel}").onClick.Invoke();
+            SetRule(lobby, hostDesk, MatchRule.Survival);
+            hostDesk.GetComponentsInChildren<Button>(true).Single(b => b.name == $"Map {finalLevel}").onClick.Invoke();
             Assert.That(lobby.Coordinator.State.FinalLevel, Is.EqualTo(finalLevel));
             lobby.Coordinator.SetReady(true);
             client.LobbySync.SendReady(true);
             if (secondClient != null) secondClient.LobbySync.SendReady(true);
             Time.timeScale = 8;
+        }
+
+        // The console's arrows flip between the two rules; click one only when the rule is not already the wanted one.
+        private static void SetRule(LobbyController lobby, RectTransform desk, MatchRule rule)
+        {
+            if (lobby.Coordinator.State.Rule != rule)
+                desk.GetComponentsInChildren<Button>().Single(b => b.name == "Rule next").onClick.Invoke();
         }
 
         private static GameplayBootstrap JoinSurvivalLobby()

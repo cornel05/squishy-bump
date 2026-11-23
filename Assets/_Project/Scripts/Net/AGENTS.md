@@ -16,6 +16,8 @@ Netcode for GameObjects 2.x over Unity Transport: session host/join on LAN (port
 - Clients never write gameplay state. RPCs from clients carry input, never results.
 - Sync code (Duy) and Session code (Nhật) live in separate subfolders `Sync/` and `Session/`.
 
+- Room options (capacity 2-6, private/public, password) are decided by the host only. The password never travels as text (hash in the join payload) and never appears in `LobbyState` or the LAN beacon. Changing the wire format bumps `StubSessionService.Protocol`.
+
 ## Public API surface
 `SessionManager` (Session), input/snapshot sync components (Sync).
 

@@ -219,27 +219,36 @@ namespace SquishyBump.UI.Menus
         public static Slider Slider(Transform parent, string text, float min, float max, float value, Action<float> onChange)
         {
             var row = Row(parent, text);
-            var go = new GameObject(text + " Slider", typeof(RectTransform), typeof(Slider), typeof(LayoutElement));
-            go.transform.SetParent(row, false);
-            go.GetComponent<LayoutElement>().minHeight = 44;
-            go.GetComponent<LayoutElement>().flexibleWidth = 1;
+            var slider = BareSlider(row, text + " Slider", 44, min, max, value, onChange);
+            slider.gameObject.AddComponent<LayoutElement>();
+            var size = slider.GetComponent<LayoutElement>();
+            size.minHeight = 44;
+            size.flexibleWidth = 1;
+            return slider;
+        }
+
+        /// <summary>Kit slider with no caption or layout: the caller sizes and places it. Knob and track scale with <paramref name="height"/>.</summary>
+        public static Slider BareSlider(Transform parent, string name, float height, float min, float max, float value, Action<float> onChange)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(Slider));
+            go.transform.SetParent(parent, false);
             var track = Child(go.transform, "Track", Color.white);
             Slice(track.GetComponent<Image>(), "slider_track");
-            track.GetComponent<Image>().pixelsPerUnitMultiplier = 160f / 44f; // keep the round caps round at 44 px
+            track.GetComponent<Image>().pixelsPerUnitMultiplier = 160f / height; // keep the round caps round
             Stretch(track);
             var fillArea = new GameObject("Fill Area", typeof(RectTransform)).transform as RectTransform;
             fillArea.SetParent(go.transform, false);
             Stretch(fillArea);
             var fill = Child(fillArea, "Fill", Color.white);
             Slice(fill.GetComponent<Image>(), "slider_fill");
-            fill.GetComponent<Image>().pixelsPerUnitMultiplier = 148f / 44f;
+            fill.GetComponent<Image>().pixelsPerUnitMultiplier = 148f / height;
             Stretch(fill);
             var handleArea = new GameObject("Handle Area", typeof(RectTransform)).transform as RectTransform;
             handleArea.SetParent(go.transform, false);
             Stretch(handleArea);
             var handle = Child(handleArea, "Handle", Color.white);
             handle.GetComponent<Image>().sprite = Kit("slider_knob");
-            handle.sizeDelta = new Vector2(44, 0);
+            handle.sizeDelta = new Vector2(height, height);
             var slider = go.GetComponent<Slider>();
             slider.fillRect = fill;
             slider.handleRect = handle;
@@ -311,6 +320,87 @@ namespace SquishyBump.UI.Menus
             field.text = value;
             return field;
         }
+
+        /// <summary>
+        /// A rect placed by pixel box (x0,y0 top-left, x1,y1 bottom-right) of a hand-drawn sheet of size <paramref name="sheet"/>:
+        /// anchors are fractions of the parent, so it follows the sprite at any scale. The parent must show the sheet.
+        /// </summary>
+        public static RectTransform PxRect(Transform parent, string name, Vector2 sheet, float x0, float y0, float x1, float y1)
+        {
+            var rect = (RectTransform)new GameObject(name, typeof(RectTransform)).transform;
+            rect.SetParent(parent, false);
+            rect.anchorMin = new Vector2(x0 / sheet.x, 1f - y1 / sheet.y);
+            rect.anchorMax = new Vector2(x1 / sheet.x, 1f - y0 / sheet.y);
+            rect.offsetMin = rect.offsetMax = Vector2.zero;
+            return rect;
+        }
+
+        /// <summary>Invisible button over a baked part of the art (a tab, an arrow). Named so tests and screenshots can find it.</summary>
+        public static Button Hotspot(Transform parent, string name, Vector2 sheet, float x0, float y0, float x1, float y1, Action onClick)
+        {
+            var rect = PxRect(parent, name, sheet, x0, y0, x1, y1);
+            var image = rect.gameObject.AddComponent<Image>();
+            image.color = new Color(1f, 1f, 1f, 0f); // alpha 0 still takes clicks
+            var button = rect.gameObject.AddComponent<Button>();
+            button.transition = Selectable.Transition.None;
+            button.onClick.AddListener(() => onClick());
+            return button;
+        }
+
+        /// <summary>
+        /// Makes an input field fit a thin baked bar: text overflows instead of being cut by the bar's height, and a
+        /// grey hint shows while it is empty.
+        /// </summary>
+        public static void FitBar(InputField field, string hint, int size)
+        {
+            var fieldRect = (RectTransform)field.transform;
+            fieldRect.anchorMin = Vector2.zero; fieldRect.anchorMax = Vector2.one; fieldRect.offsetMin = fieldRect.offsetMax = Vector2.zero;
+            field.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.01f); // the baked bar shows through
+            foreach (var text in new[] { field.textComponent, MakeHint(field, hint) })
+            {
+                text.fontSize = size;
+                text.alignment = TextAnchor.MiddleLeft;
+                text.verticalOverflow = VerticalWrapMode.Overflow;
+                text.horizontalOverflow = HorizontalWrapMode.Overflow;
+                text.raycastTarget = false;
+            }
+        }
+
+        static Text MakeHint(InputField field, string hint)
+        {
+            var text = Label(field.transform, hint, 28);
+            text.color = new Color(Ink.r, Ink.g, Ink.b, 0.45f);
+            text.supportRichText = false;
+            Stretch((RectTransform)text.transform, 8);
+            Destroy(text.GetComponent<LayoutElement>());
+            field.placeholder = text;
+            return text;
+        }
+
+        /// <summary>A flat tinted overlay on a baked part of the art (selected tab, dimmed control).</summary>
+        public static Image Tint(Transform parent, string name, Vector2 sheet, float x0, float y0, float x1, float y1, Color color)
+        {
+            var image = PxRect(parent, name, sheet, x0, y0, x1, y1).gameObject.AddComponent<Image>();
+            image.color = color;
+            image.raycastTarget = false;
+            return image;
+        }
+
+        /// <summary>Text filling a pixel box of the sheet, ink colour unless <paramref name="outlined"/>.</summary>
+        public static Text SheetText(Transform parent, string name, Vector2 sheet, float x0, float y0, float x1, float y1,
+            string text, int size, TextAnchor anchor = TextAnchor.MiddleCenter, bool outlined = false)
+        {
+            var label = Label(PxRect(parent, name, sheet, x0, y0, x1, y1), text, size);
+            label.alignment = anchor;
+            label.raycastTarget = false;
+            label.horizontalOverflow = HorizontalWrapMode.Overflow;
+            label.verticalOverflow = VerticalWrapMode.Overflow;
+            Stretch((RectTransform)label.transform);
+            Destroy(label.GetComponent<LayoutElement>());
+            return outlined ? Outlined(label) : label;
+        }
+
+        static void Destroy(UnityEngine.Object o) => UnityEngine.Object.Destroy(o);
 
         static RectTransform Child(Transform parent, string name, Color color)
         {

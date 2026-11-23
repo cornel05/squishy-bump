@@ -49,7 +49,7 @@ namespace SquishyBump.Net.Session
             if (manager.IsServer || sender != NetworkManager.ServerClientId) return;
             // NGO đã đọc hash tên message; Length vẫn gồm phần header, Position là đầu payload.
             var length = reader.Length - reader.Position;
-            if (length < 13 || length > LobbyCodec.MaxBytes || !reader.TryBeginRead(length))
+            if (length < LobbyCodec.MinBytes || length > LobbyCodec.MaxBytes || !reader.TryBeginRead(length))
             { RejectedPackets++; return; }
             var data = new byte[length]; reader.ReadBytes(ref data, data.Length);
             if (!LobbyCodec.TryRead(data, out var state)) { RejectedPackets++; return; }

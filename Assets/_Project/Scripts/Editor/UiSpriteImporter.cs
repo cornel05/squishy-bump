@@ -17,6 +17,7 @@ namespace SquishyBump.Editor
             "plate" => new Vector4(24, 20, 24, 12),
             "hud_board" => new Vector4(24, 24, 24, 24),
             "btn_blank" => new Vector4(48, 0, 48, 0),
+            "lobby_row" => new Vector4(40, 30, 40, 30),
             _ => null,
         };
 
@@ -36,6 +37,7 @@ namespace SquishyBump.Editor
             importer.textureType = TextureImporterType.Sprite;
             importer.spriteImportMode = SpriteImportMode.Single;
             importer.mipmapEnabled = false;
+            importer.maxTextureSize = 4096; // console art is 2316 px wide: keep it sharp
             importer.wrapMode = TextureWrapMode.Clamp;
             importer.alphaIsTransparency = true;
             var settings = new TextureImporterSettings();

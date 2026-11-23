@@ -600,3 +600,13 @@ Không nâng T05/T07/LAN từ fixture hình ảnh này. Giữ draft chờ cornel
 - Tests: `FighterVisualTests` (model from `Art/Characters`, width from renderer bounds, single sphere collider), `PresentationTests` (`FacingYaw`, `UprightRotation`), `PresentationPlayTests.Upright_FacesVelocityWithoutRolling`; names updated in other tests.
 - `tools/verify.ps1 -PlayMode` → PASS, 310 EditMode and 68 PlayMode (1 skip Windows-only), 0 C# warnings. `python tools/check_repo.py` → PASS.
 - Not checked: screenshots are Editor renders (camera pose of the lobby follow view), not Play Mode captures; lobby claim/desk flow is covered by `LobbyPlayTests`, not eyeballed; Windows build size (+34 MB GLB) not measured; Sketchfab licences pending (see CREDITS.md).
+
+## SB-77 · 23/11/2026 · Lobby UI kit + room options
+
+- Kit from Drive folders 7, 8, 9 (`tools/ui/import_lobby_ui.py`): lobby console, Find Server console, row pill, 3 class cards. Credits and asset ledger rows added.
+- Lobby host desk is `LobbyConsole`: tabs MATCH SETUP (6 slots, animal avatars) / MAP (final level), D-pad flips Survival/Rank, CAPACITY slider (2-6), LOBBY MODE private/public, PASSWORD, START MATCH. Class cards above the stands take their numbers from `BalanceProfile`.
+- Net (host-enforced): `LobbyRoom.TryConfigureRoom`, `StubSessionService` password hash + capacity in connection approval (`WrongPassword`), protocol `SquishyBump-LAN-11`, `LobbyCodec` v2 (capacity, public). LAN beacon `LanDiscovery` (UDP 7778, public rooms only, no password in the packet) feeds the Find Server list.
+- Tests: `LobbyRoomTests` (options), `LobbyCodecTests` (capacity/public), `SyncTests` (password, capacity, payload size), `LanDiscoveryTests`, `UiKitTests` (new sprites and sheet sizes), `RoomOptionsPlayTests` (loopback: wrong password refused, capacity, listener), `LobbyPlayTests` driven through the console buttons.
+- Play Mode screenshots (`unity command capture game_view`): [Find Server](testing/sb77/find_server.png), [lobby console](testing/sb77/lobby_console.png), [MAP tab](testing/sb77/lobby_console_map.png), [class cards](testing/sb77/lobby_stands_cards.png).
+- `tools/verify.ps1 -PlayMode` → PASS, 347 EditMode and 72 PlayMode (1 skip Windows-only), 0 C# warnings. `python tools/check_repo.py` → PASS.
+- Not checked: two real PCs on a LAN (discovery used loopback only; Windows Firewall may block UDP broadcast, the manual IP join is the fallback), gamepad on the new screens, the "PRIVITE" typo baked into the team's art.

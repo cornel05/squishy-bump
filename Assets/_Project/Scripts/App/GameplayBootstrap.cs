@@ -28,6 +28,8 @@ namespace SquishyBump.App
         public NetSync Sync => sync;
         public MatchReplica MatchState { get; } = new();
         public LobbySync LobbySync => lobbySync;
+        /// <summary>LAN room beacons (host announces, Find Server listens); see D40.</summary>
+        public LanDiscovery Discovery { get; } = new();
         internal void LockLanRoster() => session.AcceptingPlayers = false;
         public LobbyState LobbySelection { get; private set; }
         public void SetLobbySelection(LobbyState state)
@@ -152,6 +154,7 @@ namespace SquishyBump.App
             if (session == null)
                 return;
 
+            Discovery.Dispose();
             session.StateChanged -= OnSessionStateChanged;
             events.HazardRaised -= ForwardHazard;
             sync.HazardReceived -= events.Deliver;
