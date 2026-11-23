@@ -287,6 +287,15 @@ CollisionResolver hiện hữu. Hợp đồng mạng LAN-7 giữ nguyên từ nh
 SB-47 còn phải nối/kiểm chứng đầy đủ hành vi D1–D5, jump, xử lý băng, chiến thuật
 hạng cân, AI-1–AI-6 và profiler. SB-46 không chứng minh các kịch bản đó đã đạt.
 
+
+## SB-17 — sửa bố cục Wobble theo review, 23/11/2026
+
+Giữ anchor HUD cố định; Wobble bám khung model trên màn hình, pivot đáy và nâng
+nhãn để tránh hình quả/chữ khác. Cache renderer, tái dùng danh sách tối đa sáu nhãn.
+UI chỉ đọc trạng thái, không đổi gameplay. Hợp đồng tích hợp trên nền main a7b1656
+là LAN-10 sau tích hợp lobby c534179: giữ Lives/Rank của main và DashCooldownTicks của SB-17 trong snapshot
+225 byte/sáu quả; từ chối build revision cũ. Xem báo cáo hình ảnh tại
+[SB-17 Windows player](testing/sb17-hud-review/README.md).
 # Lobby SB-25 đang nối tiếp PR #95
 
 Base `ea46852` cung cấp LobbyRoom host-owned và greybox LOB01. Phần nối tiếp dùng

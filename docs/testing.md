@@ -97,6 +97,46 @@ MatchSetup qua SerializedObject/AssetDatabase và sinh meta. Không sửa GUID/a
 Đây là kiểm chứng khung D1 và tích hợp input/motor, không phải bài ổn định 120 s,
 thống kê AI-1–AI-6 hay T13 đầy đủ năm bậc. Không nâng các test đó thành đạt.
 
+## SB-17 — kiểm tra source bổ sung 20/11/2026
+
+Nhánh `feat/SB-17-basic-hud` đã qua compiler Roslyn đi kèm Unity 6000.3.28f1 với DLL
+đang có: source module và test biên dịch được; **không chạy test hoặc build Unity**.
+Lệnh từ project cha: `python scratch/compile_unity_sources.py squishy-bump-sb17`.
+Log bổ sung tại `../scratch/csc/squishy-bump-sb17/`. Unity thực tế còn thiếu license,
+batch exit 198; verify nhận lockfile còn sót là Editor mở dù không có Unity.exe.
+Chưa import/sinh meta cho MatchHud.cs/MatchHudTests.cs, chưa xác nhận bố cục hình ảnh
+hoặc hành vi runtime. Các checklist issue và T-test không đổi từ kiểm tra source này.
+
+## SB-17 — kiểm thử Native 21/11/2026
+
+Nhánh `feat/SB-17-basic-hud`, base `c293fe1`, Unity 6000.3.28f1.
+`tools/verify.ps1 -PlayMode` đạt **VERIFY: PASS**, EditMode **165/165**, PlayMode
+**38/38**, không lỗi, không warning C#, không test bị bỏ qua. Unity đã sinh meta
+cho HUD và test; giữ bản stash WIP trước khi cập nhật main.
+
+- `MatchHudTests`: đồng hồ đỏ ở 10 giây cuối; L1 đổi sang lần rụng vành kế tiếp;
+  số quả, tên quả/huy hiệu class và kg, vòng dash 1,5/3 giây và READY, Wobble ×5 đỏ.
+- Hồi quy mốc L1 135 giây đã được chạy **đỏ trước khi sửa**:
+  `TestResults/HudClockRegression.xml` ghi 1 đạt/1 lỗi vì nhận `Time 15 s` thay
+  `Ring 0 s`. Lượt verify cuối xác nhận ca này đã đạt.
+- `SyncTests` kiểm tra round-trip cooldown host; snapshot sáu quả là 225 byte.
+  Protocol approval tăng thành `LAN-5`; các build khác revision bị từ chối.
+- Kết quả XML/log Native: `TestResults/EditMode.*`, `TestResults/PlayMode.*`.
+- `tools/build-windows.ps1` đạt **BUILD: PASS**: Windows x64 v0.1.0, 100 MB,
+  0 lỗi, 2 phút 33 giây. `python tools/check_repo.py`: PASS (0 problems);
+  `git diff --check`: sạch.
+- Build tại `Builds/Windows/SquishyBump.exe`. SHA-256 của executable:
+  `FBD073CA59C4918EDBC6704F5393CF59021173AF11714C00DB4212C50117492B`;
+  `SquishyBump_Data/Managed/SquishyBump.UI.dll`:
+  `312D40D9405A9ED4B830014D8B1B852FF18A158FE0ECDD4B917280EB3F0DC46A`.
+  Hash assembly phân biệt code HUD; executable Unity có thể giống build khác.
+- Chưa quan sát được HUD trong Windows player: công cụ mở ứng dụng không phản hồi
+  và hết phiên thao tác. Kiểm tra anchor trong PlayMode chỉ chứng minh vị trí cấu
+  hình ở cạnh màn hình, chưa chứng minh khả năng đọc, chồng lấn hoặc các tỉ lệ khác.
+
+Các ca này chưa chứng minh LAN nhiều máy, toàn bộ Rank, hoặc bố cục trên mọi tỉ lệ
+màn hình; không nâng trạng thái T07/T15 từ bằng chứng HUD.
+
 ## Commands
 
 | What | Command | Output |
@@ -440,6 +480,23 @@ Không đổi trạng thái các test đó dựa vào bằng chứng này. PR ph
 cần tích hợp các PR phụ thuộc trước, merge main vào nhánh này, chuyển base về main
 và xác minh lại; không tự merge PR trong đợt làm việc này.
 
+
+### SB-17 — sửa review PR #97, 23/11/2026
+
+Nền a7b1656 đã tích hợp main vào feat/SB-17-basic-hud. Unity 6000.3.28f1 Native:
+`tools/verify.ps1 -PlayMode` → VERIFY: PASS, **242 EditMode + 60 PlayMode**,
+0 lỗi/cảnh báo compile; 1 skip có chủ đích là HudPlayerVisualTests chỉ chạy Windows Player.
+Test đó chạy riêng trong StandaloneWindows64 với Direct3D12: **1 đạt, 0 lỗi**,
+8 cảnh ở 1920×1080, 1280×720, 1440×900, 1680×720; đủ 6 tag, không giao chữ/quả.
+Đã xem trực tiếp cả 8 ảnh. Ba hồi quy đã chạy đỏ trước sửa: nhãn che chính quả,
+nhãn chồng nhau và nhãn che quả khác. [Ảnh, JSON, XML và lệnh chạy lại](testing/sb17-hud-review/README.md).
+
+Giữ anchor cố định, sửa Wobble lấy đỉnh model chiếu lên màn hình và tránh giao nhau.
+Fixture L1 freeze/đặt pose để đo, không thay thế chơi tay/LAN/T07; không nâng trạng
+thái các test đó. PR tiếp tục draft chờ cornel05 review theo yêu cầu.
+
+Release Windows x64 trên nền này: `tools/build-windows.ps1` → **BUILD: PASS**,
+101 MB, 0 errors, 48,85 s. `python tools/check_repo.py` → PASS (0 problems).
 # SB-25 nối tiếp PR #95 — tiến độ 21/11/2026, chưa nghiệm thu lobby
 
 Nhánh `feat/SB-25-3d-lobby` fast-forward lên `ea46852` (PR #95 đang mở) để dùng scene
@@ -508,6 +565,15 @@ SB-26/SB-29/SB-18 khi tích hợp. Không nâng T06/T07 hoặc bài LAN nhiều 
 `SquishyBump_Data/Managed/`: App.dll
 `C033BC93CEDF1A179D7F341EE30D46244CE1C57D6C0E10432C3B97A3A8372F88`, UI.dll
 `B939A2A79D66B37A6DA6FA008D91D1C51551DCBC8DE2D09C5EB79C915EDB7F6B`.
+
+
+SB-17 kiểm chứng cuối sau tích hợp main **c534179** (lobby PR #100), protocol
+**LAN-10** tránh trùng LAN-9 lobby: `tools/verify.ps1 -PlayMode` → **VERIFY: PASS,
+252 EditMode + 61 PlayMode**, 0 lỗi/cảnh báo compile. Một skip Windows-only có
+chủ đích; chạy riêng Windows Player Direct3D12 đạt **1/1**, cả 8 ảnh/JSON mới đã xem.
+`tools/build-windows.ps1` → **BUILD: PASS, 101 MB, 0 errors, 51,49 s**.
+[XML cuối và manifest](testing/sb17-hud-review/manifest.json). Repo check và diff sạch.
+Không nâng T05/T07/LAN từ fixture hình ảnh này. Giữ draft chờ cornel05 review.
 
 ## 23/11/2026 · SB-29 Survival LAN, T18
 

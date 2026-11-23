@@ -1,0 +1,12 @@
+{
+    "capture": "normal-1440x900",
+    "graphics": "Direct3D12",
+    "width": 1440,
+    "height": 900,
+    "visibleTags": 6,
+    "fixedHudClear": true,
+    "ownBodyOverlaps": [],
+    "labelOverlaps": [],
+    "hiddenTags": [],
+    "otherBodyOverlaps": []
+}

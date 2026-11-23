@@ -1,4 +1,4 @@
-﻿# Credits và khai báo AI
+# Credits và khai báo AI
 
 Kiểm kê ngày 20/11/2026 trên main `b856485`, phục vụ SB-61 #48, GDD 15.2 và Phụ lục C.
 Đây là hồ sơ nguồn của checkout, chưa xác nhận nội dung của một build phát hành.
@@ -16,8 +16,9 @@ Phân công hiện hành nằm trong `AGENTS.md`; tác giả và các lượt s�
 | 12 SFX `.wav` | `tools/audio/make_sfx.py`, Python stdlib; commit `3d22d10`, PR #78; `AudioDirector` / `PresentationProfile` | Tổng hợp bằng code có Claude hỗ trợ, seed 18, 44.1 kHz mono PCM 16-bit. Placeholder, không lấy sample âm thanh ngoài. |
 | L1 và vật liệu greybox | Mesh/material dưới `Data/TrainingRing/`, `ProjectScaffold` và dữ liệu mesh đã commit (script tạo mesh ban đầu không có trong checkout); Phụ lục C đã ghi nguồn SB-14 | C# và Unity 6000.3.28f1 với Codex hỗ trợ. Không dùng seed ngẫu nhiên hay model tạo ảnh. |
 | L2/L3 và hình hazard | `LevelSceneBuilder`, `MovingGround`, `PusherBlocks`, `Cannons`, `AnnulusMesh`, `RingDrop` | Primitive, mesh và màu tạo bằng C#/Unity với AI hỗ trợ code. Không có texture, model hoặc sample tải ngoài trong nhóm này. |
-| Giao diện | `UI/Menus/UiFactory.cs` tạo panel và chữ bằng uGUI | Font thực tế là `Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf")` từ Unity. Không có tệp Baloo 2/Fredoka trong Assets tại mốc kiểm kê. |
-| Kết quả SB-24 | `UI/Menus/MatchOverlay.cs`, 21/11/2026 | Codex hỗ trợ code trình bày standings host bằng uGUI/LegacyRuntime; không thêm ảnh, font tải ngoài hoặc model sinh ảnh. Yêu cầu: issue #22, GDD 10.4/11.3; không dùng seed. |
+| Giao diện | `UI/Menus/UiFactory.cs` tạo panel và chữ bằng uGUI | Font chính là Sleeping (Darrell Flood, `Assets/ThirdParty/Fonts/Sleeping/`; miễn phí cho mục đích cá nhân, cần mua giấy phép nếu thương mại hóa). Sleeping thiếu dấu tiếng Việt nên Arial/Segoe UI làm font dự phòng. Sprite UI cắt từ bộ UI kit của nhóm (Drive: Buttons.ai, icon game.ai) bằng `tools/ui/slice_kit.py`. |
+| HUD SB-17 | `UI/HUD/MatchHud.cs`, phiên bản 21/11/2026 | Codex hỗ trợ C# sinh vòng cooldown Texture2D 64 × 64, huy hiệu class bằng uGUI và chữ LegacyRuntime. Không dùng ảnh tải ngoài hoặc mô hình sinh ảnh; nguồn yêu cầu là issue #15/GDD 11.2, không dùng seed. |
+| Kết quả SB-24 | `UI/Menus/MatchOverlay.cs`, 21/11/2026 | Codex hỗ trợ code trình bày standings host bằng uGUI (từ SB-74 dùng sprite/font UI kit); không thêm ảnh, font tải ngoài hoặc model sinh ảnh. Yêu cầu: issue #22, GDD 10.4/11.3; không dùng seed. |
 
 | Lobby runtime SB-25 | `App/LobbyController.cs`, `UI/LobbyPanel.cs`, `Data/LobbyProfile.asset` · 21/11/2026 | Codex hỗ trợ C#/Unity primitive sphere/material URP cho avatar trung tính, uGUI/LegacyRuntime cho info/controls, nhãn khóa kệ và quầy host. Avatar đã chọn/display dùng lại sáu prefab/GLB nêu trên. Không có ảnh AI, model/font tải ngoài hoặc seed hình học; nguồn yêu cầu là issue #23, GDD 8.5/11.1. |
 | Nhạc | Không tìm thấy clip nhạc trong `Assets/` | Chưa nhập nhạc. Không gán tác giả/giấy phép cho nội dung chưa có. |
@@ -98,3 +99,13 @@ Hazard hiện có chỉ bổ sung hint sàn/cảnh báo cho AI qua Core, với h
 Hình học H01–H07 giữ nguyên; source H06 có hash mới trong CSV vì thêm API chỉ đọc,
 hash/commit trước đó được ghi ở Phụ lục C. Bot dùng seed trận/ID cho RNG; không có
 prompt image generation. Nguồn và giới hạn giấy phép của asset tái dùng không đổi.
+
+
+## SB-17 — nguồn HUD v2 và bằng chứng review, 23/11/2026
+
+Giữ hình vòng cooldown và badge procedural của v1; v2 sửa bố cục Wobble trong
+Assets/_Project/Scripts/UI/HUD/MatchHud.cs với hỗ trợ AI Codex, theo issue #15/GDD11.2.
+Không dùng model sinh ảnh, prompt ảnh hoặc RNG. Tám PNG trong
+docs/testing/sb17-hud-review là ScreenCapture Windows Player Direct3D12 nguyên bản,
+không phải ảnh AI hay asset runtime mới. Hash nguồn và bằng chứng trong manifest.json.
+Nguồn nhóm tạo chưa có LICENSE chung; font/uGUI theo điều khoản Unity hiện hữu.
