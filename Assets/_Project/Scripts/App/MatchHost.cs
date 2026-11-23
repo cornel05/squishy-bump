@@ -8,6 +8,7 @@ using SquishyBump.Net.Sync;
 using SquishyBump.Physics;
 using SquishyBump.Presentation;
 using SquishyBump.UI.Menus;
+using SquishyBump.UI;
 using UnityEngine;
 
 namespace SquishyBump.App
@@ -62,11 +63,16 @@ namespace SquishyBump.App
         private readonly HashSet<Collider> nearBoxes = new();
         private bool hitStopping;
         private bool pausesGame;
+        public MatchHud Hud { get; private set; }
+        private WorldSnapshot hudSnapshot;
         private ScoreService sessionScores;
         private uint matchId, simulationTick;
         public void ConfigureRank(ScoreService scores, uint id) { sessionScores = scores; matchId = id; }
         private BotProfile botProfile;
         private readonly Dictionary<ushort, BotBrain> bots = new();
+        private BotNavigationWorld navigationWorld;
+        private uint nextNavigationTick;
+        public IBotNavigationSnapshot BotNavigation { get; private set; }
         public IReadOnlyDictionary<ushort, BotBrain> Bots => bots;
         public void ConfigureBots(BotProfile profile) => botProfile = profile;
 
@@ -168,6 +174,9 @@ namespace SquishyBump.App
         {
             if (bootstrap == null) bootstrap = FindAnyObjectByType<GameplayBootstrap>();
             localInput = new LocalPlayerInput(cameraRig, bootstrap.Saved.Bindings);
+            Hud = gameObject.AddComponent<MatchHud>();
+            Hud.Init(balance, level);
+            bootstrap.Sync.SnapshotReceived += RefreshClientHud;
             // Every hazard of this level scene (H01 floor, moving ground, cannons…).
             foreach (var root in gameObject.scene.GetRootGameObjects())
                 hazardList.AddRange(root.GetComponentsInChildren<IHazard>(true));
@@ -193,6 +202,13 @@ namespace SquishyBump.App
                     var visual = view.GetComponentInChildren<RollVisual>();
                     if (visual != null) visual.TookOff += OnTookOff;
                 };
+                clientView.ViewSpawned += (id, view) =>
+                {
+                    Hud.Register(id, view.transform, view.GetComponent<SphereCollider>().radius + 0.5f);
+                    if (id == (ushort)Unity.Netcode.NetworkManager.Singleton.LocalClientId)
+                        Hud.SetFruit(view.GetComponent<FighterProfileApplier>()?.Fruit);
+                    if (hudSnapshot != null) RefreshClientHud(hudSnapshot);
+                };
             }
         }
 
@@ -206,7 +222,7 @@ namespace SquishyBump.App
             snapshotEveryTicks = Mathf.Max(1, Mathf.RoundToInt(balance.InputRateHz / balance.SnapshotRateHz));
 
             var humans = new List<ulong> { 0 };
-            humans.AddRange(bootstrap.Session.Peers.Take(fighterPrefabs.Length - 1));
+            humans.AddRange(bootstrap.Session.Peers.OrderBy(id => id).Take(fighterPrefabs.Length - 1));
             var spawns = bounds.SpawnPoints;
             for (var i = 0; i < fighterPrefabs.Length; i++)
             {
@@ -220,6 +236,8 @@ namespace SquishyBump.App
                     VisibleRenderers = go.GetComponentsInChildren<Renderer>().Where(r => r.enabled).ToArray(),
                 };
                 fighters.Add(f);
+                Hud.Register(id, f.Motor.transform, go.GetComponent<SphereCollider>().radius + 0.5f);
+                Hud.SetWobble(id, 0, true);
                 if (id >= FirstBotId && botProfile != null) bots[id] = new BotBrain(botProfile, id, seed);
                 resolver.Register(f.Id, f.Motor);
                 fighterPhysics.Add(f.Id, f.Motor);
@@ -232,6 +250,8 @@ namespace SquishyBump.App
             Director.TryPlaceRespawn = TryRespawn;
 
             if (cameraRig != null) cameraRig.Follow(fighters[0].Motor.transform);
+            Hud.SetFruit(fighters[0].Motor.GetComponent<FighterProfileApplier>()?.Fruit);
+            Hud.SetRemaining(fighters.Count, fighters.Count);
             resolver.WobbleChanged += Director.SetWobble;
             resolver.Hit += OnHit;
             resolver.Contact += OnContact;
@@ -247,6 +267,7 @@ namespace SquishyBump.App
             };
             foreach (var ice in hazardList.OfType<IceTiles>()) ice.SetSeed(seed);
             foreach (var h in hazardList) h.Bind(bootstrap.EventSink, fighterPhysics);
+            if (bots.Count > 0) navigationWorld = new BotNavigationWorld(bounds.transform.position, balance, hazardList);
             bootstrap.Sync.InputReceived += OnRemoteInput;
             bootstrap.Clock.Ticked += OnTick;
         }
@@ -278,8 +299,7 @@ namespace SquishyBump.App
             }
             // HUD for the host's local fighter (id 0); display only.
             if (overlay != null && Started && Director != null)
-                overlay.ShowHud(Director.Lives(0), Director.Rule == MatchRule.Rank ? balance.Lives : 1,
-                    Mathf.Max(0, Mathf.CeilToInt(balance.TimeLimitSeconds - seconds)));
+                overlay.ShowHud(Director.Lives(0), Director.Rule == MatchRule.Rank ? balance.Lives : 1);
         }
 
         private void FixedUpdate() => clientView?.FixedUpdate();
@@ -300,12 +320,19 @@ namespace SquishyBump.App
             var playing = Director.Phase == MatchPhase.Playing;
             var local = localInput.Sample();
             var sensedFighters = fighters.Select(f => new BotFighter(f.Id, f.Motor.transform.position,
-                f.Motor.GetComponent<Rigidbody>().linearVelocity, !f.Out)).ToArray();
+                f.Motor.GetComponent<Rigidbody>().linearVelocity, !f.Out,
+                f.Motor.GetComponent<Rigidbody>().mass, resolver.GetWobble(f.Id))).ToArray();
             var radius = bounds.OuterRadius;
             if (ringDrop != null && goTick != 0)
             {
                 var dropped = balance.RingDropSeconds.Count(at => Director.ElapsedTicks * dt + balance.RingDropWarningSeconds >= at);
                 radius *= 1f - dropped / (float)balance.RingDropSeconds.Count;
+            }
+            if (playing && navigationWorld != null && (BotNavigation == null || tick >= nextNavigationTick))
+            {
+                BotNavigation = navigationWorld.Capture(bounds.OuterRadius, Director.ElapsedTicks, dt);
+                var fastest = bots.Values.Max(b => b.DecisionRateHz);
+                nextNavigationTick = tick + (uint)Mathf.Max(1, Mathf.RoundToInt(1f / (fastest * dt)));
             }
 
             foreach (var f in fighters)
@@ -316,7 +343,7 @@ namespace SquishyBump.App
                 if (bots.TryGetValue(f.Id, out var brain))
                     input = brain.Step(bootstrap.Session.CanSimulateGameplay, playing, !f.Out,
                         f.Motor.IsDashing, f.Motor.DashReady, f.Motor.transform.position,
-                        f.Motor.transform.eulerAngles.y, bounds.transform.position, radius, sensedFighters, dt);
+                        f.Motor.transform.eulerAngles.y, bounds.transform.position, radius, sensedFighters, dt, BotNavigation);
                 // Countdown and idle slots send an empty command; motors still integrate gravity and traction.
                 if (!playing || (f.Id >= FirstBotId && !bots.ContainsKey(f.Id)))
                     input = new InputCommand(input.Sequence, Vector2.zero, false, false, input.YawDegrees);
@@ -345,6 +372,11 @@ namespace SquishyBump.App
                 f.Motor.gameObject.SetActive(false);
             }
 
+            Hud.SetClock(Director.ElapsedTicks * dt);
+            Hud.SetRemaining(Director.AliveFighters.Count, fighters.Count);
+            Hud.SetDash(fighters[0].Motor.DashCooldownTicks * dt);
+            foreach (var f in fighters) Hud.SetWobble(f.Id, resolver.GetWobble(f.Id), !f.Out);
+
             if (tick % snapshotEveryTicks == 0) bootstrap.Sync.BroadcastSnapshot(Snapshot(tick));
         }
 
@@ -357,7 +389,7 @@ namespace SquishyBump.App
             var wobble = (byte)Mathf.Clamp(resolver.GetWobble(f.Id), 0, byte.MaxValue);
             var lastInput = inboxes.TryGetValue(f.Id, out var inbox) ? inbox.LastProcessed : 0u;
             return new FighterSnapshot(f.Id, f.Fruit, body.position, body.linearVelocity, wobble, (byte)Director.Lives(f.Id),
-                flags, lastInput);
+                flags, lastInput, (ushort)f.Motor.DashCooldownTicks);
         }).ToArray());
 
         private void OnContact(ulong a, ulong b)
@@ -396,6 +428,20 @@ namespace SquishyBump.App
             resolver.ResetWobble(f.Id);
             fighterPhysics.Add(f.Id, f.Motor);
             return true;
+        }
+
+        private void RefreshClientHud(WorldSnapshot snapshot)
+        {
+            if (bootstrap.Session.State != SessionState.Joined) return;
+            hudSnapshot = snapshot;
+            Hud.SetClock(snapshot.GoTick == 0 ? 0 : (snapshot.HostTick - snapshot.GoTick) / balance.FixedStepHz);
+            Hud.SetRemaining(snapshot.Fighters.Count(f => (f.Flags & FighterFlags.Out) == 0), snapshot.Fighters.Count);
+            foreach (var f in snapshot.Fighters)
+            {
+                Hud.SetWobble(f.Id, f.Wobble, (f.Flags & FighterFlags.Out) == 0);
+                if (f.Id == (ushort)Unity.Netcode.NetworkManager.Singleton.LocalClientId)
+                    Hud.SetDash(f.DashCooldownTicks / balance.FixedStepHz);
+            }
         }
 
         private void OnHit(FighterHit hit)
@@ -517,6 +563,7 @@ namespace SquishyBump.App
                 bootstrap.Events.HazardRaised -= OnHazard;
                 bootstrap.Events.MatchRaised -= OnMatchEvent;
                 bootstrap.Sync.InputReceived -= OnRemoteInput;
+                bootstrap.Sync.SnapshotReceived -= RefreshClientHud;
             }
             if (pausesGame) Time.timeScale = 1f;
             clientView?.Dispose();

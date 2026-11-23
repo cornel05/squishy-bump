@@ -97,6 +97,46 @@ MatchSetup qua SerializedObject/AssetDatabase và sinh meta. Không sửa GUID/a
 Đây là kiểm chứng khung D1 và tích hợp input/motor, không phải bài ổn định 120 s,
 thống kê AI-1–AI-6 hay T13 đầy đủ năm bậc. Không nâng các test đó thành đạt.
 
+## SB-17 — kiểm tra source bổ sung 20/11/2026
+
+Nhánh `feat/SB-17-basic-hud` đã qua compiler Roslyn đi kèm Unity 6000.3.28f1 với DLL
+đang có: source module và test biên dịch được; **không chạy test hoặc build Unity**.
+Lệnh từ project cha: `python scratch/compile_unity_sources.py squishy-bump-sb17`.
+Log bổ sung tại `../scratch/csc/squishy-bump-sb17/`. Unity thực tế còn thiếu license,
+batch exit 198; verify nhận lockfile còn sót là Editor mở dù không có Unity.exe.
+Chưa import/sinh meta cho MatchHud.cs/MatchHudTests.cs, chưa xác nhận bố cục hình ảnh
+hoặc hành vi runtime. Các checklist issue và T-test không đổi từ kiểm tra source này.
+
+## SB-17 — kiểm thử Native 21/11/2026
+
+Nhánh `feat/SB-17-basic-hud`, base `c293fe1`, Unity 6000.3.28f1.
+`tools/verify.ps1 -PlayMode` đạt **VERIFY: PASS**, EditMode **165/165**, PlayMode
+**38/38**, không lỗi, không warning C#, không test bị bỏ qua. Unity đã sinh meta
+cho HUD và test; giữ bản stash WIP trước khi cập nhật main.
+
+- `MatchHudTests`: đồng hồ đỏ ở 10 giây cuối; L1 đổi sang lần rụng vành kế tiếp;
+  số quả, tên quả/huy hiệu class và kg, vòng dash 1,5/3 giây và READY, Wobble ×5 đỏ.
+- Hồi quy mốc L1 135 giây đã được chạy **đỏ trước khi sửa**:
+  `TestResults/HudClockRegression.xml` ghi 1 đạt/1 lỗi vì nhận `Time 15 s` thay
+  `Ring 0 s`. Lượt verify cuối xác nhận ca này đã đạt.
+- `SyncTests` kiểm tra round-trip cooldown host; snapshot sáu quả là 225 byte.
+  Protocol approval tăng thành `LAN-5`; các build khác revision bị từ chối.
+- Kết quả XML/log Native: `TestResults/EditMode.*`, `TestResults/PlayMode.*`.
+- `tools/build-windows.ps1` đạt **BUILD: PASS**: Windows x64 v0.1.0, 100 MB,
+  0 lỗi, 2 phút 33 giây. `python tools/check_repo.py`: PASS (0 problems);
+  `git diff --check`: sạch.
+- Build tại `Builds/Windows/SquishyBump.exe`. SHA-256 của executable:
+  `FBD073CA59C4918EDBC6704F5393CF59021173AF11714C00DB4212C50117492B`;
+  `SquishyBump_Data/Managed/SquishyBump.UI.dll`:
+  `312D40D9405A9ED4B830014D8B1B852FF18A158FE0ECDD4B917280EB3F0DC46A`.
+  Hash assembly phân biệt code HUD; executable Unity có thể giống build khác.
+- Chưa quan sát được HUD trong Windows player: công cụ mở ứng dụng không phản hồi
+  và hết phiên thao tác. Kiểm tra anchor trong PlayMode chỉ chứng minh vị trí cấu
+  hình ở cạnh màn hình, chưa chứng minh khả năng đọc, chồng lấn hoặc các tỉ lệ khác.
+
+Các ca này chưa chứng minh LAN nhiều máy, toàn bộ Rank, hoặc bố cục trên mọi tỉ lệ
+màn hình; không nâng trạng thái T07/T15 từ bằng chứng HUD.
+
 ## Commands
 
 | What | Command | Output |
@@ -388,3 +428,149 @@ Không dùng case physics L1 hay test domain để ghi nghiệm thu toàn sessio
 `SquishyBump_Data/Managed/`: Match.dll
 `F299F04CD55473524F801920BFEF173BE774FEDCDAED9253E260461BFA148696`, Physics.dll
 `A71CB7F2D461F44EF1F9D9C0EF12969668B312553C69D7BD0FA5B7ACB7DD5FC5`.
+
+Nền PR #98 (BotBrain D1, 53966b7) cùng PR #103 (L4/L5, 2e87aa8), Unity
+6000.3.28f1: tools/verify.ps1 -PlayMode đạt **185 EditMode + 43 PlayMode**,
+0 lỗi/skip/cảnh báo compile; repo check đạt. Xung đột asmdef đã giữ cả AI và uGUI,
+không lặp tham chiếu. Đây chỉ là kiểm tra nền phụ thuộc; chưa chứng minh các tiêu
+chí danger map, A* hoặc utility của SB-46. Chưa có build Windows cho nền ghép này.
+
+### SB-46 — navigation/utility Native, 22/11/2026
+
+Nhánh feat/SB-46-danger-navigation, nền tích hợp dd89fbd (PR #98 BotBrain và PR #103
+L4/L5); main vẫn c293fe1 khi fetch lại. Unity 6000.3.28f1. Bộ cuối
+`tools/verify.ps1 -PlayMode` → **VERIFY: PASS: 204 EditMode + 47 PlayMode**,
+0 lỗi/skip/cảnh báo compile từ code dự án. `tools/build-windows.ps1` đạt Windows x64
+v0.1.0, **101 MB, 0 errors, 25.25 s**. XML/log ở TestResults/EditMode.*, PlayMode.*;
+build log ở Logs/build-windows.log trong worktree SB-46, không đưa thư mục sinh vào Git.
+
+- NavigationTests: giới hạn 1 m/26×26, max edge/telegraph, awareness, margin băng,
+  vùng circle/annulus/box/cone/hex có xoay, ô rơi bị chặn, chặn cắt góc, đường né vùng
+  nguy hiểm và replan khi sàn đổi. **50 lưới ngẫu nhiên seed 0–49** đối chiếu A* với
+  oracle Dijkstra O(V²) độc lập, gồm chi phí và trường hợp không có đường.
+- Công thức utility kiểm tra riêng từng hạng cân; ngưỡng U≥0.4 và hysteresis 0.15.
+  Chưa có đánh giá tỷ lệ thắng hoặc cân bằng người/bot từ các ca toán học này.
+- NavigationArenaTests: L4 thật trước/sau 2 ô nứt rồi rơi, trước còn đường/sau bị
+  chặn; đặt collider Fighter thật trên lỗ vẫn không bị nhận nhầm làm sàn. L3 chỉ lộ
+  marker sau lúc phóng đạn, nhận cone khí và patch từ trạng thái thật. L2 chạy thời
+  gian tiến 30 s, lấy cảnh báo đổi chiều ở 13 s, kiểm tra hộp/làn pusher và ngân sách
+  lưới. Những ca gọi Step trực tiếp kiểm tra dữ liệu cảm nhận, không phải playtest
+  bot né hazard hoặc kiểm tra chất lượng hiển thị.
+- BotArenaTests: năm D1 trong match L1 dùng navigation/replan và đều di chuyển
+  >0.15 m qua PlayerMotor/Rigidbody thật trong 2 s; fall đổi Eliminated. Ca D2 nạp
+  profile D2 trước StartMatch, năm bot thật chọn mục tiêu utility/lập đường và có
+  dash tới PlayerMotor trong cửa sổ 6 s gameplay. D2 chạy Time.timeScale=4 để rút
+  thời gian chờ; physics vẫn fixed 1/60 s. Đây không phải T04/T05 hoặc AI-1–AI-6.
+
+Ba hồi quy đã thấy đỏ trước sửa, giữ XML/log riêng:
+
+1. SB46-UtilityBoundaryBeforeFix: **201 đạt/1 lỗi**, 0.75f−0.60f bị coi nhỏ hơn 0.15f.
+   So sánh biên có xét sai số float; không hạ ngưỡng thiết kế.
+2. SB46-ApproachFacingBeforeFix: **202 đạt/1 lỗi**; bot tới điểm tiếp cận nhưng nhìn
+   waypoint nên không charge. Tách yaw nhìn mục tiêu khỏi vector di chuyển theo path.
+   Fixture tích phân InputCommand là kiểm tra ý định, không được tính là PlayerMotor;
+   ca D2 Native ở trên kiểm chứng riêng luồng motor thật.
+3. SB46-EvadeReachabilityBeforeFix: **203 đạt/1 lỗi**; chọn ô gần bị ngăn bởi khe rồi
+   đứng lại. Chuyển sang tìm ô an toàn tới được có cost thấp nhất trong 4 m.
+
+Các ca trên đều xanh trong bộ cuối 204/47. Repo/diff checks phải sạch trước commit.
+Chưa kiểm chứng: quan sát path/debug trong player, hiệu năng năm D5, AI-1–AI-6,
+trượt/né hazard của các bậc trên đủ năm sàn, T04/T05/T07 đầy đủ hoặc LAN nhiều máy.
+Không đổi trạng thái các test đó dựa vào bằng chứng này. PR phụ thuộc #98 và #103;
+cần tích hợp các PR phụ thuộc trước, merge main vào nhánh này, chuyển base về main
+và xác minh lại; không tự merge PR trong đợt làm việc này.
+
+
+### SB-17 — sửa review PR #97, 23/11/2026
+
+Nền a7b1656 đã tích hợp main vào feat/SB-17-basic-hud. Unity 6000.3.28f1 Native:
+`tools/verify.ps1 -PlayMode` → VERIFY: PASS, **242 EditMode + 60 PlayMode**,
+0 lỗi/cảnh báo compile; 1 skip có chủ đích là HudPlayerVisualTests chỉ chạy Windows Player.
+Test đó chạy riêng trong StandaloneWindows64 với Direct3D12: **1 đạt, 0 lỗi**,
+8 cảnh ở 1920×1080, 1280×720, 1440×900, 1680×720; đủ 6 tag, không giao chữ/quả.
+Đã xem trực tiếp cả 8 ảnh. Ba hồi quy đã chạy đỏ trước sửa: nhãn che chính quả,
+nhãn chồng nhau và nhãn che quả khác. [Ảnh, JSON, XML và lệnh chạy lại](testing/sb17-hud-review/README.md).
+
+Giữ anchor cố định, sửa Wobble lấy đỉnh model chiếu lên màn hình và tránh giao nhau.
+Fixture L1 freeze/đặt pose để đo, không thay thế chơi tay/LAN/T07; không nâng trạng
+thái các test đó. PR tiếp tục draft chờ cornel05 review theo yêu cầu.
+
+Release Windows x64 trên nền này: `tools/build-windows.ps1` → **BUILD: PASS**,
+101 MB, 0 errors, 48,85 s. `python tools/check_repo.py` → PASS (0 problems).
+# SB-25 nối tiếp PR #95 — tiến độ 21/11/2026, chưa nghiệm thu lobby
+
+Nhánh `feat/SB-25-3d-lobby` fast-forward lên `ea46852` (PR #95 đang mở) để dùng scene
+và LobbyRoom đã có. Bằng chứng 169 EditMode/36 PlayMode của PR #95 là lượt đồng đội
+ghi, không phải kết quả của thay đổi nối tiếp này.
+
+Source mới: Core LobbyState bất biến/ILobbyChannel; LobbyCodec tối đa 73 byte cho
+6 người, kiểm tra version/length/duplicate ID/fruit/ready; LobbySync reliable NGO,
+chỉ nhận state từ host và chỉ nhận ready của sender thật. LobbyCoordinator nối
+membership, clock, lựa chọn từ adapter host và countdown; không broadcast state
+mỗi tick khi idle, countdown cập nhật từng giây. Bootstrap poll transport và lưu
+lựa chọn qua đổi scene. LobbyController nối motor/input/snapshot cho host/client,
+kiểm tra pick volume theo vị trí host; LobbyPanel đặt board world-space và quầy host.
+LevelLauncher đưa Single/Host qua Lobby, Single vào L1, LAN roster chỉ có người thật
+theo fruit đã chọn. Rule/Lk được giữ trong LobbySelection; luồng các trận tiếp theo
+còn phải tích hợp SB-26/SB-29. Không có đường Start match bỏ qua ready từ menu cũ.
+
+Roslyn compile toàn bộ source module/Editor/test đạt; 10 ca assertion thuần ngoài
+Unity đạt: codec 1/2/6 người, payload sai, bất biến, ready/countdown/leave, coordinator
+host/client và cleanup. Chưa phải Unity test hoặc bằng chứng lobby đi lại được.
+Đã bổ sung LobbyPlayTests cho hai peer loopback: chọn bằng vị trí trong volume,
+từ chối trái đã có chủ, ready qua NGO, countdown rồi roster hai người đúng trái.
+MenuFlowTests đổi theo menu → lobby → chọn trái → L1. Các ca Native này chưa chạy.
+
+`tools/verify.ps1 -PlayMode` FAIL: Unity EditMode và PlayMode exit198 do license,
+không có XML. Lệnh ProjectScaffold.Run mới (`TestResults/SB25LiveScaffold.log`) cũng
+exit198; LobbyProfile.asset/gán MatchSetup chưa sinh. Repo check thiếu 9 meta mới.
+Diff sạch. Chưa commit/push/PR nối tiếp; các tiêu chí issue #23 giữ mở. Cần Editor
+import/scaffold, verify/build và kiểm tra trực quan đi lại/UI/input/shelf locks,
+LAN riêng máy và scene-load barrier của SB-24. Không cắt thành lobby 2D.
+Lượt verify sau runtime chọn live Editor vì lockfile còn sau startup lỗi rồi dừng
+do không tìm thấy CLI `unity`; vẫn không có XML. Không sửa cache/lock để vượt gate.
+
+## SB-25 — Native lobby 3D, 21/11/2026
+
+Nhánh `feat/SB-25-3d-lobby`, base `ea46852` của PR #95. Unity 6000.3.28f1 đã chạy
+`ProjectScaffold.ConfigureLobbyDefaults`: tạo LobbyProfile, gán walking class và
+MatchSetup bằng Editor API, sinh đủ meta. Giữ greybox 3D, không chọn phương án cắt 2D.
+
+`tools/verify.ps1 -PlayMode` cuối đạt **VERIFY: PASS**, **179 EditMode/37 PlayMode**,
+0 failed/skipped, 0 warning C#. `python tools/check_repo.py`: PASS (0 problems);
+`git diff --check`: sạch. XML/log tại `TestResults/EditMode.*`, `TestResults/PlayMode.*`.
+
+- Native đã bắt lỗi: so `FastBufferReader.Length` khiến LobbySync loại gói hợp lệ
+  vì NGO đã đọc header tên message. `LobbyDiagnostic.xml` ghi timeout tại host countdown;
+  sửa dùng số byte còn lại (`Length - Position`). Lỗi tham chiếu khi owner bị hủy trong
+  teardown cũng đã được tái hiện và sửa. Lượt đỏ đầu giữ trong `LobbyFailureBeforeFix.*`.
+- `LobbyWireFix.xml` đạt sau sửa, rồi ca cuối
+  `LanLobby_HostVolumesEnforceExclusiveClaims_ReadyStartsTwoHumanRoster` đạt **4,023434 s**:
+  host vào scene Lobby; client NGO loopback nhận info; gửi InputCommand đi phải rồi
+  dừng, avatar host dịch ngang >0,15 m qua PlayerMotor; chọn bằng vị trí trong volume,
+  từ chối kệ đã có chủ và nhãn kệ hiện "ĐÃ CHỌN"; đổi rule/Lk chỉ khi host gần quầy;
+  info chứa trái/ready/IP; ready qua NGO, countdown rồi L1 với đúng hai ID/trái đã chọn.
+  Sau khi kiểm tra countdown đang mở, fixture dùng timeScale 4 để rút ngắn thời gian
+  chờ; policy Native kiểm tra đủ 300 tick = 5 giây ở 60 Hz. Không có gói hợp lệ bị loại.
+- `MenuFlowTests` đạt menu → lobby → chọn trái → L1 → pause → leave. Codec/coordinator
+  kiểm tra state 1/2/6 người, dữ liệu sai, quyền host, stale revision, leave/cancel và
+  countdown chỉ mở khi tất cả ready.
+
+Chưa kiểm tra trực quan glyph/layout từ camera trong Windows player, LAN các PC riêng
+hoặc scene-load barrier tích hợp SB-24. Tiến trình session nhiều màn/D1 bots thuộc
+SB-26/SB-29/SB-18 khi tích hợp. Không nâng T06/T07 hoặc bài LAN nhiều máy từ loopback.
+
+`tools/build-windows.ps1` đạt **BUILD: PASS**, Windows x64 v0.1.0, **101 MB**, 0 lỗi,
+2 phút 25 giây. Build tại `Builds/Windows/SquishyBump.exe`. SHA-256 assembly trong
+`SquishyBump_Data/Managed/`: App.dll
+`C033BC93CEDF1A179D7F341EE30D46244CE1C57D6C0E10432C3B97A3A8372F88`, UI.dll
+`B939A2A79D66B37A6DA6FA008D91D1C51551DCBC8DE2D09C5EB79C915EDB7F6B`.
+
+
+SB-17 kiểm chứng cuối sau tích hợp main **c534179** (lobby PR #100), protocol
+**LAN-10** tránh trùng LAN-9 lobby: `tools/verify.ps1 -PlayMode` → **VERIFY: PASS,
+252 EditMode + 61 PlayMode**, 0 lỗi/cảnh báo compile. Một skip Windows-only có
+chủ đích; chạy riêng Windows Player Direct3D12 đạt **1/1**, cả 8 ảnh/JSON mới đã xem.
+`tools/build-windows.ps1` → **BUILD: PASS, 101 MB, 0 errors, 51,49 s**.
+[XML cuối và manifest](testing/sb17-hud-review/manifest.json). Repo check và diff sạch.
+Không nâng T05/T07/LAN từ fixture hình ảnh này. Giữ draft chờ cornel05 review.

@@ -11,7 +11,7 @@ namespace SquishyBump.Hazards
     /// <see cref="HazardEventKind.PusherDeparture"/> event carries the departure tick. 3 m/s with a 0.3 s ease at
     /// each end. A touched fruit gets 50 N·s · K(h) along the lane and +1 Wobble, once per 0.5 s.
     /// </summary>
-    public sealed class PusherBlocks : MonoBehaviour, IHazard
+    public sealed class PusherBlocks : MonoBehaviour, IHazard, IBotHazardHints
     {
         private const float ContactSkinMeters = 0.05f;
         // Prediction samples the pass this often (seconds); not a balance value.
@@ -99,6 +99,21 @@ namespace SquishyBump.Hazards
         {
             sink = eventSink;
             fighters = fighterPhysics;
+        }
+
+        public void CollectBotWarnings(List<BotHazardWarning> warnings, int playingTicks, float dt)
+        {
+            for (var i = 0; i < blocks.Count; i++)
+            {
+                var block = blocks[i];
+                if (block.DepartTick < 0) continue;
+                var localCenter = new Vector3(0, 0, (i == 0 ? 1f : -1f) * hazards.PusherLaneZ);
+                var center = transform.TransformPoint(localCenter);
+                warnings.Add(new BotHazardWarning(BotAwareness.PusherLanes, BotHazardShape.Box,
+                    new Vector2(center.x, center.z),
+                    new Vector2(hazards.PusherDockX + hazards.PusherSize.x * 0.5f, hazards.PusherSize.z * 0.5f),
+                    transform.eulerAngles.y, Mathf.Max(0, (block.DepartTick - playingTicks) * dt)));
+            }
         }
 
         public void StepOnHost(int playingTicks, uint hostTick, float dt)

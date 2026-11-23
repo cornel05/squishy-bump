@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace SquishyBump.UI.Menus
 {
     /// <summary>
-    /// Main menu (GDD 3.1, F01): Single Player (level picker), Multiplayer (rule, Host, Join by IP), Settings, Credits, Quit.
+    /// Main menu (GDD 3.1, F01): Single Player → lobby, Multiplayer (rule, Host, Join by IP), Settings, Credits, Quit.
     /// Raises requests only; App decides what they do. Session state is read from <see cref="ISessionService"/>.
     /// </summary>
     public sealed class MainMenu : MonoBehaviour
@@ -19,15 +19,12 @@ namespace SquishyBump.UI.Menus
         private RectTransform main, levels, multiplayer, options, credits;
         private InputField address;
         private Text status;
-        private Button startMatch;
 
-        /// <summary>Level number picked on the Single Player page.</summary>
+        /// <summary>Single luôn vào lobby rồi bắt đầu L1.</summary>
         public event Action<int> SinglePlayerRequested;
         public event Action HostRequested;
         public event Action<string> JoinRequested;
         public event Action QuitRequested;
-        /// <summary>Host only: everyone loads the first level (stand-in for the SB-30 lobby).</summary>
-        public event Action StartMatchRequested;
 
         public string CurrentPage { get; private set; }
 
@@ -55,12 +52,9 @@ namespace SquishyBump.UI.Menus
             UiFactory.Label(main, version, 20);
 
             levels = UiFactory.Page(canvas, "Single Player");
-            UiFactory.Label(levels, "Pick a level", 44);
-            foreach (var level in levelList)
-            {
-                var number = level.LevelNumber;
-                UiFactory.Button(levels, $"L{number} · {level.ArenaName}", () => SinglePlayerRequested?.Invoke(number));
-            }
+            UiFactory.Label(levels, "Squishy Cup · L1 → L5", 44);
+            UiFactory.Label(levels, "Chọn trái và luật tại lobby cửa hàng.", 28);
+            UiFactory.Button(levels, "Vào lobby", () => SinglePlayerRequested?.Invoke(1));
             UiFactory.Button(levels, "Back", () => Show(main));
 
             multiplayer = UiFactory.Page(canvas, "Multiplayer");
@@ -69,7 +63,6 @@ namespace SquishyBump.UI.Menus
             address = UiFactory.InputField(multiplayer, "127.0.0.1");
             UiFactory.Button(multiplayer, "Join", () => JoinRequested?.Invoke(address.text.Trim()));
             status = UiFactory.Label(multiplayer, "", 24);
-            startMatch = UiFactory.Button(multiplayer, "Start match", () => StartMatchRequested?.Invoke());
             UiFactory.Button(multiplayer, "Back", () => Show(main));
 
             options = BuildSettings(canvas, settings, () => Show(main));
@@ -107,7 +100,6 @@ namespace SquishyBump.UI.Menus
         {
             if (status == null || session == null) return;
             status.text = session.State == SessionState.Idle ? ErrorText(session.LastEndReason) : StatusText(session.State, session.Peers.Count);
-            startMatch.gameObject.SetActive(session.State == SessionState.Hosting);
         }
 
         public static string StatusText(SessionState state, int peers) => state switch

@@ -9,6 +9,7 @@ namespace SquishyBump.App
     {
         [SerializeField] private BalanceProfile balance;
         [SerializeField] private BotProfile defaultBotProfile;
+        [SerializeField] private LobbyProfile lobby;
         [SerializeField] private SquishyBump.Presentation.PresentationProfile presentation;
         [SerializeField] private LevelDefinition[] levels;
         [Tooltip("Roster slots in order: host player, remote players, then idle slots.")]
@@ -26,6 +27,7 @@ namespace SquishyBump.App
 
         public BalanceProfile Balance => balance;
         public BotProfile DefaultBotProfile => defaultBotProfile;
+        public LobbyProfile Lobby => lobby;
         public SquishyBump.Presentation.PresentationProfile Presentation => presentation;
         public LevelDefinition[] Levels => levels;
         public GameObject[] Roster => roster;

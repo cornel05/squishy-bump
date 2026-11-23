@@ -249,3 +249,85 @@ codec và producer Rank đã qua Native, chưa có nghiệm thu full run Rank ho
 Native verify đã đạt 176 EditMode/37 PlayMode, gồm hai NGO peer loopback truyền sáu
 event và result lặp, so sánh replica/overlay. Chưa chạy LAN riêng máy, scene-load
 barrier nhiều PC hoặc Rank tích hợp; không suy rộng test protocol thành nghiệm thu đó.
+
+## SB-46 — cảm nhận sàn, danger map, A* và utility
+
+Core.BotNavigation định nghĩa ảnh chụp IBotNavigationSnapshot, BotTerrainCell và
+BotHazardWarning; các hazard triển khai IBotHazardHints chỉ đọc trạng thái đã cảnh
+báo/đang tác động. App.BotNavigationWorld raycast lưới 1 m (tối đa 26×26), loại layer
+Fighter và ô ngoài arena, nhận collider H06 để gắn cờ băng. Ô rơi/fade không có
+collider nên không đứng được. Khoảng cách mép lấy min của biên tròn và biên các ô
+lưới không có sàn; đây là xấp xỉ theo độ phân giải 1 m, không phải navmesh liên tục.
+Ảnh chụp được chia sẻ cho các bot; mỗi bot giữ dữ liệu theo reaction delay của profile.
+AI không tìm scene singleton, không gọi vật lý hoặc ghi Transform/Rigidbody.
+
+DangerMap lấy max của mép và các vùng telegraph có trong awareness, dùng đúng
+1−τ/2 s, clamp [0,1]; margin băng ×1.5 theo dữ liệu profile từ D3. RingDrop cấp vành
+đang báo; H06 cấp ô đang nứt; Cannons cấp cone khí, marker khi đạn đã bay và vùng
+cháy; MovingGround cấp cảnh báo đổi chiều/hộp đang thấy; PusherBlocks cấp làn đã
+có lịch xuất bến. Không lộ điểm rơi H05 trước lúc marker hiện. TimeToImpact cho phép
+hint hộp ở vị trí dự đoán 1 s từ chuyển động nhìn thấy; chưa chứng minh toàn bộ chiến
+thuật D5 của SB-47 bằng hint này.
+
+GridPathfinder dùng heap tái sử dụng, tám hàng xóm, cost vào ô 1+8D, không cắt góc
+qua ô bị chặn. Heuristic Euclid/sqrt(2) là cận dưới phù hợp vì bước chéo cũng cost 1;
+không tăng giá bước chéo hoặc đổi công thức GDD. Replan ở mỗi quyết định di chuyển,
+giữ waypoint giữa các quyết định và điều khiển theo vị trí bản thân hiện tại. Dữ liệu
+đối thủ/hazard vẫn theo ảnh chụp cảm nhận trễ. Hướng nhìn đuổi mục tiêu tách khỏi
+hướng di chuyển theo path; InputCommand đổi vector thế giới về hệ yaw-local như trước.
+
+Utility theo đúng A.3, xét đường tới mục tiêu, Wobble và khối lượng tương đối; không
+có cờ ưu tiên người thật. Giữ mục tiêu trừ khi ứng viên hơn ít nhất 0.15 (có xử lý
+sai số float tại biên); U<0.4 quay về Roam. D1 vẫn chọn ngẫu nhiên mỗi 4 s. Điểm tiếp
+cận ở phía xa mép của nạn nhân. Evade chọn ô an toàn tới được, cost rẻ nhất trong
+4 m bằng một lượt Dijkstra cùng graph/cost; anti-stuck chỉ chấp nhận mục tiêu ngẫu
+nhiên có đường tới. BotBrain chỉ xuất InputCommand, host vẫn dùng PlayerMotor và
+CollisionResolver hiện hữu. Hợp đồng mạng LAN-7 giữ nguyên từ nhánh phụ thuộc.
+
+SB-47 còn phải nối/kiểm chứng đầy đủ hành vi D1–D5, jump, xử lý băng, chiến thuật
+hạng cân, AI-1–AI-6 và profiler. SB-46 không chứng minh các kịch bản đó đã đạt.
+
+
+## SB-17 — sửa bố cục Wobble theo review, 23/11/2026
+
+Giữ anchor HUD cố định; Wobble bám khung model trên màn hình, pivot đáy và nâng
+nhãn để tránh hình quả/chữ khác. Cache renderer, tái dùng danh sách tối đa sáu nhãn.
+UI chỉ đọc trạng thái, không đổi gameplay. Hợp đồng tích hợp trên nền main a7b1656
+là LAN-10 sau tích hợp lobby c534179: giữ Lives/Rank của main và DashCooldownTicks của SB-17 trong snapshot
+225 byte/sáu quả; từ chối build revision cũ. Xem báo cáo hình ảnh tại
+[SB-17 Windows player](testing/sb17-hud-review/README.md).
+# Lobby SB-25 đang nối tiếp PR #95
+
+Base `ea46852` cung cấp LobbyRoom host-owned và greybox LOB01. Phần nối tiếp dùng
+Core `LobbyState` bất biến và `ILobbyChannel`, Net.Session `LobbyCodec`/`LobbySync`
+(reliable sequenced), App `LobbyCoordinator`. Client không gửi lựa chọn fruit hoặc
+rule/Lk: việc claim phải do adapter kiểm tra vị trí trên host. Client gửi một byte
+ready và sender ID lấy từ NGO. Codec từ chối hai người cùng fruit, ID trùng, ready
+chưa chọn fruit hoặc countdown khi chưa đủ hai người ready.
+
+Coordinator theo dõi join/leave và clock host, phát countdown một lần mỗi giây và
+StartRequested đúng một lần. Peer rời giải phóng fruit/cancel countdown; dispose
+tháo mọi handler. Client chỉ thay bản đọc khi revision mới hơn. Bootstrap poll
+LobbySync suốt phiên để handler sẵn trước khi scene lobby hoạt động.
+Revision LAN của nhánh này là 3 để từ chối build main cũ chưa hiểu lobby. Nhánh
+SB-24 dùng revision 2 cho match event; khi tích hợp cả hai và snapshot SB-17 phải
+chọn revision mới chung, không để hai wire format khác nhau cùng revision.
+
+LobbyController tạo avatar trung tính hoặc prefab trái đã chọn, gửi input qua
+NetSync, host dùng InputInbox/PlayerMotor và snapshot 30 Hz, client nội suy bằng
+SnapshotBuffer. Chỉ host xét tâm quả trong pick volume rồi claim. Không gửi lệnh
+claim từ client. Host phải tới gần desk mới đổi rule/Lk; info/controls dùng canvas
+world-space, nút ready/leave và desk ở overlay. LobbyProfile chứa vị trí spawn,
+class mặc định, khoảng cách desk và countdown 5 giây; Editor scaffold gán SO.
+
+Bootstrap giữ LobbySelection qua scene, LevelLauncher tạo roster theo ID/fruit
+đã xác nhận (LAN không thêm bot/idle), Single chọn trái đầu rồi đủ năm trái còn lại.
+Single luôn đi qua lobby tới L1; nút chọn tắt màn và nút Start bỏ qua ready đã gỡ.
+Progression Lk ở các trận sau thuộc tích hợp SB-26/SB-29, chưa được chứng minh.
+Native verify đạt 179 EditMode/37 PlayMode, gồm input đi lại qua NGO, chọn/khóa trái,
+quầy host theo vị trí, info, ready/countdown và roster hai người. LobbySync kiểm tra
+`reader.Length - reader.Position`: NGO đã đọc hash tên message trước handler.
+Chưa duyệt hình ảnh/glyph trong Windows player hoặc LAN nhiều PC; xem `docs/testing.md`.
+PR nối tiếp lấy base `feat/SB-25-lobby-foundation`; merge #95 trước, sau đó merge
+origin/main vào nhánh nối tiếp, chuyển base PR về main và verify lại; không force-push
+hoặc tự merge PR để đổi việc.

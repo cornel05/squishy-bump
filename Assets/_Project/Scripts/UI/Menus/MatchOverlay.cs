@@ -18,8 +18,8 @@ namespace SquishyBump.UI.Menus
         private float cardUntil, bannerUntil;
         private Text result;
         private RectTransform resultPage, hud;
-        private Text livesText, timerText;
-        private int shownLives = -1, shownMax = -1, shownSeconds = -1;
+        private Text livesText;
+        private int shownLives = -1, shownMax = -1;
         private Transform canvasRoot;
         public string ResultText => result != null && result.gameObject.activeSelf ? result.text : "";
 
@@ -71,22 +71,20 @@ namespace SquishyBump.UI.Menus
             bannerUntil = Time.unscaledTime + seconds;
         }
 
-        /// <summary>Top-left hearts and top-centre clock. Display only: the caller passes host-confirmed values.</summary>
-        public void ShowHud(int lives, int maxLives, int secondsLeft)
+        /// <summary>Hearts pill under the "players left" text (MatchHud draws the clock). Display only: the caller passes host-confirmed values.</summary>
+        public void ShowHud(int lives, int maxLives)
         {
             if (hud == null)
             {
                 hud = (RectTransform)new GameObject("Hud", typeof(RectTransform)).transform;
                 hud.SetParent(canvasRoot, false);
                 Stretch(hud);
-                livesText = HudPill("hud_lives", new Vector2(0f, 1f), new Vector2(24f, -16f), 0.4f);
-                timerText = HudPill("hud_timer", new Vector2(0.5f, 1f), new Vector2(0f, -16f), 0.32f);
+                livesText = HudPill("hud_lives", new Vector2(0f, 1f), new Vector2(24f, -90f), 0.4f);
             }
             if (resultPage != null && resultPage.gameObject.activeSelf) return;
             hud.gameObject.SetActive(true);
             if (lives != shownLives || maxLives != shownMax) livesText.text = $"{lives}/{maxLives}";
-            if (secondsLeft != shownSeconds) timerText.text = $"{secondsLeft}S";
-            shownLives = lives; shownMax = maxLives; shownSeconds = secondsLeft;
+            shownLives = lives; shownMax = maxLives;
         }
 
         private Text HudPill(string sprite, Vector2 anchor, Vector2 position, float textStart)

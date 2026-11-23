@@ -15,6 +15,7 @@ namespace SquishyBump.App
         private StubSessionService session;
         private GameEventHub events;
         private NetSync sync;
+        private LobbySync lobbySync;
         [Tooltip("Boot only: profiles, levels and roster for the scene flow. Empty in test rigs.")]
         [SerializeField] private MatchSetup setup;
 
@@ -26,6 +27,13 @@ namespace SquishyBump.App
         /// <summary>Input up / snapshot down streams of this peer.</summary>
         public NetSync Sync => sync;
         public MatchReplica MatchState { get; } = new();
+        public LobbySync LobbySync => lobbySync;
+        public LobbyState LobbySelection { get; private set; }
+        public void SetLobbySelection(LobbyState state)
+        {
+            LobbySelection = state;
+            if (state != null) Settings.Rule = state.Rule;
+        }
         /// <summary>Local options (not game state); persisted by SB-51.</summary>
         public GameSettings Settings => Saved.Settings;
         /// <summary>This player's save (GDD 10.5); loaded on Boot, written whenever settings or records change.</summary>
@@ -59,6 +67,8 @@ namespace SquishyBump.App
             manager.NetworkConfig.TickRate = 60;
             session = new StubSessionService(manager, transport);
             sync = new NetSync(manager);
+            lobbySync = new LobbySync(manager);
+            lobbySync.StateReceived += SetLobbySelection;
             events = new GameEventHub(() => session.CanSimulateGameplay);
             session.StateChanged += OnSessionStateChanged;
             if (setup != null)
@@ -85,7 +95,7 @@ namespace SquishyBump.App
                 SceneManager.LoadScene(setup.MainMenuScene, LoadSceneMode.Single);
         }
 
-        private void Update() => sync.Poll();
+        private void Update() { sync.Poll(); lobbySync.Poll(); }
 
         // Vòng mô phỏng 60 Hz của host (GDD 10.4). Client không mở tick.
         private void FixedUpdate()
@@ -121,13 +131,17 @@ namespace SquishyBump.App
         {
             // A client starts a fresh EventId stream when it joins.
             if (state == SessionState.Joined)
+            {
                 events.Reset();
+                LobbySelection = null; lobbySync.Reset();
+            }
 
             // Hosting mở phiên mới, Idle đóng phiên: cả hai đều bắt đầu lại tick và EventId.
             if (state != SessionState.Hosting && state != SessionState.Idle)
                 return;
 
             Tick = 0;
+            LobbySelection = null; lobbySync.Reset();
             events.Reset();
             MatchState.Reset();
         }
@@ -144,6 +158,8 @@ namespace SquishyBump.App
             events.MatchRaised -= MatchState.Apply;
             sync.MatchReceived -= events.Deliver;
             sync.Dispose();
+            lobbySync.Dispose();
+            lobbySync.StateReceived -= SetLobbySelection;
             session.Dispose();
         }
     }

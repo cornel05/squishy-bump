@@ -1,4 +1,4 @@
-﻿# Appendix C. Asset and AI-generation ledger
+# Appendix C. Asset and AI-generation ledger
 
 > **In this chapter:** Every asset with its generator, licence and AI declaration.
 
@@ -44,6 +44,22 @@ Text of this GDD was drafted with the help of an AI assistant (Claude) and revie
 
 ## C.2 Asset groups
 
+### HUD procedural của SB-17 (bản kiểm thử 21/11/2026)
+
+`UI/HUD/MatchHud.cs` tạo vòng cooldown 64 × 64 pixel bằng C#/Texture2D lúc chạy,
+uGUI Filled Radial360; không có tệp ảnh nhập ngoài. Panel/chữ dùng `UiFactory` và
+font LegacyRuntime tích hợp Unity. Công cụ: Unity 6000.3.28f1, code có Codex hỗ trợ;
+yêu cầu nguồn: HUD GDD 11.2 (đồng hồ, số quả, dash, hạng cân và Wobble). Không dùng
+seed hoặc model sinh ảnh; không có prompt gốc ngoài yêu cầu issue #15 và mã trong Git.
+Sử dụng trong trận qua `App/MatchHost`; phiên bản SB-17 v1. Phần code/ảnh procedural do
+dự án tạo; repo chưa có LICENSE chung, thành phần uGUI/font theo điều khoản Unity.
+Native EditMode 165/165 và PlayMode 38/38 đã đạt; xem bằng chứng build/bố cục trong
+`docs/testing.md`. Đây là bản kiểm thử, chưa ghi asset đã được nhóm duyệt.
+
+| ID | Nội dung runtime | Nguồn và vị trí dùng |
+|---|---|---|
+| ICO-HUD-DASH01 | Texture và Sprite vòng cooldown 64 × 64 | `Assets/_Project/Scripts/UI/HUD/MatchHud.cs`; HUD dưới trái |
+| ICO-HUD-CLASS01 | Huy hiệu chữ hạng cân và kg, nền uGUI tương phản | Cùng mã nguồn; HUD dưới trái, dữ liệu từ `FruitDefinition.Class` |
 ### Cập nhật UI runtime SB-24 (21/11/2026)
 
 Bản ghi `RT-UI` trong `docs/asset-ledger.csv` bổ sung kết quả trận được tạo bằng
@@ -143,3 +159,38 @@ L4 và L5, Cannons/HazardProfile từ main cho H04/H05. Không sinh bitmap/model
 không có prompt image generation hoặc seed của hình học. Seed chọn ô do host cấp.
 Vị trí, nguồn công cụ và giới hạn giấy phép theo CREDITS.md. Native tests không
 chứng minh chất lượng hiển thị, khả năng đọc cảnh báo hoặc LAN nhiều máy.
+
+## C.7 SB-46 — hint navigation, 22/11/2026
+
+Các component hazard chỉ thêm API cấp dữ liệu bot, không thêm hình ảnh/model/vật liệu.
+H06-PROC-001 tại c918aa6 có hash `17f59ffce25a69f7b385b94c677bcf2128507386fc6293c80feff122da4a59e9`;
+phiên bản có hint mới lưu hash trong CSV. Giữ c918aa6 để truy vết source v3 trước
+thay đổi. Công cụ C#/Unity 6000.3.28f1, có hỗ trợ AI Codex theo issue SB-46 và GDD
+A.3/A.4; không có prompt image generation hoặc asset tải ngoài. RNG bot dùng seed
+trận/ID; hình học không đổi. Nguồn/giấy phép giữ theo CREDITS.md, không suy diễn
+giấy phép chung của repo. Native test hành vi không thay thế kiểm tra hình ảnh.
+
+
+## SB-17 — nguồn HUD v2 và bằng chứng review, 23/11/2026
+
+Giữ hình vòng cooldown và badge procedural của v1; v2 sửa bố cục Wobble trong
+Assets/_Project/Scripts/UI/HUD/MatchHud.cs với hỗ trợ AI Codex, theo issue #15/GDD11.2.
+Không dùng model sinh ảnh, prompt ảnh hoặc RNG. Tám PNG trong
+docs/testing/sb17-hud-review là ScreenCapture Windows Player Direct3D12 nguyên bản,
+không phải ảnh AI hay asset runtime mới. Hash nguồn và bằng chứng trong manifest.json.
+Nguồn nhóm tạo chưa có LICENSE chung; font/uGUI theo điều khoản Unity hiện hữu.
+## Lobby runtime — SB-25, bản kiểm thử 21/11/2026
+
+| ID | Nguồn/phương pháp | Vị trí và trạng thái |
+|---|---|---|
+| LOB-PROC-002 | Nhóm 18, C# có hỗ trợ AI Codex, Unity primitive sphere/material URP; avatar trung tính chưa chọn trái | `App/LobbyController.cs`; kiểm thử Native theo `docs/testing.md` |
+| LOB-UI-002 | Nhóm 18, C# có hỗ trợ AI Codex, uGUI/LegacyRuntime.ttf builtin; info/controls, nhãn khóa kệ world-space và desk/ready overlay | `UI/LobbyPanel.cs`; Native kiểm tra nội dung/trạng thái, chưa duyệt glyph/đọc được từ camera |
+| LOB-CONFIG-001 | `LobbyProfile.asset` được Editor API tạo/gán walking class, spawn, desk reach và countdown | `Data/LobbyProfile.asset`; hash/nguồn trong CSV |
+
+Yêu cầu: nối runtime lobby 3D theo issue #23 và GDD 8.5/11.1 trên greybox PR #95.
+Không có ảnh AI, prompt imagegen hay seed hình học. Display và avatar đã chọn tái
+sử dụng sáu prefab/GLB hiện hữu, không tạo bản model tải ngoài. Shader/font builtin
+theo package Unity hiện có; không suy diễn giấy phép ngoài repo. Ledger tổng hợp
+`docs/asset-ledger.csv` đã bổ sung ba bản ghi này, phiên bản SB-25 v1.1 ngày 21/11/2026.
+Mã nhóm tạo chưa có LICENSE chung; thành phần Unity theo điều khoản nhà cung cấp.
+Không có bản prompt gốc riêng ngoài yêu cầu issue và mã trong Git. Chưa ghi approved.
