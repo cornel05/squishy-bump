@@ -5,6 +5,7 @@ using NUnit.Framework;
 using SquishyBump.App;
 using SquishyBump.Core;
 using SquishyBump.UI;
+using SquishyBump.UI.Menus;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -34,10 +35,10 @@ namespace SquishyBump.Tests.PlayMode
             var hud = root.AddComponent<MatchHud>();
             hud.Init(Balance(), 2);
             hud.SetClock(139);
-            Assert.That(hud.ClockColor, Is.EqualTo(Color.white));
+            Assert.That(hud.ClockColor, Is.EqualTo(UiFactory.Teal));
             hud.SetClock(140);
             Assert.That(hud.ClockColor, Is.EqualTo(Color.red));
-            Assert.That(hud.ClockText, Does.Contain("10 s"));
+            Assert.That(hud.ClockText, Is.EqualTo("00:10"));
             hud.SetRemaining(4, 6);
             Assert.That(hud.RemainingText, Is.EqualTo("Fruit 4/6"));
             var definition = AssetDatabase.FindAssets("t:FruitDefinition", new[] { Data })
@@ -63,19 +64,32 @@ namespace SquishyBump.Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator Board_SortsByValueAndKeepsOrderOnTies()
+        {
+            root = new GameObject("HUD board test");
+            var hud = root.AddComponent<MatchHud>();
+            hud.Init(Balance(), 2);
+            hud.SetBoard(new[] { ("Kiwi", 2, Color.green), ("Plum", 13, Color.magenta), ("Fig", 2, Color.red) });
+            Assert.That(hud.BoardText.Split((char)10), Is.EqualTo(new[] { "1 Plum 13", "2 Kiwi 2", "3 Fig 2" }));
+            hud.SetClock(200);
+            Assert.That(hud.ClockText, Is.EqualTo("00:00"));
+            yield return null;
+        }
+
+        [UnityTest]
         public IEnumerator L1_ClockUsesNextRingDrop()
         {
             root = new GameObject("HUD L1 test");
             var hud = root.AddComponent<MatchHud>();
             hud.Init(Balance(), 1);
             hud.SetClock(35);
-            Assert.That(hud.ClockText, Is.EqualTo("Ring 10 s"));
+            Assert.That(hud.ClockText, Is.EqualTo("00:10"));
             Assert.That(hud.ClockColor, Is.EqualTo(Color.red));
             hud.SetClock(45);
-            Assert.That(hud.ClockText, Is.EqualTo("Ring 30 s"));
-            Assert.That(hud.ClockColor, Is.EqualTo(Color.white));
+            Assert.That(hud.ClockText, Is.EqualTo("00:30"));
+            Assert.That(hud.ClockColor, Is.EqualTo(UiFactory.Teal));
             hud.SetClock(135);
-            Assert.That(hud.ClockText, Is.EqualTo("Ring 0 s"), "Không đếm lại tới 150 s sau khi vành cuối đã rụng");
+            Assert.That(hud.ClockText, Is.EqualTo("00:00"), "Không đếm lại tới 150 s sau khi vành cuối đã rụng");
             yield return null;
         }
     }

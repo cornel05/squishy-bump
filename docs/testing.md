@@ -582,3 +582,11 @@ Không nâng T05/T07/LAN từ fixture hình ảnh này. Giữ draft chờ cornel
 - EditMode kiểm công thức với 6 người/5 màn và 4 người/3 màn, phòng 2 người, hòa cắt ngưỡng và bỏ cuộc. Phần PlayMode dùng NGO loopback cùng tiến trình, tắt NGO scene management và nạp scene ở host. T18 nhiều người trên các máy riêng còn chưa kiểm chứng.
 - `tools/verify.ps1 -PlayMode` → PASS, 260 EditMode và 62 PlayMode, 0 failed/skipped, 0 cảnh báo C#. `python tools/check_repo.py` → PASS.
 - Windows x64 → BUILD PASS, 101 MB, 0 lỗi. Hai tiến trình build mới Host/Join `127.0.0.1` vào cùng lobby. Chuyển L1 → L2 trên hai cửa sổ còn cần kiểm thủ công vì điều khiển tự động bị timeout khi đi tới kệ trái.
+
+## 23/11/2026 · SB-75 UI kit "Assets cho UX/UI"
+
+- `python tools/ui/import_uxui.py <thư mục Drive>` → 29 sprite (PNG 1x), giữ GUID của các nút cũ. Không nhập ảnh `[Demo]`.
+- Ảnh chụp Play Mode 1920×1080 so với `[Demo]` của từng màn: [Start](testing/sb75-ui/start.png), [Settings](testing/sb75-ui/settings.png), [Pause](testing/sb75-ui/pause.png), [HUD](testing/sb75-ui/hud.png), [Round](testing/sb75-ui/round.png), [WINNER](testing/sb75-ui/winner.png). Canvas co theo cả hai trục (match 0.5), nên cửa sổ rộng hơn 16:9 không đẩy hàng kết quả đè lên nút Next.
+- Test mới: `UiKitTests` (sprite, viền 9-slice, kích thước console), `MatchHudTests.Board_SortsByValueAndKeepsOrderOnTies`, `MatchOverlayTests` (tim xám khi mất mạng, banner Round n, chỉ hàng của mình không bị phủ xám, bục top 3).
+- `tools/verify.ps1 -PlayMode` → PASS, 308 EditMode và 68 PlayMode (1 skip Windows-only có sẵn), 0 cảnh báo C#. `python tools/check_repo.py` → PASS.
+- Chưa kiểm: bản build Windows và LAN hai máy thật (WINNER chỉ xem qua fixture).

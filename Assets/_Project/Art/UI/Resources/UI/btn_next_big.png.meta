@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 707ac0db57c979a418298f74a3ae0742
+guid: 291614c22b4d4294b8ab787588e1145e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5764297601548157373
-    second: hud_lives_0
+      213: -2797937918907610899
+    second: btn_next_big_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: hud_lives_0
+      name: btn_next_big_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1300
-        height: 447
+        width: 239
+        height: 205
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: db10ae7c026eeff40800000000000000
-      internalID: 5764297601548157373
+      spriteID: de88aef694abb29d0800000000000000
+      internalID: -2797937918907610899
       vertices: []
       indices: 
       edges: []

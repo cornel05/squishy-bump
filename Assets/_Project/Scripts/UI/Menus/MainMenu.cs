@@ -7,6 +7,7 @@ namespace SquishyBump.UI.Menus
 {
     /// <summary>
     /// Main menu (GDD 3.1, F01): Single Player → lobby, Multiplayer (rule, Host, Join by IP), Settings, Credits, Quit.
+    /// The main page and Settings follow the team's UX/UI kit mockups; the other pages use the plain kit panel.
     /// Raises requests only; App decides what they do. Session state is read from <see cref="ISessionService"/>.
     /// </summary>
     public sealed class MainMenu : MonoBehaviour
@@ -35,21 +36,38 @@ namespace SquishyBump.UI.Menus
             var canvas = UiFactory.Canvas("Main Menu", 10).transform;
             canvas.SetParent(transform, false);
 
-            main = UiFactory.Page(canvas, "Main");
-            UiFactory.Label(main, "SQUISHY BUMP", 56);
-            UiFactory.Button(main, "Single Player", () => Show(levels));
-            UiFactory.Toggle(main, "Rank (off: Survival)", settings.Rule == MatchRule.Rank, on =>
+            // Start screen (kit mockup "6 - Start Screen"): background, logo, then the button stack.
+            main = UiFactory.Layer(canvas, "Main");
+            UiFactory.FullScreen(main, "bg_start");
+            UiFactory.Place(main, "logo", new Vector2(0.5f, 1f), new Vector2(0, -16), new Vector2(440, 273));
+            var stack = UiFactory.Layer(main, "Buttons");
+            stack.anchorMin = new Vector2(0.5f, 0f);
+            stack.anchorMax = new Vector2(0.5f, 0.69f);
+            stack.offsetMin = new Vector2(-300, 20);
+            stack.offsetMax = new Vector2(300, 0);
+            var column = stack.gameObject.AddComponent<VerticalLayoutGroup>();
+            column.spacing = 8;
+            column.childAlignment = TextAnchor.UpperCenter;
+            column.childControlWidth = column.childControlHeight = true;
+            column.childForceExpandWidth = column.childForceExpandHeight = false;
+            UiFactory.Button(stack, "Single Player", () => Show(levels));
+            UiFactory.Toggle(stack, "Rank (off: Survival)", settings.Rule == MatchRule.Rank, on =>
             {
                 settings.Rule = on ? MatchRule.Rank : MatchRule.Survival;
                 settings.NotifyChanged();
             });
             // Create Server hosts, then shows the page that holds the host status and Start match.
-            UiFactory.Button(main, "Create Server", () => { HostRequested?.Invoke(); Show(multiplayer); });
-            UiFactory.Button(main, "Find Server", () => Show(multiplayer));
-            UiFactory.Button(main, "Settings", () => Show(options));
-            UiFactory.Button(main, "Credit", () => Show(credits));
-            UiFactory.Button(main, "Exit Game", () => QuitRequested?.Invoke());
-            UiFactory.Label(main, version, 20);
+            UiFactory.Button(stack, "Create Server", () => { HostRequested?.Invoke(); Show(multiplayer); });
+            UiFactory.Button(stack, "Find Server", () => Show(multiplayer));
+            UiFactory.Button(stack, "Settings", () => Show(options));
+            UiFactory.Button(stack, "Credit", () => Show(credits));
+            UiFactory.Button(stack, "Exit Game", () => QuitRequested?.Invoke());
+            var versionLabel = UiFactory.Outlined(UiFactory.Label(main, version, 20));
+            versionLabel.alignment = TextAnchor.LowerRight;
+            var versionRect = versionLabel.rectTransform;
+            versionRect.anchorMin = versionRect.anchorMax = versionRect.pivot = Vector2.right;
+            versionRect.anchoredPosition = new Vector2(-16, 12);
+            versionRect.sizeDelta = new Vector2(400, 30);
 
             levels = UiFactory.Page(canvas, "Single Player");
             UiFactory.Label(levels, "Squishy Cup · L1 → L5", 44);
@@ -82,8 +100,8 @@ namespace SquishyBump.UI.Menus
         /// <summary>Options page shared with the pause overlay (GDD 3.1 game options).</summary>
         public static RectTransform BuildSettings(Transform canvas, GameSettings settings, Action back)
         {
-            var page = UiFactory.Page(canvas, "Settings");
-            UiFactory.Title(page, "Settings");
+            // Kit mockup "1 - Giao diện Settings": the console art has the SETTINGS title baked in.
+            var root = UiFactory.ConsolePage(canvas, "Settings", "console_settings", back, out var page);
             UiFactory.Slider(page, "Mouse sensitivity", MinSensitivity, MaxSensitivity, settings.MouseSensitivity,
                 v => { settings.MouseSensitivity = v; settings.NotifyChanged(); });
             UiFactory.Slider(page, "Camera distance", MinDistance, MaxDistance, settings.CameraDistance,
@@ -93,7 +111,7 @@ namespace SquishyBump.UI.Menus
             UiFactory.Toggle(page, "Screen shake", settings.ScreenShake,
                 v => { settings.ScreenShake = v; settings.NotifyChanged(); });
             UiFactory.Button(page, "Back", back);
-            return page;
+            return root;
         }
 
         private void Update()

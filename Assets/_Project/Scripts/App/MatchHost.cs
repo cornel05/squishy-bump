@@ -268,7 +268,7 @@ namespace SquishyBump.App
             Director.TryPlaceRespawn = TryRespawn;
 
             if (cameraRig != null) cameraRig.Follow(fighters[0].Motor.transform);
-            Hud.SetFruit(fighters[0].Motor.GetComponent<FighterProfileApplier>()?.Fruit);
+            Hud.SetFruit(fighters[0].Motor.GetComponent<FighterProfileApplier>()?.Fruit, fighters[0].Fruit);
             Hud.SetRemaining(fighters.Count, fighters.Count);
             resolver.WobbleChanged += Director.SetWobble;
             resolver.Hit += OnHit;
@@ -328,6 +328,13 @@ namespace SquishyBump.App
             // HUD for the host's local fighter (id 0); display only.
             if (overlay != null && Started && Director != null)
                 overlay.ShowHud(Director.Lives(0), Director.Rule == MatchRule.Rank ? balance.Lives : 1);
+            if (Started && Director != null && Time.unscaledTime >= nextBoardAt)
+            {
+                nextBoardAt = Time.unscaledTime + BoardRefreshSeconds;
+                var rank = Director.Rule == MatchRule.Rank && Director.Scores != null;
+                Hud.SetBoard(fighters.Select(f => (FighterLabel(f.Id),
+                    rank ? Director.Scores.Points(f.Id) : Director.Lives(f.Id), FruitColor(f.Fruit))).ToList());
+            }
         }
 
         private void UpdateSurvivalCamera()
@@ -502,12 +509,18 @@ namespace SquishyBump.App
             hudSnapshot = snapshot;
             Hud.SetClock(snapshot.GoTick == 0 ? 0 : (snapshot.HostTick - snapshot.GoTick) / balance.FixedStepHz);
             Hud.SetRemaining(snapshot.Fighters.Count(f => (f.Flags & FighterFlags.Out) == 0), snapshot.Fighters.Count);
+            var rule = bootstrap.LobbySelection?.Rule ?? bootstrap.Settings.Rule;
             foreach (var f in snapshot.Fighters)
             {
                 Hud.SetWobble(f.Id, f.Wobble, (f.Flags & FighterFlags.Out) == 0);
                 if (f.Id == (ushort)Unity.Netcode.NetworkManager.Singleton.LocalClientId)
+                {
                     Hud.SetDash(f.DashCooldownTicks / balance.FixedStepHz);
+                    overlay?.ShowHud(f.Lives, rule == MatchRule.Rank && !lanSurvival ? balance.Lives : 1);
+                }
             }
+            // Clients get lives in the snapshot, not points: their board ranks by lives left.
+            Hud.SetBoard(snapshot.Fighters.Select(f => (FighterLabel(f.Id), (int)f.Lives, FruitColor(f.Fruit))).ToList());
         }
 
         private void OnHit(FighterHit hit)
@@ -528,7 +541,7 @@ namespace SquishyBump.App
                 overlay.ShowBanner(e.Value == 0 ? "GO!" : e.Value.ToString(), 1f);
             if (e.Kind == MatchEventKind.MatchResult)
             {
-                overlay.ShowResult(e.Standings, FighterLabel, FighterFruit);
+                overlay.ShowResult(e.Standings, FighterLabel, FighterFruit, level, networkManager.LocalClientId);
                 if (!lanSurvival && leaveMatch != null) overlay.OfferResultAction("Next", leaveMatch);
             }
             if (!lanSurvival || (e.Kind != MatchEventKind.MatchResult && e.Kind != MatchEventKind.SessionResult)) return;
@@ -542,6 +555,13 @@ namespace SquishyBump.App
                 overlay.ShowSessionResult(e.Standings, FighterLabel, FighterFruit);
                 overlay.OfferResultAction("Về menu", leaveCompletedSession);
             }
+        }
+
+        private Color FruitColor(int fruit)
+        {
+            var definition = fruit >= 0 && fruit < fighterPrefabs.Length
+                ? fighterPrefabs[fruit].GetComponent<FighterProfileApplier>()?.Fruit : null;
+            return definition != null ? definition.Color : Color.white;
         }
 
         private int FighterFruit(ulong id)
@@ -608,6 +628,8 @@ namespace SquishyBump.App
         }
 
         private float audioWhoosh;
+        private float nextBoardAt;
+        private const float BoardRefreshSeconds = 0.25f; // display only; the values are already host-confirmed
 
         public void ConfigureFeedback(float hitStopSeconds, float whooshDistance)
         {

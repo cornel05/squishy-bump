@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: bb09590a6ec832e44bc5b9485aade238
+guid: cd75f30c6340c1741bd61963cba26bce
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5606836267986131580
-    second: title_settings_0
+      213: -2730941373592551891
+    second: banner_round_3_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: title_settings_0
+      name: banner_round_3_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1357
-        height: 342
+        width: 767
+        height: 138
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c7a171321eb7fcd40800000000000000
-      internalID: 5606836267986131580
+      spriteID: d2e39943a4fb91ad0800000000000000
+      internalID: -2730941373592551891
       vertices: []
       indices: 
       edges: []
