@@ -20,11 +20,12 @@ namespace SquishyBump.UI.Menus
         {
             var canvas = UiFactory.Canvas("Pause Menu", 20).transform;
             canvas.SetParent(transform, false);
-            root = UiFactory.Page(canvas, "Pause");
-            UiFactory.Label(root, pausesGame ? "Paused" : "Menu (match continues)", 44);
-            UiFactory.Button(root, "Resume", () => SetOpen(false));
-            UiFactory.Button(root, "Settings", () => { root.gameObject.SetActive(false); options.gameObject.SetActive(true); });
-            UiFactory.Button(root, "Exit Game", () => LeaveRequested?.Invoke());
+            // Kit mockup "2 - Giao diện lúc ấn Pause": the console art has the PAUSE title baked in. Home = leave.
+            root = UiFactory.ConsolePage(canvas, "Pause", "console_pause", () => LeaveRequested?.Invoke(), out var screen);
+            if (!pausesGame) UiFactory.Outlined(UiFactory.Label(screen, "Match continues", 26));
+            UiFactory.Button(screen, "Resume", () => SetOpen(false));
+            UiFactory.Button(screen, "Settings", () => { root.gameObject.SetActive(false); options.gameObject.SetActive(true); });
+            UiFactory.Button(screen, "Exit Game", () => LeaveRequested?.Invoke());
             options = MainMenu.BuildSettings(canvas, settings, () => { options.gameObject.SetActive(false); root.gameObject.SetActive(true); });
             SetOpen(false);
         }

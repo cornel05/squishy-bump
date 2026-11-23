@@ -1,6 +1,8 @@
 """Slice the Drive UI kit (.ai files are PDF-compatible) into PNG sprites for Unity.
 
-Usage: python tools/ui/slice_kit.py <Buttons.ai> <icons.ai> [--list]
+Usage: python tools/ui/slice_kit.py <Buttons.ai> [--list]
+Only the art the UX/UI folder lacks (sliders, toggle, panel, medals, hi-res avatars); buttons, HUD and the rest
+come from tools/ui/import_uxui.py.
 Needs: pip install pymupdf numpy scipy pillow
 Output: Assets/_Project/Art/UI/Resources/UI/*.png (re-run overwrites; Unity writes the .meta).
 """
@@ -17,18 +19,13 @@ OUT = Path(__file__).resolve().parents[2] / "Assets/_Project/Art/UI/Resources/UI
 
 # name -> box (x0, y0, x1, y1) in PDF points, taken from `--list`. The crop is trimmed to alpha.
 BUTTONS = {  # Buttons.ai page 0
-    "btn_create_server": (22, 32, 406, 139), "btn_find_server": (22, 157, 348, 264),
-    "btn_settings": (22, 282, 348, 389), "btn_credit": (22, 407, 348, 514),
-    "btn_exit_game": (22, 532, 348, 639), "btn_resume": (448, 32, 772, 139),
-    "btn_next": (446, 410, 680, 517), "btn_back": (448, 538, 650, 629),
-    "title_settings": (814, 35, 1156, 124), "slider_track": (810, 382, 1210, 425),
+    "slider_track": (810, 382, 1210, 425),
     "slider_fill": (812, 428, 1206, 468), "slider_knob": (988, 484, 1016, 512),
     "toggle": (1512, 328, 1584, 368), "panel_box": (26, 912, 668, 1054),
     "medal_1": (34, 670, 182, 871), "medal_2": (217, 699, 374, 864), "medal_3": (391, 708, 532, 857),
     "avatar_0": (736, 710, 842, 816), "avatar_1": (852, 710, 958, 816), "avatar_2": (964, 710, 1070, 816),
     "avatar_3": (738, 824, 844, 930), "avatar_4": (850, 824, 956, 930), "avatar_5": (960, 824, 1066, 930),
 }
-ICONS = {"arrow_next": (340, 49, 528, 181), "hud_lives": (76, 241, 404, 356), "hud_timer": (63, 408, 390, 523)}  # icons.ai page 0
 
 
 def render(path, remove_text=False):
@@ -71,18 +68,13 @@ def symmetric(im):
 
 
 def main():
-    buttons, icons = sys.argv[1], sys.argv[2]
-    a, b = render(buttons), render(icons, remove_text=True)
+    a = render(sys.argv[1])
     if "--list" in sys.argv:
-        print("Buttons.ai"); components(a); print("icons.ai"); components(b); return
+        components(a); return
     OUT.mkdir(parents=True, exist_ok=True)
     for name, box in BUTTONS.items():
         crop(a, box).save(OUT / f"{name}.png")
-    for name, box in ICONS.items():
-        crop(b, box).save(OUT / f"{name}.png")
-    panel = symmetric(Image.open(OUT / "panel_box.png"))
-    panel.save(OUT / "panel_box.png")
-    panel.save(OUT / "row_result.png")
+    symmetric(Image.open(OUT / "panel_box.png")).save(OUT / "panel_box.png")
     print("wrote", len(list(OUT.glob("*.png"))), "pngs to", OUT)
 
 

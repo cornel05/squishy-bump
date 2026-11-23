@@ -25,8 +25,9 @@ namespace SquishyBump.UI
         private readonly List<Tag> layout = new(6);
         private readonly List<Rect> occupied = new(6);
         private Canvas canvas;
-        private Text clock, remaining, fruit, classBadge, dash;
-        private Image badgeBackground;
+        private Text clock, ringCaption, remaining, fruit, classBadge, dash, boardRanks, boardValues;
+        private Image badgeBackground, avatar, board;
+        private string boardKey;
         private Image dashRing;
         private Sprite ringSprite;
         private Texture2D ringTexture;
@@ -41,6 +42,8 @@ namespace SquishyBump.UI
         public string ClassText => classBadge.text;
         public string DashText => dash.text;
         public float DashFill => dashRing.fillAmount;
+        /// <summary>Corner board as shown, one "rank name value" line per fighter.</summary>
+        public string BoardText { get; private set; } = "";
 
         public void Init(BalanceProfile profile, int levelNumber)
         {
@@ -51,26 +54,36 @@ namespace SquishyBump.UI
             canvas.GetComponent<CanvasScaler>().matchWidthOrHeight = 0.5f;
             // HUD không có điều khiển, không chặn menu/pause.
             Destroy(canvas.GetComponent<GraphicRaycaster>());
-            clock = Label("Clock", new Vector2(0.5f, 1), new Vector2(0, -20), new Vector2(320, 70), 44);
-            remaining = Label("Remaining", Vector2.up, new Vector2(24, -24), new Vector2(360, 60), 32);
-            fruit = Label("Fruit", Vector2.zero, new Vector2(24, 86), new Vector2(400, 60), 30);
-            var badge = new GameObject("Class Badge Background", typeof(RectTransform), typeof(Image));
-            badge.transform.SetParent(canvas.transform, false);
-            var badgeRect = (RectTransform)badge.transform;
-            badgeRect.anchorMin = badgeRect.anchorMax = badgeRect.pivot = Vector2.zero;
-            badgeRect.anchoredPosition = new Vector2(24, 24);
-            badgeRect.sizeDelta = new Vector2(400, 52);
-            badgeBackground = badge.GetComponent<Image>();
-            badgeBackground.color = new Color(0.12f, 0.1f, 0.18f, 0.92f);
-            badgeBackground.raycastTarget = false;
-            classBadge = Label("Class Badge", Vector2.zero, new Vector2(24, 24), new Vector2(400, 52), 30);
+            // Layout of the kit mockup "5 - HUD": clock pill top centre, ranking board top right, weight frame bottom left.
+            // The hearts are drawn by MatchOverlay.ShowHud (top left).
+            var timer = UiFactory.Place(canvas.transform, "hud_timer", new Vector2(0.5f, 1), new Vector2(0, -24), new Vector2(325, 117));
+            clock = InArt(timer, "Clock", new Vector2(0.34f, 0.08f), new Vector2(0.95f, 0.92f), 52);
+            ringCaption = Label("Ring Caption", new Vector2(0.5f, 1), new Vector2(0, -144), new Vector2(320, 40), 26);
+            ringCaption.text = level == 1 ? "Ring" : "";
+            remaining = Label("Remaining", new Vector2(0.5f, 1), new Vector2(0, level == 1 ? -180 : -144), new Vector2(360, 44), 28);
+            board = UiFactory.Place(canvas.transform, "hud_board", Vector2.one, new Vector2(-30, -30), new Vector2(383, 236));
+            board.preserveAspect = false;
+            UiFactory.Slice(board, "hud_board", 1f);
+            boardRanks = InArt(board, "Board", new Vector2(0.05f, 0.04f), new Vector2(0.8f, 0.96f), 30);
+            boardRanks.alignment = TextAnchor.UpperLeft;
+            boardRanks.color = Color.white;
+            boardValues = InArt(board, "Board Values", new Vector2(0.75f, 0.04f), new Vector2(0.95f, 0.96f), 30);
+            boardValues.alignment = TextAnchor.UpperRight;
+            boardValues.color = Color.white;
+            board.gameObject.SetActive(false);
+            badgeBackground = UiFactory.Place(canvas.transform, "hud_weight", Vector2.zero, new Vector2(24, 24), new Vector2(280, 140));
+            avatar = UiFactory.Place(badgeBackground.transform, "avatar_0", new Vector2(0, 0.5f), new Vector2(14, 8), new Vector2(100, 100));
+            classBadge = InArt(badgeBackground, "Class Badge", new Vector2(0.44f, 0.1f), new Vector2(0.97f, 0.95f), 30);
+            classBadge.color = UiFactory.Ink;
+            classBadge.GetComponent<Outline>().effectColor = Color.white;
+            fruit = Label("Fruit", Vector2.zero, new Vector2(24, 170), new Vector2(400, 50), 30);
             SetFruit(null);
-            dash = Label("Dash", Vector2.zero, new Vector2(104, 150), new Vector2(360, 65), 30);
+            dash = Label("Dash", Vector2.zero, new Vector2(104, 226), new Vector2(360, 65), 30);
             var ring = new GameObject("Dash Ring", typeof(RectTransform), typeof(Image));
             ring.transform.SetParent(canvas.transform, false);
             var rect = (RectTransform)ring.transform;
             rect.anchorMin = rect.anchorMax = rect.pivot = Vector2.zero;
-            rect.anchoredPosition = new Vector2(24, 150);
+            rect.anchoredPosition = new Vector2(24, 226);
             rect.sizeDelta = new Vector2(64, 64);
             dashRing = ring.GetComponent<Image>();
             dashRing.raycastTarget = false;
@@ -96,6 +109,7 @@ namespace SquishyBump.UI
         {
             var text = UiFactory.Label(canvas.transform, "", fontSize);
             text.name = name;
+            text.color = Color.white;
             text.raycastTarget = false;
             text.alignment = TextAnchor.MiddleCenter;
             var rect = (RectTransform)text.transform;
@@ -106,6 +120,39 @@ namespace SquishyBump.UI
             outline.effectColor = Color.black;
             outline.effectDistance = new Vector2(2, -2);
             return text;
+        }
+
+        /// <summary>Text laid over kit art, stretched between two anchors of it.</summary>
+        private Text InArt(Image art, string name, Vector2 min, Vector2 max, int fontSize)
+        {
+            var text = UiFactory.Label(art.transform, "", fontSize);
+            text.name = name;
+            text.raycastTarget = false;
+            // Vertical anchors stay 0..1 (the HUD keeps its labels on edges); the y insets become offsets.
+            var rect = text.rectTransform;
+            var height = ((RectTransform)art.transform).sizeDelta.y;
+            rect.anchorMin = new Vector2(min.x, 0);
+            rect.anchorMax = new Vector2(max.x, 1);
+            rect.offsetMin = new Vector2(0, min.y * height);
+            rect.offsetMax = new Vector2(0, (max.y - 1) * height);
+            var outline = text.gameObject.AddComponent<Outline>();
+            outline.effectColor = UiFactory.Ink;
+            outline.effectDistance = new Vector2(2, -2);
+            return text;
+        }
+
+        /// <summary>Ranking board (top right), sorted by value, highest first; ties keep the caller's order.</summary>
+        public void SetBoard(IReadOnlyList<(string Name, int Value, Color Color)> rows)
+        {
+            var sorted = rows.Select((r, i) => (r, i)).OrderByDescending(p => p.r.Value).ThenBy(p => p.i).Select(p => p.r).ToList();
+            var key = string.Join("|", sorted.Select(r => $"{r.Name}:{r.Value}"));
+            if (key == boardKey) return;
+            boardKey = key;
+            board.gameObject.SetActive(sorted.Count > 0);
+            boardRanks.text = string.Join("\n", sorted.Select((r, i) =>
+                $"{i + 1}  <color=#{ColorUtility.ToHtmlStringRGB(r.Color)}>{r.Name.ToUpperInvariant()}</color>"));
+            boardValues.text = string.Join("\n", sorted.Select(r => r.Value.ToString()));
+            BoardText = string.Join("\n", sorted.Select((r, i) => $"{i + 1} {r.Name} {r.Value}"));
         }
 
         public void SetClock(float elapsedSeconds)
@@ -119,17 +166,20 @@ namespace SquishyBump.UI
                     if (drop > elapsedSeconds) { until = drop; break; }
             }
             var seconds = Mathf.Max(0, until - elapsedSeconds);
-            clock.text = $"{(ringPending ? "Ring" : "Time")} {Mathf.CeilToInt(seconds)} s";
-            clock.color = seconds <= 10 ? Color.red : Color.white;
+            var whole = Mathf.CeilToInt(seconds);
+            clock.text = $"{whole / 60:00}:{whole % 60:00}";
+            clock.color = seconds <= 10 ? Color.red : UiFactory.Teal;
         }
 
         public void SetRemaining(int alive, int total) => remaining.text = $"Fruit {alive}/{total}";
 
-        public void SetFruit(FruitDefinition definition)
+        /// <summary>Weight frame (bottom left): the fruit's avatar, class and mass. <paramref name="fruitIndex"/> picks the avatar.</summary>
+        public void SetFruit(FruitDefinition definition, int fruitIndex = 0)
         {
             fruit.text = definition == null ? "" : definition.DisplayName;
-            classBadge.text = definition == null ? "" : $"{definition.Class.name} · {definition.Class.Mass:0.#} kg";
-            badgeBackground.enabled = definition != null;
+            classBadge.text = definition == null ? "" : $"{definition.Class.name}\n{definition.Class.Mass:0.#} kg";
+            badgeBackground.gameObject.SetActive(definition != null);
+            avatar.sprite = UiFactory.Kit("avatar_" + Mathf.Abs(fruitIndex) % 6);
             if (definition != null) fruit.color = definition.Color;
         }
 

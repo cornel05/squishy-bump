@@ -12,10 +12,15 @@ namespace SquishyBump.UI.Menus
     /// </summary>
     public static class UiFactory
     {
-        // Kit palette: deep-purple ink on the mint panels.
-        public static readonly Color Ink = new(0.23f, 0.06f, 0.6f);
+        // Kit palette (Drive "Mã màu"): #410E9E ink, #FD5FB0 pink, #3ED5D0 teal.
+        public static readonly Color Ink = new(0.255f, 0.055f, 0.62f);
+        public static readonly Color Pink = new(0.992f, 0.373f, 0.69f);
+        public static readonly Color Teal = new(0.243f, 0.835f, 0.816f);
         static readonly Color Dim = new(0.45f, 0.4f, 0.6f);
-        const float SliceBorder = 3f; // kit panels are cut at 4x: divide the 180 px border down to ~60 canvas px
+        const float SliceBorder = 3f; // slice_kit panels are cut at 4x: divide the 180 px border down to ~60 canvas px
+        const float ButtonHeight = 84f;
+        // The console art's screen, in console pixels from its centre (import_uxui: 1576x770, screen 760x430).
+        static readonly Vector2 ConsoleScreenOffset = new(18, -1), ConsoleScreenSize = new(760, 430);
         static readonly System.Collections.Generic.Dictionary<string, Sprite> sprites = new();
         static Font font;
 
@@ -44,11 +49,90 @@ namespace SquishyBump.UI.Menus
             return image;
         }
 
-        public static void Slice(Image image, string spriteName)
+        /// <summary>9-sliced kit sprite. <paramref name="scale"/> 3 for the 4x slice_kit art, 1 for the 1x UX/UI art.</summary>
+        public static void Slice(Image image, string spriteName, float scale = SliceBorder)
         {
             image.sprite = Kit(spriteName);
             image.type = Image.Type.Sliced;
-            image.pixelsPerUnitMultiplier = SliceBorder;
+            image.pixelsPerUnitMultiplier = scale;
+        }
+
+        /// <summary>Kit art placed by hand (no layout): pivot = anchor, native size unless <paramref name="size"/> is given.</summary>
+        public static Image Place(Transform parent, string spriteName, Vector2 anchor, Vector2 position, Vector2? size = null)
+        {
+            var image = Child(parent, spriteName, Color.white).GetComponent<Image>();
+            image.sprite = Kit(spriteName);
+            image.raycastTarget = false;
+            var rect = (RectTransform)image.transform;
+            rect.anchorMin = rect.anchorMax = rect.pivot = anchor;
+            rect.anchoredPosition = position;
+            if (size is { } s) { rect.sizeDelta = s; image.preserveAspect = true; }
+            else if (image.sprite != null) image.SetNativeSize();
+            return image;
+        }
+
+        /// <summary>A transparent rect filling its parent: the root of a hand-placed screen.</summary>
+        public static RectTransform Layer(Transform parent, string name)
+        {
+            var rect = (RectTransform)new GameObject(name, typeof(RectTransform)).transform;
+            rect.SetParent(parent, false);
+            Stretch(rect);
+            return rect;
+        }
+
+        /// <summary>Kit art stretched over its parent (backgrounds, full-screen frames).</summary>
+        public static Image FullScreen(Transform parent, string spriteName)
+        {
+            var image = Child(parent, spriteName, Color.white).GetComponent<Image>();
+            image.sprite = Kit(spriteName);
+            image.raycastTarget = false;
+            Stretch((RectTransform)image.transform);
+            return image;
+        }
+
+        /// <summary>Round home icon at the screen's top-left corner (as in every kit mockup).</summary>
+        public static Button HomeButton(Transform screen, Action onClick)
+        {
+            var image = Place(screen, "btn_home", Vector2.up, new Vector2(40, -40));
+            image.raycastTarget = true;
+            image.gameObject.name = "Home";
+            var button = image.gameObject.AddComponent<Button>();
+            button.onClick.AddListener(() => onClick());
+            return button;
+        }
+
+        /// <summary>
+        /// Handheld-console page (Settings/Pause mockups): full-screen root with the console art centred and a home
+        /// icon top-left. Returns the root; <paramref name="content"/> is the vertical layout over the console's screen.
+        /// </summary>
+        public static RectTransform ConsolePage(Transform canvas, string name, string spriteName, Action home, out RectTransform content)
+        {
+            var root = Layer(canvas, name);
+            var console = Place(root, spriteName, new Vector2(0.5f, 0.5f), Vector2.zero);
+            var go = new GameObject("Screen", typeof(RectTransform), typeof(VerticalLayoutGroup));
+            go.transform.SetParent(console.transform, false);
+            content = (RectTransform)go.transform;
+            content.anchorMin = content.anchorMax = content.pivot = new Vector2(0.5f, 0.5f);
+            content.anchoredPosition = ConsoleScreenOffset;
+            content.sizeDelta = ConsoleScreenSize;
+            var layout = go.GetComponent<VerticalLayoutGroup>();
+            layout.padding = new RectOffset(36, 36, 28, 28);
+            layout.spacing = 14;
+            layout.childAlignment = TextAnchor.MiddleCenter;
+            layout.childControlWidth = layout.childControlHeight = true;
+            layout.childForceExpandWidth = layout.childForceExpandHeight = false;
+            HomeButton(root, home);
+            return root;
+        }
+
+        /// <summary>White text with an ink outline: readable on the console screen and over the 3D scene.</summary>
+        public static Text Outlined(Text text, float width = 2f)
+        {
+            text.color = Color.white;
+            var outline = text.gameObject.AddComponent<Outline>();
+            outline.effectColor = Ink;
+            outline.effectDistance = new Vector2(width, -width);
+            return text;
         }
 
         public static Canvas Canvas(string name, int sortingOrder)
@@ -61,6 +145,7 @@ namespace SquishyBump.UI.Menus
             var scaler = go.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920, 1080);
+            scaler.matchWidthOrHeight = 0.5f; // the kit screens are laid out for 16:9; wide or tall windows scale on both axes
             return canvas;
         }
 
@@ -84,16 +169,8 @@ namespace SquishyBump.UI.Menus
             layout.spacing = 10;
             layout.childAlignment = TextAnchor.UpperCenter;
             layout.childControlWidth = layout.childControlHeight = true;
-            layout.childForceExpandHeight = false;
+            layout.childForceExpandWidth = layout.childForceExpandHeight = false; // pills keep their art width
             return rect;
-        }
-
-        /// <summary>Page heading: the kit's banner image when `title_<text>` exists, else a big label.</summary>
-        public static void Title(Transform parent, string text, int size = 44)
-        {
-            if (Kit("title_" + Slug(text)) == null) { Label(parent, text, size); return; }
-            var icon = Icon(parent, "title_" + Slug(text), new Vector2(0, 120));
-            icon.gameObject.AddComponent<LayoutElement>().minHeight = 120;
         }
 
         public static Text Label(Transform parent, string text, int size = 34)
@@ -118,18 +195,21 @@ namespace SquishyBump.UI.Menus
             var art = Kit("btn_" + Slug(text));
             var label = Label(go.transform, text, 32);
             Stretch((RectTransform)label.transform);
+            var size = go.GetComponent<LayoutElement>();
+            size.minHeight = size.preferredHeight = ButtonHeight;
             if (art != null)
             {
                 // The kit button has its text baked in; the label stays only as an accessible name.
                 image.sprite = art;
                 image.preserveAspect = true;
                 label.enabled = false;
-                go.GetComponent<LayoutElement>().minHeight = go.GetComponent<LayoutElement>().preferredHeight = 88;
+                size.preferredWidth = ButtonHeight * art.rect.width / art.rect.height;
             }
             else
             {
-                Slice(image, "panel_box");
-                go.GetComponent<LayoutElement>().minHeight = 72;
+                // Blank kit pill with live text, stretched to fit the caption.
+                Slice(image, "btn_blank", 1f);
+                size.preferredWidth = Mathf.Max(300f, label.preferredWidth + 110f);
             }
             var button = go.GetComponent<Button>();
             button.onClick.AddListener(() => onClick());
@@ -138,10 +218,11 @@ namespace SquishyBump.UI.Menus
 
         public static Slider Slider(Transform parent, string text, float min, float max, float value, Action<float> onChange)
         {
-            Label(parent, text, 26);
+            var row = Row(parent, text);
             var go = new GameObject(text + " Slider", typeof(RectTransform), typeof(Slider), typeof(LayoutElement));
-            go.transform.SetParent(parent, false);
+            go.transform.SetParent(row, false);
             go.GetComponent<LayoutElement>().minHeight = 44;
+            go.GetComponent<LayoutElement>().flexibleWidth = 1;
             var track = Child(go.transform, "Track", Color.white);
             Slice(track.GetComponent<Image>(), "slider_track");
             track.GetComponent<Image>().pixelsPerUnitMultiplier = 160f / 44f; // keep the round caps round at 44 px
@@ -172,20 +253,14 @@ namespace SquishyBump.UI.Menus
 
         public static Toggle Toggle(Transform parent, string text, bool value, Action<bool> onChange)
         {
-            var go = new GameObject(text, typeof(RectTransform), typeof(Toggle), typeof(LayoutElement), typeof(HorizontalLayoutGroup));
-            go.transform.SetParent(parent, false);
-            go.GetComponent<LayoutElement>().minHeight = 56;
-            var row = go.GetComponent<HorizontalLayoutGroup>();
-            row.spacing = 16;
-            row.childControlWidth = row.childControlHeight = false;
-            row.childAlignment = TextAnchor.MiddleCenter;
+            var go = Row(parent, text).gameObject;
+            go.AddComponent<Toggle>();
             var box = Child(go.transform, "Box", Color.white);
             var boxImage = box.GetComponent<Image>();
             boxImage.sprite = Kit("toggle");
-            box.sizeDelta = new Vector2(97, 52);
-            var label = Label(go.transform, text, 26);
-            label.horizontalOverflow = HorizontalWrapMode.Overflow;
-            ((RectTransform)label.transform).sizeDelta = new Vector2(440, 48);
+            var boxSize = box.gameObject.AddComponent<LayoutElement>();
+            boxSize.preferredWidth = boxSize.minWidth = 97;
+            boxSize.preferredHeight = 52;
             var toggle = go.GetComponent<Toggle>();
             toggle.targetGraphic = boxImage;
             toggle.transition = Selectable.Transition.None;
@@ -201,12 +276,32 @@ namespace SquishyBump.UI.Menus
             return toggle;
         }
 
+        /// <summary>Settings row: right-aligned caption on the left, the control (added by the caller) on the right.</summary>
+        static RectTransform Row(Transform parent, string text)
+        {
+            var go = new GameObject(text, typeof(RectTransform), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
+            go.transform.SetParent(parent, false);
+            var size = go.GetComponent<LayoutElement>();
+            size.minHeight = 52;
+            size.flexibleWidth = 1;
+            var row = go.GetComponent<HorizontalLayoutGroup>();
+            row.spacing = 18;
+            row.childAlignment = TextAnchor.MiddleLeft;
+            row.childControlWidth = row.childControlHeight = true;
+            row.childForceExpandWidth = row.childForceExpandHeight = false;
+            var label = Outlined(Label(go.transform, text, 26));
+            label.alignment = TextAnchor.MiddleRight;
+            label.GetComponent<LayoutElement>().preferredWidth = Mathf.Max(320f, label.preferredWidth);
+            return (RectTransform)go.transform;
+        }
+
         public static InputField InputField(Transform parent, string value)
         {
             var go = new GameObject("Input", typeof(RectTransform), typeof(Image), typeof(InputField), typeof(LayoutElement));
             go.transform.SetParent(parent, false);
             go.GetComponent<Image>().color = new Color(1f, 1f, 1f, 0.9f);
             go.GetComponent<LayoutElement>().minHeight = 64;
+            go.GetComponent<LayoutElement>().flexibleWidth = 1;
             var text = Label(go.transform, "", 30);
             text.color = Color.black;
             text.supportRichText = false;

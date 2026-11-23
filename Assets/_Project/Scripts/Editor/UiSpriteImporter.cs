@@ -8,11 +8,15 @@ namespace SquishyBump.Editor
     {
         const string Folder = "Assets/_Project/Art/UI/";
 
-        // Left, bottom, right, top in source pixels (kit art is rendered at 4x).
+        // Left, bottom, right, top in source pixels (slice_kit art is 4x, import_uxui art is 1x).
         static Vector4? Border(string name) => name switch
         {
-            "panel_box" or "row_result" => new Vector4(180, 180, 180, 180),
+            "panel_box" => new Vector4(180, 180, 180, 180),
             "slider_track" or "slider_fill" => new Vector4(75, 0, 75, 0),
+            "row_score" => new Vector4(24, 20, 0, 12),
+            "plate" => new Vector4(24, 20, 24, 12),
+            "hud_board" => new Vector4(24, 24, 24, 24),
+            "btn_blank" => new Vector4(48, 0, 48, 0),
             _ => null,
         };
 
