@@ -1,0 +1,92 @@
+{
+  "date": "2026-11-23",
+  "renderer": "Direct3D12",
+  "fixture": "Windows Player, L1 thật; normal và packed; Wobble 0/2/4/6/8/10, freeze để chụp; không phải LAN hay playtest người ngoài",
+  "ui_source_sha256": "54d2afbbf29aa613c4d66c8b7530a12e05c01fb4d97f6030b98828bfa6df0114",
+  "files": [
+    {
+      "path": "normal-1280x720.json",
+      "sha256": "ea7d26bf46811c139e2abbbd2b486ee5ff232d14d992a3bad3eb90827f433db6"
+    },
+    {
+      "path": "normal-1280x720.png",
+      "sha256": "647b917d0f9b3f3fdcda51458dee05c2c1be9ccea4b5f0453e666f8b96d44d83"
+    },
+    {
+      "path": "normal-1440x900.json",
+      "sha256": "de2cc5178b4eded4b8796a1c5660f33cd1630f83967bbe3ba5ad949fcb25094c"
+    },
+    {
+      "path": "normal-1440x900.png",
+      "sha256": "d472721d5a8248dbcf542947f94694a6d46f80c77abb273f32a08d216a8540d6"
+    },
+    {
+      "path": "normal-1680x720.json",
+      "sha256": "c6e18d71c36a406edf4a49ff38be71778e9fd1d5b4d25c508cd4e0fc7bc90964"
+    },
+    {
+      "path": "normal-1680x720.png",
+      "sha256": "bb33bd90974c2171aba4f870de78b9d14ea38595239d34575eddbf9d35da7ecc"
+    },
+    {
+      "path": "normal-1920x1080.json",
+      "sha256": "c79e50b56fd99763ddcb2fe549949cca33ba062a992991707e3de0d3c9788ec4"
+    },
+    {
+      "path": "normal-1920x1080.png",
+      "sha256": "1d235f34c184086c8de9895fb88b94b5cac3055f9d1dc197358f6c42e2254a2e"
+    },
+    {
+      "path": "packed-1280x720.json",
+      "sha256": "d8314f0e207af6256379833649a590e99340fd2ad649a0fe031b83931a5aeae7"
+    },
+    {
+      "path": "packed-1280x720.png",
+      "sha256": "d7e1d6b21f1865bdeec46461b265eb9797d6f05415259d2d2e38e0d6c8b304e6"
+    },
+    {
+      "path": "packed-1440x900.json",
+      "sha256": "df772fdd31a714aed8515f917022a99431ff81d625e2a3adadd1da7085e54e64"
+    },
+    {
+      "path": "packed-1440x900.png",
+      "sha256": "ded61446ac54547ae46e4514082689d2b18aa02f16eb6f1d8afb44710d13e714"
+    },
+    {
+      "path": "packed-1680x720.json",
+      "sha256": "93f756ec45cf9b1bd2ec81371ee84dee8b9ae1a9c5f027c37973b9adba8b60b8"
+    },
+    {
+      "path": "packed-1680x720.png",
+      "sha256": "cdfdfa5af9e94301133ac3739ca99ac0b85497ed552499877ffc54576038761c"
+    },
+    {
+      "path": "packed-1920x1080.json",
+      "sha256": "4aec6790006d5bab54cdc22f69f402b6bdaa8384e286b086c9b8d51aa4d4a009"
+    },
+    {
+      "path": "packed-1920x1080.png",
+      "sha256": "ca62aeebd6a4a1ae0433e22f376c52c055e317ab6cf34ddbf290754eb65c657d"
+    },
+    {
+      "path": "before-other-body-1920x1080.png",
+      "sha256": "2107742be867cda82f7a96011d409072e659909d4647bd91751559f879fb1c30"
+    },
+    {
+      "path": "windows-player.xml",
+      "sha256": "dd2408712612252b028d8a91ffca405c5e83fc30510336feb710683aab0d539f"
+    },
+    {
+      "path": "before-other-body.xml",
+      "sha256": "f67356ec0e008eb8a70204e3176654af5508069878e4d8dc268dfce215ea41ae"
+    },
+    {
+      "path": "before-own-body.xml",
+      "sha256": "7252bf05204a3b6db711c7e8ad323e91099abfbc0bb6ba25841bb245a9b5490a"
+    },
+    {
+      "path": "before-tag-collision.xml",
+      "sha256": "bd95ddca88b296dcfb02c20238e512cd7f53e6ef2cdbf66a0861371fde571d36"
+    }
+  ]
+}

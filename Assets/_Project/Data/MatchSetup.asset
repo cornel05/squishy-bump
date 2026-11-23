@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: MatchSetup
   m_EditorClassIdentifier: SquishyBump.App::SquishyBump.App.MatchSetup
   balance: {fileID: 11400000, guid: 89051a27db894734292c5b09946d54f0, type: 2}
+  defaultBotProfile: {fileID: 11400000, guid: de6ceeea012bab5409038139e19ebd34, type: 2}
   presentation: {fileID: 11400000, guid: 525d71a458fbbf74a983cec1d1621525, type: 2}
   levels:
   - {fileID: 11400000, guid: 2a57594b5aef51b44bfbc338bb70f9fd, type: 2}

@@ -65,6 +65,9 @@ namespace SquishyBump.Tests.PlayMode
             yield return SceneManager.LoadSceneAsync($"{Root}/Scenes/Levels/L1.unity", LoadSceneMode.Additive);
             var app = Object.FindAnyObjectByType<GameplayBootstrap>();
             var bounds = Object.FindAnyObjectByType<TrainingRingBounds>();
+            // A saved Rank rule would turn this ring-out into a respawn: pin Survival, keep the real save untouched.
+            app.Store = new LocalSave(System.IO.Path.Combine(Application.temporaryCachePath, "sb-tests"));
+            app.Settings.Rule = MatchRule.Survival;
 
             hostObject = new GameObject("MatchHost");
             hostObject.SetActive(false);

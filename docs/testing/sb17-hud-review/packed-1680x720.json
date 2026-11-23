@@ -1,0 +1,12 @@
+{
+    "capture": "packed-1680x720",
+    "graphics": "Direct3D12",
+    "width": 1680,
+    "height": 720,
+    "visibleTags": 6,
+    "fixedHudClear": true,
+    "ownBodyOverlaps": [],
+    "labelOverlaps": [],
+    "hiddenTags": [],
+    "otherBodyOverlaps": []
+}

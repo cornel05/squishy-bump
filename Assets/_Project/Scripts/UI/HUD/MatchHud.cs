@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using SquishyBump.Core;
 using SquishyBump.UI.Menus;
 using UnityEngine;
@@ -15,9 +16,14 @@ namespace SquishyBump.UI
             public float Height;
             public Text Label;
             public bool Alive;
+            public Renderer[] Body;
+            public ushort Id;
+            public Vector2 ScreenPoint;
         }
 
         private readonly Dictionary<ushort, Tag> tags = new();
+        private readonly List<Tag> layout = new(6);
+        private readonly List<Rect> occupied = new(6);
         private Canvas canvas;
         private Text clock, remaining, fruit, classBadge, dash;
         private Image badgeBackground;
@@ -26,6 +32,7 @@ namespace SquishyBump.UI
         private Texture2D ringTexture;
         private BalanceProfile balance;
         private int level;
+        private const float TagGapPixels = 6;
 
         public string ClockText => clock.text;
         public Color ClockColor => clock.color;
@@ -137,8 +144,12 @@ namespace SquishyBump.UI
         public void Register(ushort id, Transform target, float height)
         {
             if (tags.ContainsKey(id)) return;
-            tags.Add(id, new Tag { Target = target, Height = height,
-                Label = Label($"Wobble {id}", Vector2.one * 0.5f, Vector2.zero, new Vector2(110, 50), 30) });
+            var label = Label($"Wobble {id}", Vector2.one * 0.5f, Vector2.zero, new Vector2(110, 50), 30);
+            // Điểm bám là đáy nhãn: toàn bộ chữ nằm phía trên hình quả, không cắt qua đầu.
+            label.rectTransform.pivot = new Vector2(0.5f, 0);
+            tags.Add(id, new Tag { Id = id, Target = target, Height = height, Label = label,
+                Body = target.GetComponentsInChildren<Renderer>().Where(r => r.enabled &&
+                    (r is MeshRenderer || r is SkinnedMeshRenderer)).ToArray() });
         }
 
         public void SetWobble(ushort id, int hits, bool alive)
@@ -154,17 +165,85 @@ namespace SquishyBump.UI
             var camera = Camera.main;
             if (camera == null) return;
             var parent = (RectTransform)canvas.transform;
+            layout.Clear(); occupied.Clear();
             foreach (var tag in tags.Values)
             {
                 var point = tag.Target != null ? camera.WorldToScreenPoint(tag.Target.position + Vector3.up * tag.Height) : Vector3.back;
-                var visible = tag.Alive && tag.Target != null && point.z > 0 &&
-                    point.x >= 0 && point.x <= Screen.width && point.y >= 0 && point.y <= Screen.height;
+                var bodyArea = tag.Alive && tag.Target != null && tag.Target.gameObject.activeInHierarchy ?
+                    CollectBodyAreas(camera, tag.Body) : null;
+                if (bodyArea.HasValue)
+                    point = new Vector3(bodyArea.Value.center.x,
+                        bodyArea.Value.yMax + TagGapPixels * canvas.scaleFactor, 1);
+                var size = tag.Label.rectTransform.rect.size * canvas.scaleFactor;
+                var visible = tag.Alive && tag.Target != null && tag.Target.gameObject.activeInHierarchy && point.z > 0 &&
+                    point.x >= size.x * 0.5f && point.x <= Screen.width - size.x * 0.5f &&
+                    point.y >= 0 && point.y + size.y <= Screen.height;
                 tag.Label.gameObject.SetActive(visible);
                 if (!visible) continue;
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, point, null, out var local);
+                tag.ScreenPoint = point;
+                layout.Add(tag);
+            }
+            // Xếp từ thấp lên cao: chỉ nâng nhãn bị chạm, không đưa chữ xuống che quả.
+            layout.Sort((a, b) =>
+            {
+                var vertical = a.ScreenPoint.y.CompareTo(b.ScreenPoint.y);
+                return vertical != 0 ? vertical : a.Id.CompareTo(b.Id);
+            });
+            foreach (var tag in layout)
+            {
+                var stroke = 4 * canvas.scaleFactor; // Outline 2 px mỗi phía, theo reference canvas.
+                var width = tag.Label.preferredWidth * canvas.scaleFactor + stroke;
+                var height = tag.Label.preferredHeight * canvas.scaleFactor + stroke;
+                var centerY = tag.ScreenPoint.y + tag.Label.rectTransform.rect.height * canvas.scaleFactor * 0.5f;
+                var area = new Rect(tag.ScreenPoint.x - width * 0.5f, centerY - height * 0.5f, width, height);
+                for (var attempt = 0; attempt <= occupied.Count; attempt++)
+                {
+                    var moved = false;
+                    foreach (var other in occupied)
+                    {
+                        if (!area.Overlaps(other)) continue;
+                        var lift = other.yMax + TagGapPixels * canvas.scaleFactor - area.yMin;
+                        tag.ScreenPoint.y += lift; area.y += lift; moved = true; break;
+                    }
+                    if (!moved) break;
+                }
+                if (tag.ScreenPoint.y + tag.Label.rectTransform.rect.height * canvas.scaleFactor > Screen.height)
+                { tag.Label.gameObject.SetActive(false); continue; }
+                occupied.Add(area);
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, tag.ScreenPoint, null, out var local);
                 // Local point dùng gốc giữa canvas; các tag được đặt bằng localPosition.
                 tag.Label.rectTransform.localPosition = local;
             }
+        }
+
+        private Rect? CollectBodyAreas(Camera camera, Renderer[] renderers)
+        {
+            Rect? bodyArea = null;
+            foreach (var renderer in renderers)
+            {
+                if (renderer == null || !renderer.gameObject.activeInHierarchy) continue;
+                if (camera.WorldToScreenPoint(renderer.bounds.center).z <= 0) continue;
+                var bounds = renderer.localBounds;
+                var min = Vector2.one * float.PositiveInfinity;
+                var max = Vector2.one * float.NegativeInfinity;
+                for (var i = 0; i < 8; i++)
+                {
+                    var corner = bounds.center + Vector3.Scale(bounds.extents,
+                        new Vector3((i & 1) == 0 ? -1 : 1, (i & 2) == 0 ? -1 : 1, (i & 4) == 0 ? -1 : 1));
+                    var screen = camera.WorldToScreenPoint(renderer.localToWorldMatrix.MultiplyPoint3x4(corner));
+                    if (screen.z <= 0) continue;
+                    min = Vector2.Min(min, screen); max = Vector2.Max(max, screen);
+                }
+                if (float.IsPositiveInfinity(min.x)) continue;
+                var area = Rect.MinMaxRect(Mathf.Max(0, min.x), Mathf.Max(0, min.y),
+                    Mathf.Min(Screen.width, max.x), Mathf.Min(Screen.height, max.y));
+                if (area.width <= 0 || area.height <= 0) continue;
+                occupied.Add(area);
+                bodyArea = bodyArea.HasValue ? Rect.MinMaxRect(
+                    Mathf.Min(bodyArea.Value.xMin, area.xMin), Mathf.Min(bodyArea.Value.yMin, area.yMin),
+                    Mathf.Max(bodyArea.Value.xMax, area.xMax), Mathf.Max(bodyArea.Value.yMax, area.yMax)) : area;
+            }
+            return bodyArea;
         }
 
         private void OnDestroy()

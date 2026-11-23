@@ -13,6 +13,7 @@
         "SquishyBump.UI",
         "UnityEngine.UI",
         "SquishyBump.App",
+        "SquishyBump.AI",
         "Unity.Netcode.Runtime"
     ],
     "includePlatforms": [],
