@@ -24,7 +24,7 @@ namespace SquishyBump.UI.Menus
             UiFactory.Label(root, pausesGame ? "Paused" : "Menu (match continues)", 44);
             UiFactory.Button(root, "Resume", () => SetOpen(false));
             UiFactory.Button(root, "Settings", () => { root.gameObject.SetActive(false); options.gameObject.SetActive(true); });
-            UiFactory.Button(root, "Leave to main menu", () => LeaveRequested?.Invoke());
+            UiFactory.Button(root, "Exit Game", () => LeaveRequested?.Invoke());
             options = MainMenu.BuildSettings(canvas, settings, () => { options.gameObject.SetActive(false); root.gameObject.SetActive(true); });
             SetOpen(false);
         }

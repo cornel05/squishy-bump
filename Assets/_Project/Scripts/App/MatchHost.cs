@@ -54,6 +54,7 @@ namespace SquishyBump.App
         private FighterPhysicsAdapter fighterPhysics;
         private uint goTick;
         private MatchOverlay overlay;
+        private System.Action leaveMatch;
         private float introSeconds, bannerSeconds, finalWarningSeconds;
         private bool finalWarningShown;
         private uint? introStartTick;
@@ -104,6 +105,7 @@ namespace SquishyBump.App
             pausesGame = singlePlayer;
             pause.OpenChanged += OnPauseChanged;
             pause.LeaveRequested += leave;
+            leaveMatch = leave;
             Cursor.lockState = CursorLockMode.Locked;
         }
 
@@ -295,6 +297,9 @@ namespace SquishyBump.App
                 finalWarningShown = true;
                 overlay.ShowBanner($"{finalWarningSeconds:0} seconds left!", bannerSeconds);
             }
+            // HUD for the host's local fighter (id 0); display only.
+            if (overlay != null && Started && Director != null)
+                overlay.ShowHud(Director.Lives(0), Director.Rule == MatchRule.Rank ? balance.Lives : 1);
         }
 
         private void FixedUpdate() => clientView?.FixedUpdate();
@@ -455,7 +460,13 @@ namespace SquishyBump.App
             if (overlay == null) return;
             if (e.Kind == MatchEventKind.Countdown)
                 overlay.ShowBanner(e.Value == 0 ? "GO!" : e.Value.ToString(), 1f);
-            if (e.Kind == MatchEventKind.MatchResult) overlay.ShowResult(e.Standings, FighterLabel);
+            if (e.Kind == MatchEventKind.MatchResult) overlay.ShowResult(e.Standings, FighterLabel, FighterFruit, leaveMatch);
+        }
+
+        private int FighterFruit(ulong id)
+        {
+            var hostFighter = fighters.FirstOrDefault(f => f.Id == id);
+            return hostFighter != null ? hostFighter.Fruit : (int)(id % 6);
         }
 
         private string FighterLabel(ulong id)
