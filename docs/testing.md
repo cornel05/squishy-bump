@@ -497,3 +497,80 @@ thái các test đó. PR tiếp tục draft chờ cornel05 review theo yêu cầ
 
 Release Windows x64 trên nền này: `tools/build-windows.ps1` → **BUILD: PASS**,
 101 MB, 0 errors, 48,85 s. `python tools/check_repo.py` → PASS (0 problems).
+# SB-25 nối tiếp PR #95 — tiến độ 21/11/2026, chưa nghiệm thu lobby
+
+Nhánh `feat/SB-25-3d-lobby` fast-forward lên `ea46852` (PR #95 đang mở) để dùng scene
+và LobbyRoom đã có. Bằng chứng 169 EditMode/36 PlayMode của PR #95 là lượt đồng đội
+ghi, không phải kết quả của thay đổi nối tiếp này.
+
+Source mới: Core LobbyState bất biến/ILobbyChannel; LobbyCodec tối đa 73 byte cho
+6 người, kiểm tra version/length/duplicate ID/fruit/ready; LobbySync reliable NGO,
+chỉ nhận state từ host và chỉ nhận ready của sender thật. LobbyCoordinator nối
+membership, clock, lựa chọn từ adapter host và countdown; không broadcast state
+mỗi tick khi idle, countdown cập nhật từng giây. Bootstrap poll transport và lưu
+lựa chọn qua đổi scene. LobbyController nối motor/input/snapshot cho host/client,
+kiểm tra pick volume theo vị trí host; LobbyPanel đặt board world-space và quầy host.
+LevelLauncher đưa Single/Host qua Lobby, Single vào L1, LAN roster chỉ có người thật
+theo fruit đã chọn. Rule/Lk được giữ trong LobbySelection; luồng các trận tiếp theo
+còn phải tích hợp SB-26/SB-29. Không có đường Start match bỏ qua ready từ menu cũ.
+
+Roslyn compile toàn bộ source module/Editor/test đạt; 10 ca assertion thuần ngoài
+Unity đạt: codec 1/2/6 người, payload sai, bất biến, ready/countdown/leave, coordinator
+host/client và cleanup. Chưa phải Unity test hoặc bằng chứng lobby đi lại được.
+Đã bổ sung LobbyPlayTests cho hai peer loopback: chọn bằng vị trí trong volume,
+từ chối trái đã có chủ, ready qua NGO, countdown rồi roster hai người đúng trái.
+MenuFlowTests đổi theo menu → lobby → chọn trái → L1. Các ca Native này chưa chạy.
+
+`tools/verify.ps1 -PlayMode` FAIL: Unity EditMode và PlayMode exit198 do license,
+không có XML. Lệnh ProjectScaffold.Run mới (`TestResults/SB25LiveScaffold.log`) cũng
+exit198; LobbyProfile.asset/gán MatchSetup chưa sinh. Repo check thiếu 9 meta mới.
+Diff sạch. Chưa commit/push/PR nối tiếp; các tiêu chí issue #23 giữ mở. Cần Editor
+import/scaffold, verify/build và kiểm tra trực quan đi lại/UI/input/shelf locks,
+LAN riêng máy và scene-load barrier của SB-24. Không cắt thành lobby 2D.
+Lượt verify sau runtime chọn live Editor vì lockfile còn sau startup lỗi rồi dừng
+do không tìm thấy CLI `unity`; vẫn không có XML. Không sửa cache/lock để vượt gate.
+
+## SB-25 — Native lobby 3D, 21/11/2026
+
+Nhánh `feat/SB-25-3d-lobby`, base `ea46852` của PR #95. Unity 6000.3.28f1 đã chạy
+`ProjectScaffold.ConfigureLobbyDefaults`: tạo LobbyProfile, gán walking class và
+MatchSetup bằng Editor API, sinh đủ meta. Giữ greybox 3D, không chọn phương án cắt 2D.
+
+`tools/verify.ps1 -PlayMode` cuối đạt **VERIFY: PASS**, **179 EditMode/37 PlayMode**,
+0 failed/skipped, 0 warning C#. `python tools/check_repo.py`: PASS (0 problems);
+`git diff --check`: sạch. XML/log tại `TestResults/EditMode.*`, `TestResults/PlayMode.*`.
+
+- Native đã bắt lỗi: so `FastBufferReader.Length` khiến LobbySync loại gói hợp lệ
+  vì NGO đã đọc header tên message. `LobbyDiagnostic.xml` ghi timeout tại host countdown;
+  sửa dùng số byte còn lại (`Length - Position`). Lỗi tham chiếu khi owner bị hủy trong
+  teardown cũng đã được tái hiện và sửa. Lượt đỏ đầu giữ trong `LobbyFailureBeforeFix.*`.
+- `LobbyWireFix.xml` đạt sau sửa, rồi ca cuối
+  `LanLobby_HostVolumesEnforceExclusiveClaims_ReadyStartsTwoHumanRoster` đạt **4,023434 s**:
+  host vào scene Lobby; client NGO loopback nhận info; gửi InputCommand đi phải rồi
+  dừng, avatar host dịch ngang >0,15 m qua PlayerMotor; chọn bằng vị trí trong volume,
+  từ chối kệ đã có chủ và nhãn kệ hiện "ĐÃ CHỌN"; đổi rule/Lk chỉ khi host gần quầy;
+  info chứa trái/ready/IP; ready qua NGO, countdown rồi L1 với đúng hai ID/trái đã chọn.
+  Sau khi kiểm tra countdown đang mở, fixture dùng timeScale 4 để rút ngắn thời gian
+  chờ; policy Native kiểm tra đủ 300 tick = 5 giây ở 60 Hz. Không có gói hợp lệ bị loại.
+- `MenuFlowTests` đạt menu → lobby → chọn trái → L1 → pause → leave. Codec/coordinator
+  kiểm tra state 1/2/6 người, dữ liệu sai, quyền host, stale revision, leave/cancel và
+  countdown chỉ mở khi tất cả ready.
+
+Chưa kiểm tra trực quan glyph/layout từ camera trong Windows player, LAN các PC riêng
+hoặc scene-load barrier tích hợp SB-24. Tiến trình session nhiều màn/D1 bots thuộc
+SB-26/SB-29/SB-18 khi tích hợp. Không nâng T06/T07 hoặc bài LAN nhiều máy từ loopback.
+
+`tools/build-windows.ps1` đạt **BUILD: PASS**, Windows x64 v0.1.0, **101 MB**, 0 lỗi,
+2 phút 25 giây. Build tại `Builds/Windows/SquishyBump.exe`. SHA-256 assembly trong
+`SquishyBump_Data/Managed/`: App.dll
+`C033BC93CEDF1A179D7F341EE30D46244CE1C57D6C0E10432C3B97A3A8372F88`, UI.dll
+`B939A2A79D66B37A6DA6FA008D91D1C51551DCBC8DE2D09C5EB79C915EDB7F6B`.
+
+
+SB-17 kiểm chứng cuối sau tích hợp main **c534179** (lobby PR #100), protocol
+**LAN-10** tránh trùng LAN-9 lobby: `tools/verify.ps1 -PlayMode` → **VERIFY: PASS,
+252 EditMode + 61 PlayMode**, 0 lỗi/cảnh báo compile. Một skip Windows-only có
+chủ đích; chạy riêng Windows Player Direct3D12 đạt **1/1**, cả 8 ảnh/JSON mới đã xem.
+`tools/build-windows.ps1` → **BUILD: PASS, 101 MB, 0 errors, 51,49 s**.
+[XML cuối và manifest](testing/sb17-hud-review/manifest.json). Repo check và diff sạch.
+Không nâng T05/T07/LAN từ fixture hình ảnh này. Giữ draft chờ cornel05 review.

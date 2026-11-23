@@ -19,6 +19,8 @@ Phân công hiện hành nằm trong `AGENTS.md`; tác giả và các lượt s�
 | Giao diện | `UI/Menus/UiFactory.cs` tạo panel và chữ bằng uGUI | Font thực tế là `Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf")` từ Unity. Không có tệp Baloo 2/Fredoka trong Assets tại mốc kiểm kê. |
 | HUD SB-17 | `UI/HUD/MatchHud.cs`, phiên bản 21/11/2026 | Codex hỗ trợ C# sinh vòng cooldown Texture2D 64 × 64, huy hiệu class bằng uGUI và chữ LegacyRuntime. Không dùng ảnh tải ngoài hoặc mô hình sinh ảnh; nguồn yêu cầu là issue #15/GDD 11.2, không dùng seed. |
 | Kết quả SB-24 | `UI/Menus/MatchOverlay.cs`, 21/11/2026 | Codex hỗ trợ code trình bày standings host bằng uGUI/LegacyRuntime; không thêm ảnh, font tải ngoài hoặc model sinh ảnh. Yêu cầu: issue #22, GDD 10.4/11.3; không dùng seed. |
+
+| Lobby runtime SB-25 | `App/LobbyController.cs`, `UI/LobbyPanel.cs`, `Data/LobbyProfile.asset` · 21/11/2026 | Codex hỗ trợ C#/Unity primitive sphere/material URP cho avatar trung tính, uGUI/LegacyRuntime cho info/controls, nhãn khóa kệ và quầy host. Avatar đã chọn/display dùng lại sáu prefab/GLB nêu trên. Không có ảnh AI, model/font tải ngoài hoặc seed hình học; nguồn yêu cầu là issue #23, GDD 8.5/11.1. |
 | Nhạc | Không tìm thấy clip nhạc trong `Assets/` | Chưa nhập nhạc. Không gán tác giả/giấy phép cho nội dung chưa có. |
 
 Danh sách từng tệp, hash SHA-256, nguồn, vị trí dùng và giới hạn thông tin nằm tại

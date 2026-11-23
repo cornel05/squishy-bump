@@ -10,7 +10,7 @@
     },
     {
       "path": "normal-1280x720.png",
-      "sha256": "647b917d0f9b3f3fdcda51458dee05c2c1be9ccea4b5f0453e666f8b96d44d83"
+      "sha256": "7b095ca91e0ec9506db69b6fd5edde27c45189cdb44589bb211fde46f0236c6b"
     },
     {
       "path": "normal-1440x900.json",
@@ -18,7 +18,7 @@
     },
     {
       "path": "normal-1440x900.png",
-      "sha256": "d472721d5a8248dbcf542947f94694a6d46f80c77abb273f32a08d216a8540d6"
+      "sha256": "85f24d0da3208d2db6a6386fd01e04c72209cf4e1feeecce5b84979cba7daa11"
     },
     {
       "path": "normal-1680x720.json",
@@ -26,7 +26,7 @@
     },
     {
       "path": "normal-1680x720.png",
-      "sha256": "bb33bd90974c2171aba4f870de78b9d14ea38595239d34575eddbf9d35da7ecc"
+      "sha256": "ccb74b399fbdadd4772fc0fc31ea0265f39bb960f37a8550678c2dae40f6550d"
     },
     {
       "path": "normal-1920x1080.json",
@@ -34,7 +34,7 @@
     },
     {
       "path": "normal-1920x1080.png",
-      "sha256": "1d235f34c184086c8de9895fb88b94b5cac3055f9d1dc197358f6c42e2254a2e"
+      "sha256": "512f9bce273d59a7f9da37831e87f363f49a1c8ae467350c423e64151f6f8abd"
     },
     {
       "path": "packed-1280x720.json",
@@ -42,7 +42,7 @@
     },
     {
       "path": "packed-1280x720.png",
-      "sha256": "d7e1d6b21f1865bdeec46461b265eb9797d6f05415259d2d2e38e0d6c8b304e6"
+      "sha256": "64fc46f4cb827446738738dab28df6b80386852ec5ebd9775a9dc862d518541c"
     },
     {
       "path": "packed-1440x900.json",
@@ -50,7 +50,7 @@
     },
     {
       "path": "packed-1440x900.png",
-      "sha256": "ded61446ac54547ae46e4514082689d2b18aa02f16eb6f1d8afb44710d13e714"
+      "sha256": "6c1834f25c8204ba42e97250e510e139be1131907498201468bc1adbaf5497a7"
     },
     {
       "path": "packed-1680x720.json",
@@ -58,7 +58,7 @@
     },
     {
       "path": "packed-1680x720.png",
-      "sha256": "cdfdfa5af9e94301133ac3739ca99ac0b85497ed552499877ffc54576038761c"
+      "sha256": "80a7026233628d392a65551a21dba42be368cd8cc08dc103f95bf59a5a96ffb9"
     },
     {
       "path": "packed-1920x1080.json",
@@ -66,7 +66,7 @@
     },
     {
       "path": "packed-1920x1080.png",
-      "sha256": "ca62aeebd6a4a1ae0433e22f376c52c055e317ab6cf34ddbf290754eb65c657d"
+      "sha256": "7d7e487dbe8e8421a028984b1268bf9a2cc94f6711a687139dc397cd0cdd3516"
     },
     {
       "path": "before-other-body-1920x1080.png",
@@ -74,19 +74,25 @@
     },
     {
       "path": "windows-player.xml",
-      "sha256": "dd2408712612252b028d8a91ffca405c5e83fc30510336feb710683aab0d539f"
+      "sha256": "cbb4c92d900a10f5c92f6ac1a2f07f3db98b26c6d87c92b18db6313b133a040b"
     },
     {
       "path": "before-other-body.xml",
-      "sha256": "f67356ec0e008eb8a70204e3176654af5508069878e4d8dc268dfce215ea41ae"
+      "sha256": "0e4ae4ebfa7f7bbf114ce0ecbaec67973c75f550edc05f3894186d0d83e42d2d"
     },
     {
       "path": "before-own-body.xml",
-      "sha256": "7252bf05204a3b6db711c7e8ad323e91099abfbc0bb6ba25841bb245a9b5490a"
+      "sha256": "00faa08da4786ec04de421a3112bf20debbb8d9efecaf4cbf1273ad5d9ba3f41"
     },
     {
       "path": "before-tag-collision.xml",
-      "sha256": "bd95ddca88b296dcfb02c20238e512cd7f53e6ef2cdbf66a0861371fde571d36"
+      "sha256": "44b02498993d81e8e218135df3186878639f8cd82601311cadf16d9dada9cb55"
+    },
+    {
+      "path": "verify-results.json",
+      "sha256": "b369fa585416d2c245d7ab5e68a901375aaa8befd61a6f08d73213a34354935f"
     }
-  ]
+  ],
+  "base": "c534179",
+  "protocol": "SquishyBump-LAN-10"
 }

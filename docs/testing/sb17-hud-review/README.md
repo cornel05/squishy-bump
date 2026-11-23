@@ -68,3 +68,10 @@ bằng chứng Windows player. Bộ verify toàn dự án và release build ghi 
 Đây là fixture hình ảnh có kiểm soát trên L1, không phải một lượt chơi tay liên tục,
 LAN nhiều PC, T07 đầy đủ hoặc playtest người ngoài. Giữ PR draft để cornel05 đối chiếu
 ảnh và review; chưa merge hay tuyên bố issue hoàn tất theo Definition of Done.
+
+
+Bộ cuối trên nền main c534179, protocol LAN-10: **252 EditMode + 61 PlayMode**
+đạt, 0 lỗi/cảnh báo compile; 1 skip Windows-only đã chạy riêng đạt 1/1. Từng ca và hash XML gốc:
+[verify-results.json](verify-results.json). Release Windows x64 **101 MB,
+0 errors, 51,49 s**, BUILD: PASS. Toàn bộ ảnh/JSON/XML Windows trong thư mục là
+lượt chạy lại sau tích hợp lobby; nguồn MatchHud không đổi giữa hai lượt.
