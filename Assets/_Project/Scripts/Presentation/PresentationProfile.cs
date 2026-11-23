@@ -13,6 +13,18 @@ namespace SquishyBump.Presentation
         [Tooltip("Downward speed, m/s, above which stopping counts as a landing.")]
         [SerializeField] private float landingSpeed;
 
+        [Header("Upright movement (animals)")]
+        [Tooltip("On: the Body stays upright, faces the velocity and leans; off: it rolls like a ball.")]
+        [SerializeField] private bool upright;
+        [Tooltip("Yaw turn rate toward the movement direction, degrees per second.")]
+        [SerializeField] private float turnDegreesPerSecond;
+        [Tooltip("Forward lean at full speed, degrees.")]
+        [SerializeField] private float leanMaxDegrees;
+        [Tooltip("Horizontal speed (m/s) that gives the full lean.")]
+        [SerializeField] private float leanFullSpeed;
+        [Tooltip("Below this horizontal speed (m/s) the Body keeps its facing.")]
+        [SerializeField] private float faceMinSpeed;
+
         [Header("Camera")]
         [SerializeField] private float cameraDistance;
         [SerializeField] private float pitchMinDegrees;
@@ -53,6 +65,11 @@ namespace SquishyBump.Presentation
         public Vector2 SquashScale => squashScale;
         public float SquashSeconds => squashSeconds;
         public float LandingSpeed => landingSpeed;
+        public bool Upright => upright;
+        public float TurnDegreesPerSecond => turnDegreesPerSecond;
+        public float LeanMaxDegrees => leanMaxDegrees;
+        public float LeanFullSpeed => leanFullSpeed;
+        public float FaceMinSpeed => faceMinSpeed;
         public float CameraDistance => cameraDistance;
         public float PitchMinDegrees => pitchMinDegrees;
         public float PitchMaxDegrees => pitchMaxDegrees;

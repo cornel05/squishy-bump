@@ -20,7 +20,7 @@ namespace SquishyBump.Editor
     {
         const string Root = "Assets/_Project";
         const string Scene = Root + "/Scenes/Sandbox/Test_Duy.unity";
-        static readonly string[] Roster = { "Apple", "Watermelon", "Blueberry", "Pineapple", "Peach", "Mangosteen" };
+        static readonly string[] Roster = { "Cat", "Bear", "Frog", "Pig", "Chick", "Penguin" };
 
         [MenuItem("Squishy Bump/Build Duy Sandbox (L1 host loop)")]
         public static void BuildDuy()

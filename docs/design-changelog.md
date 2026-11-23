@@ -51,3 +51,5 @@ font Baloo 2/VI) là khoảng thiếu triển khai, không tự coi là quyết 
 hoàn thành feature từ trạng thái issue/PR đơn thuần. Hồ sơ này cần đối chiếu tiếp khi main thay đổi.
 
 **D38 · 23/11/2026** · Survival LAN giữ ít nhất hai người trước màn cuối do host chọn. Nếu đồng hạng cắt ngang ngưỡng loại, đấu lại cùng màn, roster đủ điều kiện, trái và seed. Quy tắc này áp dụng cả khi hòa hạng nhất ở màn cuối. · Scope: GDD 3.5, 3.6, 14.3 T18 · Issue: #106
+
+**D39 · 23/11/2026** · 6 fruit fighters replaced by 6 animals (Bear, Pig, Cat, Penguin, Chick, Frog; same slots and classes) and the lobby becomes a claw machine; fighters stay upright, face movement and squash instead of rolling. GDD text update pending until the MVP works. Reason: team delivered new character and lobby art. · Scope: GDD 2, 6.2, 12 · Issue: #113

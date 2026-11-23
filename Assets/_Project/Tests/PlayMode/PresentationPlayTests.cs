@@ -35,36 +35,32 @@ namespace SquishyBump.Tests.PlayMode
             floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
             floor.transform.localScale = new Vector3(60f, 1f, 60f);
             floor.transform.position = new Vector3(0f, -0.5f, 0f);
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Fighters/Apple.prefab");
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Fighters/Cat.prefab");
             fighter = Object.Instantiate(prefab, position, Quaternion.identity);
             return fighter.GetComponent<PlayerMotor>();
         }
 
         [UnityTest]
-        public IEnumerator Rolling_TurnsBodyButNotCollider()
+        public IEnumerator Upright_FacesVelocityWithoutRolling()
         {
             var motor = SpawnFighter(new Vector3(0f, 0.5f, 0f));
             var roll = fighter.GetComponentInChildren<RollVisual>();
             Assert.That(roll, Is.Not.Null);
-            Assert.That(roll.Body.GetComponent<MeshRenderer>(), Is.Not.Null, "mesh lives on the rolling Body");
-            var start = roll.Body.rotation;
+            Assert.That(Profile.Upright, Is.True);
 
-            var previous = start;
-            var minAxisX = 1f;
-            for (var i = 0; i < 40; i++)
+            // Run +x: the body must turn from +z to face +x.
+            for (var i = 0; i < 90; i++)
             {
                 yield return new WaitForFixedUpdate();
-                motor.Step(new InputCommand((uint)i, Vector2.up, false, false, 0f), Time.fixedDeltaTime);
+                motor.Step(new InputCommand((uint)i, Vector2.right, false, false, 0f), Time.fixedDeltaTime);
                 yield return null;
-                // Moving +z rolls about +x: every frame's turn has that axis.
-                (roll.Body.rotation * Quaternion.Inverse(previous)).ToAngleAxis(out var angle, out var axis);
-                if (angle > 0.01f && angle < 180f) minAxisX = Mathf.Min(minAxisX, axis.x);
-                previous = roll.Body.rotation;
             }
 
+            var facing = roll.Body.rotation * Vector3.forward;
+            var flatFacing = new Vector3(facing.x, 0f, facing.z).normalized;
+            Assert.That(Vector3.Angle(flatFacing, Vector3.right), Is.LessThan(10f), "faces the direction of movement");
+            Assert.That(Vector3.Dot(roll.Body.rotation * Vector3.up, Vector3.up), Is.GreaterThan(0.9f), "no roll: still upright");
             Assert.That(fighter.transform.rotation, Is.EqualTo(Quaternion.identity), "collider never rotates");
-            Assert.That(Quaternion.Angle(start, roll.Body.rotation), Is.GreaterThan(10f));
-            Assert.That(minAxisX, Is.GreaterThan(0.99f));
         }
 
         [UnityTest]

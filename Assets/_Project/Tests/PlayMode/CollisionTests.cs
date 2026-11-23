@@ -52,8 +52,8 @@ namespace SquishyBump.Tests.PlayMode
         [UnityTest]
         public IEnumerator HeadOn_KnownSpeeds_MatchesFormulaWithinTwoPercent()
         {
-            var a = Spawn(1, "Apple", 0f, 5f);
-            var b = Spawn(2, "Mangosteen", 0.9f, -3f);
+            var a = Spawn(1, "Cat", 0f, 5f);
+            var b = Spawn(2, "Penguin", 0.9f, -3f);
             var hits = new List<FighterHit>();
             resolver.Hit += hits.Add;
             yield return null;
@@ -71,8 +71,8 @@ namespace SquishyBump.Tests.PlayMode
         [UnityTest]
         public IEnumerator Hit_StunsForBasePlusWobbleAndIgnoresInput()
         {
-            var a = Spawn(1, "Apple", 0f, 5f);
-            Spawn(2, "Mangosteen", 0.9f, -3f);
+            var a = Spawn(1, "Cat", 0f, 5f);
+            Spawn(2, "Penguin", 0.9f, -3f);
             var motor = a.GetComponent<PlayerMotor>();
             yield return null;
 
@@ -91,8 +91,8 @@ namespace SquishyBump.Tests.PlayMode
         [UnityTest]
         public IEnumerator OverlappingFighters_AreNotSeparatedByPhysX()
         {
-            var a = Spawn(1, "Apple", 0f, 0f);
-            var b = Spawn(2, "Mangosteen", 0.5f, 0f);
+            var a = Spawn(1, "Cat", 0f, 0f);
+            var b = Spawn(2, "Penguin", 0.5f, 0f);
 
             for (var i = 0; i < 10; i++) yield return new WaitForFixedUpdate();
 
@@ -104,7 +104,7 @@ namespace SquishyBump.Tests.PlayMode
         [UnityTest]
         public IEnumerator Wobble_DecaysEverySixSecondsAndIsCapped()
         {
-            Spawn(1, "Apple", 0f, 0f);
+            Spawn(1, "Cat", 0f, 0f);
             var changes = new List<int>();
             resolver.WobbleChanged += (_, wobble) => changes.Add(wobble);
             var decayTicks = Mathf.RoundToInt(Balance.WobbleDecaySeconds / Time.fixedDeltaTime);

@@ -12,7 +12,8 @@ Phân công hiện hành nằm trong `AGENTS.md`; tác giả và các lượt s�
 
 | Nhóm | Nguồn, công cụ và sử dụng | Khai báo |
 | --- | --- | --- |
-| Sáu quả `.glb` | `tools/models/make_fruits.py`, Blender 4.2 LTS; commit `b856485`, PR #86; prefab fighter tại `Assets/_Project/Prefabs/Fighters/` | Mô hình procedural có Claude hỗ trợ viết script. Không phải ảnh text-to-image và không nhập model bên ngoài. Seed Blueberry 18, các quả khác dùng mặc định 0; không có bản lưu prompt nguyên văn trong repo. |
+| Sáu nhân vật `.glb` (Gấu, Heo, Mèo, Cánh cụt, Gà, Ếch) | Gói Blender do nhóm giao qua Drive, nhập vào `Assets/_Project/Art/Characters/`; prefab fighter tại `Assets/_Project/Prefabs/Fighters/`; SB-76 #113 | Asset do nhóm tạo, thay sáu quả procedural cũ. Avatar HUD/kết quả được dựng bằng `AvatarRenderer` từ chính các model này. |
+| Lobby "STAR CATCHER" (`Art/Lobby/Lobby.glb`) | `LOPPY.glb` do team Creative tự làm, giao qua Drive; `LobbySceneBuilder`; SB-76 #113 | Asset do nhóm tạo, không dùng model bên ngoài. Tên file `.fbx` trong GLB là tên node nội bộ, không phải nguồn Sketchfab (team Creative xác nhận 23/11/2026). |
 | 12 SFX `.wav` | `tools/audio/make_sfx.py`, Python stdlib; commit `3d22d10`, PR #78; `AudioDirector` / `PresentationProfile` | Tổng hợp bằng code có Claude hỗ trợ, seed 18, 44.1 kHz mono PCM 16-bit. Placeholder, không lấy sample âm thanh ngoài. |
 | L1 và vật liệu greybox | Mesh/material dưới `Data/TrainingRing/`, `ProjectScaffold` và dữ liệu mesh đã commit (script tạo mesh ban đầu không có trong checkout); Phụ lục C đã ghi nguồn SB-14 | C# và Unity 6000.3.28f1 với Codex hỗ trợ. Không dùng seed ngẫu nhiên hay model tạo ảnh. |
 | L2/L3 và hình hazard | `LevelSceneBuilder`, `MovingGround`, `PusherBlocks`, `Cannons`, `AnnulusMesh`, `RingDrop` | Primitive, mesh và màu tạo bằng C#/Unity với AI hỗ trợ code. Không có texture, model hoặc sample tải ngoài trong nhóm này. |

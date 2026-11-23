@@ -56,7 +56,7 @@ namespace SquishyBump.Tests.PlayMode
 
         PlayerMotor Fruit(Vector3 at)
         {
-            var go = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Fighters/Apple.prefab"),
+            var go = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Fighters/Cat.prefab"),
                 at, Quaternion.identity);
             spawned.Add(go);
             return go.GetComponent<PlayerMotor>();
