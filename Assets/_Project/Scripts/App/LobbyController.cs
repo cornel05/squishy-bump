@@ -51,13 +51,15 @@ namespace SquishyBump.App
             rig = MakeCamera(); input = new LocalPlayerInput(rig, app.Saved.Bindings);
             neutralMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
             neutralMaterial.SetColor("_BaseColor", Color.gray);
-            panel = gameObject.AddComponent<LobbyPanel>(); panel.Init(layout.Find("Info board"), layout.Find("Controls board"), single);
+            panel = gameObject.AddComponent<LobbyPanel>(); panel.Init(layout.Find("Info board"), layout.Find("Controls board"), single,
+                setup.Levels.Select(level => level.ArenaName).ToArray());
             MakeDisplays(stands);
             coordinator = new LobbyCoordinator(app.Session, app.Clock, app.LobbySync, Mathf.RoundToInt(setup.Balance.FixedStepHz),
                 Mathf.RoundToInt(setup.Lobby.CountdownSeconds * setup.Balance.FixedStepHz), app.Settings.Rule, app.LobbySelection);
             coordinator.Changed += OnState; coordinator.StartRequested += Launch;
             panel.ReadyRequested += coordinator.SetReady;
             panel.ConfigureRequested += ConfigureAtDesk; panel.LeaveRequested += Leave;
+            panel.RoomRequested += ConfigureRoomAtDesk; panel.PasswordRequested += SetPasswordAtDesk;
             panel.StartSingleRequested += StartSingle; panel.LookRequested += LockLook;
             app.Sync.InputReceived += OnInput; app.Sync.SnapshotReceived += OnSnapshot; app.Clock.Ticked += OnTick;
             buffer = new SnapshotBuffer(1f / setup.Balance.FixedStepHz, setup.Balance.InterpolationBufferSeconds);
@@ -82,7 +84,9 @@ namespace SquishyBump.App
                 foreach (var b in display.GetComponentsInChildren<MonoBehaviour>()) b.enabled = false;
                 display.GetComponent<Rigidbody>().isKinematic = true;
                 var definition = display.GetComponent<FighterProfileApplier>().Fruit;
-                panel.RegisterStand(i, stands.GetChild(i), definition.DisplayName, definition.Class.name);
+                var fighterClass = definition.Class;
+                panel.RegisterStand(i, stands.GetChild(i), definition.DisplayName, fighterClass.name, new LobbyPanel.ClassStats(
+                    fighterClass.Mass, fighterClass.MaxSpeed, setup.Balance.DashDeltaV(fighterClass), fighterClass.Traction));
             }
         }
         private ulong LocalId => app.GetComponent<NetworkManager>().LocalClientId;
@@ -185,6 +189,7 @@ namespace SquishyBump.App
                     if (buffer.TrySample(f.Id, Time.time, out var p, out _)) avatar.Object.transform.position = p;
                 }
             }
+            Announce();
             panel.Show(coordinator.State, LocalId, address, Mathf.RoundToInt(setup.Balance.FixedStepHz),
                 i => setup.Roster[i].name, AtDesk());
         }
@@ -195,6 +200,26 @@ namespace SquishyBump.App
             if (launching || !AtDesk()) return;
             var current = coordinator.State;
             coordinator.Configure(rule ?? current.Rule, single ? 5 : level ?? current.FinalLevel);
+        }
+        // Room options exist only for a LAN host standing at the desk; single player never opens a room.
+        private void ConfigureRoomAtDesk(int? capacity, bool? isPublic)
+        {
+            if (launching || single || !AtDesk()) return;
+            var current = coordinator.State;
+            coordinator.ConfigureRoom(capacity ?? current.Capacity, isPublic ?? current.Public);
+        }
+        private void SetPasswordAtDesk(string password)
+        { if (!launching && !single && AtDesk()) app.Session.Password = password; }
+        private float nextBeacon;
+        // Public LAN rooms announce themselves about once a second until the match starts.
+        private void Announce()
+        {
+            if (single || launching || !app.Session.CanSimulateGameplay || Time.unscaledTime < nextBeacon) return;
+            nextBeacon = Time.unscaledTime + 1f;
+            var state = coordinator.State;
+            if (state == null || !state.Public || state.Started || state.Players.Count >= state.Capacity) return;
+            app.Discovery.Announce(Environment.MachineName, state.Players.Count, state.Capacity, state.Rule,
+                !string.IsNullOrEmpty(app.Session.Password));
         }
         private void StartSingle()
         { if (single && app.Session.CanSimulateGameplay && coordinator.State.Players[0].Fruit >= 0) Launch(coordinator.State); }

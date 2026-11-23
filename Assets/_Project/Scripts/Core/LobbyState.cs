@@ -24,11 +24,17 @@ namespace SquishyBump.Core
     public sealed class LobbyState
     {
         public LobbyState(uint revision, MatchRule rule, int finalLevel, int remainingTicks, bool started,
-            IEnumerable<LobbyPlayer> players)
+            IEnumerable<LobbyPlayer> players, int capacity = MaxCapacity, bool isPublic = true)
         {
+            Capacity = capacity; Public = isPublic;
             Revision = revision; Rule = rule; FinalLevel = finalLevel; RemainingTicks = remainingTicks; Started = started;
             Players = Array.AsReadOnly(players.ToArray());
         }
+        public const int MinCapacity = 2, MaxCapacity = 6;
+        /// <summary>Số người tối đa host chấp nhận (2–6).</summary>
+        public int Capacity { get; }
+        /// <summary>Phòng công khai hiện trong danh sách LAN; private chỉ vào bằng IP. Mật khẩu không bao giờ nằm trong state.</summary>
+        public bool Public { get; }
         public uint Revision { get; }
         public MatchRule Rule { get; }
         public int FinalLevel { get; }

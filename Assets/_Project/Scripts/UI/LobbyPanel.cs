@@ -12,23 +12,29 @@ namespace SquishyBump.UI
     public sealed class LobbyPanel : MonoBehaviour
     {
         private Text board, summary;
-        private RectTransform settings;
+        private LobbyConsole console;
+        private RectTransform actions;
         private Button ready;
         private LobbyState state;
-        private bool localReady, single;
+        private bool localReady, single, consoleClosed;
+        private string[] animalNames = Array.Empty<string>();
         private readonly Dictionary<int, (Text Label, string Fruit, string Class)> stands = new();
         public string BoardText => board.text;
         public event Action<bool> ReadyRequested;
         /// <summary>Host desk: null = keep the room's current value (the panel's snapshot can be a tick old).</summary>
         public event Action<MatchRule?, int?> ConfigureRequested;
+        /// <summary>Host desk: capacity (2–6) and public/private; null = unchanged.</summary>
+        public event Action<int?, bool?> RoomRequested;
+        public event Action<string> PasswordRequested;
+        public LobbyConsole Console => console;
         public event Action LeaveRequested, StartSingleRequested, LookRequested;
-        public void Init(Transform infoBoard, Transform controlsBoard, bool isSingle)
+        public void Init(Transform infoBoard, Transform controlsBoard, bool isSingle, IReadOnlyList<string> mapNames)
         {
             single = isSingle;
             board = WorldText(infoBoard, "Thông tin phòng");
             WorldText(controlsBoard, "ĐIỀU KHIỂN\nWASD: đi lại\nĐi vào vùng trước kệ để chọn trái\nTrái đã có người chọn bị khóa\nHost tới quầy chọn luật/độ dài\nEsc: mở con trỏ / rời phòng");
             var canvas = UiFactory.Canvas("Lobby actions", 15).transform; canvas.SetParent(transform, false);
-            var page = UiFactory.Page(canvas, "Lobby actions");
+            var page = actions = UiFactory.Page(canvas, "Lobby actions");
             page.anchorMin = page.anchorMax = new Vector2(0, 0); page.pivot = Vector2.zero;
             page.anchoredPosition = new Vector2(20, 20); page.sizeDelta = new Vector2(620, 460);
             summary = UiFactory.Label(page, "Đang đồng bộ lobby…", 24);
@@ -36,16 +42,15 @@ namespace SquishyBump.UI
             { if (single) StartSingleRequested?.Invoke(); else ReadyRequested?.Invoke(!localReady); });
             UiFactory.Button(page, "Khóa chuột để xoay camera (Esc để mở)", () => LookRequested?.Invoke());
             UiFactory.Button(page, "Rời phòng", () => LeaveRequested?.Invoke());
-            settings = UiFactory.Page(canvas, "Host desk"); settings.sizeDelta = new Vector2(600, 900);
-            settings.anchorMin = settings.anchorMax = new Vector2(1, 0.5f); settings.pivot = new Vector2(1, 0.5f);
-            settings.anchoredPosition = new Vector2(-20, 0);
-            UiFactory.Label(settings, "QUẦY HOST", 32);
-            UiFactory.Button(settings, "Survival", () => ConfigureRequested?.Invoke(MatchRule.Survival, null));
-            UiFactory.Button(settings, "Rank", () => ConfigureRequested?.Invoke(MatchRule.Rank, null));
-            if (!single)
-                for (var i = 1; i <= 5; i++)
-                { var level = i; UiFactory.Button(settings, $"L1 → L{level}", () => ConfigureRequested?.Invoke(null, level)); }
-            settings.gameObject.SetActive(false);
+            // The host desk is the team's lobby console (kit folder 7); it opens at the desk and hides again on X.
+            console = new LobbyConsole(canvas, single, mapNames);
+            console.ConfigureRequested += (rule, level) => ConfigureRequested?.Invoke(rule, level);
+            console.RoomRequested += (capacity, isPublic) => RoomRequested?.Invoke(capacity, isPublic);
+            console.PasswordChanged += text => PasswordRequested?.Invoke(text);
+            console.StartRequested += () =>
+            { if (single) StartSingleRequested?.Invoke(); else if (ready.interactable) ReadyRequested?.Invoke(!localReady); };
+            console.CloseRequested += () => { consoleClosed = true; console.Root.gameObject.SetActive(false); };
+            console.Root.gameObject.SetActive(false);
         }
         public void Show(LobbyState value, ulong localId, string hostAddress, int tickRate, Func<int, string> fruitName, bool atDesk)
         {
@@ -66,13 +71,57 @@ namespace SquishyBump.UI
             board.text = $"SQUISHY CUP · L1 → L{value.FinalLevel}\n{value.Rule}\nIP host: {hostAddress}\n" +
                 string.Join("\n", value.Players.Select(p => $"Người {p.Id}: {(p.Fruit < 0 ? "chưa chọn" : fruitName(p.Fruit))} · {(p.Ready ? "READY" : "chưa ready")}")) + countdown;
             summary.text = $"{value.Rule} · L1 → L{value.FinalLevel}\nBạn: {(player.Fruit < 0 ? "đi vào kệ để chọn trái" : fruitName(player.Fruit))}" + countdown;
-            settings.gameObject.SetActive(atDesk && !value.Started);
+            if (!atDesk) consoleClosed = false;
+            if (animalNames.Length == 0) animalNames = Enumerable.Range(0, 6).Select(fruitName).ToArray();
+            console.Show(value, localId, animalNames);
+            var open = atDesk && !value.Started && !consoleClosed;
+            console.Root.gameObject.SetActive(open);
+            actions.gameObject.SetActive(!open); // the console has its own START MATCH and would sit under this panel
         }
         private Text WorldText(Transform surface, string text)
             => WorldText(surface, text, Vector3.back * 0.2f, new Vector2(600, 600));
 
-        public void RegisterStand(int index, Transform surface, string fruitName, string className)
+        /// <summary>Numbers of a class card, from the balance data (never typed in): kg, m/s, m/s of dash, grip.</summary>
+        public readonly struct ClassStats
         {
+            public ClassStats(float weight, float maxSpeed, float dash, float grip) { Weight = weight; MaxSpeed = maxSpeed; Dash = dash; Grip = grip; }
+            public float Weight { get; }
+            public float MaxSpeed { get; }
+            public float Dash { get; }
+            public float Grip { get; }
+        }
+
+        private static readonly Vector2 CardSheet = new(1572, 527);
+        // Value column of the card art, in sprite pixels: left edge, right edge, and the vertical centre of its four rows.
+        private const float CardValueLeft = 996, CardValueRight = 1255, CardRowHeight = 44;
+        private static readonly float[] CardRows = { 145, 193, 248, 300 };
+        private const float CardHeight = 3.4f, CardScale = 0.0012f;
+
+        private void BuildCard(Transform surface, string className, ClassStats stats)
+        {
+            var art = UiFactory.Kit("card_" + className.ToLowerInvariant());
+            if (art == null) return;
+            var go = new GameObject($"Class card {className}", typeof(RectTransform), typeof(Canvas));
+            go.transform.SetParent(transform, false);
+            go.transform.position = surface.position + Vector3.up * CardHeight;
+            go.transform.rotation = Quaternion.identity; go.transform.localScale = Vector3.one * CardScale;
+            go.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
+            var rect = (RectTransform)go.transform;
+            rect.sizeDelta = CardSheet;
+            var image = new GameObject("Art", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
+            image.transform.SetParent(go.transform, false);
+            image.sprite = art; image.raycastTarget = false;
+            var artRect = (RectTransform)image.transform;
+            artRect.anchorMin = Vector2.zero; artRect.anchorMax = Vector2.one; artRect.offsetMin = artRect.offsetMax = Vector2.zero;
+            var values = new[] { $"{stats.Weight:0.#} KG", $"{stats.MaxSpeed:0.0} M/S", $"{stats.Dash:0.0} M/S", $"{stats.Grip:0.0}" };
+            for (var i = 0; i < values.Length; i++)
+                UiFactory.SheetText(artRect, $"Value {i + 1}", CardSheet, CardValueLeft, CardRows[i] - CardRowHeight / 2,
+                    CardValueRight, CardRows[i] + CardRowHeight / 2, values[i], 44, TextAnchor.MiddleLeft);
+        }
+
+        public void RegisterStand(int index, Transform surface, string fruitName, string className, ClassStats stats = default)
+        {
+            if (stats.Weight > 0f) BuildCard(surface, className, stats);
             var label = WorldText(surface, "", Vector3.up * 2.3f, new Vector2(480, 160));
             label.name = $"Stand {index} status";
             label.alignment = TextAnchor.MiddleCenter;

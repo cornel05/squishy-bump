@@ -54,6 +54,14 @@ namespace SquishyBump.App
             if (disposed || !session.CanSimulateGameplay || Room == null || !Room.TryConfigure(0, rule, finalLevel)) return false;
             Publish(); return true;
         }
+        /// <summary>Host: capacity (2–6) and public/private; the session enforces the same capacity on new connections.</summary>
+        public bool ConfigureRoom(int capacity, bool isPublic)
+        {
+            if (disposed || !session.CanSimulateGameplay || Room == null) return false;
+            if (Room.Capacity == capacity && Room.Public == isPublic) return true;
+            if (!Room.TryConfigureRoom(0, capacity, isPublic)) return false;
+            session.Capacity = capacity; Publish(); return true;
+        }
         private void OnReady(ulong id, bool ready)
         {
             if (Room != null && Room.Players.TryGetValue(id, out var current) && current.Ready == ready) return;
@@ -72,7 +80,8 @@ namespace SquishyBump.App
             if (started) StartRequested?.Invoke(State);
         }
         private LobbyState Snapshot() => new(++revision, Room.Rule, Room.FinalLevel, Room.RemainingTicks, Room.Started,
-            Room.Players.OrderBy(p => p.Key).Select(p => new LobbyPlayer(p.Key, p.Value.Fruit ?? -1, p.Value.Ready)));
+            Room.Players.OrderBy(p => p.Key).Select(p => new LobbyPlayer(p.Key, p.Value.Fruit ?? -1, p.Value.Ready)),
+            Room.Capacity, Room.Public);
         private void Publish()
         { State = Snapshot(); Changed?.Invoke(State); channel.Broadcast(State); }
         private void OnState(LobbyState state)
