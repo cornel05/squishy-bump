@@ -632,6 +632,12 @@ Build Windows x64 release đạt: 0 errors, 857 MB; repo checker PASS (0 problem
 - Tests mới: `LevelLaunchArgsTests` (EditMode), `LevelArtTests` (PlayMode L1–L5).
 - Kết quả sau rebase lên `main` (`bcc115a`): `tools/verify.ps1 -PlayMode` → **VERIFY: PASS** (**376** EditMode, **82** PlayMode passed, **1** skipped WindowsPlayer-only, **0** cảnh báo `SquishyBump.*`); `python tools/check_repo.py` → **PASS** (0 problems); `tools/build-windows.ps1` → **BUILD: PASS** (**0 errors**, **3993 MB**). Chưa playtest tương tác trực tiếp trong `.exe` L1–L5 qua `play-level.ps1`.
 
+### SB-79 — đồng bộ Creative map assets L1 & L2 từ Drive (25/11/2026)
+
+- L1: trích `sand01_Normal.jpg` (`648 KB`) và màu `Sand` vàng cát linear `(0.80, 0.565, 0.125)` từ `cat vong 1..4.glb` sang `Band.mat` (giữ `Fixed_Vong1..4.asset` đúng bán kính đồng tâm & UV/tangents, tránh normal đảo/trùng bán kính của `cat vong 2..4`); nâng `Map1Demo.glb` → `Map1.glb` (ẩn `Torus.001..006` tĩnh) và thay bộ phao mới (`PhaoTron1..3`, `PhaoUnicorn1..2`, `PhaoLgbt`).
+- L2: thêm `chuotlatdat.glb` (`15.7 MB`) và `meolatdat.glb` (`12.1 MB`) gắn lên 3 chướng ngại vật xoay `Box 0..2` của `MovingGround` qua `LevelArtBinder` (giữ nguyên `BoxCollider`). L3–L5 đã khớp 100% với Drive nên giữ nguyên.
+- Kết quả: `tools/verify.ps1 -PlayMode` → **VERIFY: PASS** (**376** EditMode, **89** PlayMode passed, **2** skipped, **0** cảnh báo `SquishyBump.*`); `python tools/check_repo.py` → **PASS** (0 problems); `tools/build-windows.ps1` → **BUILD: PASS** (**0 errors**, **3847 MB**). Chưa mở `.exe` playtest tương tác trực tiếp L1/L2.
+
 ## 24/11/2026 · SB-32 — kết quả, bảng điểm và spectator
 
 Nền main `e2e9a6a`, nhánh `feat/SB-32-results-spectator`. Windows Player Direct3D12:
