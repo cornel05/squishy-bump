@@ -31,17 +31,17 @@ namespace SquishyBump.UI
         public void Init(Transform infoBoard, Transform controlsBoard, bool isSingle, IReadOnlyList<string> mapNames)
         {
             single = isSingle;
-            board = WorldText(infoBoard, "Thông tin phòng");
-            WorldText(controlsBoard, "ĐIỀU KHIỂN\nWASD: đi lại\nĐi vào vùng trước kệ để chọn trái\nTrái đã có người chọn bị khóa\nHost tới quầy chọn luật/độ dài\nEsc: mở con trỏ / rời phòng");
+            board = WorldText(infoBoard, "Room Info");
+            WorldText(controlsBoard, "CONTROLS\nWASD: Move\nStep in front of a stand to pick a fighter\nTaken fighters are locked\nHost: go to the desk to set rule / length\nEsc: unlock cursor / leave room");
             var canvas = UiFactory.Canvas("Lobby actions", 15).transform; canvas.SetParent(transform, false);
             var page = actions = UiFactory.Page(canvas, "Lobby actions");
             page.anchorMin = page.anchorMax = new Vector2(0, 0); page.pivot = Vector2.zero;
             page.anchoredPosition = new Vector2(20, 20); page.sizeDelta = new Vector2(620, 460);
-            summary = UiFactory.Label(page, "Đang đồng bộ lobby…", 24);
-            ready = UiFactory.Button(page, single ? "Bắt đầu" : "Sẵn sàng / hủy", () =>
+            summary = UiFactory.Label(page, "Syncing lobby...", 24);
+            ready = UiFactory.Button(page, single ? "Start" : "Ready / Cancel", () =>
             { if (single) StartSingleRequested?.Invoke(); else ReadyRequested?.Invoke(!localReady); });
-            UiFactory.Button(page, "Khóa chuột để xoay camera (Esc để mở)", () => LookRequested?.Invoke());
-            UiFactory.Button(page, "Rời phòng", () => LeaveRequested?.Invoke());
+            UiFactory.Button(page, "Lock mouse to orbit camera (Esc to unlock)", () => LookRequested?.Invoke());
+            UiFactory.Button(page, "Leave Room", () => LeaveRequested?.Invoke());
             // The host desk is the team's lobby console (kit folder 7); it opens at the desk and hides again on X.
             console = new LobbyConsole(canvas, single, mapNames);
             console.ConfigureRequested += (rule, level) => ConfigureRequested?.Invoke(rule, level);
@@ -63,14 +63,14 @@ namespace SquishyBump.UI
             {
                 var occupied = value.Players.Any(p => p.Fruit == stand.Key);
                 var owner = value.Players.FirstOrDefault(p => p.Fruit == stand.Key);
-                var status = occupied ? $"ĐÃ CHỌN · {(owner.Id == localId ? "BẠN" : $"người {owner.Id}")}" : "ĐI VÀO ĐỂ CHỌN";
+                var status = occupied ? $"TAKEN - {(owner.Id == localId ? "YOU" : $"Player {owner.Id}")}" : "STEP IN TO PICK";
                 stand.Value.Label.text = $"{stand.Value.Fruit}\n{stand.Value.Class}\n{status}";
                 stand.Value.Label.color = occupied ? new Color(1, 0.75f, 0.25f) : Color.white;
             }
-            var countdown = value.RemainingTicks > 0 ? $"\nBắt đầu sau {(value.RemainingTicks + tickRate - 1) / tickRate} s" : "";
-            board.text = $"SQUISHY CUP · L1 → L{value.FinalLevel}\n{value.Rule}\nIP host: {hostAddress}\n" +
-                string.Join("\n", value.Players.Select(p => $"Người {p.Id}: {(p.Fruit < 0 ? "chưa chọn" : fruitName(p.Fruit))} · {(p.Ready ? "READY" : "chưa ready")}")) + countdown;
-            summary.text = $"{value.Rule} · L1 → L{value.FinalLevel}\nBạn: {(player.Fruit < 0 ? "đi vào kệ để chọn trái" : fruitName(player.Fruit))}" + countdown;
+            var countdown = value.RemainingTicks > 0 ? $"\nStarting in {(value.RemainingTicks + tickRate - 1) / tickRate} s" : "";
+            board.text = $"SQUISHY CUP - L1 -> L{value.FinalLevel}\n{value.Rule}\nHost IP: {hostAddress}\n" +
+                string.Join("\n", value.Players.Select(p => $"Player {p.Id}: {(p.Fruit < 0 ? "none" : fruitName(p.Fruit))} - {(p.Ready ? "READY" : "not ready")}")) + countdown;
+            summary.text = $"{value.Rule} - L1 -> L{value.FinalLevel}\nYou: {(player.Fruit < 0 ? "step into a stand to pick" : fruitName(player.Fruit))}" + countdown;
             if (!atDesk) consoleClosed = false;
             if (animalNames.Length == 0) animalNames = Enumerable.Range(0, 6).Select(fruitName).ToArray();
             console.Show(value, localId, animalNames);

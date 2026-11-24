@@ -68,7 +68,7 @@ namespace SquishyBump.Tests.PlayMode
             yield return null;
             var panel = lobby.GetComponent<LobbyPanel>();
             Assert.That(lobby.GetComponentsInChildren<Text>().Single(t => t.name == "Stand 0 status").text,
-                Does.Contain("ĐÃ CHỌN").And.Contain("BẠN"));
+                Does.Contain("TAKEN").And.Contain("YOU"));
             lobby.Motors[peer].GetComponent<Rigidbody>().position = pick0;
             yield return new WaitForFixedUpdate(); yield return new WaitForFixedUpdate();
             Assert.That(lobby.Coordinator.Room.Players[peer].Fruit, Is.Null, "Kệ đã chọn không cấp cho peer khác.");
@@ -92,7 +92,7 @@ namespace SquishyBump.Tests.PlayMode
             lobby.Coordinator.SetReady(true); client.LobbySync.SendReady(true);
             yield return WaitFor(() => lobby.Coordinator.State.RemainingTicks > 0, "host countdown");
             yield return WaitFor(() => client.LobbySelection != null && client.LobbySelection.RemainingTicks > 0, "client nhận countdown");
-            Assert.That(panel.BoardText, Does.Contain("Bear").And.Contain("Pig").And.Contain("READY").And.Contain("IP host:"));
+            Assert.That(panel.BoardText, Does.Contain("Bear").And.Contain("Pig").And.Contain("READY").And.Contain("Host IP:"));
             Assert.That(host.LobbySync.RejectedPackets, Is.Zero);
             Assert.That(client.LobbySync.RejectedPackets, Is.Zero);
             Assert.That(host.Launcher.Match, Is.Null, "Chưa được bỏ qua countdown 5 giây.");
@@ -126,14 +126,14 @@ namespace SquishyBump.Tests.PlayMode
                 Assert.That(client.MatchState.Result[0].FighterId, Is.Zero);
                 if (level < 5)
                 {
-                    Assert.That(ResultButton("Tiếp tục"), Is.Null, "Nút phải đợi bảng kết quả.");
-                    yield return ClickResultAction("Tiếp tục");
+                    Assert.That(ResultButton("Continue"), Is.Null, "Nút phải đợi bảng kết quả.");
+                    yield return ClickResultAction("Continue");
                 }
             }
             yield return WaitFor(() => client.MatchState.SessionResult.Count == 2, "client nhận bảng xếp hạng phiên");
             Assert.That(client.MatchState.SessionResult.Select(row => (row.FighterId, row.Rank)),
                 Is.EqualTo(new[] { (0UL, 1), (peer, 2) }));
-            Assert.That(host.Launcher.Overlay.ResultText, Does.Contain("VÔ ĐỊCH · Pig"));
+            Assert.That(host.Launcher.Overlay.ResultText, Does.Contain("CHAMPION - Pig"));
         }
 
         [UnityTest]
@@ -145,10 +145,10 @@ namespace SquishyBump.Tests.PlayMode
             RingOut(0);
             yield return WaitFor(() => host.Launcher.Match.Director.AliveFighters.Count == 2, "host bị loại khỏi trận");
             RingOut(peers[1]);
-            yield return ClickResultAction("Tiếp tục");
+            yield return ClickResultAction("Continue");
             yield return WaitFor(() => IsPlaying(2), "L2 bắt đầu sau khi loại host");
             Assert.That(host.Launcher.Match.Fighters.Select(f => (ulong)f.Id), Is.EquivalentTo(peers));
-            Assert.That(host.Launcher.Overlay.GetComponentsInChildren<Text>().Any(t => t.text.StartsWith("ĐANG QUAN SÁT")), Is.True);
+            Assert.That(host.Launcher.Overlay.GetComponentsInChildren<Text>().Any(t => t.text.StartsWith("SPECTATING")), Is.True);
             secondClient.Session.Leave();
             yield return WaitFor(() => client.MatchState.SessionResult.Count == 3, "client nhận kết quả bỏ cuộc");
             Assert.That(client.MatchState.SessionResult.Select(row => row.FighterId), Is.EqualTo(new[] { peers[0], peers[1], 0UL }));
@@ -164,7 +164,7 @@ namespace SquishyBump.Tests.PlayMode
             var seed = first.Director.Seed;
             RingOut(0);
             RingOut(peer);
-            yield return ClickResultAction("Đấu lại");
+            yield return ClickResultAction("Rematch");
             yield return WaitFor(() => host.Launcher.Match != first && IsPlaying(1), "L1 bắt đầu lại");
             Assert.That(host.Launcher.Match.Director.Seed, Is.EqualTo(seed));
             Assert.That(host.Launcher.Match.Fighters.Select(f => (ulong)f.Id), Is.EquivalentTo(new[] { 0UL, peer }));

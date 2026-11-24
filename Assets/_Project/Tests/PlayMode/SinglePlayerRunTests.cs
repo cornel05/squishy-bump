@@ -27,7 +27,7 @@ namespace SquishyBump.Tests.PlayMode
             yield return WaitFor(() => app.Launcher.Lobby != null && app.Launcher.Lobby.Coordinator != null);
             var lobby = app.Launcher.Lobby;
             Assert.That(lobby.Coordinator.ClaimFromHostPosition(0, 4), Is.True);
-            lobby.GetComponentsInChildren<Button>().Single(b => b.GetComponentInChildren<Text>().text == "Bắt đầu").onClick.Invoke();
+            lobby.GetComponentsInChildren<Button>().Single(b => b.GetComponentInChildren<Text>().text == "Start").onClick.Invoke();
             yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
             var match = app.Launcher.Match;
             Assert.That(match.Director.Level, Is.EqualTo(1));
@@ -83,7 +83,7 @@ namespace SquishyBump.Tests.PlayMode
                         Drop(match, tie ? null : match.Fighters[1].Id);
                         yield return WaitFor(() => match.Director.Phase == MatchPhase.Result);
                         Assert.That(match.Director.GetSinglePlayerOutcome(0), Is.EqualTo(SurvivalOutcome.Retry));
-                        yield return ClickResult("Chơi lại");
+                        yield return ClickResult("Retry");
                         var previous = match;
                         yield return WaitFor(() => app.Launcher.Match != previous && app.Launcher.Match.Started);
                         match = app.Launcher.Match;
@@ -107,13 +107,13 @@ namespace SquishyBump.Tests.PlayMode
                     { Drop(match, match.Fighters[1].Id); yield return null; }
                 }
                 yield return WaitFor(() => match.Director.Phase == MatchPhase.Result);
-                if (n < 5) yield return ClickResult("Tiếp tục");
+                if (n < 5) yield return ClickResult("Continue");
                 else
                 {
                     yield return WaitFor(() => app.Launcher.SingleRun.Finished);
                     Assert.That(app.Launcher.SingleRun.LevelsCleared, Is.EqualTo(5));
-                    Assert.That(app.Launcher.Overlay.ResultText, Does.Contain("ĐÃ QUA 5/5 MÀN"));
-                    Assert.That(app.Launcher.Overlay.GetComponentsInChildren<Text>().Any(t => t.name == "Single Run Summary" && t.text.Contains("CHƠI LẠI")), Is.True);
+                    Assert.That(app.Launcher.Overlay.ResultText, Does.Contain("CLEARED 5/5 LEVELS"));
+                    Assert.That(app.Launcher.Overlay.GetComponentsInChildren<Text>().Any(t => t.name == "Single Run Summary" && t.text.Contains("RETRIES:")), Is.True);
                     if (Application.platform == RuntimePlatform.WindowsPlayer)
                     {
                         Assert.That(SystemInfo.graphicsDeviceType, Is.Not.EqualTo(UnityEngine.Rendering.GraphicsDeviceType.Null));
@@ -126,7 +126,7 @@ namespace SquishyBump.Tests.PlayMode
                         yield return new WaitForSecondsRealtime(0.5f);
                         Assert.That(File.Exists(capture), Is.True);
                     }
-                    yield return ClickResult("Về menu");
+                    yield return ClickResult("Main Menu");
                     yield return WaitFor(() => app.Session.State == SessionState.Idle);
                     Assert.That(SceneManager.GetActiveScene().name, Is.EqualTo("MainMenu"));
                 }
@@ -163,7 +163,7 @@ namespace SquishyBump.Tests.PlayMode
                 return button != null;
             }, 6);
             button.onClick.Invoke();
-            if (caption != "Về menu") button.onClick.Invoke(); // Nhấp lặp không được nhảy hai màn/tăng retry hai lần.
+            if (caption != "Main Menu") button.onClick.Invoke(); // Nhấp lặp không được nhảy hai màn/tăng retry hai lần.
         }
 
         private IEnumerator Boot()
@@ -200,7 +200,7 @@ namespace SquishyBump.Tests.PlayMode
             yield return WaitFor(() => match.Director.Phase == MatchPhase.Result);
             yield return new WaitForSecondsRealtime(3.1f);
             Assert.That(app.Launcher.Overlay.GetComponentsInChildren<Button>()
-                .Select(b => b.GetComponentInChildren<Text>().text), Does.Contain("Chơi lại"));
+                .Select(b => b.GetComponentInChildren<Text>().text), Does.Contain("Retry"));
         }
 
         [UnityTearDown]

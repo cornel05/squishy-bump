@@ -31,7 +31,7 @@ namespace SquishyBump.AI
             {
                 var cell = snapshot.Cell(i);
                 if (!Finite(cell.EdgeDistance) || cell.EdgeDistance < 0)
-                    throw new ArgumentException("Khoảng cách tới mép phải hữu hạn và không âm.");
+                    throw new ArgumentException("Edge distance must be finite and non-negative.");
                 walkable[i] = cell.Walkable;
                 var margin = edgeMargin * (cell.Ice ? iceMarginMultiplier : 1f);
                 var value = cell.Walkable ? Mathf.Clamp01(1 - cell.EdgeDistance / margin) : 1f;

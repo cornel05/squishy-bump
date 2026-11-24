@@ -71,7 +71,7 @@ namespace SquishyBump.Tests.PlayMode
             CollectionAssert.AreEqual(host.MatchState.Result.Select(s => (s.FighterId, s.Rank, s.Points, s.Lives)),
                 client.MatchState.Result.Select(s => (s.FighterId, s.Rank, s.Points, s.Lives)));
             Assert.That(clientOverlay.ResultText, Is.EqualTo(hostOverlay.ResultText));
-            Assert.That(clientOverlay.ResultText, Does.Contain("5 điểm"));
+            Assert.That(clientOverlay.ResultText, Does.Contain("5 pts"));
         }
     }
 }

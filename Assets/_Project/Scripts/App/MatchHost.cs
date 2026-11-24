@@ -610,7 +610,7 @@ namespace SquishyBump.App
             {
                 sessionFinished = true;
                 overlay.ShowSessionResult(e.Standings, FighterLabel, FighterFruit);
-                overlay.OfferResultAction("Về menu", leaveCompletedSession ?? leaveMatch);
+                overlay.OfferResultAction("Main Menu", leaveCompletedSession ?? leaveMatch);
             }
         }
 

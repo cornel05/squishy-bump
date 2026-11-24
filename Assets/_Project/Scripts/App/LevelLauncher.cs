@@ -192,7 +192,7 @@ namespace SquishyBump.App
                 sink.Publish(MatchEvent.SessionResult(sink.NextEventId(), bootstrap.Tick, survivalDecision.Standings));
                 return;
             }
-            Overlay.OfferResultAction(survivalDecision.NextLevel == survivalRun.Level ? "Đấu lại" : "Tiếp tục", ContinueSurvival);
+            Overlay.OfferResultAction(survivalDecision.NextLevel == survivalRun.Level ? "Rematch" : "Continue", ContinueSurvival);
         }
 
         private void UpdateSinglePlayer()
@@ -209,9 +209,9 @@ namespace SquishyBump.App
                 var characters = Match.Fighters.ToDictionary(f => (ulong)f.Id, f => (int)f.Fruit);
                 Overlay.ShowSessionResult(rows, id => setup.Roster[characters[id]].name, id => characters[id]);
                 Overlay.ShowSinglePlayerSummary(singleRun.LevelsCleared, singleRun.Retries);
-                Overlay.OfferResultAction("Về menu", LeaveToMenu);
+                Overlay.OfferResultAction("Main Menu", LeaveToMenu);
             }
-            else Overlay.OfferResultAction(singleWon ? "Tiếp tục" : "Chơi lại", ContinueSinglePlayer);
+            else Overlay.OfferResultAction(singleWon ? "Continue" : "Retry", ContinueSinglePlayer);
         }
 
         private void ContinueSinglePlayer()

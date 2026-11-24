@@ -167,7 +167,7 @@ namespace SquishyBump.Net.Sync
 
         public static byte[] WriteMatch(MatchEvent e)
         {
-            if (!ValidMatch(e)) throw new ArgumentException("Payload match không hợp lệ.", nameof(e));
+            if (!ValidMatch(e)) throw new ArgumentException("Invalid match payload.", nameof(e));
             using var stream = new MemoryStream(MatchHeaderBytes + e.Standings.Count * StandingBytes);
             using var w = new BinaryWriter(stream);
             w.Write(e.EventId); w.Write(e.HostTick); w.Write((byte)e.Kind);

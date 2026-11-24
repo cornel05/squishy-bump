@@ -43,7 +43,7 @@ namespace SquishyBump.App
         private void Start()
         {
             if (setup.Lobby == null || setup.Lobby.WalkingClass == null)
-                throw new InvalidOperationException("Chạy ProjectScaffold.Run để gán LobbyProfile/WalkingClass.");
+                throw new InvalidOperationException("Run ProjectScaffold.Run to assign LobbyProfile/WalkingClass.");
             layout = gameObject.scene.GetRootGameObjects().Single(g => g.name == "Store aisle").transform;
             floor = layout.Find("Floor").GetComponent<Collider>().bounds; desk = layout.Find("Host desk");
             var stands = layout.Find("Fruit stands");

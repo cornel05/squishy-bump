@@ -14,7 +14,7 @@ namespace SquishyBump.Match
         public RankRules(int lives, int respawnTicks, int invulnerabilityTicks, int touchTicks, int points, int l1CloseTick)
         {
             if (lives <= 0 || respawnTicks <= 0 || invulnerabilityTicks < 0 || touchTicks < 0 || points < 0 || l1CloseTick <= 0)
-                throw new ArgumentException("Cấu hình Rank không hợp lệ.");
+                throw new ArgumentException("Invalid Rank configuration.");
             Lives = lives; RespawnTicks = respawnTicks; InvulnerabilityTicks = invulnerabilityTicks;
             TouchTicks = touchTicks; Points = points; L1CloseTick = l1CloseTick;
         }
@@ -27,7 +27,7 @@ namespace SquishyBump.Match
         public static RankRules FromProfile(BalanceProfile profile, int hz)
         {
             if (profile == null || hz <= 0 || profile.RingDropSeconds.Count < 3)
-                throw new ArgumentException("Cần BalanceProfile và tick rate hợp lệ.");
+                throw new ArgumentException("Valid BalanceProfile and tick rate are required.");
             return new RankRules(profile.Lives, (int)Math.Round(profile.RespawnDelaySeconds * hz),
                 (int)Math.Round(profile.InvulnerabilitySeconds * hz), (int)Math.Round(profile.LastTouchWindowSeconds * hz),
                 profile.PointsPerRingOut, (int)Math.Round(profile.RingDropSeconds[2] * hz));
@@ -85,11 +85,11 @@ namespace SquishyBump.Match
             this.hasHostAuthority = hasHostAuthority ?? throw new ArgumentNullException(nameof(hasHostAuthority));
             this.roster = roster.ToArray();
             if (this.roster.Length < 2 || this.roster.Distinct().Count() != this.roster.Length)
-                throw new ArgumentException("Cần ít nhất hai fighter với ID riêng.", nameof(roster));
+                throw new ArgumentException("At least two fighters with distinct IDs are required.", nameof(roster));
             if (level < 1 || level > 5 || tickRate <= 0 || countdownSeconds <= 0 ||
                 (rule != MatchRule.Survival && rule != MatchRule.Rank) ||
                 !(confirmationSeconds > 0) || float.IsInfinity(confirmationSeconds) || limitSeconds <= 0)
-                throw new ArgumentException("Cấu hình thời gian hoặc level không hợp lệ.");
+                throw new ArgumentException("Invalid time or level configuration.");
 
             Level = level;
             Seed = seed;
@@ -250,7 +250,7 @@ namespace SquishyBump.Match
         public SurvivalOutcome GetSinglePlayerOutcome(ulong playerId)
         {
             if (Rule != MatchRule.Survival || Phase != MatchPhase.Result || !roster.Contains(playerId))
-                throw new InvalidOperationException("Cần kết quả đã xác nhận và ID người chơi thuộc roster.");
+                throw new InvalidOperationException("Confirmed result and a roster player ID are required.");
 
             if (Placements[0].FighterId != playerId || Placements[1].Rank == 1)
                 return SurvivalOutcome.Retry;

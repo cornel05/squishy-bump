@@ -41,12 +41,12 @@ namespace SquishyBump.Match
         public void BeginMatch(uint matchId, IEnumerable<ulong> roster)
         {
             if (!hasAuthority()) return;
-            if (open || completedMatches.Contains(matchId)) throw new InvalidOperationException("Match ID phải mới và trận trước đã chốt.");
+            if (open || completedMatches.Contains(matchId)) throw new InvalidOperationException("Match ID must be new and the previous match must be closed.");
             currentMatch = matchId;
             activeRoster.Clear();
             foreach (var id in roster)
             {
-                if (!activeRoster.Add(id)) throw new ArgumentException("Roster trùng ID.", nameof(roster));
+                if (!activeRoster.Add(id)) throw new ArgumentException("Duplicate ID in roster.", nameof(roster));
                 if (!totals.ContainsKey(id)) totals.Add(id, new Total());
             }
             touches.Clear(); scoredFalls.Clear(); open = true;
@@ -86,7 +86,7 @@ namespace SquishyBump.Match
             // Kiểm tra đủ dữ liệu trước khi thay tổng, tránh chốt một nửa roster.
             foreach (var id in activeRoster)
                 if (!lives.ContainsKey(id) || !survivalTicks.ContainsKey(id) || lives[id] < 0 || survivalTicks[id] < 0)
-                    throw new ArgumentException("Thiếu hoặc sai dữ liệu tổng kết Rank.");
+                    throw new ArgumentException("Missing or invalid Rank summary data.");
             foreach (var id in activeRoster)
             {
                 totals[id].Lives += lives[id];

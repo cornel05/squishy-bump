@@ -21,7 +21,7 @@ namespace SquishyBump.Core
         [SerializeField] private float crackSeconds = 1.5f;
         [SerializeField] private float returnSeconds = 10f;
         [SerializeField] private float fadeSeconds = 1f;
-        [Header("Chỉ trình bày, không thay hình học mặt trên")]
+        [Header("Presentation only, does not change top surface geometry")]
         [SerializeField] private float thickness = 0.25f;
         [SerializeField] private float shakeMeters = 0.025f;
         public int Rings => rings;

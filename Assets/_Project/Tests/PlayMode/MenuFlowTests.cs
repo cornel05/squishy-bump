@@ -67,7 +67,7 @@ namespace SquishyBump.Tests.PlayMode
             menu.ShowPage("Single Player");
             var picks = menu.GetComponentsInChildren<UnityEngine.UI.Button>()
                 .Select(b => b.GetComponentInChildren<UnityEngine.UI.Text>().text).ToArray();
-            Assert.That(picks, Does.Contain("Vào lobby"));
+            Assert.That(picks, Does.Contain("Enter Lobby"));
             Assert.That(picks.Any(t => t.StartsWith("L2")), Is.False);
 
             app.Launcher.EnterSinglePlayerLobby();
@@ -76,7 +76,7 @@ namespace SquishyBump.Tests.PlayMode
             var layout = SceneManager.GetActiveScene().GetRootGameObjects().Single(g => g.name == "Store aisle").transform;
             lobby.Motors[0].GetComponent<Rigidbody>().position = layout.Find("Fruit stands/Stand 1/Pick volume").GetComponent<BoxCollider>().bounds.center;
             yield return WaitFor(() => lobby.Coordinator.State.Players[0].Fruit == 0);
-            lobby.GetComponentsInChildren<UnityEngine.UI.Button>().Single(b => b.GetComponentInChildren<UnityEngine.UI.Text>().text == "Bắt đầu").onClick.Invoke();
+            lobby.GetComponentsInChildren<UnityEngine.UI.Button>().Single(b => b.GetComponentInChildren<UnityEngine.UI.Text>().text == "Start").onClick.Invoke();
             yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
             var match = app.Launcher.Match;
             Assert.That(app.Launcher.Overlay.CardVisible, Is.True, "arena card (B02) before the countdown");
