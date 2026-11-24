@@ -305,6 +305,7 @@ namespace SquishyBump.App
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            if (scene.path == LobbyScenePath && bootstrap.Session.CanSimulateGameplay) bootstrap.UnlockLanRoster();
             if (scene.path == setup.MainMenuScene) BuildMenu(scene);
             if (scene.path == LobbyScenePath)
             {

@@ -250,7 +250,7 @@ and [`gdd/ids.md`](gdd/ids.md). Update a row whenever the test is run (date, bui
 | T08 | Đạt trong PlayMode | 15/11/2026 | Nhánh SB-16 | Minh Nhật | `SurvivalArenaTests.T08_LastTwoFallOnSameTick_DrawAndRetrySameSeed` đưa hai quả qua kill plane L1 cùng tick. Cả hai hạng 1, chơi lại cùng roster và seed. |
 | T09 | not run | | | | |
 | T10 | pass (Native PlayMode, 120 s mô phỏng) | 21/11/2026 | SB-44 / base `c293fe1` | Codex | 61 collider thật; kiểm tra từng tick ≥37 và BFS; xem bằng chứng bên dưới. |
-| T11 | not run | | | | |
+| T11 | Một phần — Survival loopback + Rank EditMode đạt | 24/11/2026 | SB-30 trên `main` | Codex / Duy | Peer gửi input rồi rớt; loại ở tick host, motor dừng, trận tiếp tục, lobby mở lại admission; Rank giữ điểm/không respawn trong EditMode; LAN riêng máy chưa chạy. |
 | T12 | pass (PlayMode loopback) | 21/11/2026 | SB-20 recovery, base `39bfc7f` | Codex | Client L1 về MainMenu và hiện thông báo khi host đóng phiên. |
 | T13 | not run | | | | |
 | T14 | not run | | | | |
@@ -619,3 +619,8 @@ Windows D3D12 đạt riêng. Fixture lobby đã tách hai lần nhấn đổi lu
 frame để đọc snapshot đã render. T04 giữ Một phần như bảng trên;
 [xem báo cáo và bằng chứng](testing/sb26-single-run.md).
 Build Windows x64 release đạt: 0 errors, 857 MB; repo checker PASS (0 problems).
+
+### SB-30 — đối soát lên `main` (24/11/2026)
+
+- Hợp nhất PR #96 với `main`: dùng chung `StubSessionService.AcceptingPlayers` (`GameplayBootstrap.LockLanRoster` / `UnlockLanRoster`), bỏ `ISessionAdmission`; gom phát `MatchEvent.Elimination` về `MatchDirector` cho cả Survival và Rank (không respawn, không cộng ring-out credit, giữ nguyên điểm đã ghi).
+- Kiểm thử: `SurvivalMatchTests` (đã cập nhật sang `GameEventHub`), `RankMatchTests.Disconnect_EliminatesWithoutRespawnOrCreditAndKeepsScore`, `SyncTests`, `MenuFlowTests.T11_ClientLeaves_RemoteInputStopsAndLobbyReopensAdmission` (loopback). Chưa chạy LAN 2 máy riêng.

@@ -184,5 +184,54 @@ namespace SquishyBump.Tests.EditMode
             Assert.That(RespawnPicker.TryPick(Vector3.zero, 2, null, null, out var position, p => p.x >= 1), Is.True);
             Assert.That(position.x, Is.GreaterThanOrEqualTo(1));
         }
+
+        [Test]
+        public void Disconnect_EliminatesWithoutRespawnOrCreditAndKeepsScore()
+        {
+            var hub = new GameEventHub(() => true);
+            var events = new List<MatchEvent>();
+            hub.MatchRaised += events.Add;
+            using var match = new MatchDirector(() => true, new[] { 1UL, 2UL, 3UL }, 2, 7, Hz, 3, 0.5f, 150,
+                rule: MatchRule.Rank, rankRules: new RankRules(3, 120, 90, 180, 1, 105 * Hz), eventSink: hub);
+            Start(match);
+
+            // Fighter 2 scores 1 point before disconnecting later.
+            match.RecordTouch(1, 2, Countdown + 1);
+            match.ReportRingOut(1, Countdown + 1);
+            To(match, Countdown + 1, Countdown + 121);
+            Assert.That(match.Scores.Points(2), Is.EqualTo(1));
+
+            // Fighter 1 touches Fighter 2, then Fighter 2 disconnects cleanly: no RingOut credit to 1, no respawn, keeps score.
+            var dropTick = (uint)(Countdown + 122);
+            match.RecordTouch(2, 1, dropTick);
+            Assert.That(match.ReportDisconnect(2, dropTick), Is.True);
+            Assert.That(match.ReportDisconnect(2, dropTick), Is.False);
+            match.CompleteTick(dropTick);
+            Assert.That(match.Lives(2), Is.Zero);
+            Assert.That(match.IsRespawning(2), Is.False);
+            Assert.That(match.DisconnectedAt(2), Is.EqualTo(dropTick));
+            Assert.That(match.Scores.Points(1), Is.Zero);
+            Assert.That(match.Scores.Points(2), Is.EqualTo(1));
+            Assert.That(events.Count(e => e.HostTick == dropTick && e.Kind == MatchEventKind.Elimination && e.FighterId == 2 && e.Value == 3), Is.EqualTo(1));
+            Assert.That(events.Count(e => e.HostTick == dropTick && e.Kind == MatchEventKind.RingOut), Is.Zero);
+
+            To(match, (int)dropTick + 1, Countdown + 250);
+            Assert.That(match.Lives(2), Is.Zero);
+            Assert.That(match.AliveFighters, Has.No.Member(2UL));
+
+            // Respawning fighter 3 disconnecting skips remaining lives cleanly and finishes match.
+            var fallTick = (uint)(Countdown + 251);
+            match.ReportRingOut(3, fallTick);
+            match.CompleteTick(fallTick);
+            Assert.That(match.IsRespawning(3), Is.True);
+            Assert.That(match.ReportDisconnect(3, fallTick + 1), Is.True);
+            match.CompleteTick(fallTick + 1);
+            Assert.That(match.Lives(3), Is.Zero);
+            Assert.That(match.IsRespawning(3), Is.False);
+            To(match, (int)fallTick + 2, (int)fallTick + 31);
+            Assert.That(match.Phase, Is.EqualTo(MatchPhase.Result));
+            Assert.That(match.Placements.Select(p => (p.FighterId, p.Rank)), Is.EqualTo(new[] { (1UL, 1), (3UL, 2), (2UL, 3) }));
+            Assert.That(match.Scores.Points(2), Is.EqualTo(1));
+        }
     }
 }

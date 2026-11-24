@@ -31,6 +31,8 @@ namespace SquishyBump.App
         /// <summary>LAN room beacons (host announces, Find Server listens); see D40.</summary>
         public LanDiscovery Discovery { get; } = new();
         internal void LockLanRoster() => session.AcceptingPlayers = false;
+        internal void UnlockLanRoster() => session.AcceptingPlayers = true;
+        public bool AcceptingPlayers => session.AcceptingPlayers;
         public LobbyState LobbySelection { get; private set; }
         public void SetLobbySelection(LobbyState state)
         {

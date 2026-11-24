@@ -142,6 +142,57 @@ namespace SquishyBump.Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator T11_ClientLeaves_RemoteInputStopsAndLobbyReopensAdmission()
+        {
+            yield return SceneManager.LoadSceneAsync($"{Root}/Scenes/Boot.unity", LoadSceneMode.Single);
+            app = Object.FindObjectsByType<GameplayBootstrap>(FindObjectsSortMode.None).First(b => b.Launcher != null);
+            app.Store = null;
+            host = new GameObject("SB30 test client").AddComponent<GameplayBootstrap>();
+            foreach (var peer in new[] { app, host })
+            {
+                peer.GetComponent<NetworkManager>().NetworkConfig.EnableSceneManagement = false;
+                peer.GetComponent<NetworkManager>().NetworkConfig.ForceSamePrefabs = false;
+            }
+            Assert.That(app.Session.Host(Core.SessionMode.Lan), Is.True);
+            Assert.That(host.Session.Join("127.0.0.1"), Is.True);
+            yield return WaitFor(() => host.Session.State == CoreSession.Joined, 7);
+            Assert.That(host.Session.State, Is.EqualTo(CoreSession.Joined));
+            var remoteId = app.Session.Peers.Single();
+            app.Launcher.LoadLevel(1);
+            yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
+            var match = app.Launcher.Match;
+            Assert.That(app.AcceptingPlayers, Is.False);
+            yield return WaitFor(() => match.Director.Phase == MatchPhase.Playing, 8);
+            var remote = match.Fighters.Single(f => f.Id == remoteId);
+            var initialZ = remote.Motor.transform.position.z;
+            host.Sync.SendInput(new[] {
+                new Core.InputCommand(1, Vector2.up, false, false, 0),
+                new Core.InputCommand(2, Vector2.up, false, false, 0),
+                new Core.InputCommand(3, Vector2.up, false, false, 0) });
+            yield return WaitFor(() => remote.Motor.transform.position.z > initialZ + 0.01f);
+            uint? eventTick = null;
+            app.Events.MatchRaised += e =>
+            { if (e.Kind == Core.MatchEventKind.Elimination && e.FighterId == remoteId) eventTick = e.HostTick; };
+            host.Session.Leave();
+            yield return WaitFor(() => match.Director.DisconnectedAt(remoteId).HasValue);
+            Assert.That(eventTick, Is.EqualTo(match.Director.DisconnectedAt(remoteId)));
+            Assert.That(match.Director.AliveFighters, Has.No.Member(remoteId));
+            Assert.That(remote.Out, Is.True); Assert.That(remote.Motor.enabled, Is.False);
+            Assert.That(remote.Motor.GetComponent<Rigidbody>().isKinematic, Is.True);
+            var stopped = remote.Motor.transform.position;
+            for (var i = 0; i < 3; i++) yield return new WaitForFixedUpdate();
+            Assert.That(Vector3.Distance(stopped, remote.Motor.transform.position), Is.LessThan(0.001f));
+            Assert.That(match.Director.Phase, Is.EqualTo(MatchPhase.Playing), "Các slot còn lại tiếp tục trận.");
+            // Luồng kết quả→lobby tự động còn thuộc session flow; kiểm tra điểm vào scene mở lại admission.
+            yield return SceneManager.LoadSceneAsync($"{Root}/Scenes/Lobby.unity", LoadSceneMode.Single);
+            Assert.That(app.AcceptingPlayers, Is.True);
+            yield return WaitFor(() => host.Session.State == CoreSession.Idle);
+            Assert.That(host.Session.Join("127.0.0.1"), Is.True);
+            yield return WaitFor(() => host.Session.State == CoreSession.Joined, 7);
+            Assert.That(host.Session.State, Is.EqualTo(CoreSession.Joined));
+        }
+
+        [UnityTest]
         public IEnumerator Level_StartsWithItsHazard([Values(2, 3)] int level)
         {
             yield return SceneManager.LoadSceneAsync($"{Root}/Scenes/Boot.unity", LoadSceneMode.Single);

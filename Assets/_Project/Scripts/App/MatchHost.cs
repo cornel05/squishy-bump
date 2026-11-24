@@ -65,6 +65,8 @@ namespace SquishyBump.App
         private readonly HashSet<Collider> nearBoxes = new();
         private bool hitStopping;
         private bool pausesGame;
+        private readonly HashSet<ulong> pendingDisconnects = new();
+        private readonly HashSet<ulong> disconnected = new();
         private bool lanSurvival;
         private bool survivalResult;
         private bool sessionFinished;
@@ -247,6 +249,7 @@ namespace SquishyBump.App
         public void StartMatch()
         {
             if (Started || !bootstrap.Session.CanSimulateGameplay) return;
+            bootstrap.LockLanRoster();
             resolver = gameObject.AddComponent<CollisionResolver>();
             resolver.Configure(balance);
             fighterPhysics = new FighterPhysicsAdapter(resolver);
@@ -287,6 +290,7 @@ namespace SquishyBump.App
             Hud.SetFruit(fighters[0].Motor.GetComponent<FighterProfileApplier>()?.Fruit, fighters[0].Fruit);
             Hud.SetRemaining(fighters.Count, fighters.Count);
             resolver.WobbleChanged += Director.SetWobble;
+            bootstrap.Session.PeerLeft += OnPeerLeft;
             resolver.Hit += OnHit;
             resolver.Contact += OnContact;
             foreach (var f in fighters)
@@ -390,7 +394,23 @@ namespace SquishyBump.App
         // Host only: a client's commands steer only that client's own fighter.
         private void OnRemoteInput(ulong client, IReadOnlyList<InputCommand> commands)
         {
+            if (disconnected.Contains(client)) return;
             if (inboxes.TryGetValue(client, out var inbox)) inbox.Offer(commands);
+        }
+
+        private void OnPeerLeft(ulong id)
+        {
+            if (!bootstrap.Session.CanSimulateGameplay || !disconnected.Add(id)) return;
+            inboxes.Remove(id);
+            var fighter = fighters.FirstOrDefault(f => f.Id == id);
+            if (fighter == null) return;
+            pendingDisconnects.Add(id);
+            if (fighter.Out) return;
+            // Đóng input/physics ngay; thứ hạng được commit cùng mọi lần rơi ở tick kế tiếp.
+            fighter.Motor.enabled = false;
+            var body = fighter.Motor.GetComponent<Rigidbody>(); body.linearVelocity = Vector3.zero; body.isKinematic = true;
+            foreach (var collider in fighter.Motor.GetComponentsInChildren<Collider>()) collider.enabled = false;
+            fighterPhysics.Remove(id);
         }
 
         private void OnTick(uint tick)
@@ -398,9 +418,13 @@ namespace SquishyBump.App
             if ((lanSurvival || singleRoster != null) && (sessionFinished || Director.Phase == MatchPhase.Result)) return;
             simulationTick = tick;
             var dt = Time.fixedDeltaTime;
+            foreach (var id in pendingDisconnects) Director.ReportDisconnect(id, tick);
+            pendingDisconnects.Clear();
             introStartTick ??= tick;
             if (Director.Phase == MatchPhase.Intro && tick - introStartTick.Value >= Mathf.RoundToInt(introSeconds / dt))
                 Director.FinishIntro(tick);
+            else if (Director.Phase == MatchPhase.Intro)
+                Director.CompleteTick(tick);
             var playing = Director.Phase == MatchPhase.Playing;
             var local = localInput.Sample();
             var sensedFighters = fighters.Select(f => new BotFighter(f.Id, f.Motor.transform.position,
@@ -421,10 +445,10 @@ namespace SquishyBump.App
 
             foreach (var f in fighters)
             {
-                if (f.Out) continue;
-                if (lanSurvival && f.Id != 0 && !bootstrap.Session.Peers.Contains(f.Id))
+                if (f.Out || disconnected.Contains(f.Id)) continue;
+                if (lanSurvival && f.Id != 0 && f.Id < FirstBotId && !bootstrap.Session.Peers.Contains(f.Id))
                 {
-                    if (playing) Director.ReportRingOut(f.Id, tick);
+                    if (disconnected.Add(f.Id)) Director.ReportDisconnect(f.Id, tick);
                     continue;
                 }
                 f.Motor.Invulnerable = Director.IsInvulnerable(f.Id, 1);
@@ -694,6 +718,7 @@ namespace SquishyBump.App
                 bootstrap.Events.HazardRaised -= OnHazard;
                 bootstrap.Events.MatchRaised -= OnMatchEvent;
                 bootstrap.Sync.InputReceived -= OnRemoteInput;
+                bootstrap.Session.PeerLeft -= OnPeerLeft;
                 bootstrap.Sync.SnapshotReceived -= RefreshClientHud;
             }
             if (pausesGame) Time.timeScale = 1f;

@@ -189,6 +189,7 @@ nối trong các issue tương ứng.
 `Scenes/Boot` (build index 0), `MainMenu`, `Lobby`, `Levels/L1…L5` are shared: edited by their owner
 (L1, L4, L5 Nhật; L2, L3 Duy) or through prefabs. `Scenes/Sandbox/Test_Duy` and `Test_Nhat` are personal and
 never built. Scene list is set by `SquishyBump.Editor.ProjectScaffold.Run`.
+
 ## H06 / SB-44
 
 `Core.IceProfile` chứa balance GDD 7.4–7.5; `Hazards.IceRules` chụp dữ liệu thành tick.
@@ -351,3 +352,14 @@ vẫn dành cho test/công cụ; đường menu production luôn bắt đầu L1
 MatchSetup tham chiếu D1–D5 có sẵn qua Editor.SinglePlayerSetup.Configure;
 ProjectScaffold gọi cùng helper. Không đổi wire protocol hoặc Core contract.
 Giới hạn kiểm chứng T04 và lệnh chạy lại: [báo cáo SB-26](testing/sb26-single-run.md).
+
+## SB-30 — ngắt kết nối & đóng/mở nhận người
+
+`StubSessionService.AcceptingPlayers` (mặc định bật, reset khi `Host`) trả `SessionEndReason.MatchInProgress`
+(`"SB:MatchInProgress"`) khi phòng đang đấu. `MatchHost.StartMatch` gọi `GameplayBootstrap.LockLanRoster`,
+còn `LevelLauncher` mở lại qua `UnlockLanRoster` khi nạp `Lobby`.
+
+`MatchHost` nhận `PeerLeft`, xoá input inbox, dừng motor/collider/force adapter ngay và đưa
+`ReportDisconnect` vào host tick kế tiếp. `MatchDirector` loại trực tiếp ở tick đó cho cả
+Survival và Rank (kể cả khi đang chờ hồi sinh: hết mạng, không respawn, không tính ring-out/last-touch
+credit, giữ nguyên điểm đã ghi), ghi `DisconnectedAt` và chỉ phát một `MatchEvent.Elimination`.

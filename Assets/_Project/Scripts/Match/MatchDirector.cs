@@ -58,6 +58,8 @@ namespace SquishyBump.Match
         private readonly Dictionary<ulong, int> wobble = new();
         private readonly List<ulong[]> eliminations = new();
         private readonly HashSet<ulong> pendingFalls = new();
+        private readonly Dictionary<ulong, uint> pendingDisconnects = new();
+        private readonly Dictionary<ulong, uint> disconnectedAt = new();
         private uint lastTick;
         private int countdownRemaining;
         private int elapsedTicks;
@@ -131,6 +133,7 @@ namespace SquishyBump.Match
         public int ElapsedTicks => elapsedTicks;
         public event Action<MatchPhase> PhaseChanged;
         public event Action<IReadOnlyList<SurvivalPlacement>> ResultConfirmed;
+        public uint? DisconnectedAt(ulong id) => disconnectedAt.TryGetValue(id, out var tick) ? tick : null;
 
         private bool CanSimulate => !disposed && hasHostAuthority();
 
@@ -138,6 +141,7 @@ namespace SquishyBump.Match
         {
             if (!CanSimulate || Phase != MatchPhase.Intro)
                 return;
+            CommitNonPlayingDisconnects(hostTick);
             lastTick = hostTick;
             countdownRemaining = countdownTicks;
             SetPhase(MatchPhase.Countdown);
@@ -163,6 +167,18 @@ namespace SquishyBump.Match
                 pendingFalls.Add(fighterId);
         }
 
+        /// <summary>Host áp dụng mất kết nối ở tick mô phỏng nhận sự kiện. Không phải ring-out được tính điểm.</summary>
+        public bool ReportDisconnect(ulong fighterId, uint hostTick)
+        {
+            var active = Rule == MatchRule.Rank
+                ? rankEntries.TryGetValue(fighterId, out var entry) && !entry.Eliminated
+                : wobble.ContainsKey(fighterId);
+            if (!CanSimulate || Phase == MatchPhase.Result || !active ||
+                (Phase != MatchPhase.Intro && !IsNextTick(hostTick)) || hostTick == 0 ||
+                pendingDisconnects.ContainsKey(fighterId)) return false;
+            pendingDisconnects.Add(fighterId, hostTick); return true;
+        }
+
         public void SampleArena(ulong fighterId, uint hostTick, UnityEngine.Vector3 worldCenter)
         {
             if (bounds != null && CanSimulate && Phase == MatchPhase.Playing && IsNextTick(hostTick)
@@ -173,12 +189,15 @@ namespace SquishyBump.Match
         // Host gọi sau khi đã báo mọi ring-out của tick này, kể cả tick cuối.
         public void CompleteTick(uint hostTick)
         {
-            if (!CanSimulate || Phase == MatchPhase.Intro || Phase == MatchPhase.Result || !IsNextTick(hostTick))
+            if (!CanSimulate || Phase == MatchPhase.Result)
                 return;
+            if (Phase == MatchPhase.Intro) { CommitNonPlayingDisconnects(hostTick); return; }
+            if (!IsNextTick(hostTick)) return;
             lastTick = hostTick;
 
             if (Phase == MatchPhase.Countdown)
             {
+                CommitNonPlayingDisconnects(hostTick);
                 if (--countdownRemaining % tickRate == 0)
                     Publish(MatchEvent.Countdown(NextEventId(), hostTick, countdownRemaining / tickRate));
                 if (countdownRemaining == 0)
@@ -196,20 +215,27 @@ namespace SquishyBump.Match
                 CompleteRankTick(hostTick);
                 return;
             }
-            if (pendingFalls.Count != 0)
+            var disconnects = TakeDisconnects(hostTick);
+            if (pendingFalls.Count != 0 || disconnects.Length != 0)
             {
-                var group = roster.Where(pendingFalls.Contains).ToArray();
+                var disconnectSet = disconnects.Length == 0 ? null : disconnects.ToHashSet();
+                var group = roster.Where(id => wobble.ContainsKey(id) &&
+                    (pendingFalls.Contains(id) || (disconnectSet != null && disconnectSet.Contains(id)))).ToArray();
                 foreach (var fighter in group)
                 {
                     wobble.Remove(fighter);
-                    Publish(MatchEvent.RingOut(NextEventId(), hostTick, fighter));
+                    if (disconnectSet != null && disconnectSet.Contains(fighter)) disconnectedAt[fighter] = hostTick;
+                    else Publish(MatchEvent.RingOut(NextEventId(), hostTick, fighter));
                 }
-                eliminations.Add(group);
-                foreach (var fighter in group)
-                    Publish(MatchEvent.Elimination(NextEventId(), hostTick, fighter, wobble.Count + 1));
+                if (group.Length != 0)
+                {
+                    eliminations.Add(group);
+                    foreach (var fighter in group)
+                        Publish(MatchEvent.Elimination(NextEventId(), hostTick, fighter, wobble.Count + 1));
+                    lastEliminationAt = elapsedTicks;
+                    PublishScoreboard();
+                }
                 pendingFalls.Clear();
-                lastEliminationAt = elapsedTicks;
-                PublishScoreboard();
             }
 
             if (wobble.Count <= 1)
@@ -261,6 +287,8 @@ namespace SquishyBump.Match
             wobble.Clear();
             eliminations.Clear();
             pendingFalls.Clear();
+            pendingDisconnects.Clear();
+            disconnectedAt.Clear();
             rankEntries.Clear();
             Placements = Array.Empty<SurvivalPlacement>();
             foreach (var fighter in roster)
@@ -293,6 +321,30 @@ namespace SquishyBump.Match
             ResultConfirmed?.Invoke(Placements);
         }
 
+        private ulong[] TakeDisconnects(uint tick)
+        {
+            var ids = roster.Where(id => pendingDisconnects.TryGetValue(id, out var at) && at == tick).ToArray();
+            foreach (var id in ids) pendingDisconnects.Remove(id);
+            return ids;
+        }
+
+        private void CommitNonPlayingDisconnects(uint tick)
+        {
+            var disconnects = TakeDisconnects(tick);
+            if (disconnects.Length == 0) return;
+            foreach (var id in disconnects)
+            {
+                wobble.Remove(id);
+                disconnectedAt[id] = tick;
+                if (Rule == MatchRule.Rank && rankEntries.TryGetValue(id, out var state))
+                { state.Lives = 0; state.RespawnAt = -1; state.Eliminated = true; }
+            }
+            eliminations.Add(disconnects);
+            lastEliminationAt = elapsedTicks;
+            var rank = (Rule == MatchRule.Rank ? rankEntries.Values.Count(s => !s.Eliminated) : wobble.Count) + 1;
+            foreach (var id in disconnects) Publish(MatchEvent.Elimination(NextEventId(), tick, id, rank));
+        }
+
         private MatchStanding[] Standings(IEnumerable<SurvivalPlacement> placements) => placements.Select(p =>
             new MatchStanding(p.FighterId, p.Rank, Scores?.Points(p.FighterId) ?? 0,
                 Rule == MatchRule.Rank ? Lives(p.FighterId) : wobble.ContainsKey(p.FighterId) ? 1 : 0,
@@ -315,8 +367,18 @@ namespace SquishyBump.Match
 
         private void CompleteRankTick(uint hostTick)
         {
-            var changed = pendingFalls.Count > 0;
-            var eliminated = new List<ulong>();
+            var disconnects = TakeDisconnects(hostTick);
+            var disconnectSet = disconnects.Length == 0 ? null : disconnects.ToHashSet();
+            if (disconnectSet != null) pendingFalls.ExceptWith(disconnectSet);
+            var changed = pendingFalls.Count > 0 || disconnects.Length > 0;
+            var eliminated = new List<ulong>(disconnects);
+            foreach (var id in disconnects)
+            {
+                var state = rankEntries[id];
+                state.Lives = 0; state.RespawnAt = -1; state.Eliminated = true;
+                wobble.Remove(id);
+                disconnectedAt[id] = hostTick;
+            }
             foreach (var id in roster.Where(pendingFalls.Contains))
             {
                 var state = rankEntries[id];
@@ -363,7 +425,6 @@ namespace SquishyBump.Match
 
         private uint NextEventId() => eventSink?.NextEventId() ?? 0;
         private void Publish(MatchEvent gameEvent) => eventSink?.Publish(gameEvent);
-
         private static void AppendGroup(List<SurvivalPlacement> results, IEnumerable<ulong> fighters)
         {
             var rank = results.Count + 1;
