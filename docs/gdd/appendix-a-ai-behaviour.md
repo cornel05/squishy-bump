@@ -4,7 +4,7 @@
 
 ## A.1 Architecture
 
-Each bot runs a sense-think-act cycle on the host at its decision rate (4 to 10 Hz by tier). BotSensors read the world state and the hazard events; BotBrain updates the danger map, chooses a target, runs the state machine and plans a path; the result is an input command (move vector, jump, dash) fed to the same PlayerMotor as a human player. Each bot plays the fruit it received in the lobby and knows its own weight class. Reaction delay is modelled by acting on sensor data that is older by the tier's delay.
+Each bot runs a sense-think-act cycle on the host at its decision rate (4 to 10 Hz by tier). BotSensors read the world state and the hazard events; BotBrain updates the danger map, chooses a target, runs the state machine and plans a path; the result is an input command (move vector, jump, dash) fed to the same PlayerMotor as a human player. Each bot plays the fighter it received in the lobby and knows its own weight class. Reaction delay is modelled by acting on sensor data that is older by the tier's delay.
 
 ## A.2 State machine
 
@@ -26,7 +26,7 @@ Anti-stuck rule: if a bot makes less than 0.5 m of progress toward its goal in 2
 U(t) = 0.4·(1 − min(d/12, 1)) + 0.3·(1 − min(e_t/6, 1)) + 0.2·(h_t/10) + 0.1·s_t − 0.5·D_path
 ```
 
-d is the distance to the target, e_t the target's distance to the nearest edge, h_t its Wobble, s_t its class vulnerability relative to the bot (1 when the target is lighter, 0.5 when equal, 0 when heavier) and D_path the mean danger along the planned path. A bot changes target only when another fruit scores at least 0.15 higher (hysteresis). Bots do not prefer the human player, so Rank results stay fair. D1 bots ignore utility and pick a random target every 4 s.
+d is the distance to the target, e_t the target's distance to the nearest edge, h_t its Wobble, s_t its class vulnerability relative to the bot (1 when the target is lighter, 0.5 when equal, 0 when heavier) and D_path the mean danger along the planned path. A bot changes target only when another fighter scores at least 0.15 higher (hysteresis). Bots do not prefer the human player, so Rank results stay fair. D1 bots ignore utility and pick a random target every 4 s.
 
 ## A.4 Danger map and pathfinding
 
@@ -46,11 +46,11 @@ The arena is covered by a grid of 1 m cells (at most 26 × 26). Each cell gets a
 | Targeting | Random | Utility | Utility | Utility | Utility |
 | Hazard awareness | Edge and ring drops | + cannons, turntable reversal, obstacle boxes, pusher lanes | + tiles | + blasts, burn, time left | All, with time-to-impact |
 | Ice handling | None | None | Edge margin ×1.5 on ice | Margin ×1.5; brakes early | Margin ×1.5; plans slides with μ_ice |
-| Class-aware tactics | None | None | Avoids charging heavier fruits head-on | Heavy holds the centre; Light keeps distance and flanks | Predictive: baits heavier fruits into hazards, punishes lighter ones near edges, plays for low Wobble near the time limit |
+| Class-aware tactics | None | None | Avoids charging heavier fighters head-on | Heavy holds the centre; Light keeps distance and flanks | Predictive: baits heavier fighters into hazards, punishes lighter ones near edges, plays for low Wobble near the time limit |
 
 ## A.6 Roster rule
 
-For level N the host creates five bots: one at tier D_N and four drawn uniformly from tiers max(1, N − 2) to N using the match seed. The bots take the five fruits the player did not pick, in seeded order, and keep them for the whole run. Survival retries keep the same roster, fruits and seed, so the same roster is recognisable across retries.
+For level N the host creates five bots: one at tier D_N and four drawn uniformly from tiers max(1, N − 2) to N using the match seed. The bots take the five fighters the player did not pick, in seeded order, and keep them for the whole run. Survival retries keep the same roster, fighters and seed, so the same roster is recognisable across retries.
 
 ## A.7 AI test scenarios
 
