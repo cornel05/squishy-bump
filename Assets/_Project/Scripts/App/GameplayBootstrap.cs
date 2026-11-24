@@ -94,9 +94,16 @@ namespace SquishyBump.App
 
         private void Start()
         {
-            // shortcut: only a fresh start (player launch or Play on Boot, frame ≤ 2) goes to the menu, so PlayMode
+            // shortcut: only a fresh start (player launch or Play on Boot, frame ≤ 2) auto-navigates, so PlayMode
             // tests that load Boot mid-run keep their own scenes. Replace with an explicit boot flag if it bites.
-            if (Launcher != null && Time.frameCount <= 2)
+            if (Launcher == null || Time.frameCount > 2) return;
+            var args = Environment.GetCommandLineArgs();
+            var startRule = LevelLauncher.ReadStartRule(args);
+            if (startRule.HasValue) Settings.Rule = startRule.Value;
+            var startLevel = LevelLauncher.ReadStartLevel(args);
+            if (startLevel > 0)
+                Launcher.StartSinglePlayer(startLevel);
+            else
                 SceneManager.LoadScene(setup.MainMenuScene, LoadSceneMode.Single);
         }
 
