@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using SquishyBump.Core;
@@ -53,6 +54,38 @@ namespace SquishyBump.App
         public MatchOverlay Overlay { get; private set; }
         public AudioDirector Audio { get; private set; }
         public LobbyController Lobby { get; private set; }
+
+        /// <summary>Reads -level 1..5 (or L1..L5) from CLI args; returns 0 when omitted or invalid.</summary>
+        public static int ReadStartLevel(string[] args)
+        {
+            if (args == null) return 0;
+            int index = Array.IndexOf(args, "-level");
+            if (index < 0) return 0;
+            if (index + 1 < args.Length)
+            {
+                var raw = (args[index + 1] ?? string.Empty).Trim();
+                if (raw.StartsWith("L", StringComparison.OrdinalIgnoreCase)) raw = raw.Substring(1);
+                if (int.TryParse(raw, out int level) && level >= 1 && level <= 5) return level;
+            }
+            Debug.LogWarning("[LevelLauncher] Expected -level followed by 1..5 (or L1..L5).");
+            return 0;
+        }
+
+        /// <summary>Reads optional -rule survival|rank from CLI args; returns null when omitted or invalid.</summary>
+        public static MatchRule? ReadStartRule(string[] args)
+        {
+            if (args == null) return null;
+            int index = Array.IndexOf(args, "-rule");
+            if (index < 0) return null;
+            if (index + 1 < args.Length)
+            {
+                var raw = (args[index + 1] ?? string.Empty).Trim();
+                if (string.Equals(raw, "survival", StringComparison.OrdinalIgnoreCase)) return MatchRule.Survival;
+                if (string.Equals(raw, "rank", StringComparison.OrdinalIgnoreCase)) return MatchRule.Rank;
+            }
+            Debug.LogWarning("[LevelLauncher] Expected -rule followed by survival or rank.");
+            return null;
+        }
 
         public void Init(GameplayBootstrap owner, MatchSetup matchSetup)
         {

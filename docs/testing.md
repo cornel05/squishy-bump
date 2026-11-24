@@ -624,3 +624,10 @@ Build Windows x64 release đạt: 0 errors, 857 MB; repo checker PASS (0 problem
 
 - Hợp nhất PR #96 với `main`: dùng chung `StubSessionService.AcceptingPlayers` (`GameplayBootstrap.LockLanRoster` / `UnlockLanRoster`), bỏ `ISessionAdmission`; gom phát `MatchEvent.Elimination` về `MatchDirector` cho cả Survival và Rank (không respawn, không cộng ring-out credit, giữ nguyên điểm đã ghi).
 - Kiểm thử: `SurvivalMatchTests` (đã cập nhật sang `GameEventHub`), `RankMatchTests.Disconnect_EliminatesWithoutRespawnOrCreditAndKeepsScore`, `SyncTests`, `MenuFlowTests.T11_ClientLeaves_RemoteInputStopsAndLobbyReopensAdmission` (loopback). Chưa chạy LAN 2 máy riêng.
+
+### SB-78 — gắn Creative map assets L1–L5 & direct launch (24/11/2026)
+
+- Assets & scenes: đưa raw GLBs/meshes/materials vào `Assets/_Project/Art/Levels/L1..L5/`, gắn vào `L1..L5.unity` qua `LevelArtSceneBuilder` (`TrainingRingFloor.prefab` / H01 trên L1, `LevelArtBinder` runtime trên L2/L4/L5). Giữ tỉ lệ visual fighter `1.0x` đợt này (mốc scale đã thử nghiệm trước đó giữ lại trong ghi chú: `L1: 0.95x`, `L2: 0.80x`, `L3: 0.60x`, `L4: 0.90x`, `L5: 0.85x`).
+- Inject màn chơi: CLI `-level 1..5` (`L1..L5`) & `-rule survival|rank` (`LevelLauncher` + `GameplayBootstrap`), `LevelPlayCommands.PlayL1..PlayL5`, `tools/play-level.ps1`.
+- Tests mới: `LevelLaunchArgsTests` (EditMode), `LevelArtTests` (PlayMode L1–L5).
+- Kết quả sau rebase lên `main` (`bcc115a`): `tools/verify.ps1 -PlayMode` → **VERIFY: PASS** (**376** EditMode, **82** PlayMode passed, **1** skipped WindowsPlayer-only, **0** cảnh báo `SquishyBump.*`); `python tools/check_repo.py` → **PASS** (0 problems); `tools/build-windows.ps1` → **BUILD: PASS** (**0 errors**, **3993 MB**). Chưa playtest tương tác trực tiếp trong `.exe` L1–L5 qua `play-level.ps1`.
