@@ -57,6 +57,16 @@ namespace SquishyBump.Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator SessionResult_RankShowsPointsAndLivesOnVisiblePodium()
+        {
+            var overlay = NewOverlay();
+            overlay.ShowSessionResult(new[] { new MatchStanding(1, 1, 17, 2), new MatchStanding(2, 2, 9, 0) }, id => $"Animal {id}");
+            Assert.That(root.GetComponentsInChildren<Text>().Any(t => t.enabled && t.text.Contains("17") && t.text.Contains("2 mạng")),
+                Is.True, "Podium phải hiển thị cả điểm và mạng, không chỉ ở summary ẩn.");
+            yield return null;
+        }
+
+        [UnityTest]
         public IEnumerator SessionResult_PutsTopThreeOnPodiums()
         {
             var overlay = NewOverlay();

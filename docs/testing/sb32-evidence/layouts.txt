@@ -1,0 +1,12 @@
+1280x720-0.png: Direct3D12; text bounds/height PASS
+1280x720-1.png: Direct3D12; text bounds/height PASS
+1280x720-2.png: Direct3D12; text bounds/height PASS
+1920x1080-0.png: Direct3D12; text bounds/height PASS
+1920x1080-1.png: Direct3D12; text bounds/height PASS
+1920x1080-2.png: Direct3D12; text bounds/height PASS
+1680x720-0.png: Direct3D12; text bounds/height PASS
+1680x720-1.png: Direct3D12; text bounds/height PASS
+1680x720-2.png: Direct3D12; text bounds/height PASS
+1280x960-0.png: Direct3D12; text bounds/height PASS
+1280x960-1.png: Direct3D12; text bounds/height PASS
+1280x960-2.png: Direct3D12; text bounds/height PASS

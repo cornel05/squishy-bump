@@ -72,6 +72,7 @@ namespace SquishyBump.App
         private bool sessionFinished;
         private IReadOnlyList<LobbyPlayer> survivalRoster;
         private ushort? cameraFighter;
+        private IReadOnlyList<MatchStanding> confirmedBoard = System.Array.Empty<MatchStanding>();
         private System.Action leaveCompletedSession;
         public MatchHud Hud { get; private set; }
         private WorldSnapshot hudSnapshot;
@@ -220,6 +221,8 @@ namespace SquishyBump.App
             bootstrap.Session.StateChanged += OnSessionState;
             bootstrap.Events.HazardRaised += OnHazard;
             bootstrap.Events.MatchRaised += OnMatchEvent;
+            confirmedBoard = bootstrap.MatchState.Scoreboard;
+            RefreshBoard(); // Reliable event có thể đến trước lúc scene client dựng HUD.
             if (autoHost && bootstrap.Session.State == SessionState.Idle) bootstrap.Session.Host(SessionMode.SinglePlayer);
             if (autoHost && bootstrap.Session.State == SessionState.Hosting) StartMatch();
             if (bootstrap.Session.State == SessionState.Joined) OnSessionState(SessionState.Joined);
@@ -238,9 +241,10 @@ namespace SquishyBump.App
                 clientView.ViewSpawned += (id, view) =>
                 {
                     Hud.Register(id, view.transform, view.GetComponent<SphereCollider>().radius + 0.5f);
-                    if (id == (ushort)Unity.Netcode.NetworkManager.Singleton.LocalClientId)
+                    if (id == (ushort)networkManager.LocalClientId)
                         Hud.SetFruit(view.GetComponent<FighterProfileApplier>()?.Fruit);
                     if (hudSnapshot != null) RefreshClientHud(hudSnapshot);
+                    RefreshBoard();
                 };
             }
         }
@@ -328,7 +332,8 @@ namespace SquishyBump.App
             localInput?.UpdateLook();
             UpdateSounds();
             clientView?.Update(Time.time);
-            if (lanSurvival && (Started || clientView != null)) UpdateSurvivalCamera();
+            if (Started || clientView != null) UpdateFighterCamera();
+            Hud.ShowScoreboard(localInput != null && localInput.ScoreboardHeld && !survivalResult);
             foreach (var f in fighters)
             {
                 if (f.Out) continue;
@@ -348,23 +353,20 @@ namespace SquishyBump.App
             // HUD for the host's local fighter (id 0); display only.
             if (overlay != null && Started && Director != null)
                 overlay.ShowHud(Director.Lives(0), Director.Rule == MatchRule.Rank ? balance.Lives : 1);
-            if (Started && Director != null && Time.unscaledTime >= nextBoardAt)
-            {
-                nextBoardAt = Time.unscaledTime + BoardRefreshSeconds;
-                var rank = Director.Rule == MatchRule.Rank && Director.Scores != null;
-                Hud.SetBoard(fighters.Select(f => (FighterLabel(f.Id),
-                    rank ? Director.Scores.Points(f.Id) : Director.Lives(f.Id), FruitColor(f.Fruit))).ToList());
-            }
+
         }
 
-        private void UpdateSurvivalCamera()
+        private void UpdateFighterCamera()
         {
             if (cameraRig == null) return;
             var own = (ushort)networkManager.LocalClientId;
             var views = clientView != null ? clientView.Views : null;
             var ownView = views != null ? (views.TryGetValue(own, out var view) ? view : null) :
                 fighters.FirstOrDefault(f => f.Id == own)?.Motor.gameObject;
-            if (ownView != null && ownView.activeSelf)
+            var rule = bootstrap.LobbySelection?.Rule ?? bootstrap.Settings.Rule;
+            var lives = Director != null ? Director.Lives(own) : hudSnapshot?.Fighters.FirstOrDefault(f => f.Id == own).Lives ?? 0;
+            // Rank: một quả ẩn để hồi sinh vẫn giữ quyền chơi và camera của mình.
+            if (ownView != null && (ownView.activeSelf || (rule == MatchRule.Rank && lives > 0)))
             {
                 FollowFighter(own, ownView);
                 overlay?.ShowSpectating(false);
@@ -553,14 +555,13 @@ namespace SquishyBump.App
             foreach (var f in snapshot.Fighters)
             {
                 Hud.SetWobble(f.Id, f.Wobble, (f.Flags & FighterFlags.Out) == 0);
-                if (f.Id == (ushort)Unity.Netcode.NetworkManager.Singleton.LocalClientId)
+                if (f.Id == (ushort)networkManager.LocalClientId)
                 {
                     Hud.SetDash(f.DashCooldownTicks / balance.FixedStepHz);
                     overlay?.ShowHud(f.Lives, rule == MatchRule.Rank && !lanSurvival ? balance.Lives : 1);
                 }
             }
-            // Clients get lives in the snapshot, not points: their board ranks by lives left.
-            Hud.SetBoard(snapshot.Fighters.Select(f => (FighterLabel(f.Id), (int)f.Lives, FruitColor(f.Fruit))).ToList());
+            // Điểm/hạng cập nhật từ reliable event; ViewSpawned cập nhật tên/màu khi có avatar.
         }
 
         private void OnHit(FighterHit hit)
@@ -576,6 +577,16 @@ namespace SquishyBump.App
         private void OnMatchEvent(MatchEvent e)
         {
             if (e.Kind == MatchEventKind.Respawn) Sound(Sfx.Respawn, LocalFighterPosition());
+            if (e.Kind == MatchEventKind.Scoreboard || e.Kind == MatchEventKind.MatchResult || e.Kind == MatchEventKind.SessionResult)
+            {
+                confirmedBoard = e.Standings;
+                RefreshBoard();
+            }
+            if (e.Kind == MatchEventKind.MatchResult || e.Kind == MatchEventKind.SessionResult)
+            {
+                Hud.ShowScoreboard(false);
+                Hud.SetVisible(false);
+            }
             if (overlay == null) return;
             if (e.Kind == MatchEventKind.Countdown)
                 overlay.ShowBanner(e.Value == 0 ? "GO!" : e.Value.ToString(), 1f);
@@ -590,7 +601,7 @@ namespace SquishyBump.App
                 }
                 else if (!lanSurvival && leaveMatch != null) overlay.OfferResultAction("Next", leaveMatch);
             }
-            if (!lanSurvival || (e.Kind != MatchEventKind.MatchResult && e.Kind != MatchEventKind.SessionResult)) return;
+            if (e.Kind != MatchEventKind.SessionResult && (!lanSurvival || e.Kind != MatchEventKind.MatchResult)) return;
 
             survivalResult = true;
             localInput.Suspended = true;
@@ -599,8 +610,16 @@ namespace SquishyBump.App
             {
                 sessionFinished = true;
                 overlay.ShowSessionResult(e.Standings, FighterLabel, FighterFruit);
-                overlay.OfferResultAction("Về menu", leaveCompletedSession);
+                overlay.OfferResultAction("Về menu", leaveCompletedSession ?? leaveMatch);
             }
+        }
+
+        private void RefreshBoard()
+        {
+            if (confirmedBoard.Count == 0) return;
+            var rule = bootstrap.LobbySelection?.Rule ?? bootstrap.Settings.Rule;
+            Hud.SetStandings(confirmedBoard, FighterLabel, id => FruitColor(FighterFruit(id)), rule, level,
+                bootstrap.LobbySelection?.FinalLevel ?? SinglePlayerRun.FinalLevel);
         }
 
         private Color FruitColor(int fruit)
@@ -616,7 +635,11 @@ namespace SquishyBump.App
                 foreach (var player in bootstrap.LobbySelection.Players)
                     if (player.Id == id) return player.Fruit;
             var hostFighter = fighters.FirstOrDefault(f => f.Id == id);
-            return hostFighter != null ? hostFighter.Fruit : (int)(id % 6);
+            if (hostFighter != null) return hostFighter.Fruit;
+            if (clientView?.Buffer.Newest != null)
+                foreach (var row in clientView.Buffer.Newest.Fighters)
+                    if (row.Id == id) return row.Fruit;
+            return (int)(id % 6);
         }
 
         private string FighterLabel(ulong id)
@@ -674,8 +697,6 @@ namespace SquishyBump.App
         }
 
         private float audioWhoosh;
-        private float nextBoardAt;
-        private const float BoardRefreshSeconds = 0.25f; // display only; the values are already host-confirmed
 
         public void ConfigureFeedback(float hitStopSeconds, float whooshDistance)
         {

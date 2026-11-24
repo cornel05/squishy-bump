@@ -631,3 +631,18 @@ Build Windows x64 release đạt: 0 errors, 857 MB; repo checker PASS (0 problem
 - Inject màn chơi: CLI `-level 1..5` (`L1..L5`) & `-rule survival|rank` (`LevelLauncher` + `GameplayBootstrap`), `LevelPlayCommands.PlayL1..PlayL5`, `tools/play-level.ps1`.
 - Tests mới: `LevelLaunchArgsTests` (EditMode), `LevelArtTests` (PlayMode L1–L5).
 - Kết quả sau rebase lên `main` (`bcc115a`): `tools/verify.ps1 -PlayMode` → **VERIFY: PASS** (**376** EditMode, **82** PlayMode passed, **1** skipped WindowsPlayer-only, **0** cảnh báo `SquishyBump.*`); `python tools/check_repo.py` → **PASS** (0 problems); `tools/build-windows.ps1` → **BUILD: PASS** (**0 errors**, **3993 MB**). Chưa playtest tương tác trực tiếp trong `.exe` L1–L5 qua `play-level.ps1`.
+
+## 24/11/2026 · SB-32 — kết quả, bảng điểm và spectator
+
+Nền main `e2e9a6a`, nhánh `feat/SB-32-results-spectator`. Windows Player Direct3D12:
+`ResultsSpectatorTests` **7/7 đạt, 0 skip**, gồm input Tab/trái/phải, target camera
+thật ở Survival/Rank, giữ camera khi chờ hồi sinh, bảng reliable host/client qua
+NGO loopback sau reconnect và snapshot mới. Kiểm 12 trang (match/session/Tab ×4
+kích thước 1280×720,1920×1080,1680×720,1280×960): biên/chiều cao chữ và ribbon
+không che podium. Đã xem ảnh match, session 4:3 và Tab ultrawide; không ghi
+2560×1080 đạt vì OS không áp dụng. [Báo cáo và bằng chứng](testing/sb32-results-spectator.md).
+Không nâng T04/T06/T07/T18 hoặc số người playtest ngoài từ các fixture này.
+Verifier cuối SB-32: VERIFY PASS, 376 EditMode +89 PlayMode, 0 lỗi/cảnh báo C#,
+2 skip có chủ đích (ca hình ảnh Windows-only); riêng SB-32 Player7/7 đạt.
+
+Xác minh nguồn cuối SB-32 ngày 24/11/2026: release Windows **Succeeded: 0 errors, 3993 MB, 00:01:05.8226868**; `python tools/check_repo.py` → **PASS (0 problems)**. Không đưa 43 meta UI do importer đổi maxTextureSize vào commit.

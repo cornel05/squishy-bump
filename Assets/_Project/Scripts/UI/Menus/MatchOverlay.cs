@@ -144,7 +144,7 @@ namespace SquishyBump.UI.Menus
                 ? $"VÔ ĐỊCH · {label(standings[0].FighterId)}"
                 : "PHIÊN ĐÃ KẾT THÚC";
             BuildWinnerPage(headline, standings, label, fruit ?? DefaultFruit);
-            ShowResultText(headline + "\n" + string.Join("\n", standings.Select(s => $"{s.Rank}. {label(s.FighterId)}")));
+            ShowResultText(headline + "\n" + string.Join("\n", standings.Select(s => $"{s.Rank}. {label(s.FighterId)} — {s.Points} điểm · {s.Lives} mạng")));
         }
 
         public void OfferResultAction(string caption, Action onClick)
@@ -193,6 +193,7 @@ namespace SquishyBump.UI.Menus
             card.gameObject.SetActive(false);
             banner.gameObject.SetActive(false);
             result.text = content;
+            spectating.gameObject.SetActive(false);
             if (hud != null) hud.gameObject.SetActive(false);
             result.gameObject.SetActive(true);
             resultReadyAt = Time.unscaledTime + ResultReadSeconds;
@@ -255,15 +256,16 @@ namespace SquishyBump.UI.Menus
                     x += 50f;
                 }
                 UiFactory.Place(row.transform, Avatar(fruit(s.FighterId)), new Vector2(0, 0.5f), new Vector2(x, 0), new Vector2(92, 92)).color = tint;
-                var text = UiFactory.Label(row.transform, $"{label(s.FighterId).ToUpperInvariant()}\nSCORE: {s.Points} · {s.Lives} mạng", 30);
+                var text = UiFactory.Label(row.transform, $"{label(s.FighterId).ToUpperInvariant()}\n{s.Points} điểm · {s.Lives} mạng", 28);
                 text.alignment = TextAnchor.MiddleLeft;
                 text.color = mine ? UiFactory.Ink : new Color(0.3f, 0.3f, 0.35f);
                 var textRect = text.rectTransform;
                 textRect.anchorMin = textRect.anchorMax = textRect.pivot = new Vector2(0, 0.5f);
                 textRect.anchoredPosition = new Vector2(x + 108, 0);
-                textRect.sizeDelta = new Vector2(360, 100);
+                textRect.sizeDelta = new Vector2(row.rectTransform.sizeDelta.x - (x + 108) - 16, 100);
                 y -= 136f;
             }
+            BuildPodiums(page, standings, label, fruit, compact: true);
             var own = standings.FirstOrDefault(s => s.FighterId == localId);
             if (standings.Any(s => s.FighterId == localId))
             {
@@ -288,26 +290,46 @@ namespace SquishyBump.UI.Menus
             lineRect.anchorMin = lineRect.anchorMax = lineRect.pivot = new Vector2(0.5f, 1f);
             lineRect.anchoredPosition = new Vector2(0, -190);
             lineRect.sizeDelta = new Vector2(1200, 60);
-            // Podium slots of the mockup (canvas px from the centre): 2nd left, 1st centre, 3rd right.
-            var slots = new[] { (x: 3f, y: 150f), (x: -482f, y: 115f), (x: 482f, y: 125f) };
-            var podium = standings.Where(s => s.Rank <= 3).Take(3).ToList();
+            BuildPodiums(page, standings, label, fruit, compact: false);
+            var rest = standings.Where(s => s.Rank > 3).ToArray();
+            for (var i = 0; i < rest.Length; i++)
+            {
+                var row = rest[i];
+                var lower = UiFactory.Outlined(UiFactory.Label(page, $"{row.Rank}. {label(row.FighterId).ToUpperInvariant()}\n{row.Points} điểm · {row.Lives} mạng", 28), 2);
+                lower.name = $"Standing {row.FighterId}";
+                lower.rectTransform.anchorMin = lower.rectTransform.anchorMax = lower.rectTransform.pivot = new Vector2(0.5f, 0);
+                lower.rectTransform.anchoredPosition = new Vector2((i - (rest.Length - 1) * 0.5f) * 460, 85);
+                lower.rectTransform.sizeDelta = new Vector2(440, 80);
+            }
+        }
+
+        private static void BuildPodiums(Transform page, IReadOnlyList<MatchStanding> standings,
+            Func<ulong, string> label, Func<ulong, int> fruit, bool compact)
+        {
+            // 2nd trái, 1st giữa, 3rd phải; hạng đồng hạng vẫn giữ nguyên giá trị host gửi.
+            var slots = compact ? new[] { (x: 560f, y: 210f), (x: 220f, y: 140f), (x: 900f, y: 140f) }
+                : new[] { (x: 3f, y: 150f), (x: -482f, y: 115f), (x: 482f, y: 125f) };
+            var podium = standings.Where(s => s.Rank <= 3).OrderBy(s => s.Rank).Take(3).ToList();
             for (var i = 0; i < podium.Count; i++)
             {
                 var s = podium[i];
                 var (x, y) = slots[i];
-                var centre = new Vector2(0.5f, 0.5f);
-                UiFactory.Place(page, Avatar(fruit(s.FighterId)), centre, new Vector2(x, y), new Vector2(210, 210)).name = $"Podium {s.Rank}";
-                UiFactory.Place(page, "medal_" + s.Rank, centre, new Vector2(x - 160, y - 110), new Vector2(120, 156));
-                var plate = UiFactory.Place(page, "plate", centre, new Vector2(x, y - 260), new Vector2(340, 112));
+                var centre = new Vector2(compact ? 0 : 0.5f, 0.5f);
+                var avatarSize = compact ? 150 : 210;
+                var avatar = UiFactory.Place(page, Avatar(fruit(s.FighterId)), centre, new Vector2(x, y), new Vector2(avatarSize, avatarSize));
+                avatar.name = $"Podium {s.Rank}";
+                avatar.rectTransform.pivot = Vector2.one * 0.5f;
+                var medal = UiFactory.Place(page, "medal_" + s.Rank, centre, new Vector2(x - (compact ? 100 : 160), y - 110), new Vector2(90, 117));
+                medal.rectTransform.pivot = Vector2.one * 0.5f;
+                var plate = UiFactory.Place(page, "plate", centre, new Vector2(x, y - (compact ? 200 : 260)), new Vector2(340, 128));
+                plate.rectTransform.pivot = Vector2.one * 0.5f;
                 plate.preserveAspect = false;
                 UiFactory.Slice(plate, "plate", 1f);
-                UiFactory.Place(plate.transform, Avatar(fruit(s.FighterId)), new Vector2(0, 0.5f), new Vector2(22, 4), new Vector2(76, 76));
-                var text = UiFactory.Label(plate.transform, $"{label(s.FighterId).ToUpperInvariant()}\nSCORE: {s.Points}", 28);
-                text.alignment = TextAnchor.MiddleLeft;
-                var textRect = text.rectTransform;
-                textRect.anchorMin = textRect.anchorMax = textRect.pivot = new Vector2(0, 0.5f);
-                textRect.anchoredPosition = new Vector2(110, 4);
-                textRect.sizeDelta = new Vector2(220, 90);
+                var text = UiFactory.Label(plate.transform, $"{s.Rank}. {label(s.FighterId).ToUpperInvariant()}\n{s.Points} điểm · {s.Lives} mạng", 28);
+                text.rectTransform.anchorMin = Vector2.zero;
+                text.rectTransform.anchorMax = Vector2.one;
+                text.rectTransform.offsetMin = new Vector2(20, 12);
+                text.rectTransform.offsetMax = new Vector2(-20, -12);
             }
         }
 
