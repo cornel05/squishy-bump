@@ -33,6 +33,11 @@ namespace SquishyBump.App
         private LanSurvivalRun.Decision survivalDecision;
         private bool survivalLaunchPending, survivalLoadPending, survivalFinished;
         private int evaluatedPeers = -1;
+        private SinglePlayerRun singleRun;
+        private uint singleSeed;
+        private bool singleResultHandled, singleLoadPending;
+        private bool singleWon;
+        public SinglePlayerRun SingleRun => singleRun;
 
         private void ResetRankSession()
         {
@@ -73,14 +78,21 @@ namespace SquishyBump.App
         }
 
         /// <summary>Direct start of one level, no lobby (tests and tools).</summary>
-        public void StartSinglePlayer(int level = 1)
+        public void StartSinglePlayer(int level = 1, uint? seed = null)
         {
-            if (BeginSinglePlayer()) LoadLevel(level);
+            if (BeginSinglePlayer())
+            {
+                if (seed.HasValue) singleSeed = seed.Value;
+                LoadLevel(level);
+            }
         }
 
         private bool BeginSinglePlayer()
         {
             singlePlayer = true;
+            singleRun = null;
+            singleSeed = unchecked((uint)System.Environment.TickCount);
+            singleResultHandled = singleLoadPending = false;
             ResetRankSession();
             return bootstrap.Session.State != SessionState.Idle || bootstrap.Session.Host(SessionMode.SinglePlayer);
         }
@@ -124,6 +136,8 @@ namespace SquishyBump.App
 
         private void Update()
         {
+            if (singlePlayer && singleRun != null && bootstrap.Session.CanSimulateGameplay)
+            { UpdateSinglePlayer(); return; }
             if (survivalRun == null || survivalFinished || !bootstrap.Session.CanSimulateGameplay) return;
             if (survivalLaunchPending)
             {
@@ -146,6 +160,34 @@ namespace SquishyBump.App
                 return;
             }
             Overlay.OfferResultAction(survivalDecision.NextLevel == survivalRun.Level ? "Đấu lại" : "Tiếp tục", ContinueSurvival);
+        }
+
+        private void UpdateSinglePlayer()
+        {
+            if (singleLoadPending || singleResultHandled || Match == null || !Match.Started || Match.Director.Phase != MatchPhase.Result) return;
+            singleResultHandled = true;
+            singleWon = singleRun.Rule == MatchRule.Rank || Match.Director.GetSinglePlayerOutcome(0) != SurvivalOutcome.Retry;
+            if (singleWon && singleRun.Level == SinglePlayerRun.FinalLevel)
+            {
+                singleRun.Continue(true);
+                var rows = singleRun.Rule == MatchRule.Rank
+                    ? scores.Standings().Select(s => new MatchStanding(s.FighterId, s.Rank, s.Points, s.Lives, checked((int)s.SurvivalTicks))).ToArray()
+                    : Match.Director.Placements.Select(p => new MatchStanding(p.FighterId, p.Rank, 0)).ToArray();
+                var characters = Match.Fighters.ToDictionary(f => (ulong)f.Id, f => (int)f.Fruit);
+                Overlay.ShowSessionResult(rows, id => setup.Roster[characters[id]].name, id => characters[id]);
+                Overlay.ShowSinglePlayerSummary(singleRun.LevelsCleared, singleRun.Retries);
+                Overlay.OfferResultAction("Về menu", LeaveToMenu);
+            }
+            else Overlay.OfferResultAction(singleWon ? "Tiếp tục" : "Chơi lại", ContinueSinglePlayer);
+        }
+
+        private void ContinueSinglePlayer()
+        {
+            if (singleLoadPending || !singleResultHandled || singleRun.Finished || !bootstrap.Session.CanSimulateGameplay) return;
+            var next = singleWon ? singleRun.Level + 1 : singleRun.Level;
+            singleLoadPending = true;
+            if (!TryLoadLevel(next)) { singleLoadPending = false; return; }
+            singleRun.Continue(singleWon);
         }
 
         private void ContinueSurvival()
@@ -171,16 +213,18 @@ namespace SquishyBump.App
         {
             var selection = bootstrap.LobbySelection;
             if (selection == null) return setup.Roster;
-            if (singlePlayer)
-            {
-                var choice = selection.Players.Single(p => p.Id == 0).Fruit;
-                return new[] { setup.Roster[choice] }.Concat(setup.Roster.Where((_, i) => i != choice)).ToArray();
-            }
+            if (singlePlayer) return setup.Roster;
             return selection.Players.OrderBy(p => p.Id).Select(p => setup.Roster[p.Fruit]).ToArray();
         }
 
         /// <summary>Host: every peer loads the level; the match starts when it is loaded here.</summary>
-        public void LoadLevel(int number) => TryLoadLevel(number);
+        public void LoadLevel(int number)
+        {
+            // Lối tắt công khai dành cho test/công cụ dev; UI production chỉ gọi từ lobby ở L1.
+            if (singlePlayer && singleRun != null && singleRun.Level != number)
+                singleRun = new SinglePlayerRun(singleRun.Current.Fruits[0], singleRun.Seed, singleRun.Rule, number);
+            TryLoadLevel(number);
+        }
 
         private bool TryLoadLevel(int number)
         {
@@ -248,6 +292,8 @@ namespace SquishyBump.App
                 survivalDecision = null;
                 survivalLaunchPending = survivalLoadPending = survivalFinished = false;
                 evaluatedPeers = -1;
+                singleRun = null;
+                singleLoadPending = singleResultHandled = false;
             }
             if (state != SessionState.Idle || bootstrap.Session.LastEndReason == SessionEndReason.LocalLeave)
                 return;
@@ -331,6 +377,13 @@ namespace SquishyBump.App
             }
             Match.ConfigureRank(scores, ++matchSequence);
             Match.ConfigureBots(setup.DefaultBotProfile);
+            if (singlePlayer)
+            {
+                singleRun ??= new SinglePlayerRun(bootstrap.LobbySelection?.Players.Single(p => p.Id == 0).Fruit ?? 0,
+                    singleSeed, bootstrap.Settings.Rule, level.LevelNumber);
+                Match.ConfigureSinglePlayer(singleRun.Current, setup);
+                singleResultHandled = singleLoadPending = false;
+            }
             Pause = hostObject.AddComponent<PauseMenu>();
             Pause.Init(bootstrap.Settings, singlePlayer);
             Match.AttachPause(Pause, singlePlayer, LeaveToMenu);

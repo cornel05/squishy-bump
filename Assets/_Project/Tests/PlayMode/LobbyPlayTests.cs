@@ -82,6 +82,9 @@ namespace SquishyBump.Tests.PlayMode
             yield return WaitFor(() => hostDesk.gameObject.activeSelf, "host tới quầy");
             SetRule(lobby, hostDesk, MatchRule.Rank);
             Assert.That(lobby.Coordinator.State.Rule, Is.EqualTo(MatchRule.Rank));
+            // The console renders the host snapshot in Update. Separate the two user clicks
+            // so the second arrow uses the displayed Rank rule, rather than the old Survival snapshot.
+            yield return null;
             SetRule(lobby, hostDesk, MatchRule.Survival);
             length3.onClick.Invoke();
             Assert.That(lobby.Coordinator.State.Rule, Is.EqualTo(MatchRule.Survival));

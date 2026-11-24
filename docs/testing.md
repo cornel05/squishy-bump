@@ -243,7 +243,7 @@ and [`gdd/ids.md`](gdd/ids.md). Update a row whenever the test is run (date, bui
 | T01 | pass | 16/11/2026 | PR SB-42 | Đình Duy | `BalanceProfileTests`: all 9 claims of GDD 14.1 pass; `HazardTelegraphs_LastAtLeastOneSecond` covers H01–H05 (H07 boxes always visible). H06's 1.5 s crack warning gets its assert when its config lands (SB-44). |
 | T02 | pass | 16/11/2026 | PR SB-12 | Đình Duy | `CollisionResolverTests.HeadOn_KnownSpeeds_MatchesImpulseFormula` and `CollisionTests.HeadOn_KnownSpeeds_MatchesFormulaWithinTwoPercent`: Normal vs Normal at +5 / −3 m/s → −1.4 / +3.4 m/s, within 2%. |
 | T03 | not run | | | | |
-| T04 | not run | | | | |
+| T04 | Một phần (luồng tự động) | 24/11/2026 | SB-26, nền `1dd3328` | Codex | `SinglePlayerRunTests`: scene thật L1–L5, bot chạy, retry thua/hòa giữ ID/nhân vật/tier/seed, summary5/5 và retry2; Windows Player4/4. Fixture điều khiển outcome qua kill plane, chưa phải lượt chơi Survival hoàn chỉnh do người thật điều khiển chống bot. [Báo cáo và bằng chứng](testing/sb26-single-run.md). |
 | T05 | pass (PlayMode tự động) | 22/11/2026 | PR #101, gameplay `c1824dd` | Codex | `RankRunTests` 8/8. Chạy riêng từng level, số lần rơi/hồi sinh/điểm: L1 18/12/7, L2 15/10/6, L3 17/12/13, L4 17/12/3, L5 17/11/4. Cả năm đạt mục 1–4, 6a (hạng trận), 6b (hạng phiên) và 7, kết thúc trước mốc đóng hồi sinh. Ca 2 quả kiểm mục 5: L1 rơi tick 6301 sau mốc 6300, L2 rơi tick 9000 cùng tick hết giờ. Cả hai ca xác nhận hồi sinh trước mốc, loại cả quả còn mạng sau khi cửa đóng và đồng hạng trận khi rơi cùng tick. Một host đi L1→L5 qua `LevelLauncher.LoadLevel`, đạt 6a mỗi màn và 6b sau L5, tổng 84/56/35 trong lượt verify. Fixture gọi loader giữa các trận. Đồng hạng phiên và xếp hạng nhiều quả sống khi hết giờ được kiểm bằng EditMode. L3/L5 chưa có lượt rơi do chạm đã hết hạn. Bằng chứng `TestResults/T05.xml`, `T05-L*.log`, `T05-Session*.log`, `T05-Close-L*.log`. Verify 223 EditMode, 54 PlayMode, 0 cảnh báo C#. Check repo PASS. |
 | T06 | not run | | | | |
 | T07 | Một phần | 15/11/2026 | Nhánh SB-16 | Minh Nhật | EditMode kiểm chứng chính sách Survival L2–L5 tại 150 giây. L1 dùng mẫu rơi được cấp trong PlayMode. Chờ chạy đủ năm scene với cả hai luật và H01. |
@@ -610,3 +610,12 @@ Không nâng T05/T07/LAN từ fixture hình ảnh này. Giữ draft chờ cornel
 - Play Mode screenshots (`unity command capture game_view`): [Find Server](testing/sb77/find_server.png), [lobby console](testing/sb77/lobby_console.png), [MAP tab](testing/sb77/lobby_console_map.png), [class cards](testing/sb77/lobby_stands_cards.png).
 - `tools/verify.ps1 -PlayMode` → PASS, 347 EditMode and 72 PlayMode (1 skip Windows-only), 0 C# warnings. `python tools/check_repo.py` → PASS.
 - Not checked: two real PCs on a LAN (discovery used loopback only; Windows Firewall may block UDP broadcast, the manual IP join is the fallback), gamepad on the new screens, the "PRIVITE" typo baked into the team's art.
+
+### SB-26 — 24/11/2026
+
+Nền main `1dd3328`; `tools/verify.ps1 -PlayMode`: 356 EditMode +76 PlayMode đạt,
+0 lỗi/cảnh báo C#, 1 skip HudVisual dành cho Windows Player. Bốn ca Single Player
+Windows D3D12 đạt riêng. Fixture lobby đã tách hai lần nhấn đổi luật sang hai
+frame để đọc snapshot đã render. T04 giữ Một phần như bảng trên;
+[xem báo cáo và bằng chứng](testing/sb26-single-run.md).
+Build Windows x64 release đạt: 0 errors, 857 MB; repo checker PASS (0 problems).

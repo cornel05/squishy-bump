@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-24 07:19:04Z" end-time="2026-11-24 07:19:12Z" duration="8,5904877">
+  <test-suite type="TestSuite" id="1112" name="Squishy Bump" fullname="Squishy Bump" runstate="Runnable" testcasecount="74" result="Failed" site="Child" start-time="2026-11-24 07:19:04Z" end-time="2026-11-24 07:19:12Z" duration="8.590488" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1105" name="SquishyBump.Tests.PlayMode.dll" fullname="D:/Work/Code/Assignment/Game/squishy-bump-sb26/Library/ScriptAssemblies/SquishyBump.Tests.PlayMode.dll" runstate="Runnable" testcasecount="74" result="Failed" site="Child" start-time="2026-11-24 07:19:04Z" end-time="2026-11-24 07:19:12Z" duration="8.577495" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="7736" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1106" name="SquishyBump" fullname="SquishyBump" runstate="Runnable" testcasecount="74" result="Failed" site="Child" start-time="2026-11-24 07:19:04Z" end-time="2026-11-24 07:19:12Z" duration="8.574791" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1107" name="Tests" fullname="SquishyBump.Tests" runstate="Runnable" testcasecount="74" result="Failed" site="Child" start-time="2026-11-24 07:19:04Z" end-time="2026-11-24 07:19:12Z" duration="8.572476" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1108" name="PlayMode" fullname="SquishyBump.Tests.PlayMode" runstate="Runnable" testcasecount="74" result="Failed" site="Child" start-time="2026-11-24 07:19:04Z" end-time="2026-11-24 07:19:12Z" duration="8.570349" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1098" name="SinglePlayerRunTests" fullname="SquishyBump.Tests.PlayMode.SinglePlayerRunTests" classname="SquishyBump.Tests.PlayMode.SinglePlayerRunTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-11-24 07:19:04Z" end-time="2026-11-24 07:19:12Z" duration="8.565745" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1099" name="SingleSurvival_Loss_OffersRetryInsteadOfLeavingRun" fullname="SquishyBump.Tests.PlayMode.SinglePlayerRunTests.SingleSurvival_Loss_OffersRetryInsteadOfLeavingRun" methodname="SingleSurvival_Loss_OffersRetryInsteadOfLeavingRun" classname="SquishyBump.Tests.PlayMode.SinglePlayerRunTests" runstate="Runnable" seed="870005902" result="Failed" start-time="2026-11-24 07:19:04Z" end-time="2026-11-24 07:19:12Z" duration="8.551131" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: collection containing "Chơi lại"
+  But was:  < "Next" >
+]]></message>
+                  <stack-trace><![CDATA[at SquishyBump.Tests.PlayMode.SinglePlayerRunTests+<SingleSurvival_Loss_OffersRetryInsteadOfLeavingRun>d__3.MoveNext () [0x001f4] in D:\Work\Code\Assignment\Game\squishy-bump-sb26\Assets\_Project\Tests\PlayMode\SinglePlayerRunTests.cs:53
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Saving results to: C:/Users/THIS PC/AppData/LocalLow/BKU Group 18/Squishy Bump\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

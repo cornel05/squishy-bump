@@ -331,3 +331,23 @@ Chưa duyệt hình ảnh/glyph trong Windows player hoặc LAN nhiều PC; xem 
 PR nối tiếp lấy base `feat/SB-25-lobby-foundation`; merge #95 trước, sau đó merge
 origin/main vào nhánh nối tiếp, chuyển base PR về main và verify lại; không force-push
 hoặc tự merge PR để đổi việc.
+
+
+## SB-26 — luồng Single và roster theo seed
+
+Match.SinglePlayerRun giữ seed run, bậc/seed từng màn, số lần retry và số màn đã
+qua. Một lần shuffle năm slot nhân vật còn lại sau lựa chọn lobby; ID bot/nhân vật
+không đổi giữa các màn. Theo A.6, màn N có một D_N và bốn lần rút đều trong
+[max(1,N−2),N]. D39 thay hình trái bằng thú nhưng giữ slot và hạng cân.
+
+App.LevelLauncher nối lobby → L1, kết quả host → Chơi lại/Tiếp tục, L5 → tổng kết.
+Survival chỉ đi tiếp khi người chơi hạng nhất duy nhất; Rank đi tiếp kể cả thua.
+Retry nạp lại scene bằng seed/roster cũ để tạo lại sàn, hazard, motor và BotBrain.
+UI chỉ nhận dữ liệu và callback; giữ thời gian đọc kết quả tối thiểu 3 s. Trận dừng
+mô phỏng sau Result; nhấp tiếp tục lặp khi đang tải không được nhảy hai màn.
+ScoreService hiện hữu giữ tổng Rank qua các màn. API StartSinglePlayer(n)/LoadLevel(n)
+vẫn dành cho test/công cụ; đường menu production luôn bắt đầu L1 và không có chọn tắt màn.
+
+MatchSetup tham chiếu D1–D5 có sẵn qua Editor.SinglePlayerSetup.Configure;
+ProjectScaffold gọi cùng helper. Không đổi wire protocol hoặc Core contract.
+Giới hạn kiểm chứng T04 và lệnh chạy lại: [báo cáo SB-26](testing/sb26-single-run.md).

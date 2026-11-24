@@ -174,6 +174,18 @@ namespace SquishyBump.UI.Menus
             resultAction = onClick;
         }
 
+        public void ShowSinglePlayerSummary(int levelsCleared, int retries)
+        {
+            var summary = $"ĐÃ QUA {levelsCleared}/5 MÀN · CHƠI LẠI {retries} LẦN";
+            result.text += "\n" + summary;
+            var text = UiFactory.Outlined(UiFactory.Label(resultPage, summary, 30), 2);
+            text.name = "Single Run Summary";
+            var rect = text.rectTransform;
+            rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0.5f, 0);
+            rect.anchoredPosition = new Vector2(0, 24);
+            rect.sizeDelta = new Vector2(1200, 48);
+        }
+
         public void ShowSpectating(bool visible) => spectating.gameObject.SetActive(visible && !result.gameObject.activeSelf);
 
         private void ShowResultText(string content)
