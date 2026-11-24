@@ -35,6 +35,7 @@ namespace SquishyBump.App
         [SerializeField] private Transform turntableArt;
         [SerializeField] private Transform ringArt;
         [SerializeField] private float turntableLift = 0.002f;
+        [SerializeField] private Transform[] obstacleArts;
 
         [Header("Ice Tiles (L4 / L5)")]
         [SerializeField] private Mesh bakedTileMesh;
@@ -48,13 +49,15 @@ namespace SquishyBump.App
 
         public bool IsBound { get; private set; }
         public int BoundTileCount => skins.Count;
+        public int BoundObstacleCount { get; private set; }
 
-        public void ConfigureMovingGround(Transform turntableVisual, Transform ringVisual, float lift = 0.002f)
+        public void ConfigureMovingGround(Transform turntableVisual, Transform ringVisual, float lift = 0.002f, Transform[] obstacles = null)
         {
             mode = LevelArtMode.MovingGround;
             turntableArt = turntableVisual;
             ringArt = ringVisual;
             turntableLift = lift;
+            obstacleArts = obstacles;
         }
 
         public void ConfigureIceMeshTiles(Mesh tileMesh, IcePaletteEntry[] tilePalette)
@@ -123,6 +126,46 @@ namespace SquishyBump.App
             ringArt.SetParent(ring.transform, true);
             turntable.enabled = false;
             ring.enabled = false;
+
+            BoundObstacleCount = 0;
+            if (obstacleArts != null)
+            {
+                for (var i = 0; i < obstacleArts.Length; i++)
+                {
+                    var art = obstacleArts[i];
+                    var box = ringTransform.Find($"Box {i}");
+                    if (art == null || box == null) continue;
+                    var boxRenderer = box.GetComponent<Renderer>();
+                    if (boxRenderer == null) continue;
+
+                    var target = boxRenderer.bounds;
+                    foreach (var r in box.GetComponentsInChildren<Renderer>(true)) r.enabled = false;
+
+                    var artRenderers = art.GetComponentsInChildren<Renderer>(true);
+                    if (artRenderers.Length > 0)
+                    {
+                        var current = artRenderers[0].bounds;
+                        for (var r = 1; r < artRenderers.Length; r++) current.Encapsulate(artRenderers[r].bounds);
+                        var maxExtent = Mathf.Max(current.size.x, current.size.y, current.size.z);
+                        var targetExtent = Mathf.Max(target.size.x, target.size.y, target.size.z);
+                        if (maxExtent > 1e-4f)
+                        {
+                            var factor = (targetExtent * 1.15f) / maxExtent;
+                            art.localScale *= factor;
+                            current = artRenderers[0].bounds;
+                            for (var r = 1; r < artRenderers.Length; r++) current.Encapsulate(artRenderers[r].bounds);
+                        }
+                        art.position += new Vector3(
+                            target.center.x - current.center.x,
+                            target.min.y - current.min.y,
+                            target.center.z - current.center.z);
+                    }
+
+                    art.SetParent(box, true);
+                    BoundObstacleCount++;
+                }
+            }
+
             IsBound = true;
         }
 

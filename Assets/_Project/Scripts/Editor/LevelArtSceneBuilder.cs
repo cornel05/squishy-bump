@@ -60,7 +60,8 @@ namespace SquishyBump.Editor
             var floorPrefab = LoadAsset<GameObject>($"{ProjectRoot}/Prefabs/Hazards/TrainingRingFloor.prefab");
             var bandMat = LoadAsset<Material>($"{ArtRoot}/L1/Band.mat");
             var waterMat = LoadAsset<Material>($"{ArtRoot}/L1/Water.mat");
-            var mapAsset = LoadAsset<GameObject>($"{ArtRoot}/L1/Map1Demo.glb");
+            var mapAsset = LoadAsset<GameObject>($"{ArtRoot}/L1/Map1.glb");
+            ConfigureL1SandMaterial(bandMat, $"{ArtRoot}/L1/sand01_Normal.jpg");
 
             var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
             Camera.main.transform.SetPositionAndRotation(new Vector3(0f, 9f, -12f), Quaternion.Euler(35f, 0f, 0f));
@@ -75,6 +76,7 @@ namespace SquishyBump.Editor
 
                 var vongAsset = LoadAsset<GameObject>($"{ArtRoot}/L1/Vong{i + 1}.glb");
                 var fixedMesh = LoadAsset<Mesh>($"{ArtRoot}/L1/Fixed_Vong{i + 1}.asset");
+                EnsurePlanarUvAndTangents(fixedMesh);
                 var pivot = new GameObject($"Vong{i + 1}Pivot");
                 pivot.transform.SetParent(bandTransform, false);
                 pivot.transform.localPosition = new Vector3(0f, L1IslandY, 0f);
@@ -109,6 +111,11 @@ namespace SquishyBump.Editor
                 if (mf != null) mf.sharedMesh = cylMesh;
                 cyl.gameObject.SetActive(false);
             }
+            for (var i = 1; i <= 6; i++)
+            {
+                var torus = FindChild(island.transform, $"Torus.{i:000}");
+                if (torus != null) torus.gameObject.SetActive(false);
+            }
 
             var floatsRoot = new GameObject("CreativeFloats");
             floatsRoot.transform.SetParent(artRoot.transform, false);
@@ -119,7 +126,7 @@ namespace SquishyBump.Editor
                 ("PhaoTron2.glb", "PhaoTron2", new Vector3(-17.84141f, -2.4056528f, 2.6431718f), new Quaternion(0f, 0.83867055f, 0f, 0.54463905f), 2.6f),
                 ("PhaoUnicorn2.glb", "PhaoUnicorn2", new Vector3(17.84141f, -2.4056528f, 7.9295154f), new Quaternion(0f, 0.99691737f, 0f, 0.07845909f), 3.9f),
                 ("PhaoTron3.glb", "PhaoTron3", new Vector3(-14.537445f, -2.4056528f, 27.753304f), new Quaternion(0f, 0.9135455f, 0f, -0.40673658f), 5.2f),
-                ("PhaoUnicorn3.glb", "PhaoUnicorn3", new Vector3(13.215858f, -2.4056528f, 29.07489f), new Quaternion(0f, 0.6087614f, 0f, -0.7933533f), 6.5f),
+                ("PhaoLgbt.glb", "PhaoLgbt", new Vector3(13.215858f, -2.4056528f, 29.07489f), new Quaternion(0f, 0.6087614f, 0f, -0.7933533f), 6.5f),
             };
             foreach (var (file, name, pos, rot, phase) in floatPlacements)
             {
@@ -169,8 +176,21 @@ namespace SquishyBump.Editor
             UnityEngine.Physics.SyncTransforms();
             AlignTop(center, turntableBounds, 0.002f);
 
+            var obstacleFiles = new[] { "chuotlatdat.glb", "meolatdat.glb", "chuotlatdat.glb" };
+            var obstaclesRoot = new GameObject("Obstacles").transform;
+            obstaclesRoot.SetParent(root.transform, false);
+            var obstacleArts = new Transform[obstacleFiles.Length];
+            for (var i = 0; i < obstacleFiles.Length; i++)
+            {
+                var obstacleAsset = LoadAsset<GameObject>($"{ArtRoot}/L2/{obstacleFiles[i]}");
+                var obstacle = (GameObject)PrefabUtility.InstantiatePrefab(obstacleAsset, obstaclesRoot);
+                obstacle.name = $"ObstacleArt_{i}";
+                StripNonVisuals(obstacle);
+                obstacleArts[i] = obstacle.transform;
+            }
+
             var binder = root.AddComponent<LevelArtBinder>();
-            binder.ConfigureMovingGround(center.transform, copper.transform, 0.002f);
+            binder.ConfigureMovingGround(center.transform, copper.transform, 0.002f, obstacleArts);
             EditorUtility.SetDirty(binder);
 
             EditorSceneManager.MarkSceneDirty(scene);
@@ -295,6 +315,48 @@ namespace SquishyBump.Editor
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene, level.ScenePath);
             Debug.Log($"[LevelArtSceneBuilder] Built {level.ScenePath}");
+        }
+
+        private static void ConfigureL1SandMaterial(Material bandMat, string normalPath)
+        {
+            if (AssetImporter.GetAtPath(normalPath) is TextureImporter importer)
+            {
+                var dirty = importer.textureType != TextureImporterType.NormalMap || importer.wrapMode != TextureWrapMode.Repeat;
+                if (dirty)
+                {
+                    importer.textureType = TextureImporterType.NormalMap;
+                    importer.wrapMode = TextureWrapMode.Repeat;
+                    importer.SaveAndReimport();
+                }
+            }
+            var sandNormal = LoadAsset<Texture2D>(normalPath);
+            // Creative cat vong 1..4 Sand material baseColorFactor (linear 0.800, 0.565, 0.125 -> sRGB).
+            var sandColor = new Color(0.8001648f, 0.5653464f, 0.1247587f, 1f).gamma;
+            bandMat.SetColor("_BaseColor", sandColor);
+            bandMat.SetColor("_Color", sandColor);
+            bandMat.SetTexture("_BumpMap", sandNormal);
+            bandMat.SetTextureScale("_BaseMap", new Vector2(4f, 4f));
+            bandMat.SetTextureScale("_BumpMap", new Vector2(4f, 4f));
+            bandMat.SetFloat("_BumpScale", 0.9f);
+            bandMat.SetFloat("_Smoothness", 0.25f);
+            bandMat.EnableKeyword("_NORMALMAP");
+            EditorUtility.SetDirty(bandMat);
+        }
+
+        private static void EnsurePlanarUvAndTangents(Mesh mesh)
+        {
+            var dirty = false;
+            if (mesh.uv == null || mesh.uv.Length != mesh.vertexCount)
+            {
+                mesh.uv = mesh.vertices.Select(v => new Vector2(v.x, v.z) * 0.25f).ToArray();
+                dirty = true;
+            }
+            if (dirty || mesh.tangents == null || mesh.tangents.Length != mesh.vertexCount)
+            {
+                mesh.RecalculateTangents();
+                dirty = true;
+            }
+            if (dirty) EditorUtility.SetDirty(mesh);
         }
 
         private static (GameObject Root, GameObject Model) SpawnArt(string assetPath, string rootName)

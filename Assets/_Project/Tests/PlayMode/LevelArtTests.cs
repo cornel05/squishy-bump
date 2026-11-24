@@ -80,19 +80,34 @@ namespace SquishyBump.Tests.PlayMode
                         Assert.That(band.GetComponent<MeshCollider>().enabled, Is.True);
                         var vong = band.Find($"Vong{i + 1}Pivot/Vong{i + 1}");
                         Assert.That(vong, Is.Not.Null);
-                        Assert.That(vong.GetComponentInChildren<Renderer>(false).enabled, Is.True);
+                        var vr = vong.GetComponentInChildren<Renderer>(false);
+                        Assert.That(vr.enabled, Is.True);
+                        Assert.That(vr.sharedMaterial.GetTexture("_BumpMap"), Is.Not.Null, "L1 sand normal map should be assigned.");
+                        var sandCol = vr.sharedMaterial.GetColor("_BaseColor");
+                        Assert.That(sandCol.r - sandCol.b, Is.GreaterThan(0.2f), "L1 ring should be warm sand, not grey.");
                         Assert.That(vong.GetComponentsInChildren<Collider>(true).Any(c => c.enabled), Is.False);
                     }
+                    Assert.That(artRoot.transform.Find("CreativeFloats/PhaoLgbt"), Is.Not.Null);
+                    var staticFloat = artRoot.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "Torus.001");
+                    Assert.That(staticFloat != null && staticFloat.gameObject.activeSelf, Is.False);
                     break;
                 case 2:
                     var binder2 = artRoot.GetComponent<LevelArtBinder>();
                     var moving = Object.FindFirstObjectByType<MovingGround>();
                     Assert.That(binder2, Is.Not.Null);
                     Assert.That(binder2.IsBound, Is.True);
+                    Assert.That(binder2.BoundObstacleCount, Is.EqualTo(3));
                     Assert.That(moving.Turntable.GetComponent<Renderer>().enabled, Is.False);
                     Assert.That(moving.Ring.GetComponent<Renderer>().enabled, Is.False);
                     Assert.That(moving.Turntable.transform.Find("Cylinder.001"), Is.Not.Null);
                     Assert.That(moving.Ring.transform.Find("Cylinder"), Is.Not.Null);
+                    Assert.That(moving.Boxes.All(b => b.enabled), Is.True);
+                    for (var i = 0; i < 3; i++)
+                    {
+                        var box = moving.Ring.transform.Find($"Box {i}");
+                        Assert.That(box.GetComponent<Renderer>().enabled, Is.False);
+                        Assert.That(box.Find($"ObstacleArt_{i}"), Is.Not.Null);
+                    }
                     break;
                 case 3:
                     var floor = GameObject.Find("Floor r 9 m");
