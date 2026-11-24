@@ -44,3 +44,12 @@ tools/githooks/* text eol=lf
 *.ttf  filter=lfs diff=lfs merge=lfs -text
 *.otf  filter=lfs diff=lfs merge=lfs -text
 *.pdf  filter=lfs diff=lfs merge=lfs -text
+
+# Giữ nguyên byte bằng chứng để SHA-256 trong manifest không đổi theo checkout.
+docs/testing/sb17-hud-review/*.json -text
+docs/testing/sb17-hud-review/*.xml -text
+
+# Bằng chứng SB-26 dùng LF để hash ổn định qua checkout.
+docs/testing/sb26-evidence/*.json text eol=lf
+docs/testing/sb26-evidence/*.xml text eol=lf
+docs/testing/sb26-evidence/*.txt text eol=lf

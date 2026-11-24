@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SquishyBump.Core;
 using SquishyBump.Net.Sync;
 using SquishyBump.Presentation;
@@ -16,6 +17,7 @@ namespace SquishyBump.App
     public sealed class MatchClientView : IDisposable
     {
         private readonly GameplayBootstrap bootstrap;
+        private readonly NetworkManager manager;
         private readonly GameObject[] prefabs;
         private readonly CameraRig cameraRig;
         private readonly LocalPlayerInput input;
@@ -23,11 +25,13 @@ namespace SquishyBump.App
         private readonly float tickSeconds;
         private readonly List<InputCommand> recent = new();
         private readonly Dictionary<ushort, GameObject> views = new();
+        private readonly Dictionary<ushort, Renderer[]> visibleRenderers = new();
 
         public MatchClientView(GameplayBootstrap bootstrap, GameObject[] prefabs, CameraRig cameraRig,
             LocalPlayerInput input, BalanceProfile balance)
         {
             this.bootstrap = bootstrap;
+            manager = bootstrap.GetComponent<NetworkManager>();
             this.prefabs = prefabs;
             this.cameraRig = cameraRig;
             this.input = input;
@@ -63,7 +67,7 @@ namespace SquishyBump.App
         {
             var newest = buffer.Newest;
             if (newest == null) return;
-            var own = (ushort)NetworkManager.Singleton.LocalClientId;
+            var own = (ushort)manager.LocalClientId;
             foreach (var f in newest.Fighters)
             {
                 if (!views.TryGetValue(f.Id, out var view))
@@ -73,10 +77,15 @@ namespace SquishyBump.App
                     view.GetComponent<Rigidbody>().isKinematic = true;
                     foreach (var c in view.GetComponents<Collider>()) c.enabled = false;
                     views[f.Id] = view;
+                    visibleRenderers[f.Id] = view.GetComponentsInChildren<Renderer>().Where(r => r.enabled).ToArray();
                     ViewSpawned?.Invoke(f.Id, view);
                     if (f.Id == own && cameraRig != null) cameraRig.Follow(view.transform);
                 }
                 if (buffer.TrySample(f.Id, now, out var position, out _)) view.transform.position = position;
+                view.SetActive((f.Flags & (FighterFlags.Out | FighterFlags.Respawning)) == 0 &&
+                    !bootstrap.MatchState.OutFighters.Contains((ulong)f.Id) && !bootstrap.MatchState.Eliminated.ContainsKey(f.Id));
+                var visible = (f.Flags & FighterFlags.Invulnerable) == 0 || Mathf.Repeat(now, 0.5f) < 0.25f;
+                foreach (var renderer in visibleRenderers[f.Id]) renderer.enabled = visible;
             }
         }
 

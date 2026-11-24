@@ -52,8 +52,8 @@ namespace SquishyBump.Tests.PlayMode
             for (var i = 0; i < 10; i++) yield return new WaitForFixedUpdate();
 
             Assert.That(host.Fighters, Has.Count.EqualTo(6));
-            // Six fighters fit the ~200-byte snapshot of GDD 10.4.
-            Assert.That(SquishyBump.Net.Sync.SyncCodec.WriteSnapshot(host.Snapshot(app.Clock.Tick)).Length, Is.EqualTo(213));
+            // SB-17 thêm 2 byte cooldown mỗi quả; sáu quả vẫn khoảng 200 byte (GDD 10.4).
+            Assert.That(SquishyBump.Net.Sync.SyncCodec.WriteSnapshot(host.Snapshot(app.Clock.Tick)).Length, Is.EqualTo(225));
             Assert.That(host.Director.Phase, Is.EqualTo(MatchPhase.Countdown));
             Assert.That(app.Clock.Tick, Is.GreaterThan(5u));
         }
@@ -65,6 +65,9 @@ namespace SquishyBump.Tests.PlayMode
             yield return SceneManager.LoadSceneAsync($"{Root}/Scenes/Levels/L1.unity", LoadSceneMode.Additive);
             var app = Object.FindAnyObjectByType<GameplayBootstrap>();
             var bounds = Object.FindAnyObjectByType<TrainingRingBounds>();
+            // A saved Rank rule would turn this ring-out into a respawn: pin Survival, keep the real save untouched.
+            app.Store = new LocalSave(System.IO.Path.Combine(Application.temporaryCachePath, "sb-tests"));
+            app.Settings.Rule = MatchRule.Survival;
 
             hostObject = new GameObject("MatchHost");
             hostObject.SetActive(false);
@@ -77,9 +80,9 @@ namespace SquishyBump.Tests.PlayMode
             var prefabs = so.FindProperty("fighterPrefabs");
             prefabs.arraySize = 2;
             prefabs.GetArrayElementAtIndex(0).objectReferenceValue =
-                AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Fighters/Apple.prefab");
+                AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Fighters/Cat.prefab");
             prefabs.GetArrayElementAtIndex(1).objectReferenceValue =
-                AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Fighters/Watermelon.prefab");
+                AssetDatabase.LoadAssetAtPath<GameObject>($"{Root}/Prefabs/Fighters/Bear.prefab");
             so.ApplyModifiedPropertiesWithoutUndo();
             hostObject.SetActive(true);
             yield return null;

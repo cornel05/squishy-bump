@@ -79,6 +79,8 @@ namespace SquishyBump.Physics
 
         /// <summary>Raised on the host for every hit, after Wobble and stun were applied.</summary>
         public event Action<FighterHit> Hit;
+        /// <summary>Mọi tiếp xúc quả-quả, kể cả xung lực dưới ngưỡng Wobble, cho luật chạm cuối.</summary>
+        public event Action<ulong, ulong> Contact;
         /// <summary>Fighter id and its new Wobble.</summary>
         public event Action<ulong, int> WobbleChanged;
 
@@ -107,7 +109,7 @@ namespace SquishyBump.Physics
         public void AddWobble(ulong fighterId, int amount)
         {
             var fighter = Find(fighterId);
-            if (fighter == null) return;
+            if (fighter == null || fighter.Motor.Invulnerable) return;
             fighter.TicksSinceHit = 0;
             SetWobble(fighter, fighter.Wobble + amount);
         }
@@ -125,8 +127,16 @@ namespace SquishyBump.Physics
         {
             active.Clear();
             foreach (var fighter in fighters)
-                if (fighter.Motor != null && fighter.Motor.isActiveAndEnabled) active.Add(fighter);
+                if (fighter.Motor != null && fighter.Motor.isActiveAndEnabled && !fighter.Motor.Invulnerable) active.Add(fighter);
             if (bodies.Length < active.Count) bodies = new FighterBody[active.Count];
+
+            for (var a = 0; a < active.Count; a++)
+            for (var b = a + 1; b < active.Count; b++)
+            {
+                var radius = active[a].Sphere.radius + active[b].Sphere.radius;
+                var offset = active[a].Body.position + active[a].Sphere.center - active[b].Body.position - active[b].Sphere.center;
+                if (offset.sqrMagnitude <= radius * radius) Contact?.Invoke(active[a].Id, active[b].Id);
+            }
 
             var decayTicks = Mathf.RoundToInt(balance.WobbleDecaySeconds / fixedDeltaTime);
             for (var i = 0; i < active.Count; i++)

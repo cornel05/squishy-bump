@@ -26,7 +26,7 @@ namespace SquishyBump.Tests.EditMode
         public void SaveThenLoad_KeepsSettingsBindingsFruitAndRecords()
         {
             var store = new LocalSave(folder);
-            var data = new SaveData { Bindings = "{\"bindings\":[]}", LastFruit = "Peach" };
+            var data = new SaveData { Bindings = "{\"bindings\":[]}", LastFruit = "Chick" };
             data.Settings.MouseSensitivity = 1.7f;
             data.Settings.ScreenShake = false;
             data.Settings.Rule = MatchRule.Rank;
@@ -39,7 +39,7 @@ namespace SquishyBump.Tests.EditMode
             Assert.That((loaded.Settings.MouseSensitivity, loaded.Settings.ScreenShake, loaded.Settings.Rule),
                 Is.EqualTo((1.7f, false, MatchRule.Rank)));
             Assert.That((loaded.Bindings, loaded.LastFruit, loaded.BestSurvivalLevel, loaded.BestRankScore),
-                Is.EqualTo(("{\"bindings\":[]}", "Peach", 3, 12)));
+                Is.EqualTo(("{\"bindings\":[]}", "Chick", 3, 12)));
             Assert.That(File.Exists(store.FilePath + ".tmp"), Is.False, "atomic write leaves no temp file");
         }
 

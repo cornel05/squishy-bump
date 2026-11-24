@@ -1,0 +1,98 @@
+{
+  "date": "2026-11-23",
+  "renderer": "Direct3D12",
+  "fixture": "Windows Player, L1 thật; normal và packed; Wobble 0/2/4/6/8/10, freeze để chụp; không phải LAN hay playtest người ngoài",
+  "ui_source_sha256": "54d2afbbf29aa613c4d66c8b7530a12e05c01fb4d97f6030b98828bfa6df0114",
+  "files": [
+    {
+      "path": "normal-1280x720.json",
+      "sha256": "ea7d26bf46811c139e2abbbd2b486ee5ff232d14d992a3bad3eb90827f433db6"
+    },
+    {
+      "path": "normal-1280x720.png",
+      "sha256": "7b095ca91e0ec9506db69b6fd5edde27c45189cdb44589bb211fde46f0236c6b"
+    },
+    {
+      "path": "normal-1440x900.json",
+      "sha256": "de2cc5178b4eded4b8796a1c5660f33cd1630f83967bbe3ba5ad949fcb25094c"
+    },
+    {
+      "path": "normal-1440x900.png",
+      "sha256": "85f24d0da3208d2db6a6386fd01e04c72209cf4e1feeecce5b84979cba7daa11"
+    },
+    {
+      "path": "normal-1680x720.json",
+      "sha256": "c6e18d71c36a406edf4a49ff38be71778e9fd1d5b4d25c508cd4e0fc7bc90964"
+    },
+    {
+      "path": "normal-1680x720.png",
+      "sha256": "ccb74b399fbdadd4772fc0fc31ea0265f39bb960f37a8550678c2dae40f6550d"
+    },
+    {
+      "path": "normal-1920x1080.json",
+      "sha256": "c79e50b56fd99763ddcb2fe549949cca33ba062a992991707e3de0d3c9788ec4"
+    },
+    {
+      "path": "normal-1920x1080.png",
+      "sha256": "512f9bce273d59a7f9da37831e87f363f49a1c8ae467350c423e64151f6f8abd"
+    },
+    {
+      "path": "packed-1280x720.json",
+      "sha256": "d8314f0e207af6256379833649a590e99340fd2ad649a0fe031b83931a5aeae7"
+    },
+    {
+      "path": "packed-1280x720.png",
+      "sha256": "64fc46f4cb827446738738dab28df6b80386852ec5ebd9775a9dc862d518541c"
+    },
+    {
+      "path": "packed-1440x900.json",
+      "sha256": "df772fdd31a714aed8515f917022a99431ff81d625e2a3adadd1da7085e54e64"
+    },
+    {
+      "path": "packed-1440x900.png",
+      "sha256": "6c1834f25c8204ba42e97250e510e139be1131907498201468bc1adbaf5497a7"
+    },
+    {
+      "path": "packed-1680x720.json",
+      "sha256": "93f756ec45cf9b1bd2ec81371ee84dee8b9ae1a9c5f027c37973b9adba8b60b8"
+    },
+    {
+      "path": "packed-1680x720.png",
+      "sha256": "80a7026233628d392a65551a21dba42be368cd8cc08dc103f95bf59a5a96ffb9"
+    },
+    {
+      "path": "packed-1920x1080.json",
+      "sha256": "4aec6790006d5bab54cdc22f69f402b6bdaa8384e286b086c9b8d51aa4d4a009"
+    },
+    {
+      "path": "packed-1920x1080.png",
+      "sha256": "7d7e487dbe8e8421a028984b1268bf9a2cc94f6711a687139dc397cd0cdd3516"
+    },
+    {
+      "path": "before-other-body-1920x1080.png",
+      "sha256": "2107742be867cda82f7a96011d409072e659909d4647bd91751559f879fb1c30"
+    },
+    {
+      "path": "windows-player.xml",
+      "sha256": "cbb4c92d900a10f5c92f6ac1a2f07f3db98b26c6d87c92b18db6313b133a040b"
+    },
+    {
+      "path": "before-other-body.xml",
+      "sha256": "0e4ae4ebfa7f7bbf114ce0ecbaec67973c75f550edc05f3894186d0d83e42d2d"
+    },
+    {
+      "path": "before-own-body.xml",
+      "sha256": "00faa08da4786ec04de421a3112bf20debbb8d9efecaf4cbf1273ad5d9ba3f41"
+    },
+    {
+      "path": "before-tag-collision.xml",
+      "sha256": "44b02498993d81e8e218135df3186878639f8cd82601311cadf16d9dada9cb55"
+    },
+    {
+      "path": "verify-results.json",
+      "sha256": "b369fa585416d2c245d7ab5e68a901375aaa8befd61a6f08d73213a34354935f"
+    }
+  ],
+  "base": "c534179",
+  "protocol": "SquishyBump-LAN-10"
+}

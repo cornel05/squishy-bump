@@ -11,21 +11,26 @@ namespace SquishyBump.Core
         Elimination,
         MatchResult,
         Scoreboard,
+        SessionResult,
     }
 
     /// <summary>Một dòng của kết quả trận hoặc bảng điểm phiên.</summary>
     public readonly struct MatchStanding
     {
-        public MatchStanding(ulong fighterId, int rank, int points)
+        public MatchStanding(ulong fighterId, int rank, int points, int lives = 0, int survivalTicks = 0)
         {
             FighterId = fighterId;
             Rank = rank;
             Points = points;
+            Lives = lives;
+            SurvivalTicks = survivalTicks;
         }
 
         public ulong FighterId { get; }
         public int Rank { get; }
         public int Points { get; }
+        public int Lives { get; }
+        public int SurvivalTicks { get; }
     }
 
     /// <summary>
@@ -53,7 +58,8 @@ namespace SquishyBump.Core
             FighterId = fighterId;
             CreditedFighterId = creditedFighterId;
             Value = value;
-            this.standings = standings;
+            // Payload không đổi khi caller tái sử dụng danh sách sau Publish.
+            this.standings = standings == null ? null : Array.AsReadOnly(new List<MatchStanding>(standings).ToArray());
         }
 
         public uint EventId { get; }
@@ -84,5 +90,8 @@ namespace SquishyBump.Core
 
         public static MatchEvent Scoreboard(uint eventId, uint hostTick, IReadOnlyList<MatchStanding> standings) =>
             new MatchEvent(eventId, hostTick, MatchEventKind.Scoreboard, NoFighter, NoFighter, 0, standings);
+
+        public static MatchEvent SessionResult(uint eventId, uint hostTick, IReadOnlyList<MatchStanding> standings) =>
+            new MatchEvent(eventId, hostTick, MatchEventKind.SessionResult, NoFighter, NoFighter, 0, standings);
     }
 }

@@ -1,4 +1,3 @@
-using System.Linq;
 using NUnit.Framework;
 using SquishyBump.Core;
 using UnityEditor;
@@ -6,32 +5,32 @@ using UnityEngine;
 
 namespace SquishyBump.Tests.EditMode
 {
-    /// <summary>SB-11: the six A15 .glb fruits sit under Visual/Body; the collider stays the class-radius sphere (GDD 12.2).</summary>
+    /// <summary>SB-76: the six animal .glb sit under Visual/Body; the collider stays the class-radius sphere (GDD 12.2).</summary>
     public sealed class FighterVisualTests
     {
-        static readonly string[] Fruits = { "Watermelon", "Pineapple", "Apple", "Mangosteen", "Peach", "Blueberry" };
+        static readonly string[] Animals = { "Bear", "Pig", "Cat", "Penguin", "Chick", "Frog" };
 
-        static GameObject Prefab(string fruit) =>
-            AssetDatabase.LoadAssetAtPath<GameObject>($"Assets/_Project/Prefabs/Fighters/{fruit}.prefab");
+        static GameObject Prefab(string animal) =>
+            AssetDatabase.LoadAssetAtPath<GameObject>($"Assets/_Project/Prefabs/Fighters/{animal}.prefab");
 
         [Test]
-        public void Prefabs_HaveGlbModelUnderBody([ValueSource(nameof(Fruits))] string fruit)
+        public void Prefabs_HaveGlbModelUnderBody([ValueSource(nameof(Animals))] string animal)
         {
-            var model = Prefab(fruit).transform.Find("Visual/Body/Model");
+            var model = Prefab(animal).transform.Find("Visual/Body/Model");
 
             Assert.That(model, Is.Not.Null);
             var source = PrefabUtility.GetCorrespondingObjectFromOriginalSource(model.gameObject);
-            Assert.That(AssetDatabase.GetAssetPath(source), Is.EqualTo($"Assets/_Project/Art/Fruits/{fruit}.glb"));
+            Assert.That(AssetDatabase.GetAssetPath(source), Is.EqualTo($"Assets/_Project/Art/Characters/{animal}.glb"));
             Assert.That(model.GetComponentsInChildren<MeshRenderer>(), Is.Not.Empty);
-            Assert.That(Prefab(fruit).transform.Find("Visual/Body").GetComponent<MeshRenderer>().enabled, Is.False,
+            Assert.That(Prefab(animal).transform.Find("Visual/Body").GetComponent<MeshRenderer>().enabled, Is.False,
                 "placeholder sphere hidden");
         }
 
         [Test]
-        public void Model_HasNoCollider_ColliderStaysClassSphere([ValueSource(nameof(Fruits))] string fruit)
+        public void Model_HasNoCollider_ColliderStaysClassSphere([ValueSource(nameof(Animals))] string animal)
         {
-            var prefab = Prefab(fruit);
-            var definition = AssetDatabase.LoadAssetAtPath<FruitDefinition>($"Assets/_Project/Data/Fruits/{fruit}.asset");
+            var prefab = Prefab(animal);
+            var definition = AssetDatabase.LoadAssetAtPath<FruitDefinition>($"Assets/_Project/Data/Fruits/{animal}.asset");
 
             var colliders = prefab.GetComponentsInChildren<Collider>(true);
 
@@ -42,17 +41,24 @@ namespace SquishyBump.Tests.EditMode
         }
 
         [Test]
-        public void ModelBody_WorldSizeMatchesClassRadius([ValueSource(nameof(Fruits))] string fruit)
+        public void Model_WidthFromRendererBoundsIsTwiceRadius_FeetOnSphereBottom([ValueSource(nameof(Animals))] string animal)
         {
-            var prefab = Prefab(fruit);
-            var radius = ((SphereCollider)prefab.GetComponent<Collider>()).radius;
-            var body = prefab.transform.Find("Visual/Body/Model").GetComponentsInChildren<MeshFilter>()
-                .Single(m => m.name == "Body");
+            var instance = Object.Instantiate(Prefab(animal));
+            try
+            {
+                var radius = ((SphereCollider)instance.GetComponent<Collider>()).radius;
+                var bounds = new Bounds();
+                var first = true;
+                foreach (var r in instance.transform.Find("Visual/Body/Model").GetComponentsInChildren<Renderer>())
+                {
+                    if (first) { bounds = r.bounds; first = false; } else bounds.Encapsulate(r.bounds);
+                }
 
-            // Width of the body mesh in the prefab's space; the oval fruits (Watermelon, Pineapple) differ by <= 15%.
-            var width = body.sharedMesh.bounds.size.x * body.transform.lossyScale.x / prefab.transform.lossyScale.x;
-
-            Assert.That(width, Is.EqualTo(2f * radius).Within(2f * radius * 0.15f));
+                Assert.That(bounds.size.x, Is.EqualTo(2f * radius).Within(0.02f * radius));
+                Assert.That(bounds.min.y, Is.EqualTo(-radius).Within(0.02f));
+                Assert.That(bounds.center.x, Is.EqualTo(0f).Within(0.02f));
+            }
+            finally { Object.DestroyImmediate(instance); }
         }
     }
 }

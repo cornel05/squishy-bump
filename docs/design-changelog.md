@@ -49,3 +49,9 @@ Các mục chưa triển khai/kiểm chứng (L4/L5, Rank, LAN nhiều PC, playt
 font Baloo 2/VI) là khoảng thiếu triển khai, không tự coi là quyết định cắt scope.
 3D lobby và chiến thuật bot chưa bị cắt bởi các entry hiện có. Không ghi pass test hoặc
 hoàn thành feature từ trạng thái issue/PR đơn thuần. Hồ sơ này cần đối chiếu tiếp khi main thay đổi.
+
+**D38 · 23/11/2026** · Survival LAN giữ ít nhất hai người trước màn cuối do host chọn. Nếu đồng hạng cắt ngang ngưỡng loại, đấu lại cùng màn, roster đủ điều kiện, trái và seed. Quy tắc này áp dụng cả khi hòa hạng nhất ở màn cuối. · Scope: GDD 3.5, 3.6, 14.3 T18 · Issue: #106
+
+**D39 · 23/11/2026** · 6 fruit fighters replaced by 6 animals (Bear, Pig, Cat, Penguin, Chick, Frog; same slots and classes) and the lobby becomes a claw machine; fighters stay upright, face movement and squash instead of rolling. GDD text update pending until the MVP works. Reason: team delivered new character and lobby art. · Scope: GDD 2, 6.2, 12 · Issue: #113
+
+**D40 · 23/11/2026** · Lobby gets the team's console UI kit and LAN room options: capacity (2–6), private/public, password and a LAN room list. LAN only; Relay stays cut (D36). Reason: Team Creative delivered the lobby/Find Server mockups with these controls. · Scope: GDD 3.1, 3.5, 10.2, 11 · Issue: #115

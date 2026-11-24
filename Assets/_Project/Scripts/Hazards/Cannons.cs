@@ -17,7 +17,7 @@ namespace SquishyBump.Hazards
     /// with fixed-step gravity; blast R 3 m, J = J₀(1 − d/R)·K(h) outward with 30% up, +2 Wobble; burning patch
     /// 2 m for 3 s, +1 Wobble per full second inside.
     /// </summary>
-    public sealed class Cannons : MonoBehaviour, IHazard
+    public sealed class Cannons : MonoBehaviour, IHazard, IHazardZones, IBotHazardHints
     {
         [Serializable]
         public struct Mount
@@ -66,6 +66,28 @@ namespace SquishyBump.Hazards
         public int LockedFireTick(int i) => cannons[i].FireTick;
         public bool BallFlying(int i) => cannons[i].Flying;
         public Vector3 BallPosition(int i) => cannons[i].BallPosition;
+
+        public IReadOnlyList<HazardZone> ThreatenedZones(int playingTick, float dt)
+        {
+            var zones = new List<HazardZone>();
+            foreach (var c in cannons)
+            {
+                if (c.PatchUntilTick >= playingTick) zones.Add(new HazardZone(c.PatchCentre, hazards.PatchRadius));
+                if (c.Flying || c.Mount.Kind == CannonKind.Fire && c.FireTick >= playingTick)
+                    zones.Add(new HazardZone(c.Aim, hazards.BlastRadius));
+                if (c.Mount.Kind == CannonKind.Air && c.FireTick >= 0 &&
+                    playingTick >= c.FireTick - Mathf.RoundToInt(hazards.CannonTelegraphSeconds / dt) &&
+                    playingTick <= c.FireTick + Mathf.RoundToInt(hazards.AirGustSeconds / dt))
+                {
+                    // Bao tròn bảo thủ nón gió: không chọn một điểm đang nằm trong nón làm điểm hồi sinh.
+                    var direction = (c.Aim - c.Muzzle).normalized;
+                    var half = hazards.AirRange * 0.5f;
+                    var width = hazards.AirRange * Mathf.Tan(hazards.AirConeHalfAngle * Mathf.Deg2Rad);
+                    zones.Add(new HazardZone(c.Muzzle + direction * half, Mathf.Sqrt(half * half + width * width)));
+                }
+            }
+            return zones;
+        }
 
         /// <summary>For cannons built at runtime: call on an inactive object, before Awake.</summary>
         public void Configure(BalanceProfile balanceProfile, HazardProfile hazardProfile, Mount[] layout, bool chaos)
@@ -160,6 +182,35 @@ namespace SquishyBump.Hazards
         {
             sink = eventSink;
             fighters = fighterPhysics;
+        }
+
+        public void CollectBotWarnings(List<BotHazardWarning> warnings, int playingTicks, float dt)
+        {
+            var seconds = playingTicks * dt;
+            foreach (var c in cannons)
+            {
+                if (c.FireTick < 0) continue;
+                var fireAt = c.FireTick * dt;
+                if (c.Mount.Kind == CannonKind.Air && seconds >= fireAt - hazards.CannonTelegraphSeconds &&
+                    seconds < fireAt + hazards.AirGustSeconds)
+                {
+                    var direction = c.Aim - c.Muzzle;
+                    warnings.Add(new BotHazardWarning(BotAwareness.Cannons, BotHazardShape.Cone,
+                        new Vector2(c.Muzzle.x, c.Muzzle.z), new Vector2(hazards.AirRange, hazards.AirConeHalfAngle),
+                        Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg, Mathf.Max(0, fireAt - seconds)));
+                }
+                // Điểm rơi chỉ lộ khi marker đã hiện trong lúc đạn bay, không đọc mục tiêu bí mật trước đó.
+                if (c.Mount.Kind == CannonKind.Fire && c.Flying)
+                {
+                    var impactAt = fireAt + FlightSeconds(c.Muzzle, c.Aim, hazards.FireLaunchAngle, balance.Gravity);
+                    warnings.Add(new BotHazardWarning(BotAwareness.Cannons | BotAwareness.Blasts,
+                        BotHazardShape.Circle, new Vector2(c.Aim.x, c.Aim.z), new Vector2(hazards.BlastRadius, 0),
+                        0, Mathf.Max(0, impactAt - seconds)));
+                }
+                if (c.PatchUntilTick > playingTicks)
+                    warnings.Add(new BotHazardWarning(BotAwareness.BurningPatches, BotHazardShape.Circle,
+                        new Vector2(c.PatchCentre.x, c.PatchCentre.z), new Vector2(hazards.PatchRadius, 0), 0, 0));
+            }
         }
 
         public void StepOnHost(int playingTicks, uint hostTick, float dt)

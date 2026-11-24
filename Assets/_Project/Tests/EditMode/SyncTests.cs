@@ -13,13 +13,11 @@ namespace SquishyBump.Tests.EditMode
         public void Admission_RejectsMidMatchAndAllowsLobbyAgainWithSpecificReason()
         {
             var payload = System.Text.Encoding.UTF8.GetBytes("build-4");
-            Assert.That(SquishyBump.Net.Session.StubSessionService.CheckJoin(payload, "build-4", 2, SessionMode.Lan, false),
-                Is.EqualTo(SessionEndReason.MatchInProgress));
-            Assert.That(SquishyBump.Net.Session.StubSessionService.CheckJoin(payload, "build-4", 2, SessionMode.Lan, true),
+            Assert.That(SquishyBump.Net.Session.StubSessionService.CheckJoin(payload, "build-4", 2, SessionMode.Lan, 6, null),
                 Is.EqualTo(SessionEndReason.None));
             Assert.That(SquishyBump.Net.Session.StubSessionService.ReadRejection("SB:MatchInProgress"),
                 Is.EqualTo(SessionEndReason.MatchInProgress));
-            Assert.That(SquishyBump.UI.Menus.MainMenu.ErrorText(SessionEndReason.MatchInProgress), Does.Contain("lobby"));
+            Assert.That(SquishyBump.UI.Menus.MainMenu.ErrorText(SessionEndReason.MatchInProgress), Does.Contain("phiên đấu"));
         }
         [TestCase(1, SessionEndReason.None)]
         [TestCase(5, SessionEndReason.None)]
@@ -30,6 +28,50 @@ namespace SquishyBump.Tests.EditMode
             Assert.That(SquishyBump.Net.Session.StubSessionService.CheckJoin(payload, "build-1", connected, SessionMode.Lan),
                 Is.EqualTo(expected));
         }
+
+        [Test]
+        public void LanApproval_WithPassword_AcceptsOnlyTheMatchingHash()
+        {
+            var good = SquishyBump.Net.Session.StubSessionService.JoinPayload("build-1", "star");
+            var wrong = SquishyBump.Net.Session.StubSessionService.JoinPayload("build-1", "moon");
+            var none = SquishyBump.Net.Session.StubSessionService.JoinPayload("build-1", null);
+            System.Func<byte[], SessionEndReason> check = payload =>
+                SquishyBump.Net.Session.StubSessionService.CheckJoin(payload, "build-1", 1, SessionMode.Lan, 6, "star");
+
+            Assert.That(check(good), Is.EqualTo(SessionEndReason.None));
+            Assert.That(check(wrong), Is.EqualTo(SessionEndReason.WrongPassword));
+            Assert.That(check(none), Is.EqualTo(SessionEndReason.WrongPassword));
+        }
+
+        [Test]
+        public void LanApproval_WithoutPassword_IgnoresAnythingTheClientSends() =>
+            Assert.That(SquishyBump.Net.Session.StubSessionService.CheckJoin(
+                SquishyBump.Net.Session.StubSessionService.JoinPayload("build-1", "whatever"), "build-1", 1, SessionMode.Lan, 6, null),
+                Is.EqualTo(SessionEndReason.None));
+
+        [TestCase(1, 3, SessionEndReason.None)]
+        [TestCase(2, 3, SessionEndReason.None)]
+        [TestCase(3, 3, SessionEndReason.RoomFull)]
+        [TestCase(2, 2, SessionEndReason.RoomFull)]
+        [TestCase(5, 9, SessionEndReason.None)]
+        [TestCase(6, 9, SessionEndReason.RoomFull)]
+        public void LanApproval_EnforcesHostCapacity_NeverAboveSix(int connected, int capacity, SessionEndReason expected) =>
+            Assert.That(SquishyBump.Net.Session.StubSessionService.CheckJoin(
+                System.Text.Encoding.UTF8.GetBytes("build-1"), "build-1", connected, SessionMode.Lan, capacity, null), Is.EqualTo(expected));
+
+        [Test]
+        public void JoinPayload_StaysUnderTheApprovalLimit_AndNeverCarriesThePasswordText()
+        {
+            var payload = SquishyBump.Net.Session.StubSessionService.JoinPayload(
+                SquishyBump.Net.Session.StubSessionService.Protocol + ":6000.3.28f1", "0123456789abcdef");
+
+            Assert.That(payload.Length, Is.LessThanOrEqualTo(128));
+            Assert.That(System.Text.Encoding.UTF8.GetString(payload), Does.Not.Contain("0123456789abcdef"));
+        }
+
+        [Test]
+        public void ReadRejection_MapsWrongPassword() =>
+            Assert.That(SquishyBump.Net.Session.StubSessionService.ReadRejection("SB:WrongPassword"), Is.EqualTo(SessionEndReason.WrongPassword));
 
         [Test]
         public void LanApproval_RejectsWrongVersionMalformedPayloadAndSinglePlayer()
@@ -142,7 +184,7 @@ namespace SquishyBump.Tests.EditMode
         public void Snapshot_RoundTripsAndRejectsBadLength()
         {
             var f = new FighterSnapshot(3, 2, new Vector3(1, 2, 3), new Vector3(-4, 0, 5), 7, 1,
-                FighterFlags.Dashing | FighterFlags.Stunned, 99);
+                FighterFlags.Dashing | FighterFlags.Stunned, 99, 137);
             var bytes = SyncCodec.WriteSnapshot(new WorldSnapshot(1234, 600, new[] { f, f }));
 
             Assert.That(SyncCodec.TryReadSnapshot(bytes, out var s), Is.True);
@@ -150,6 +192,7 @@ namespace SquishyBump.Tests.EditMode
             Assert.That(s.GoTick, Is.EqualTo(600u));
             Assert.That(s.Fighters.Count, Is.EqualTo(2));
             var r = s.Fighters[1];
+            Assert.That(r.DashCooldownTicks, Is.EqualTo(137));
             Assert.That((r.Id, r.Fruit, r.Position, r.Velocity, r.Wobble, r.Lives, r.Flags, r.LastInput),
                 Is.EqualTo(((ushort)3, (byte)2, f.Position, f.Velocity, (byte)7, (byte)1,
                     FighterFlags.Dashing | FighterFlags.Stunned, 99u)));

@@ -15,6 +15,7 @@ namespace SquishyBump.App
         private StubSessionService session;
         private GameEventHub events;
         private NetSync sync;
+        private LobbySync lobbySync;
         [Tooltip("Boot only: profiles, levels and roster for the scene flow. Empty in test rigs.")]
         [SerializeField] private MatchSetup setup;
 
@@ -25,6 +26,19 @@ namespace SquishyBump.App
         public GameEventHub EventHub => events;
         /// <summary>Input up / snapshot down streams of this peer.</summary>
         public NetSync Sync => sync;
+        public MatchReplica MatchState { get; } = new();
+        public LobbySync LobbySync => lobbySync;
+        /// <summary>LAN room beacons (host announces, Find Server listens); see D40.</summary>
+        public LanDiscovery Discovery { get; } = new();
+        internal void LockLanRoster() => session.AcceptingPlayers = false;
+        internal void UnlockLanRoster() => session.AcceptingPlayers = true;
+        public bool AcceptingPlayers => session.AcceptingPlayers;
+        public LobbyState LobbySelection { get; private set; }
+        public void SetLobbySelection(LobbyState state)
+        {
+            LobbySelection = state;
+            if (state != null) Settings.Rule = state.Rule;
+        }
         /// <summary>Local options (not game state); persisted by SB-51.</summary>
         public GameSettings Settings => Saved.Settings;
         /// <summary>This player's save (GDD 10.5); loaded on Boot, written whenever settings or records change.</summary>
@@ -58,6 +72,8 @@ namespace SquishyBump.App
             manager.NetworkConfig.TickRate = 60;
             session = new StubSessionService(manager, transport);
             sync = new NetSync(manager);
+            lobbySync = new LobbySync(manager);
+            lobbySync.StateReceived += SetLobbySelection;
             events = new GameEventHub(() => session.CanSimulateGameplay);
             session.StateChanged += OnSessionStateChanged;
             if (setup != null)
@@ -71,6 +87,9 @@ namespace SquishyBump.App
             // Hazard events: the host's hub forwards each one reliably; a client's hub receives them (dedup by EventId).
             events.HazardRaised += ForwardHazard;
             sync.HazardReceived += events.Deliver;
+            events.MatchRaised += MatchState.Apply;
+            events.MatchRaised += ForwardMatch;
+            sync.MatchReceived += events.Deliver;
         }
 
         private void Start()
@@ -81,7 +100,7 @@ namespace SquishyBump.App
                 SceneManager.LoadScene(setup.MainMenuScene, LoadSceneMode.Single);
         }
 
-        private void Update() => sync.Poll();
+        private void Update() { sync.Poll(); lobbySync.Poll(); }
 
         // Vòng mô phỏng 60 Hz của host (GDD 10.4). Client không mở tick.
         private void FixedUpdate()
@@ -108,18 +127,28 @@ namespace SquishyBump.App
             if (session.CanSimulateGameplay) sync.BroadcastHazard(gameEvent);
         }
 
+        private void ForwardMatch(MatchEvent gameEvent)
+        {
+            if (session.CanSimulateGameplay) sync.BroadcastMatch(gameEvent);
+        }
+
         private void OnSessionStateChanged(SessionState state)
         {
             // A client starts a fresh EventId stream when it joins.
             if (state == SessionState.Joined)
+            {
                 events.Reset();
+                LobbySelection = null; lobbySync.Reset();
+            }
 
             // Hosting mở phiên mới, Idle đóng phiên: cả hai đều bắt đầu lại tick và EventId.
             if (state != SessionState.Hosting && state != SessionState.Idle)
                 return;
 
             Tick = 0;
+            LobbySelection = null; lobbySync.Reset();
             events.Reset();
+            MatchState.Reset();
         }
 
         private void OnDestroy()
@@ -127,10 +156,16 @@ namespace SquishyBump.App
             if (session == null)
                 return;
 
+            Discovery.Dispose();
             session.StateChanged -= OnSessionStateChanged;
             events.HazardRaised -= ForwardHazard;
             sync.HazardReceived -= events.Deliver;
+            events.MatchRaised -= ForwardMatch;
+            events.MatchRaised -= MatchState.Apply;
+            sync.MatchReceived -= events.Deliver;
             sync.Dispose();
+            lobbySync.Dispose();
+            lobbySync.StateReceived -= SetLobbySelection;
             session.Dispose();
         }
     }

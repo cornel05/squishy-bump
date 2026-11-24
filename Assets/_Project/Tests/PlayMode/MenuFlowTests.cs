@@ -63,14 +63,20 @@ namespace SquishyBump.Tests.PlayMode
                 Assert.That(menu.CurrentPage, Is.EqualTo(page));
             }
 
-            // The level picker lists every level of the match setup.
+            // Single đi qua lobby rồi bắt đầu L1, không có đường chọn tắt L2–L5.
             menu.ShowPage("Single Player");
             var picks = menu.GetComponentsInChildren<UnityEngine.UI.Button>()
-                .Select(b => b.GetComponentInChildren<UnityEngine.UI.Text>().text).Where(t => t.StartsWith("L")).ToArray();
-            Assert.That(picks, Has.Length.EqualTo(5));
-            Assert.That(picks[1], Does.StartWith("L2"));
+                .Select(b => b.GetComponentInChildren<UnityEngine.UI.Text>().text).ToArray();
+            Assert.That(picks, Does.Contain("Vào lobby"));
+            Assert.That(picks.Any(t => t.StartsWith("L2")), Is.False);
 
-            app.Launcher.StartSinglePlayer();
+            app.Launcher.EnterSinglePlayerLobby();
+            yield return WaitFor(() => app.Launcher.Lobby != null && app.Launcher.Lobby.Coordinator != null && app.Launcher.Lobby.Motors.Count == 1);
+            var lobby = app.Launcher.Lobby;
+            var layout = SceneManager.GetActiveScene().GetRootGameObjects().Single(g => g.name == "Store aisle").transform;
+            lobby.Motors[0].GetComponent<Rigidbody>().position = layout.Find("Fruit stands/Stand 1/Pick volume").GetComponent<BoxCollider>().bounds.center;
+            yield return WaitFor(() => lobby.Coordinator.State.Players[0].Fruit == 0);
+            lobby.GetComponentsInChildren<UnityEngine.UI.Button>().Single(b => b.GetComponentInChildren<UnityEngine.UI.Text>().text == "Bắt đầu").onClick.Invoke();
             yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
             var match = app.Launcher.Match;
             Assert.That(app.Launcher.Overlay.CardVisible, Is.True, "arena card (B02) before the countdown");
@@ -155,7 +161,7 @@ namespace SquishyBump.Tests.PlayMode
             app.Launcher.LoadLevel(1);
             yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
             var match = app.Launcher.Match;
-            Assert.That(((Core.ISessionAdmission)app.Session).AcceptingJoins, Is.False);
+            Assert.That(app.AcceptingPlayers, Is.False);
             yield return WaitFor(() => match.Director.Phase == MatchPhase.Playing, 8);
             var remote = match.Fighters.Single(f => f.Id == remoteId);
             var initialZ = remote.Motor.transform.position.z;
@@ -179,7 +185,7 @@ namespace SquishyBump.Tests.PlayMode
             Assert.That(match.Director.Phase, Is.EqualTo(MatchPhase.Playing), "Các slot còn lại tiếp tục trận.");
             // Luồng kết quả→lobby tự động còn thuộc session flow; kiểm tra điểm vào scene mở lại admission.
             yield return SceneManager.LoadSceneAsync($"{Root}/Scenes/Lobby.unity", LoadSceneMode.Single);
-            Assert.That(((Core.ISessionAdmission)app.Session).AcceptingJoins, Is.True);
+            Assert.That(app.AcceptingPlayers, Is.True);
             yield return WaitFor(() => host.Session.State == CoreSession.Idle);
             Assert.That(host.Session.Join("127.0.0.1"), Is.True);
             yield return WaitFor(() => host.Session.State == CoreSession.Joined, 7);
