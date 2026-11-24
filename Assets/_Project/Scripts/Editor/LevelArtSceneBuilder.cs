@@ -62,15 +62,21 @@ namespace SquishyBump.Editor
             var waterMat = LoadAsset<Material>($"{ArtRoot}/L1/Water.mat");
             var mapAsset = LoadAsset<GameObject>($"{ArtRoot}/L1/Map1.glb");
             ConfigureL1SandMaterial(bandMat, $"{ArtRoot}/L1/sand01_Normal.jpg");
+            var woodMat = LoadOrCreateWoodMaterial($"{ArtRoot}/L1/WoodPlank.mat", $"{ArtRoot}/L1/WoodPlank.png");
 
             var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
             Camera.main.transform.SetPositionAndRotation(new Vector3(0f, 9f, -12f), Quaternion.Euler(35f, 0f, 0f));
 
             var floor = (GameObject)PrefabUtility.InstantiatePrefab(floorPrefab);
+            var bandTransforms = new Transform[4];
+            var bandOuterRadii = new float[4];
             for (var i = 0; i < 4; i++)
             {
                 var bandTransform = floor.transform.Find($"Band {i}")
                     ?? throw new InvalidOperationException($"Missing Band {i} on TrainingRingFloor.");
+                bandTransforms[i] = bandTransform;
+                var bandCollider = bandTransform.GetComponent<MeshCollider>();
+                bandOuterRadii[i] = bandCollider != null ? bandCollider.bounds.extents.x : 0f;
                 var bandRenderer = bandTransform.GetComponent<MeshRenderer>();
                 if (bandRenderer != null) bandRenderer.enabled = false;
 
@@ -101,20 +107,44 @@ namespace SquishyBump.Editor
             island.transform.localPosition = new Vector3(0f, L1IslandY, 0f);
             island.transform.localScale = Vector3.one * L1IslandScale;
             StripNonVisuals(island);
+            PrefabUtility.UnpackPrefabInstance(island, PrefabUnpackMode.OutermostRoot, InteractionMode.AutomatedAction);
 
-            for (var i = 1; i <= 4; i++)
+            var leftoverNames = new[]
             {
-                var cyl = FindChild(island.transform, $"Cylinder.{i:000}");
-                if (cyl == null) continue;
-                var cylMesh = LoadAsset<Mesh>($"{ArtRoot}/L1/Fixed_Cylinder.{i:000}.asset");
-                var mf = cyl.GetComponent<MeshFilter>();
-                if (mf != null) mf.sharedMesh = cylMesh;
-                cyl.gameObject.SetActive(false);
+                "Cylinder.001", "Cylinder.002", "Cylinder.003", "Cylinder.004",
+                "Torus.001", "Torus.002", "Torus.003", "Torus.004", "Torus.005", "Torus.006",
+                "Sphere.006", "Cube.001", "Circle.001", "Circle.002", "Circle.003", "Circle.009",
+            };
+            foreach (var junkName in leftoverNames)
+            {
+                var junk = FindChild(island.transform, junkName);
+                if (junk != null) Object.DestroyImmediate(junk.gameObject);
             }
-            for (var i = 1; i <= 6; i++)
+
+            foreach (var child in island.GetComponentsInChildren<Transform>(true).ToArray())
             {
-                var torus = FindChild(island.transform, $"Torus.{i:000}");
-                if (torus != null) torus.gameObject.SetActive(false);
+                if (child == null || child == island.transform) continue;
+                var isPlank = child.name.StartsWith("Plane.", StringComparison.Ordinal);
+                var isPebble = child.name.StartsWith("Roundcube.", StringComparison.Ordinal);
+                if (!isPlank && !isPebble) continue;
+
+                if (isPlank)
+                {
+                    var s = child.localScale;
+                    if (s.x < 0f || s.y < 0f || s.z < 0f)
+                        child.localScale = new Vector3(Mathf.Abs(s.x), Mathf.Abs(s.y), Mathf.Abs(s.z));
+                    var mr = child.GetComponent<MeshRenderer>();
+                    if (mr != null) mr.sharedMaterial = woodMat;
+                }
+
+                var pos = child.position;
+                var r = Mathf.Sqrt(pos.x * pos.x + pos.z * pos.z);
+                var targetBand = 0;
+                for (var b = 3; b >= 0; b--)
+                {
+                    if (r <= bandOuterRadii[b]) { targetBand = b; break; }
+                }
+                child.SetParent(bandTransforms[targetBand], true);
             }
 
             var floatsRoot = new GameObject("CreativeFloats");
@@ -147,6 +177,7 @@ namespace SquishyBump.Editor
             water.GetComponent<Renderer>().sharedMaterial = waterMat;
 
             CreateArenaBounds(level, balance);
+            AssetDatabase.SaveAssets();
             EditorSceneManager.SaveScene(scene, level.ScenePath);
             Debug.Log($"[LevelArtSceneBuilder] Built {level.ScenePath}");
         }
@@ -341,6 +372,25 @@ namespace SquishyBump.Editor
             bandMat.SetFloat("_Smoothness", 0.25f);
             bandMat.EnableKeyword("_NORMALMAP");
             EditorUtility.SetDirty(bandMat);
+        }
+
+        private static Material LoadOrCreateWoodMaterial(string matPath, string texturePath)
+        {
+            var woodTex = LoadAsset<Texture2D>(texturePath);
+            var mat = AssetDatabase.LoadAssetAtPath<Material>(matPath);
+            if (mat == null)
+            {
+                var shader = Shader.Find("Universal Render Pipeline/Lit")
+                    ?? throw new InvalidOperationException("Missing Universal Render Pipeline/Lit shader.");
+                mat = new Material(shader) { name = "WoodPlank" };
+                AssetDatabase.CreateAsset(mat, matPath);
+            }
+            mat.SetTexture("_BaseMap", woodTex);
+            mat.SetColor("_BaseColor", Color.white);
+            mat.SetColor("_Color", Color.white);
+            mat.SetFloat("_Smoothness", 0.18f);
+            EditorUtility.SetDirty(mat);
+            return mat;
         }
 
         private static void EnsurePlanarUvAndTangents(Mesh mesh)

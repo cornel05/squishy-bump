@@ -638,6 +638,12 @@ Build Windows x64 release đạt: 0 errors, 857 MB; repo checker PASS (0 problem
 - L2: thêm `chuotlatdat.glb` (`15.7 MB`) và `meolatdat.glb` (`12.1 MB`) gắn lên 3 chướng ngại vật xoay `Box 0..2` của `MovingGround` qua `LevelArtBinder` (giữ nguyên `BoxCollider`). L3–L5 đã khớp 100% với Drive nên giữ nguyên.
 - Kết quả: `tools/verify.ps1 -PlayMode` → **VERIFY: PASS** (**376** EditMode, **89** PlayMode passed, **2** skipped, **0** cảnh báo `SquishyBump.*`); `python tools/check_repo.py` → **PASS** (0 problems); `tools/build-windows.ps1` → **BUILD: PASS** (**0 errors**, **3847 MB**). Chưa mở `.exe` playtest tương tác trực tiếp L1/L2.
 
+### SB-80 — hoàn thiện Map 1: texture ván gỗ & dọn mesh dư/lỗi (25/11/2026)
+
+- Xóa hoàn toàn các mesh dư/lỗi còn sót trong `Map1.glb` (`Sphere.006`, `Cube.001`, `Circle.001/002/003/009`, `Torus.001..006`, `Cylinder.001..004`).
+- Tạo `WoodPlank.png` (`512×512`) + `WoodPlank.mat` (URP Lit) gán cho 10 tấm ván `Plane.009..020`, sửa scale âm `Plane.011`, và reparent ván gỗ + sỏi (`Roundcube.*`) vào đúng `Band 0..3` để rụng đồng bộ theo H01.
+- Kết quả: `tools/verify.ps1 -PlayMode` → **VERIFY: PASS** (**376** EditMode, **89** PlayMode passed, **2** skipped, **0** cảnh báo `SquishyBump.*`); `python tools/check_repo.py` → **PASS** (0 problems); `tools/build-windows.ps1` → **BUILD: PASS** (**0 errors**, **3845 MB**). Chưa mở `.exe` soi lại hình trực tiếp.
+
 ## 24/11/2026 · SB-32 — kết quả, bảng điểm và spectator
 
 Nền main `e2e9a6a`, nhánh `feat/SB-32-results-spectator`. Windows Player Direct3D12:

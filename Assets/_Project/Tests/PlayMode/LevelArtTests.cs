@@ -88,8 +88,14 @@ namespace SquishyBump.Tests.PlayMode
                         Assert.That(vong.GetComponentsInChildren<Collider>(true).Any(c => c.enabled), Is.False);
                     }
                     Assert.That(artRoot.transform.Find("CreativeFloats/PhaoLgbt"), Is.Not.Null);
-                    var staticFloat = artRoot.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "Torus.001");
-                    Assert.That(staticFloat != null && staticFloat.gameObject.activeSelf, Is.False);
+                    foreach (var removed in new[] { "Sphere.006", "Cube.001", "Circle.001", "Circle.002", "Circle.003", "Circle.009", "Torus.001" })
+                        Assert.That(artRoot.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == removed), Is.Null,
+                            $"L1 leftover {removed} should be removed.");
+                    var planks = ringDrop.GetComponentsInChildren<Renderer>(false)
+                        .Where(r => r.name.StartsWith("Plane.", StringComparison.Ordinal)).ToArray();
+                    Assert.That(planks, Has.Length.EqualTo(10), "L1 should bind 10 wooden planks onto RingDrop bands.");
+                    Assert.That(planks.All(p => p.sharedMaterial != null && p.sharedMaterial.GetTexture("_BaseMap") != null), Is.True,
+                        "Every L1 wooden plank should use the WoodPlank texture.");
                     break;
                 case 2:
                     var binder2 = artRoot.GetComponent<LevelArtBinder>();
