@@ -53,3 +53,8 @@ docs/testing/sb17-hud-review/*.xml -text
 docs/testing/sb26-evidence/*.json text eol=lf
 docs/testing/sb26-evidence/*.xml text eol=lf
 docs/testing/sb26-evidence/*.txt text eol=lf
+
+# Bằng chứng SB-32 dùng LF để SHA-256 ổn định qua checkout.
+docs/testing/sb32-evidence/*.json text eol=lf
+docs/testing/sb32-evidence/*.xml text eol=lf
+docs/testing/sb32-evidence/*.txt text eol=lf

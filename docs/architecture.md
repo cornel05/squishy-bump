@@ -363,3 +363,18 @@ còn `LevelLauncher` mở lại qua `UnlockLanRoster` khi nạp `Lobby`.
 `ReportDisconnect` vào host tick kế tiếp. `MatchDirector` loại trực tiếp ở tick đó cho cả
 Survival và Rank (kể cả khi đang chờ hồi sinh: hết mạng, không respawn, không tính ring-out/last-touch
 credit, giữ nguyên điểm đã ghi), ghi `DisconnectedAt` và chỉ phát một `MatchEvent.Elimination`.
+
+### SB-32 — UI kết quả và spectator
+
+`MatchHost` nhận reliable `MatchEvent.Scoreboard`/result, giữ nguyên rank/points/lives
+host gửi và chuyển cho `MatchHud.SetStandings`. Snapshot không xếp lại hạng/điểm;
+`ViewSpawned` chỉ resolve tên/màu từ prefab/snapshot. Trên client, Fruit lấy theo
+ID trong snapshot thay vì coi peer ID là slot prefab (ID sau reconnect có thể khác).
+`LocalPlayerInput.ScoreboardHeld` đọc action Scoreboard; App bật/tắt bảng khi giữ/thả,
+không dừng clock/motor. UI chỉ trình bày dữ liệu.
+
+Camera dùng cùng `CameraRig.Follow` cho hai luật: Rank còn mạng giữ target cục bộ
+khi ẩn chờ respawn; khi thật sự bị loại thì theo fighter sống và đổi trái/phải.
+Trang kết quả match/session giữ hạng host, podium/top3/điểm/mạng, các hạng còn lại
+và delay ít nhất 3 giây unscaled. HUD gameplay ẩn trong kết quả. Không đổi Core
+contract, packet hay simulation ownership.

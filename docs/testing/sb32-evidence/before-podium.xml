@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-24 11:25:06Z" end-time="2026-11-24 11:25:06Z" duration="0,3019478">
+  <test-suite type="TestSuite" id="1124" name="Squishy Bump" fullname="Squishy Bump" runstate="Runnable" testcasecount="84" result="Failed" site="Child" start-time="2026-11-24 11:25:06Z" end-time="2026-11-24 11:25:06Z" duration="0.301948" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1117" name="SquishyBump.Tests.PlayMode.dll" fullname="D:/Work/Code/Assignment/Game/squishy-bump-sb26/Library/ScriptAssemblies/SquishyBump.Tests.PlayMode.dll" runstate="Runnable" testcasecount="84" result="Failed" site="Child" start-time="2026-11-24 11:25:06Z" end-time="2026-11-24 11:25:06Z" duration="0.287184" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27044" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1118" name="SquishyBump" fullname="SquishyBump" runstate="Runnable" testcasecount="84" result="Failed" site="Child" start-time="2026-11-24 11:25:06Z" end-time="2026-11-24 11:25:06Z" duration="0.283999" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1119" name="Tests" fullname="SquishyBump.Tests" runstate="Runnable" testcasecount="84" result="Failed" site="Child" start-time="2026-11-24 11:25:06Z" end-time="2026-11-24 11:25:06Z" duration="0.281044" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1120" name="PlayMode" fullname="SquishyBump.Tests.PlayMode" runstate="Runnable" testcasecount="84" result="Failed" site="Child" start-time="2026-11-24 11:25:06Z" end-time="2026-11-24 11:25:06Z" duration="0.278659" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1062" name="MatchOverlayTests" fullname="SquishyBump.Tests.PlayMode.MatchOverlayTests" classname="SquishyBump.Tests.PlayMode.MatchOverlayTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-11-24 11:25:06Z" end-time="2026-11-24 11:25:06Z" duration="0.274737" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1065" name="SessionResult_RankShowsPointsAndLivesOnVisiblePodium" fullname="SquishyBump.Tests.PlayMode.MatchOverlayTests.SessionResult_RankShowsPointsAndLivesOnVisiblePodium" methodname="SessionResult_RankShowsPointsAndLivesOnVisiblePodium" classname="SquishyBump.Tests.PlayMode.MatchOverlayTests" runstate="Runnable" seed="886187451" result="Failed" start-time="2026-11-24 11:25:06Z" end-time="2026-11-24 11:25:06Z" duration="0.253959" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Podium phải hiển thị cả điểm và mạng, không chỉ ở summary ẩn.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at SquishyBump.Tests.PlayMode.MatchOverlayTests+<SessionResult_RankShowsPointsAndLivesOnVisiblePodium>d__5.MoveNext () [0x00078] in D:\Work\Code\Assignment\Game\squishy-bump-sb26\Assets\_Project\Tests\PlayMode\MatchOverlayTests.cs:64
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Saving results to: C:/Users/THIS PC/AppData/LocalLow/BKU Group 18/Squishy Bump\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Failed(Child)" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="0001-01-01 00:00:00Z" end-time="0001-01-01 00:00:00Z" duration="17,0893594">
+  <test-suite type="TestSuite" id="1000" name="Squishy Bump" fullname="Squishy Bump" runstate="Runnable" testcasecount="40" result="Failed" site="Child" start-time="2026-11-24 13:34:52Z" end-time="2026-11-24 13:35:09Z" duration="17.089359" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">One or more child tests had errorsOne or more child tests had errorsOne or more child tests had errorsOne or more child tests had errorsOne or more child tests had errorsOne or more child tests had errors  17 · 2♥
+13 · 1♥
+9 · 0♥
+7 · 0♥
+3 · 0♥
+1 · 0♥
+  Expected: less than or equal to 219.119995f
+  But was:  292.5f
+at SquishyBump.Tests.PlayMode.ResultsSpectatorTests+&lt;WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions&gt;d__17.MoveNext () [0x00603] in D:\Work\Code\Assignment\Game\squishy-bump-sb26\Assets\_Project\Tests\PlayMode\ResultsSpectatorTests.cs:254
+at UnityEngine.TestTools.TestEnumerator+&lt;Execute&gt;d__7.MoveNext () [0x0004e] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+<properties><property name="platform" value="PlayMode"></property></properties><failure>One or more child tests had errors<message>One or more child tests had errors</message></failure><test-suite type="Assembly" id="1054" name="SquishyBump.Tests.PlayMode.dll" fullname="D:/Work/Code/Assignment/Game/squishy-bump-sb26/Builds/SB32Visual/PlayerWithTests/PlayerWithTests_Data/Managed/SquishyBump.Tests.PlayMode.dll" runstate="Runnable" testcasecount="40" result="Failed" site="Child" start-time="2026-11-24 13:34:52Z" end-time="2026-11-24 13:35:09Z" duration="17.071795" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">One or more child tests had errorsOne or more child tests had errorsOne or more child tests had errorsOne or more child tests had errorsOne or more child tests had errors  17 · 2♥
+13 · 1♥
+9 · 0♥
+7 · 0♥
+3 · 0♥
+1 · 0♥
+  Expected: less than or equal to 219.119995f
+  But was:  292.5f
+at SquishyBump.Tests.PlayMode.ResultsSpectatorTests+&lt;WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions&gt;d__17.MoveNext () [0x00603] in D:\Work\Code\Assignment\Game\squishy-bump-sb26\Assets\_Project\Tests\PlayMode\ResultsSpectatorTests.cs:254
+at UnityEngine.TestTools.TestEnumerator+&lt;Execute&gt;d__7.MoveNext () [0x0004e] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+<properties><property name="_PID" value="38284"></property><property name="_APPDOMAIN" value="Unity Root Domain"></property><property name="platform" value="PlayMode"></property><property name="EditorOnly" value="False"></property></properties><failure>One or more child tests had errors<message>One or more child tests had errors</message></failure><test-suite type="TestSuite" id="1055" name="SquishyBump" fullname="SquishyBump" runstate="Runnable" testcasecount="40" result="Failed" site="Child" start-time="2026-11-24 13:34:52Z" end-time="2026-11-24 13:35:09Z" duration="17.064023" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">One or more child tests had errorsOne or more child tests had errorsOne or more child tests had errorsOne or more child tests had errors  17 · 2♥
+13 · 1♥
+9 · 0♥
+7 · 0♥
+3 · 0♥
+1 · 0♥
+  Expected: less than or equal to 219.119995f
+  But was:  292.5f
+at SquishyBump.Tests.PlayMode.ResultsSpectatorTests+&lt;WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions&gt;d__17.MoveNext () [0x00603] in D:\Work\Code\Assignment\Game\squishy-bump-sb26\Assets\_Project\Tests\PlayMode\ResultsSpectatorTests.cs:254
+at UnityEngine.TestTools.TestEnumerator+&lt;Execute&gt;d__7.MoveNext () [0x0004e] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+<properties></properties><failure>One or more child tests had errors<message>One or more child tests had errors</message></failure><test-suite type="TestSuite" id="1056" name="Tests" fullname="SquishyBump.Tests" runstate="Runnable" testcasecount="40" result="Failed" site="Child" start-time="2026-11-24 13:34:52Z" end-time="2026-11-24 13:35:09Z" duration="17.056961" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">One or more child tests had errorsOne or more child tests had errorsOne or more child tests had errors  17 · 2♥
+13 · 1♥
+9 · 0♥
+7 · 0♥
+3 · 0♥
+1 · 0♥
+  Expected: less than or equal to 219.119995f
+  But was:  292.5f
+at SquishyBump.Tests.PlayMode.ResultsSpectatorTests+&lt;WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions&gt;d__17.MoveNext () [0x00603] in D:\Work\Code\Assignment\Game\squishy-bump-sb26\Assets\_Project\Tests\PlayMode\ResultsSpectatorTests.cs:254
+at UnityEngine.TestTools.TestEnumerator+&lt;Execute&gt;d__7.MoveNext () [0x0004e] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+<properties></properties><failure>One or more child tests had errors<message>One or more child tests had errors</message></failure><test-suite type="TestSuite" id="1057" name="PlayMode" fullname="SquishyBump.Tests.PlayMode" runstate="Runnable" testcasecount="40" result="Failed" site="Child" start-time="2026-11-24 13:34:52Z" end-time="2026-11-24 13:35:09Z" duration="17.050831" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">One or more child tests had errorsOne or more child tests had errors  17 · 2♥
+13 · 1♥
+9 · 0♥
+7 · 0♥
+3 · 0♥
+1 · 0♥
+  Expected: less than or equal to 219.119995f
+  But was:  292.5f
+at SquishyBump.Tests.PlayMode.ResultsSpectatorTests+&lt;WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions&gt;d__17.MoveNext () [0x00603] in D:\Work\Code\Assignment\Game\squishy-bump-sb26\Assets\_Project\Tests\PlayMode\ResultsSpectatorTests.cs:254
+at UnityEngine.TestTools.TestEnumerator+&lt;Execute&gt;d__7.MoveNext () [0x0004e] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+<properties></properties><failure>One or more child tests had errors<message>One or more child tests had errors</message></failure><test-suite type="TestFixture" id="1031" name="ResultsSpectatorTests" fullname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" classname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-11-24 13:34:52Z" end-time="2026-11-24 13:35:09Z" duration="17.045934" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">One or more child tests had errors  17 · 2♥
+13 · 1♥
+9 · 0♥
+7 · 0♥
+3 · 0♥
+1 · 0♥
+  Expected: less than or equal to 219.119995f
+  But was:  292.5f
+at SquishyBump.Tests.PlayMode.ResultsSpectatorTests+&lt;WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions&gt;d__17.MoveNext () [0x00603] in D:\Work\Code\Assignment\Game\squishy-bump-sb26\Assets\_Project\Tests\PlayMode\ResultsSpectatorTests.cs:254
+at UnityEngine.TestTools.TestEnumerator+&lt;Execute&gt;d__7.MoveNext () [0x0004e] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+<properties></properties><failure>One or more child tests had errors<message>One or more child tests had errors</message></failure><test-case id="1037" name="ClientRankBoard_ReliablePointsAndRanksSurviveNewSnapshots" fullname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests.ClientRankBoard_ReliablePointsAndRanksSurviveNewSnapshots" methodname="ClientRankBoard_ReliablePointsAndRanksSurviveNewSnapshots" classname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" runstate="Runnable" seed="1102489875" result="Passed" start-time="2026-11-24 13:34:52Z" end-time="2026-11-24 13:34:58Z" duration="5.903655" asserts="0"><properties><property name="_JOINTYPE" value="UnityCombinatorial"></property><property name="retryIteration" value="0"></property><property name="repeatIteration" value="0"></property></properties></test-case><test-case id="1036" name="Rank_RespawnKeepsOwnCamera_EliminationEnablesCycle" fullname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests.Rank_RespawnKeepsOwnCamera_EliminationEnablesCycle" methodname="Rank_RespawnKeepsOwnCamera_EliminationEnablesCycle" classname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" runstate="Runnable" seed="448497257" result="Passed" start-time="2026-11-24 13:34:58Z" end-time="2026-11-24 13:35:02Z" duration="4.528112" asserts="0"><properties><property name="_JOINTYPE" value="UnityCombinatorial"></property><property name="retryIteration" value="0"></property><property name="repeatIteration" value="0"></property></properties></test-case><test-case id="1032" name="ResultButton_WaitsThreeRealSecondsEvenWhenPaused" fullname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests.ResultButton_WaitsThreeRealSecondsEvenWhenPaused" methodname="ResultButton_WaitsThreeRealSecondsEvenWhenPaused" classname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" runstate="Runnable" seed="1836854256" result="Passed" start-time="2026-11-24 13:35:02Z" end-time="2026-11-24 13:35:05Z" duration="3.020979" asserts="0"><properties><property name="_JOINTYPE" value="UnityCombinatorial"></property><property name="retryIteration" value="0"></property><property name="repeatIteration" value="0"></property></properties></test-case><test-case id="1033" name="RoundAndSession_PodiumKeepsHostRanksPointsAndLives" fullname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests.RoundAndSession_PodiumKeepsHostRanksPointsAndLives" methodname="RoundAndSession_PodiumKeepsHostRanksPointsAndLives" classname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" runstate="Runnable" seed="21620627" result="Passed" start-time="2026-11-24 13:35:05Z" end-time="2026-11-24 13:35:05Z" duration="0.043750" asserts="0"><properties><property name="_JOINTYPE" value="UnityCombinatorial"></property><property name="retryIteration" value="0"></property><property name="repeatIteration" value="0"></property></properties></test-case><test-case id="1034" name="Scoreboard_HoldTabUsesConfirmedRowsAndReleaseCloses" fullname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests.Scoreboard_HoldTabUsesConfirmedRowsAndReleaseCloses" methodname="Scoreboard_HoldTabUsesConfirmedRowsAndReleaseCloses" classname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" runstate="Runnable" seed="1665877434" result="Passed" start-time="2026-11-24 13:35:05Z" end-time="2026-11-24 13:35:06Z" duration="0.995542" asserts="0"><properties><property name="_JOINTYPE" value="UnityCombinatorial"></property><property name="retryIteration" value="0"></property><property name="repeatIteration" value="0"></property></properties></test-case><test-case id="1035" name="Survival_EliminatedCameraCyclesOnlyLivingFighters" fullname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests.Survival_EliminatedCameraCyclesOnlyLivingFighters" methodname="Survival_EliminatedCameraCyclesOnlyLivingFighters" classname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" runstate="Runnable" seed="661030791" result="Passed" start-time="2026-11-24 13:35:06Z" end-time="2026-11-24 13:35:09Z" duration="2.276806" asserts="0"><properties><property name="_JOINTYPE" value="UnityCombinatorial"></property><property name="retryIteration" value="0"></property><property name="repeatIteration" value="0"></property></properties></test-case><test-case id="1038" name="WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions" fullname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests.WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions" methodname="WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions" classname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" runstate="Runnable" seed="798047933" result="Failed" start-time="2026-11-24 13:35:09Z" end-time="2026-11-24 13:35:09Z" duration="0.256871" asserts="0">  17 · 2♥
+13 · 1♥
+9 · 0♥
+7 · 0♥
+3 · 0♥
+1 · 0♥
+  Expected: less than or equal to 219.119995f
+  But was:  292.5f
+at SquishyBump.Tests.PlayMode.ResultsSpectatorTests+&lt;WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions&gt;d__17.MoveNext () [0x00603] in D:\Work\Code\Assignment\Game\squishy-bump-sb26\Assets\_Project\Tests\PlayMode\ResultsSpectatorTests.cs:254
+at UnityEngine.TestTools.TestEnumerator+&lt;Execute&gt;d__7.MoveNext () [0x0004e] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+<properties><property name="_JOINTYPE" value="UnityCombinatorial"></property><property name="retryIteration" value="0"></property><property name="repeatIteration" value="0"></property></properties><failure>  17 · 2♥
+13 · 1♥
+9 · 0♥
+7 · 0♥
+3 · 0♥
+1 · 0♥
+  Expected: less than or equal to 219.119995f
+  But was:  292.5f
+at SquishyBump.Tests.PlayMode.ResultsSpectatorTests+&lt;WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions&gt;d__17.MoveNext () [0x00603] in D:\Work\Code\Assignment\Game\squishy-bump-sb26\Assets\_Project\Tests\PlayMode\ResultsSpectatorTests.cs:254
+at UnityEngine.TestTools.TestEnumerator+&lt;Execute&gt;d__7.MoveNext () [0x0004e] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+<message>  17 · 2♥
+13 · 1♥
+9 · 0♥
+7 · 0♥
+3 · 0♥
+1 · 0♥
+  Expected: less than or equal to 219.119995f
+  But was:  292.5f
+</message><stack-trace>at SquishyBump.Tests.PlayMode.ResultsSpectatorTests+&lt;WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions&gt;d__17.MoveNext () [0x00603] in D:\Work\Code\Assignment\Game\squishy-bump-sb26\Assets\_Project\Tests\PlayMode\ResultsSpectatorTests.cs:254
+at UnityEngine.TestTools.TestEnumerator+&lt;Execute&gt;d__7.MoveNext () [0x0004e] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+</stack-trace></failure></test-case></test-suite></test-suite></test-suite></test-suite></test-suite></test-suite>
+</test-run>

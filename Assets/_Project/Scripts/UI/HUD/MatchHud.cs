@@ -28,6 +28,8 @@ namespace SquishyBump.UI
         private Text clock, ringCaption, remaining, fruit, classBadge, dash, boardRanks, boardValues;
         private Image badgeBackground, avatar, board;
         private string boardKey;
+        private RectTransform scoreboard;
+        private Text scoreboardTitle, scoreboardRows;
         private Image dashRing;
         private Sprite ringSprite;
         private Texture2D ringTexture;
@@ -44,6 +46,49 @@ namespace SquishyBump.UI
         public float DashFill => dashRing.fillAmount;
         /// <summary>Corner board as shown, one "rank name value" line per fighter.</summary>
         public string BoardText { get; private set; } = "";
+        public bool ScoreboardVisible => canvas.enabled && scoreboard != null && scoreboard.gameObject.activeSelf;
+
+        public void SetVisible(bool visible) => canvas.enabled = visible;
+        public void ShowScoreboard(bool held)
+        {
+            if (scoreboard != null) scoreboard.gameObject.SetActive(held);
+        }
+
+        /// <summary>Hiển thị hạng/điểm/mạng đã được host xác nhận; client không tự xếp lại.</summary>
+        public void SetStandings(IReadOnlyList<MatchStanding> rows, System.Func<ulong, string> label,
+            System.Func<ulong, Color> color, MatchRule rule, int currentLevel, int finalLevel)
+        {
+            if (scoreboard == null)
+            {
+                var panel = UiFactory.Place(canvas.transform, "panel_box", Vector2.one * 0.5f, Vector2.zero, new Vector2(1100, 620));
+                UiFactory.Slice(panel, "panel_box");
+                panel.name = "Scoreboard";
+                scoreboard = panel.rectTransform;
+                scoreboardTitle = UiFactory.Label(scoreboard, "", 42);
+                scoreboardTitle.rectTransform.anchorMin = scoreboardTitle.rectTransform.anchorMax = new Vector2(0.5f, 1);
+                scoreboardTitle.rectTransform.anchoredPosition = new Vector2(0, -65);
+                scoreboardTitle.rectTransform.sizeDelta = new Vector2(1000, 80);
+                scoreboardRows = UiFactory.Label(scoreboard, "", 34);
+                scoreboardRows.alignment = TextAnchor.UpperLeft;
+                scoreboardRows.lineSpacing = 1.5f;
+                scoreboardRows.rectTransform.anchorMin = Vector2.zero;
+                scoreboardRows.rectTransform.anchorMax = Vector2.one;
+                scoreboardRows.rectTransform.offsetMin = new Vector2(60, 40);
+                scoreboardRows.rectTransform.offsetMax = new Vector2(-60, -130);
+                scoreboard.gameObject.SetActive(false);
+            }
+            scoreboardTitle.text = $"BẢNG ĐIỂM · L{currentLevel}/{finalLevel} · {rule}";
+            string Value(MatchStanding row) => rule == MatchRule.Rank ? $"{row.Points} điểm · {row.Lives} mạng" : row.Lives > 0 ? "CÒN SỐNG" : "ĐÃ LOẠI";
+            BoardText = string.Join("\n", rows.Select(row => $"{row.Rank} {label(row.FighterId)} — {Value(row)}"));
+            scoreboardRows.text = string.Join("\n", rows.Select(row =>
+                $"{row.Rank}. {label(row.FighterId).ToUpperInvariant()} — {Value(row)}{(rule == MatchRule.Rank && row.Lives == 0 ? " · ĐÃ LOẠI" : "")}"));
+            boardRanks.fontSize = boardValues.fontSize = 22;
+            boardRanks.rectTransform.anchorMax = new Vector2(0.65f, 1);
+            boardValues.rectTransform.anchorMin = new Vector2(0.65f, 0);
+            boardRanks.text = string.Join("\n", rows.Select(row => $"{row.Rank} <color=#{ColorUtility.ToHtmlStringRGB(color(row.FighterId))}>{label(row.FighterId).ToUpperInvariant()}</color>"));
+            boardValues.text = string.Join("\n", rows.Select(row => rule == MatchRule.Rank ? $"{row.Points}đ ·{row.Lives}m" : row.Lives > 0 ? "●" : "×"));
+            board.gameObject.SetActive(rows.Count > 0);
+        }
 
         public void Init(BalanceProfile profile, int levelNumber)
         {
