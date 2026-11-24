@@ -1,0 +1,180 @@
+{
+  "date": "2026-11-24",
+  "unity": "6000.3.28f1",
+  "base": "3cef5f0",
+  "scope": "Model + NGO loopback cùng tiến trình; T18 nhiều PC chưa chạy",
+  "runs": {
+    "EditMode": {
+      "result": "Passed",
+      "total": "381",
+      "passed": "381",
+      "failed": "0",
+      "skipped": "0",
+      "start-time": "2026-11-24 09:47:08Z",
+      "end-time": "2026-11-24 09:47:11Z",
+      "raw_xml_sha256": "aecbd04307c210bcc8e1ba182c4ddba60cd3c39fe3d6806e657cd08db870d17f",
+      "relevant_cases": [
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.ConfirmedResults_KeepTwoUntilFinal_ThenRankEveryone(2,5,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.ConfirmedResults_KeepTwoUntilFinal_ThenRankEveryone(6,5,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.ConfirmedResults_KeepTwoUntilFinal_ThenRankEveryone(4,3,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.ConfirmedResults_KeepTwoUntilFinal_ThenRankEveryone(2,1,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(2,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(2,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(2,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(2,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(2,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(3,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(3,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(3,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(3,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(3,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(4,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(4,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(4,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(4,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(4,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(5,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(5,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(5,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(5,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(5,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(6,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(6,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(6,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(6,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(6,System.Int32[])",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.LastOpponentLeaves_FinishesByForfeitWithoutAnotherMatch",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.TieAtKnockoutCutoff_ReplaysSameLevelAndRoster(1,2,1)",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.TieAtKnockoutCutoff_ReplaysSameLevelAndRoster(3,4,3)",
+          "result": "Passed"
+        }
+      ]
+    },
+    "PlayMode": {
+      "result": "Passed",
+      "total": "77",
+      "passed": "76",
+      "failed": "0",
+      "skipped": "1",
+      "start-time": "2026-11-24 09:47:29Z",
+      "end-time": "2026-11-24 09:54:12Z",
+      "raw_xml_sha256": "7c09c3224bf33aac809778a061538a21b9468bec516b4b839bad19c0de0ffb48",
+      "relevant_cases": [
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.LobbyPlayTests.LanSurvival_DrawAtFinal_ReplaysLevelUntilThereIsOneChampion",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.LobbyPlayTests.LanSurvival_HostKnockedOut_SpectatesWhileClientsPlayFinal",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.LobbyPlayTests.LanSurvival_TwoPlayersContinueThroughL5_AndClientReceivesChampion",
+          "result": "Passed"
+        }
+      ]
+    }
+  },
+  "sources": {
+    "Assets/_Project/Tests/EditMode/LanSurvivalRunTests.cs": "b654c9dfab7ffc9553f52dc456698b4839d2e20cbc7acc8f43865a2086b47f82",
+    "Assets/_Project/Tests/PlayMode/LobbyPlayTests.cs": "2d6330aa9170b10acf3aad6f462c639b042ce2f572d2a3119c392639ddc0446b",
+    "Assets/_Project/Scripts/Match/LanSurvivalRun.cs": "fce02a77d9c7306a6f816f4f39bbe874fdc8733d43660ed0f965ac0b8cbc6a80",
+    "Assets/_Project/Scripts/App/LevelLauncher.cs": "026332da172e8319574c508530e388b9cd7c7aeac7a585dd6715af97aec38ddd",
+    "Assets/_Project/Scripts/App/MatchHost.cs": "f8442e2bd7e13faf4982e409de045bbf09cac04e434ad75187641a4493d31afd"
+  },
+  "source_hash_format": "UTF-8 LF"
+}

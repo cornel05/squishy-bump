@@ -1,4 +1,4 @@
-﻿# Testing
+# Testing
 
 ## Lượt thử SB-20 ngày 21/11/2026 — phục hồi phiên LAN
 
@@ -257,7 +257,7 @@ and [`gdd/ids.md`](gdd/ids.md). Update a row whenever the test is run (date, bui
 | T15 | fail — delayed local response | 21/11/2026 | v0.1.0 / `4f0c0de` | Codex | MPP L3, nominal 100 ms RTT / 2% loss. Client moved on 6/6 instrumented inputs after 344–354 ms. Gust warning matched the rendered host tick and aim. See T15 evidence above. |
 | T16 | cut | 16/11/2026 | | Đình Duy | Out of A02 scope: D36 (#82). |
 | T17 | cut | 16/11/2026 | | Đình Duy | Out of A02 scope: D37 (#83). |
-| T18 | not run | | | | |
+| T18 | Một phần (model và loopback) | 24/11/2026 | SB-29, nền `3cef5f0` | Codex | Bảng loại 25 tổ hợp phòng 2–6 người/1–5 màn; loopback hiện có kiểm L1–L5, host spectate, hòa chung kết. Chưa chạy 6 người/5 màn và 4 người/3 màn trên PC riêng. [Báo cáo](testing/sb29-survival.md). |
 | T19 | not run | | | | |
 | T20 | not run | | | | |
 
@@ -619,3 +619,13 @@ Windows D3D12 đạt riêng. Fixture lobby đã tách hai lần nhấn đổi lu
 frame để đọc snapshot đã render. T04 giữ Một phần như bảng trên;
 [xem báo cáo và bằng chứng](testing/sb26-single-run.md).
 Build Windows x64 release đạt: 0 errors, 857 MB; repo checker PASS (0 problems).
+
+## 24/11/2026 · SB-29 — đối chiếu bảng loại và T18 Một phần
+
+Nền `3cef5f0`, nhánh `feat/SB-29-survival-evidence`. Bổ sung 25 tổ hợp phòng
+2–6 người/1–5 màn với oracle độc lập; kiểm đúng người bị loại, hạng cuối và một
+champion. Verifier Native PASS: 381 EditMode +76 PlayMode, 0 lỗi/cảnh báo C#,
+1 skip HudVisual dành riêng Windows Player. Ba ca Survival lobby (L1–L5,
+host spectate, hòa chung kết) đạt qua NGO loopback cùng tiến trình. Repo checker
+PASS (0 problems). Runtime không đổi, không build release mới.
+T18 nhiều máy giữ chưa đạt; [bằng chứng và bảng nghiệm thu](testing/sb29-survival.md).

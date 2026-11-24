@@ -7,6 +7,59 @@ namespace SquishyBump.Tests.EditMode
 {
     public sealed class LanSurvivalRunTests
     {
+        // Oracle từ GDD 3.5 + D38: số người còn sau từng màn, không tính lại
+        // công thức production trong assertion. Các hàng ngắn gồm cả màn chung kết.
+        [TestCase(2, new[] { 1 })]
+        [TestCase(2, new[] { 2, 1 })]
+        [TestCase(2, new[] { 2, 2, 1 })]
+        [TestCase(2, new[] { 2, 2, 2, 1 })]
+        [TestCase(2, new[] { 2, 2, 2, 2, 1 })]
+        [TestCase(3, new[] { 1 })]
+        [TestCase(3, new[] { 2, 1 })]
+        [TestCase(3, new[] { 2, 2, 1 })]
+        [TestCase(3, new[] { 2, 2, 2, 1 })]
+        [TestCase(3, new[] { 2, 2, 2, 2, 1 })]
+        [TestCase(4, new[] { 1 })]
+        [TestCase(4, new[] { 2, 1 })]
+        [TestCase(4, new[] { 3, 2, 1 })]
+        [TestCase(4, new[] { 3, 2, 2, 1 })]
+        [TestCase(4, new[] { 3, 2, 2, 2, 1 })]
+        [TestCase(5, new[] { 1 })]
+        [TestCase(5, new[] { 3, 1 })]
+        [TestCase(5, new[] { 3, 2, 1 })]
+        [TestCase(5, new[] { 4, 3, 2, 1 })]
+        [TestCase(5, new[] { 4, 3, 2, 2, 1 })]
+        [TestCase(6, new[] { 1 })]
+        [TestCase(6, new[] { 3, 1 })]
+        [TestCase(6, new[] { 4, 2, 1 })]
+        [TestCase(6, new[] { 4, 3, 2, 1 })]
+        [TestCase(6, new[] { 5, 4, 3, 2, 1 })]
+        public void EveryRoomSizeAndLength_RemovesWorstPlayersAndEndsWithOneChampion(int count, int[] remaining)
+        {
+            var entrants = Enumerable.Range(0, count).Select(id => (ulong)id).ToArray();
+            var peers = entrants.Skip(1).ToArray();
+            var run = new LanSurvivalRun(remaining.Length, entrants);
+            foreach (var survivors in remaining)
+            {
+                var before = run.Active.ToArray();
+                var decision = run.Evaluate(peers, Placements(before.Reverse().ToArray()));
+                if (survivors > 1)
+                {
+                    Assert.That(decision.NextLevel, Is.EqualTo(run.Level + 1));
+                    Assert.That(decision.Active, Is.EqualTo(before.TakeLast(survivors)),
+                        "Chỉ người hạng thấp bị loại; host có thể bị loại trước màn cuối.");
+                    run.Advance(decision);
+                }
+                else
+                {
+                    Assert.That(decision.NextLevel, Is.Null);
+                    Assert.That(decision.Standings.Count(row => row.Rank == 1), Is.EqualTo(1));
+                    Assert.That(decision.Standings.Select(row => row.FighterId), Is.EqualTo(entrants.Reverse()));
+                    Assert.That(decision.Standings.Select(row => row.Rank), Is.EqualTo(Enumerable.Range(1, count)));
+                }
+            }
+        }
+
         [TestCase(2, 5, new[] { 2, 2, 2, 2 })]
         [TestCase(6, 5, new[] { 5, 4, 3, 2 })]
         [TestCase(4, 3, new[] { 3, 2 })]
