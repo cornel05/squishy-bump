@@ -1,8 +1,8 @@
 # Squishy Bump GDD
 
-Game design document for Squishy Bump (CO3045 Assignment 01, v1.3), a 3D physics party brawler where six jelly fruits bump each other off living arenas.
+Game design document for Squishy Bump (CO3045 Assignment 01/02, v1.4), a 3D physics party brawler where six squishy animal fighters bump each other off living arenas.
 
-`SquishyBump_GDD_EN_v1.3.pdf` is the original. The `.md` files are the agent-readable source: one file per chapter, converted with `python tools/gdd/pdf_to_md.py` and then hand-fixed (tables, page-break artefacts, the Figure 2 stage table in 5.3). Re-running the converter overwrites those fixes. When the two disagree, the PDF wins.
+`SquishyBump_GDD_EN_v1.4.pdf` and `SquishyBump_GDD_VI_v1.4.pdf` are the current v1.4 PDF exports (updated from `SquishyBump_GDD_EN_v1.3.pdf` for Creative SB-76/77/78 assets and per-map visual scales). The `.md` files are the agent-readable source: one file per chapter, converted with `python tools/gdd/pdf_to_md.py` and then hand-fixed (tables, page-break artefacts, the Figure 2 stage table in 5.3). Re-running the converter overwrites those fixes. When the two disagree, the PDF wins.
 
 `ids.md` indexes every ID (F, O, PF, H, T, AI, LV, LD, B) to the table that defines it. Regenerate it with `python tools/gdd/gen_ids.py`.
 

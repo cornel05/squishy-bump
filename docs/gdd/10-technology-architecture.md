@@ -33,10 +33,10 @@ Unity was chosen because it combines a mature 3D physics engine (PhysX), first-p
 
 | Component | Responsibility | Authoritative data |
 |---|---|---|
-| SessionManager | Host, join (LAN or relay), 3D lobby slots, fruit picks, ready state, version check, disconnects | Session members, chosen fruits and phase (host) |
+| SessionManager | Host, join (LAN or relay), 3D lobby slots, fighter picks, ready state, version check, disconnects | Session members, chosen fighters and phase (host) |
 | MatchDirector | Match state machine: Intro, Countdown, Playing, Result, with the time limit; lives and respawns under the Rank rule | Match clock, alive list, lives, elimination order (host) |
 | PlayerMotor | Traction-limited movement, jump, dash, air control | Fighter position and velocity (host) |
-| FighterProfileApplier | Applies the chosen fruit's weight-class profile (mass, radius, top speed, traction) at spawn; fixed for the session | Fruit and class per player (host) |
+| FighterProfileApplier | Applies the chosen fighter's weight-class profile (mass, radius, top speed, traction) at spawn; fixed for the session | Fighter and class per player (host) |
 | CollisionResolver | Custom sphere-sphere detection, impulse, knockback scaling, positional correction | Wobble meter, stun timer (host) |
 | HazardDirector | Schedules and simulates ring drops, cannons, tiles, the turntable, the obstacle ring and pusher blocks | Hazard states, seeded schedule (host) |
 | BotBrain, BotSensors | FSM, utility targeting, danger map and grid A\* (Appendix A) | Bot input commands (host) |
@@ -57,20 +57,20 @@ The host is the single source of truth. It runs the physics for every fighter, e
 | Input command | Client to host | Sequence number, move vector (clamped to length 1), jump and dash buttons, camera yaw. 60 Hz, unreliable; each packet repeats the last three commands to survive loss. |
 | World snapshot | Host to all | Host tick, and for each fighter: position, velocity, Wobble, lives, flags, last processed input. 30 Hz, unreliable. About 200 bytes per snapshot. |
 | Hazard event | Host to all | Ring-drop warning, tile warning, cannon aim and fire, turntable reversal, pusher departure, with the host tick at which they take effect. Reliable. |
-| Match event | Host to all | Countdown, ring-out (fighter, credited fruit, tick), respawn, elimination (fighter, rank, tick), match result, score table. Reliable and idempotent by event ID. |
-| Lobby state | Host to all | Slots, names, chosen fruits, ready flags, rule, session length, build version. Reliable. |
+| Match event | Host to all | Countdown, ring-out (fighter, credited fighter, tick), respawn, elimination (fighter, rank, tick), match result, score table. Reliable and idempotent by event ID. |
+| Lobby state | Host to all | Slots, names, chosen fighters, ready flags, rule, session length, build version. Reliable. |
 
 Local feel. A client predicts its own fighter with the same PlayerMotor code, so movement, jumps and dashes respond on the same frame. When a snapshot arrives, the client replays unacknowledged inputs from the host state; if the error is above 0.3 m it corrects the visual over 0.1 s, and above 1.5 m it snaps. Collisions with other fighters and hazards are resolved only on the host, so a client sees a bump one round trip after it happens. Remote fighters are interpolated with a 100 ms buffer.
 
 Bandwidth. A snapshot of six fighters is about 200 bytes. At 30 Hz this is about 6 KB/s per client, or about 30 KB/s of host upload for five clients, which is small for LAN and relay.
 
-Disconnects. A client that disconnects during a match is eliminated at that tick and keeps its placement and Rank points; its fruit becomes free again. It can rejoin the lobby between matches. If the host leaves, the session ends and clients return to the main menu with a message; host migration is out of scope.
+Disconnects. A client that disconnects during a match is eliminated at that tick and keeps its placement and Rank points; its fighter becomes free again. It can rejoin the lobby between matches. If the host leaves, the session ends and clients return to the main menu with a message; host migration is out of scope.
 
 ## 10.5 Randomness, timing and saves
 
-Every random decision (tile selection, cannon targets, bot rosters, bot fruit picks, bot aim noise, respawn point choice) uses a pseudo-random generator seeded by the host at match start. The same seed reproduces the same hazard schedule, which makes bugs reproducible and keeps a Survival retry fair. Hazard timing is measured in host ticks, never in client wall-clock time, so network delay cannot change when a ring drops or a tile falls.
+Every random decision (tile selection, cannon targets, bot rosters, bot fighter picks, bot aim noise, respawn point choice) uses a pseudo-random generator seeded by the host at match start. The same seed reproduces the same hazard schedule, which makes bugs reproducible and keeps a Survival retry fair. Hazard timing is measured in host ticks, never in client wall-clock time, so network delay cannot change when a ring drops or a tile falls.
 
-Local saves (JSON in the user data folder) store settings, key bindings, the last chosen fruit, the best Survival run and the best Rank score. Match state is never saved: a match is short and restarts cleanly.
+Local saves (JSON in the user data folder) store settings, key bindings, the last chosen fighter, the best Survival run and the best Rank score. Match state is never saved: a match is short and restarts cleanly.
 
 ## 10.6 Performance and test environment
 

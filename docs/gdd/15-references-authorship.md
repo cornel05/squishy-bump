@@ -13,20 +13,19 @@ The sources below were used to check the course requirements, organise the GDD, 
 | S03 | LMS — GDD Template | GDD structure and required content |
 | S04 | Unity — Unity 6 User Manual | Engine reference |
 | S05 | Unity — Universal Render Pipeline | Rendering with URP |
-| S06 | Unity — ScriptableObject | Configuration data for fruits, weight classes, hazards and arenas |
+| S06 | Unity — ScriptableObject | Configuration data for fighters, weight classes, hazards and arenas |
 | S07 | Unity — Netcode for GameObjects, Unity Transport, Multiplayer Services (Relay) | Host-authoritative networking, LAN and relay |
 | S08 | Sumo — Table 9 Studio | Spherical fighters, physics interaction and arena hazards in a ring-out game |
 | S09 | Fall Guys, Stumble Guys | Cute style, short rounds, funny failure, readable characters |
 | S10 | Gang Beasts | Humour from collisions and dangerous environments |
 | S11 | Super Smash Bros. Ultimate | Ring-out knockback that grows with damage |
 | S12 | Rocket League | Control and collision feedback in online physics |
-| S13 | Black Forest Labs — FLUX.1-schnell model card (Apache-2.0) | Licence of AI-generated images |
 
 How the reference games are applied and where the design differs is analysed in Section 2.2. Asset, image and sound sources are managed in Appendix C.
 
 ## 15.2 Asset provenance and AI use
 
-Squishy Bump's assets are produced by the team with AI image generation and with procedural code written with an AI assistant (Claude), as listed in Section 13.3 and Chapter 12. Appendix C records each asset's file, generator, licence and AI declaration; when a placeholder is replaced, the record is updated. Reference images, design diagrams, mockups and gameplay captures are captioned in the GDD, and design illustrations are never used as evidence of implementation or test results.
+All current 3D/2D art assets in Squishy Bump (animal characters, STAR CATCHER lobby, L1–L5 maps and UX/UI kits) are produced by the Creative team and integrated in Unity, paired with technical diagrams and procedural placeholder SFX (Appendix C). All superseded concept assets have been removed.
 
 The GDD text was drafted with the help of an AI assistant and reviewed by both members, who can explain the decisions in their chapters. AI use in code will be declared in the README of Assignment 02.
 
