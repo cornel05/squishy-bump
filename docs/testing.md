@@ -658,3 +658,9 @@ Verifier cuối SB-32: VERIFY PASS, 376 EditMode +89 PlayMode, 0 lỗi/cảnh b�
 2 skip có chủ đích (ca hình ảnh Windows-only); riêng SB-32 Player7/7 đạt.
 
 Xác minh nguồn cuối SB-32 ngày 24/11/2026: release Windows **Succeeded: 0 errors, 3993 MB, 00:01:05.8226868**; `python tools/check_repo.py` → **PASS (0 problems)**. Không đưa 43 meta UI do importer đổi maxTextureSize vào commit.
+
+### SB-81 — props Map 1 rụng đồng bộ theo H01 (25/11/2026)
+
+- Reparent 100% `MeshRenderer` của `Creative_Map1` (4 cây dừa, 2 rương, xẻng, đá lớn, 10 ván gỗ, sỏi) vào `Band 0..3` theo bán kính tâm `Renderer.bounds.center`; xóa node `Creative_Map1` rỗng.
+- `LevelArtTests` kiểm tra rương/xẻng/cây dừa ngoài thuộc `Band 0`, cây dừa vòng 2 thuộc `Band 1`, và rương rơi cùng `Band 0` khi `RingDrop` drop tick 2700.
+- Kết quả: `tools/verify.ps1 -PlayMode` → **VERIFY: PASS** (**376** EditMode, **89** PlayMode passed, **2** skipped, **0** cảnh báo `SquishyBump.*`); `python tools/check_repo.py` → **PASS** (0 problems); `tools/build-windows.ps1` → **BUILD: PASS** (**0 errors**, **3845 MB**). Chưa mở `.exe` kiểm tra rụng thực tế tại các mốc 45s/75s/105s.

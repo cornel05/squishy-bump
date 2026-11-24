@@ -107,7 +107,7 @@ namespace SquishyBump.Editor
             island.transform.localPosition = new Vector3(0f, L1IslandY, 0f);
             island.transform.localScale = Vector3.one * L1IslandScale;
             StripNonVisuals(island);
-            PrefabUtility.UnpackPrefabInstance(island, PrefabUnpackMode.OutermostRoot, InteractionMode.AutomatedAction);
+            PrefabUtility.UnpackPrefabInstance(island, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
 
             var leftoverNames = new[]
             {
@@ -121,24 +121,20 @@ namespace SquishyBump.Editor
                 if (junk != null) Object.DestroyImmediate(junk.gameObject);
             }
 
-            foreach (var child in island.GetComponentsInChildren<Transform>(true).ToArray())
+            foreach (var mr in island.GetComponentsInChildren<MeshRenderer>(true).ToArray())
             {
-                if (child == null || child == island.transform) continue;
-                var isPlank = child.name.StartsWith("Plane.", StringComparison.Ordinal);
-                var isPebble = child.name.StartsWith("Roundcube.", StringComparison.Ordinal);
-                if (!isPlank && !isPebble) continue;
-
-                if (isPlank)
+                if (mr == null) continue;
+                var child = mr.transform;
+                if (child.name.StartsWith("Plane.", StringComparison.Ordinal))
                 {
                     var s = child.localScale;
                     if (s.x < 0f || s.y < 0f || s.z < 0f)
                         child.localScale = new Vector3(Mathf.Abs(s.x), Mathf.Abs(s.y), Mathf.Abs(s.z));
-                    var mr = child.GetComponent<MeshRenderer>();
-                    if (mr != null) mr.sharedMaterial = woodMat;
+                    mr.sharedMaterial = woodMat;
                 }
 
-                var pos = child.position;
-                var r = Mathf.Sqrt(pos.x * pos.x + pos.z * pos.z);
+                var center = mr.bounds.center;
+                var r = Mathf.Sqrt(center.x * center.x + center.z * center.z);
                 var targetBand = 0;
                 for (var b = 3; b >= 0; b--)
                 {
@@ -146,6 +142,10 @@ namespace SquishyBump.Editor
                 }
                 child.SetParent(bandTransforms[targetBand], true);
             }
+
+            if (island.GetComponentsInChildren<Renderer>(true).Length != 0)
+                throw new InvalidOperationException("L1 Creative_Map1 still has unparented renderers after Band assignment.");
+            Object.DestroyImmediate(island);
 
             var floatsRoot = new GameObject("CreativeFloats");
             floatsRoot.transform.SetParent(artRoot.transform, false);

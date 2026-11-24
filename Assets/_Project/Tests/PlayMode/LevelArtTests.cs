@@ -88,14 +88,29 @@ namespace SquishyBump.Tests.PlayMode
                         Assert.That(vong.GetComponentsInChildren<Collider>(true).Any(c => c.enabled), Is.False);
                     }
                     Assert.That(artRoot.transform.Find("CreativeFloats/PhaoLgbt"), Is.Not.Null);
+                    Assert.That(artRoot.transform.Find("Creative_Map1"), Is.Null,
+                        "All L1 island props should be reparented to RingDrop bands, leaving no static Creative_Map1.");
                     foreach (var removed in new[] { "Sphere.006", "Cube.001", "Circle.001", "Circle.002", "Circle.003", "Circle.009", "Torus.001" })
-                        Assert.That(artRoot.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == removed), Is.Null,
-                            $"L1 leftover {removed} should be removed.");
+                        Assert.That(new[] { artRoot, ringDrop.gameObject }.SelectMany(g => g.GetComponentsInChildren<Transform>(true))
+                            .FirstOrDefault(t => t.name == removed), Is.Null, $"L1 leftover {removed} should be removed.");
                     var planks = ringDrop.GetComponentsInChildren<Renderer>(false)
                         .Where(r => r.name.StartsWith("Plane.", StringComparison.Ordinal)).ToArray();
                     Assert.That(planks, Has.Length.EqualTo(10), "L1 should bind 10 wooden planks onto RingDrop bands.");
                     Assert.That(planks.All(p => p.sharedMaterial != null && p.sharedMaterial.GetTexture("_BaseMap") != null), Is.True,
                         "Every L1 wooden plank should use the WoodPlank texture.");
+                    var band0 = ringDrop.transform.Find("Band 0");
+                    Assert.That(band0.Find("Object_14"), Is.Not.Null, "Outer treasure chest should belong to Band 0.");
+                    Assert.That(band0.Find("Box001_Material #25_0"), Is.Not.Null, "Outer shovel should belong to Band 0.");
+                    Assert.That(band0.Find("Low Poly Palm Tree"), Is.Not.Null, "Outer palm tree should belong to Band 0.");
+                    Assert.That(ringDrop.transform.Find("Band 1/Low Poly Palm Tree.002"), Is.Not.Null, "Second-ring palm tree should belong to Band 1.");
+                    var chest = band0.Find("Object_14");
+                    var chestBefore = chest.position.y;
+                    // BalanceProfile ringDropSeconds[0] = 45 s → band 0 drops at playing tick 2700 (60 Hz).
+                    ringDrop.StepOnHost(2700, 2700, 1f / 60f);
+                    Assert.That(ringDrop.IsDropped(0), Is.True);
+                    yield return WaitFor(() => chest.position.y < chestBefore - 0.05f, 2f);
+                    Assert.That(chest.position.y, Is.LessThan(chestBefore - 0.05f),
+                        "Band 0 props should fall together with Band 0 when H01 drops.");
                     break;
                 case 2:
                     var binder2 = artRoot.GetComponent<LevelArtBinder>();
