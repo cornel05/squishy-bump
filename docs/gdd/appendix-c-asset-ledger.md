@@ -194,3 +194,11 @@ theo package Unity hiện có; không suy diễn giấy phép ngoài repo. Ledge
 `docs/asset-ledger.csv` đã bổ sung ba bản ghi này, phiên bản SB-25 v1.1 ngày 21/11/2026.
 Mã nhóm tạo chưa có LICENSE chung; thành phần Unity theo điều khoản nhà cung cấp.
 Không có bản prompt gốc riêng ngoài yêu cầu issue và mã trong Git. Chưa ghi approved.
+
+
+SB-26 (24/11/2026): CFG-SINGLE-001 là MatchSetup.asset được Unity 6000.3.28f1
+sửa qua SinglePlayerSetup.Configure để tham chiếu D1–D5 hiện hữu. Codex hỗ trợ
+code luồng/roster và helper Editor theo GDD 3.5/A.6; không thêm model/ảnh/font/SFX
+hay asset sinh ảnh. D39 giữ các slot/hạng cân khi đổi sang thú. Không dùng RNG
+để sinh asset; RNG gameplay do host giữ seed. Hash config trong asset-ledger.csv;
+nguồn/giấy phép tài nguyên UI/nhân vật tái dùng giữ nguyên.

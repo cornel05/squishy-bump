@@ -239,6 +239,7 @@ namespace SquishyBump.Editor
         static void EnsureMatchSetup()
         {
             var setup = EnsureAsset<MatchSetup>(MatchSetupPath);
+            SinglePlayerSetup.Configure();
             var so = new SerializedObject(setup);
             if (so.FindProperty("defaultBotProfile").objectReferenceValue == null)
             {

@@ -77,12 +77,25 @@ namespace SquishyBump.App
         private uint matchId, simulationTick;
         public void ConfigureRank(ScoreService scores, uint id) { sessionScores = scores; matchId = id; }
         private BotProfile botProfile;
+        private readonly Dictionary<ushort, BotProfile> singleProfiles = new();
+        private IReadOnlyList<LobbyPlayer> singleRoster;
         private readonly Dictionary<ushort, BotBrain> bots = new();
         private BotNavigationWorld navigationWorld;
         private uint nextNavigationTick;
         public IBotNavigationSnapshot BotNavigation { get; private set; }
         public IReadOnlyDictionary<ushort, BotBrain> Bots => bots;
-        public void ConfigureBots(BotProfile profile) => botProfile = profile;
+        public void ConfigureBots(BotProfile profile)
+        {
+            botProfile = profile;
+            // API cấu hình toàn bộ bot cho sandbox/test; launcher gán roster A.6 sau lệnh này.
+            foreach (var id in singleProfiles.Keys.ToArray()) singleProfiles[id] = profile;
+        }
+        public void ConfigureSinglePlayer(SinglePlayerRun.Round round, MatchSetup setup)
+        {
+            seed = round.Seed;
+            singleRoster = round.Fruits.Select((fruit, i) => new LobbyPlayer(i == 0 ? 0UL : (ulong)(FirstBotId + i), fruit, false)).ToArray();
+            for (var i = 0; i < round.Tiers.Count; i++) singleProfiles[(ushort)(FirstBotId + i + 1)] = setup.BotProfile(round.Tiers[i]);
+        }
 
         public MatchDirector Director { get; private set; }
         public IReadOnlyList<Fighter> Fighters => fighters;
@@ -184,6 +197,7 @@ namespace SquishyBump.App
             public RollVisual Visual;
             public Renderer[] VisibleRenderers;
             public bool Out;
+            public int BotTier;
         }
 
         private void Start()
@@ -238,7 +252,7 @@ namespace SquishyBump.App
             fighterPhysics = new FighterPhysicsAdapter(resolver);
             snapshotEveryTicks = Mathf.Max(1, Mathf.RoundToInt(balance.InputRateHz / balance.SnapshotRateHz));
 
-            var roster = survivalRoster ?? DefaultRoster();
+            var roster = singleRoster ?? survivalRoster ?? DefaultRoster();
             var spawns = bounds.SpawnPoints;
             for (var i = 0; i < roster.Count; i++)
             {
@@ -256,7 +270,9 @@ namespace SquishyBump.App
                 fighters.Add(f);
                 Hud.Register(id, f.Motor.transform, go.GetComponent<SphereCollider>().radius + 0.5f);
                 Hud.SetWobble(id, 0, true);
-                if (id >= FirstBotId && botProfile != null) bots[id] = new BotBrain(botProfile, id, seed);
+                var profile = singleProfiles.TryGetValue(id, out var assigned) ? assigned : botProfile;
+                if (id >= FirstBotId && profile != null)
+                { f.BotTier = profile.Tier; bots[id] = new BotBrain(profile, id, seed); }
                 resolver.Register(f.Id, f.Motor);
                 fighterPhysics.Add(f.Id, f.Motor);
                 if (id != 0 && id < FirstBotId) inboxes[id] = new InputInbox();
@@ -379,7 +395,7 @@ namespace SquishyBump.App
 
         private void OnTick(uint tick)
         {
-            if (lanSurvival && (sessionFinished || Director.Phase == MatchPhase.Result)) return;
+            if ((lanSurvival || singleRoster != null) && (sessionFinished || Director.Phase == MatchPhase.Result)) return;
             simulationTick = tick;
             var dt = Time.fixedDeltaTime;
             introStartTick ??= tick;
@@ -542,7 +558,13 @@ namespace SquishyBump.App
             if (e.Kind == MatchEventKind.MatchResult)
             {
                 overlay.ShowResult(e.Standings, FighterLabel, FighterFruit, level, networkManager.LocalClientId);
-                if (!lanSurvival && leaveMatch != null) overlay.OfferResultAction("Next", leaveMatch);
+                if (singleRoster != null)
+                {
+                    survivalResult = true;
+                    localInput.Suspended = true;
+                    Cursor.lockState = CursorLockMode.None;
+                }
+                else if (!lanSurvival && leaveMatch != null) overlay.OfferResultAction("Next", leaveMatch);
             }
             if (!lanSurvival || (e.Kind != MatchEventKind.MatchResult && e.Kind != MatchEventKind.SessionResult)) return;
 
