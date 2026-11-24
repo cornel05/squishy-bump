@@ -66,7 +66,7 @@ namespace SquishyBump.Tests.PlayMode
             var overlay = root.AddComponent<MatchOverlay>(); overlay.Init();
             overlay.ShowResult(Rows, id => "Animal " + id);
             var clicked = 0;
-            overlay.OfferResultAction("Tiếp tục", () => clicked++);
+            overlay.OfferResultAction("Continue", () => clicked++);
             Time.timeScale = 0;
             var since = Time.unscaledTime;
             while (Time.unscaledTime - since < 2.9f)
@@ -91,14 +91,14 @@ namespace SquishyBump.Tests.PlayMode
             overlay.ShowSessionResult(Rows, id => "Animal " + id);
             yield return null;
             AssertPodium();
-            Assert.That(overlay.ResultText, Does.Contain("17 điểm · 2 mạng").And.Contain("6. Animal 0"));
+            Assert.That(overlay.ResultText, Does.Contain("17 pts - 2 lives").And.Contain("6. Animal 0"));
         }
 
         private void AssertPodium()
         {
             Assert.That(root.GetComponentsInChildren<Image>().Where(i => i.name.StartsWith("Podium ")).Select(i => i.name),
                 Is.EquivalentTo(new[] { "Podium 1", "Podium 2", "Podium 3" }));
-            Assert.That(root.GetComponentsInChildren<Text>().Any(t => t.enabled && t.text.Contains("17 điểm · 2 mạng")), Is.True);
+            Assert.That(root.GetComponentsInChildren<Text>().Any(t => t.enabled && t.text.Contains("17 pts - 2 lives")), Is.True);
         }
 
         [UnityTest]
@@ -109,7 +109,7 @@ namespace SquishyBump.Tests.PlayMode
             // Reliable event deliberately disagrees with lives sorting: client/display must retain host ranks.
             app.EventSink.Publish(MatchEvent.Scoreboard(app.EventSink.NextEventId(), app.Tick, Rows));
             yield return null;
-            Assert.That(match.Hud.BoardText.Split('\n')[0], Does.StartWith("1 ").And.Contain("17 điểm · 2 mạng"));
+            Assert.That(match.Hud.BoardText.Split('\n')[0], Does.StartWith("1 ").And.Contain("17 pts - 2 lives"));
             Assert.That(match.Hud.ScoreboardVisible, Is.False);
             keyboard = InputSystem.AddDevice<Keyboard>(); keyboard.MakeCurrent();
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Tab));
@@ -166,16 +166,16 @@ namespace SquishyBump.Tests.PlayMode
                 new[] { setup.Roster[1], setup.Roster[0] }, 1, false);
             root.SetActive(true);
             yield return WaitFor(() => remoteMatch.ClientView != null && remoteMatch.ClientView.Views.Count == 2);
-            yield return WaitFor(() => remoteMatch.Hud.BoardText.Contains("17 điểm · 1 mạng"));
+            yield return WaitFor(() => remoteMatch.Hud.BoardText.Contains("17 pts - 1 lives"));
             var tick = remoteMatch.ClientView.Buffer.Newest.HostTick;
             yield return WaitFor(() => remoteMatch.ClientView.Buffer.Newest.HostTick > tick + 6);
             Assert.That(remoteMatch.Hud.BoardText, Is.EqualTo(app.Launcher.Match.Hud.BoardText));
-            Assert.That(remoteMatch.Hud.BoardText.Split('\n')[0], Does.StartWith("1 Bear").And.Contain("17 điểm · 1 mạng"));
+            Assert.That(remoteMatch.Hud.BoardText.Split('\n')[0], Does.StartWith("1 Bear").And.Contain("17 pts - 1 lives"));
             Assert.That(remoteMatch.GetComponentsInChildren<Text>().Single(t => t.name == "Board").text,
                 Is.EqualTo(app.Launcher.Match.GetComponentsInChildren<Text>().Single(t => t.name == "Board").text),
                 "Màu nhân vật cũng phải khớp khi ID peer khác slot prefab.");
             app.EventSink.Publish(MatchEvent.SessionResult(app.EventSink.NextEventId(), app.Tick, rows));
-            yield return WaitFor(() => remoteOverlay.ResultText.Contains("17 điểm · 1 mạng"));
+            yield return WaitFor(() => remoteOverlay.ResultText.Contains("17 pts - 1 lives"));
             Assert.That(remoteMatch.Hud.GetComponentsInChildren<Canvas>().Single(c => c.name == "Match HUD").enabled, Is.False,
                 "SessionResult Rank nhận sớm cũng phải ẩn HUD gameplay.");
         }
@@ -200,7 +200,7 @@ namespace SquishyBump.Tests.PlayMode
                 {
                     Assert.That(match.Director.Lives(0), Is.GreaterThan(0));
                     Assert.That(camera.Follow, Is.SameAs(own.Motor.transform), "Đợi hồi sinh giữ camera mình.");
-                    Assert.That(app.Launcher.Overlay.GetComponentsInChildren<Text>().Any(t => t.text.StartsWith("ĐANG QUAN SÁT")), Is.False);
+                    Assert.That(app.Launcher.Overlay.GetComponentsInChildren<Text>().Any(t => t.text.StartsWith("SPECTATING")), Is.False);
                 }
             }
             Time.timeScale = 0;
@@ -262,7 +262,7 @@ namespace SquishyBump.Tests.PlayMode
                     else { hud.SetStandings(Rows, id => "Animal " + id, _ => Color.cyan, MatchRule.Rank, 2, 5); hud.ShowScoreboard(true); }
                     if (state < 2)
                     {
-                        overlay.OfferResultAction(state == 0 ? "Tiếp tục" : "Về menu", () => { });
+                        overlay.OfferResultAction(state == 0 ? "Continue" : "Main Menu", () => { });
                         yield return WaitFor(() => overlay.GetComponentsInChildren<Button>().Length == 1);
                     }
                     yield return null; yield return null;

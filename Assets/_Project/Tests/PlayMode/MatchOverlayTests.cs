@@ -52,7 +52,7 @@ namespace SquishyBump.Tests.PlayMode
             Assert.That(rows.Select(r => r.name), Is.EqualTo(new[] { "Row 1", "Row 2 (you)", "Row 3" }));
             Assert.That(rows[1].color, Is.EqualTo(Color.white));
             Assert.That(rows[0].color, Is.Not.EqualTo(Color.white));
-            Assert.That(overlay.ResultText, Does.StartWith("KẾT QUẢ"));
+            Assert.That(overlay.ResultText, Does.StartWith("RESULTS"));
             yield return null;
         }
 
@@ -61,7 +61,7 @@ namespace SquishyBump.Tests.PlayMode
         {
             var overlay = NewOverlay();
             overlay.ShowSessionResult(new[] { new MatchStanding(1, 1, 17, 2), new MatchStanding(2, 2, 9, 0) }, id => $"Animal {id}");
-            Assert.That(root.GetComponentsInChildren<Text>().Any(t => t.enabled && t.text.Contains("17") && t.text.Contains("2 mạng")),
+            Assert.That(root.GetComponentsInChildren<Text>().Any(t => t.enabled && t.text.Contains("17") && t.text.Contains("2 lives")),
                 Is.True, "Podium phải hiển thị cả điểm và mạng, không chỉ ở summary ẩn.");
             yield return null;
         }
@@ -74,7 +74,7 @@ namespace SquishyBump.Tests.PlayMode
             overlay.ShowSessionResult(standings, id => $"Fruit {id}");
             var podiums = root.GetComponentsInChildren<Image>().Where(i => i.name.StartsWith("Podium ")).Select(i => i.name);
             Assert.That(podiums, Is.EquivalentTo(new[] { "Podium 1", "Podium 2", "Podium 3" }));
-            Assert.That(overlay.ResultText, Does.Contain("VÔ ĐỊCH · Fruit 1"));
+            Assert.That(overlay.ResultText, Does.Contain("CHAMPION - Fruit 1"));
             yield return null;
         }
     }

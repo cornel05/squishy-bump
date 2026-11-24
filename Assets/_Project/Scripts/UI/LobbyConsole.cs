@@ -124,7 +124,7 @@ namespace SquishyBump.UI
                 UiFactory.Slice(image, "lobby_row", 1f);
                 rect.gameObject.AddComponent<Button>().onClick.AddListener(() => ConfigureRequested?.Invoke(null, level));
                 var label = UiFactory.SheetText(rect, "Label", new Vector2(1044, rowHeight), 36, 0, 1008, rowHeight,
-                    $"MAP {level} · {mapNames[i].ToUpperInvariant()}", 40, TextAnchor.MiddleLeft);
+                    $"MAP {level} - {mapNames[i].ToUpperInvariant()}", 40, TextAnchor.MiddleLeft);
                 label.raycastTarget = false;
                 maps.Add(image);
             }
@@ -154,7 +154,7 @@ namespace SquishyBump.UI
         {
             rule = state.Rule;
             finalLevel = state.FinalLevel;
-            ruleText.text = single ? rule.ToString().ToUpperInvariant() : $"{rule.ToString().ToUpperInvariant()} · L1→L{finalLevel}";
+            ruleText.text = single ? rule.ToString().ToUpperInvariant() : $"{rule.ToString().ToUpperInvariant()} - L1->L{finalLevel}";
             for (var i = 0; i < slots.Count; i++)
             {
                 var slot = slots[i];
@@ -163,15 +163,15 @@ namespace SquishyBump.UI
                 if (i < state.Players.Count)
                 {
                     var player = state.Players[i];
-                    var animal = player.Fruit >= 0 && player.Fruit < animals.Count ? animals[player.Fruit] : "—";
-                    slot.Name.text = $"{(player.Id == localId ? "YOU" : $"P{player.Id + 1}")} · {animal}";
+                    var animal = player.Fruit >= 0 && player.Fruit < animals.Count ? animals[player.Fruit] : "-";
+                    slot.Name.text = $"{(player.Id == localId ? "YOU" : $"P{player.Id + 1}")} - {animal}";
                     slot.Ready.text = player.Ready ? "READY" : "";
                     slot.Avatar.enabled = player.Fruit >= 0;
                     if (player.Fruit >= 0) slot.Avatar.sprite = UiFactory.Kit("avatar_" + player.Fruit);
                 }
                 else
                 {
-                    slot.Name.text = open ? "—" : "LOCKED";
+                    slot.Name.text = open ? "-" : "LOCKED";
                     slot.Ready.text = "";
                     slot.Avatar.enabled = false;
                 }

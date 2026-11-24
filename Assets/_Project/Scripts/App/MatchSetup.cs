@@ -29,7 +29,7 @@ namespace SquishyBump.App
         public BalanceProfile Balance => balance;
         public BotProfile DefaultBotProfile => defaultBotProfile;
         public BotProfile BotProfile(int tier) => System.Array.Find(botProfiles ?? System.Array.Empty<BotProfile>(), p => p != null && p.Tier == tier)
-            ?? throw new System.InvalidOperationException($"Thiếu BotProfile D{tier} trong MatchSetup.");
+            ?? throw new System.InvalidOperationException($"Missing BotProfile D{tier} in MatchSetup.");
         public LobbyProfile Lobby => lobby;
         public SquishyBump.Presentation.PresentationProfile Presentation => presentation;
         public LevelDefinition[] Levels => levels;

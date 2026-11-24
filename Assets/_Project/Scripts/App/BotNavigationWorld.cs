@@ -31,7 +31,7 @@ namespace SquishyBump.App
             center = arenaCenter; balance = physics;
             providers = hazards.OfType<IBotHazardHints>().ToArray();
             var layer = LayerMask.NameToLayer("Fighter");
-            if (layer < 0) throw new InvalidOperationException("Thiếu layer Fighter cho cảm nhận sàn.");
+            if (layer < 0) throw new InvalidOperationException("Missing Fighter layer for floor sensing.");
             floorMask = ~(1 << layer);
         }
         public IBotNavigationSnapshot Capture(float radius, int playingTicks, float dt)

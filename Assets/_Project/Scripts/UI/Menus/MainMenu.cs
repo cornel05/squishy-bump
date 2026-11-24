@@ -74,9 +74,9 @@ namespace SquishyBump.UI.Menus
             versionRect.sizeDelta = new Vector2(400, 30);
 
             levels = UiFactory.Page(canvas, "Single Player");
-            UiFactory.Label(levels, "Squishy Cup · L1 → L5", 44);
-            UiFactory.Label(levels, "Chọn trái và luật tại lobby cửa hàng.", 28);
-            UiFactory.Button(levels, "Vào lobby", () => SinglePlayerRequested?.Invoke(1));
+            UiFactory.Label(levels, "Squishy Cup - L1 -> L5", 44);
+            UiFactory.Label(levels, "Pick your fighter and rule in the store lobby.", 28);
+            UiFactory.Button(levels, "Enter Lobby", () => SinglePlayerRequested?.Invoke(1));
             UiFactory.Button(levels, "Back", () => Show(main));
 
             multiplayer = BuildFindServer(canvas);
@@ -86,9 +86,9 @@ namespace SquishyBump.UI.Menus
             credits = UiFactory.Page(canvas, "Credits");
             UiFactory.Label(credits, "Credits", 44);
             UiFactory.Label(credits,
-                "BKU Group 18\nĐình Duy · Minh Nhật\nUnity 6 · URP · Netcode · glTFast\n" +
-                "Font: Sleeping (Darrell Flood) · UI kit: nhóm\n6 model: Blender / script nhóm\n12 SFX: Python / script nhóm\n" +
-                "Nhạc: chưa có\nAI hỗ trợ code và asset: Claude / Codex\nChi tiết nguồn: CREDITS.md", 24)
+                "BKU Group 18\nDinh Duy - Minh Nhat\nUnity 6 - URP - Netcode - glTFast\n" +
+                "Font: Sleeping (Darrell Flood) - UI kit: team\n6 models: Blender / team scripts\n12 SFX: Python / team scripts\n" +
+                "Music: none\nAI code & asset assistance: Claude / Codex\nFull credits: CREDITS.md", 24)
                 .GetComponent<LayoutElement>().minHeight = 400;
             UiFactory.Button(credits, "Back", () => Show(main));
 
@@ -192,22 +192,22 @@ namespace SquishyBump.UI.Menus
 
         public static string StatusText(SessionState state, int peers) => state switch
         {
-            SessionState.Hosting => $"Hosting on port 7777 · {peers} joined",
-            SessionState.Joining => "Joining…",
-            SessionState.Joined => "Joined · waiting for the host",
+            SessionState.Hosting => $"Hosting on port 7777 - {peers} joined",
+            SessionState.Joining => "Joining...",
+            SessionState.Joined => "Joined - waiting for the host",
             _ => "",
         };
 
         public static string ErrorText(SessionEndReason reason) => reason switch
         {
-            SessionEndReason.VersionMismatch => "Sai phiên bản build. Hãy dùng cùng bản với host.",
-            SessionEndReason.RoomFull => "Phòng đã đủ 6 người hoặc không nhận kết nối.",
-            SessionEndReason.MatchInProgress => "Phòng đang trong phiên đấu.",
-            SessionEndReason.WrongPassword => "Sai mật khẩu phòng.",
-            SessionEndReason.InvalidAddress => "Địa chỉ IPv4 hoặc port không hợp lệ.",
-            SessionEndReason.ConnectFailed => "Không tới được host. Kiểm tra IP và kết nối LAN.",
-            SessionEndReason.HostLost => "Host đã rời phòng hoặc mất kết nối.",
-            SessionEndReason.StartFailed => "Không thể mở kết nối. Hãy thử lại.",
+            SessionEndReason.VersionMismatch => "Build version mismatch. Please use the same version as the host.",
+            SessionEndReason.RoomFull => "Room is full (6 players) or not accepting connections.",
+            SessionEndReason.MatchInProgress => "Match is already in progress.",
+            SessionEndReason.WrongPassword => "Wrong room password.",
+            SessionEndReason.InvalidAddress => "Invalid IPv4 address or port.",
+            SessionEndReason.ConnectFailed => "Could not reach the host. Check the IP and LAN connection.",
+            SessionEndReason.HostLost => "The host left the room or disconnected.",
+            SessionEndReason.StartFailed => "Could not open connection. Please try again.",
             _ => "",
         };
 

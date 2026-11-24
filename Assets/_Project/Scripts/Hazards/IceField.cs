@@ -21,7 +21,7 @@ namespace SquishyBump.Hazards
                 waveTicks < 1 || crackTicks < 1 || returnTicks < 1 || fadeTicks < 1 ||
                 phaseTwoTicks < 0 || phaseThreeTicks < phaseTwoTicks || firstCount < 1 ||
                 secondCount < 1 || thirdCount < 1 || fighterWeight < 0)
-                throw new ArgumentOutOfRangeException(nameof(rings), "Cấu hình H06 không hợp lệ.");
+                throw new ArgumentOutOfRangeException(nameof(rings), "Invalid H06 configuration.");
             Rings = rings; MinimumSolid = minimumSolid; WaveTicks = waveTicks; CrackTicks = crackTicks;
             ReturnTicks = returnTicks; FadeTicks = fadeTicks; PhaseTwoTicks = phaseTwoTicks;
             PhaseThreeTicks = phaseThreeTicks; FirstCount = firstCount; SecondCount = secondCount;

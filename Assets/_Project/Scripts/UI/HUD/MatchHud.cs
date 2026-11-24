@@ -77,16 +77,16 @@ namespace SquishyBump.UI
                 scoreboardRows.rectTransform.offsetMax = new Vector2(-60, -130);
                 scoreboard.gameObject.SetActive(false);
             }
-            scoreboardTitle.text = $"BẢNG ĐIỂM · L{currentLevel}/{finalLevel} · {rule}";
-            string Value(MatchStanding row) => rule == MatchRule.Rank ? $"{row.Points} điểm · {row.Lives} mạng" : row.Lives > 0 ? "CÒN SỐNG" : "ĐÃ LOẠI";
-            BoardText = string.Join("\n", rows.Select(row => $"{row.Rank} {label(row.FighterId)} — {Value(row)}"));
+            scoreboardTitle.text = $"SCOREBOARD - L{currentLevel}/{finalLevel} - {rule}";
+            string Value(MatchStanding row) => rule == MatchRule.Rank ? $"{row.Points} pts - {row.Lives} lives" : row.Lives > 0 ? "ALIVE" : "OUT";
+            BoardText = string.Join("\n", rows.Select(row => $"{row.Rank} {label(row.FighterId)} - {Value(row)}"));
             scoreboardRows.text = string.Join("\n", rows.Select(row =>
-                $"{row.Rank}. {label(row.FighterId).ToUpperInvariant()} — {Value(row)}{(rule == MatchRule.Rank && row.Lives == 0 ? " · ĐÃ LOẠI" : "")}"));
+                $"{row.Rank}. {label(row.FighterId).ToUpperInvariant()} - {Value(row)}{(rule == MatchRule.Rank && row.Lives == 0 ? " - OUT" : "")}"));
             boardRanks.fontSize = boardValues.fontSize = 22;
             boardRanks.rectTransform.anchorMax = new Vector2(0.65f, 1);
             boardValues.rectTransform.anchorMin = new Vector2(0.65f, 0);
             boardRanks.text = string.Join("\n", rows.Select(row => $"{row.Rank} <color=#{ColorUtility.ToHtmlStringRGB(color(row.FighterId))}>{label(row.FighterId).ToUpperInvariant()}</color>"));
-            boardValues.text = string.Join("\n", rows.Select(row => rule == MatchRule.Rank ? $"{row.Points}đ ·{row.Lives}m" : row.Lives > 0 ? "●" : "×"));
+            boardValues.text = string.Join("\n", rows.Select(row => rule == MatchRule.Rank ? $"{row.Points}p {row.Lives}L" : row.Lives > 0 ? "O" : "X"));
             board.gameObject.SetActive(rows.Count > 0);
         }
 

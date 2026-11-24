@@ -73,7 +73,7 @@ namespace SquishyBump.UI.Menus
             actionRect.sizeDelta = new Vector2(340f, 88f);
             resultButton.gameObject.SetActive(false);
 
-            spectating = UiFactory.Label(canvas, "ĐANG QUAN SÁT · ← → đổi góc nhìn", 26);
+            spectating = UiFactory.Label(canvas, "SPECTATING - < > switch camera", 26);
             var spectatorRect = (RectTransform)spectating.transform;
             spectatorRect.anchorMin = spectatorRect.anchorMax = new Vector2(0.5f, 0f);
             spectatorRect.anchoredPosition = new Vector2(0f, 78f);
@@ -133,18 +133,18 @@ namespace SquishyBump.UI.Menus
             int round = 0, ulong localId = 0)
         {
             BuildRoundPage(round, standings, label, fruit ?? DefaultFruit, localId);
-            ShowResultText("KẾT QUẢ\n" + string.Join("\n", standings.Select(s =>
-                $"{s.Rank}. {label(s.FighterId)} — {s.Points} điểm · {s.Lives} mạng")));
+            ShowResultText("RESULTS\n" + string.Join("\n", standings.Select(s =>
+                $"{s.Rank}. {label(s.FighterId)} - {s.Points} pts - {s.Lives} lives")));
         }
 
         /// <summary>Session result (kit "4 - Giao diện final"): WINNER frame with the top three on podiums.</summary>
         public void ShowSessionResult(IReadOnlyList<MatchStanding> standings, Func<ulong, string> label, Func<ulong, int> fruit = null)
         {
             var headline = standings.Count(s => s.Rank == 1) == 1
-                ? $"VÔ ĐỊCH · {label(standings[0].FighterId)}"
-                : "PHIÊN ĐÃ KẾT THÚC";
+                ? $"CHAMPION - {label(standings[0].FighterId)}"
+                : "SESSION FINISHED";
             BuildWinnerPage(headline, standings, label, fruit ?? DefaultFruit);
-            ShowResultText(headline + "\n" + string.Join("\n", standings.Select(s => $"{s.Rank}. {label(s.FighterId)} — {s.Points} điểm · {s.Lives} mạng")));
+            ShowResultText(headline + "\n" + string.Join("\n", standings.Select(s => $"{s.Rank}. {label(s.FighterId)} - {s.Points} pts - {s.Lives} lives")));
         }
 
         public void OfferResultAction(string caption, Action onClick)
@@ -176,7 +176,7 @@ namespace SquishyBump.UI.Menus
 
         public void ShowSinglePlayerSummary(int levelsCleared, int retries)
         {
-            var summary = $"ĐÃ QUA {levelsCleared}/5 MÀN · CHƠI LẠI {retries} LẦN";
+            var summary = $"CLEARED {levelsCleared}/5 LEVELS - RETRIES: {retries}";
             result.text += "\n" + summary;
             var text = UiFactory.Outlined(UiFactory.Label(resultPage, summary, 30), 2);
             text.name = "Single Run Summary";
@@ -221,7 +221,7 @@ namespace SquishyBump.UI.Menus
             if (round is >= 1 and <= 5) UiFactory.Place(page, $"banner_round_{round}", Vector2.up, new Vector2(40, -30));
             else
             {
-                var title = UiFactory.Outlined(UiFactory.Label(page, "KẾT QUẢ", 64), 3);
+                var title = UiFactory.Outlined(UiFactory.Label(page, "RESULTS", 64), 3);
                 var rect = title.rectTransform;
                 rect.anchorMin = rect.anchorMax = rect.pivot = Vector2.up;
                 rect.anchoredPosition = new Vector2(40, -30);
@@ -256,7 +256,7 @@ namespace SquishyBump.UI.Menus
                     x += 50f;
                 }
                 UiFactory.Place(row.transform, Avatar(fruit(s.FighterId)), new Vector2(0, 0.5f), new Vector2(x, 0), new Vector2(92, 92)).color = tint;
-                var text = UiFactory.Label(row.transform, $"{label(s.FighterId).ToUpperInvariant()}\n{s.Points} điểm · {s.Lives} mạng", 28);
+                var text = UiFactory.Label(row.transform, $"{label(s.FighterId).ToUpperInvariant()}\n{s.Points} pts - {s.Lives} lives", 28);
                 text.alignment = TextAnchor.MiddleLeft;
                 text.color = mine ? UiFactory.Ink : new Color(0.3f, 0.3f, 0.35f);
                 var textRect = text.rectTransform;
@@ -295,7 +295,7 @@ namespace SquishyBump.UI.Menus
             for (var i = 0; i < rest.Length; i++)
             {
                 var row = rest[i];
-                var lower = UiFactory.Outlined(UiFactory.Label(page, $"{row.Rank}. {label(row.FighterId).ToUpperInvariant()}\n{row.Points} điểm · {row.Lives} mạng", 28), 2);
+                var lower = UiFactory.Outlined(UiFactory.Label(page, $"{row.Rank}. {label(row.FighterId).ToUpperInvariant()}\n{row.Points} pts - {row.Lives} lives", 28), 2);
                 lower.name = $"Standing {row.FighterId}";
                 lower.rectTransform.anchorMin = lower.rectTransform.anchorMax = lower.rectTransform.pivot = new Vector2(0.5f, 0);
                 lower.rectTransform.anchoredPosition = new Vector2((i - (rest.Length - 1) * 0.5f) * 460, 85);
@@ -325,7 +325,7 @@ namespace SquishyBump.UI.Menus
                 plate.rectTransform.pivot = Vector2.one * 0.5f;
                 plate.preserveAspect = false;
                 UiFactory.Slice(plate, "plate", 1f);
-                var text = UiFactory.Label(plate.transform, $"{s.Rank}. {label(s.FighterId).ToUpperInvariant()}\n{s.Points} điểm · {s.Lives} mạng", 28);
+                var text = UiFactory.Label(plate.transform, $"{s.Rank}. {label(s.FighterId).ToUpperInvariant()}\n{s.Points} pts - {s.Lives} lives", 28);
                 text.rectTransform.anchorMin = Vector2.zero;
                 text.rectTransform.anchorMax = Vector2.one;
                 text.rectTransform.offsetMin = new Vector2(20, 12);

@@ -17,7 +17,7 @@ namespace SquishyBump.Tests.EditMode
                 Is.EqualTo(SessionEndReason.None));
             Assert.That(SquishyBump.Net.Session.StubSessionService.ReadRejection("SB:MatchInProgress"),
                 Is.EqualTo(SessionEndReason.MatchInProgress));
-            Assert.That(SquishyBump.UI.Menus.MainMenu.ErrorText(SessionEndReason.MatchInProgress), Does.Contain("phiên đấu"));
+            Assert.That(SquishyBump.UI.Menus.MainMenu.ErrorText(SessionEndReason.MatchInProgress), Does.Contain("in progress"));
         }
         [TestCase(1, SessionEndReason.None)]
         [TestCase(5, SessionEndReason.None)]

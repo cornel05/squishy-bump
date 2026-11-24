@@ -14,7 +14,7 @@ namespace SquishyBump.Net.Session
         public const int MinBytes = Header;
         public static byte[] Write(LobbyState state)
         {
-            if (!Valid(state)) throw new ArgumentException("Lobby state không hợp lệ.", nameof(state));
+            if (!Valid(state)) throw new ArgumentException("Invalid lobby state.", nameof(state));
             using var stream = new MemoryStream(); using var w = new BinaryWriter(stream);
             w.Write(Version); w.Write(state.Revision); w.Write((byte)state.Rule); w.Write((byte)state.FinalLevel);
             w.Write(state.RemainingTicks); w.Write(state.Started); w.Write((byte)state.Players.Count);
