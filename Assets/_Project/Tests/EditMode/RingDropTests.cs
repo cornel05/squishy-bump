@@ -63,5 +63,15 @@ namespace SquishyBump.Tests.EditMode
         [Test]
         public void RingDropTelegraph_LastsAtLeastOneSecond() =>
             Assert.That(Balance.RingDropWarningSeconds, Is.GreaterThanOrEqualTo(1f));
+
+        [Test]
+        public void TargetWaterY_RisesWithEachDroppedBandAndSubmergesRingAtEnd()
+        {
+            Assert.That(RingDrop.TargetWaterY(0, 4), Is.EqualTo(RingDrop.InitialWaterY).Within(0.001f));
+            Assert.That(RingDrop.InitialWaterY, Is.GreaterThan(-0.5f), "water starts close to the ring surface");
+            for (var i = 1; i <= 4; i++)
+                Assert.That(RingDrop.TargetWaterY(i, 4), Is.GreaterThan(RingDrop.TargetWaterY(i - 1, 4)));
+            Assert.That(RingDrop.TargetWaterY(4, 4), Is.GreaterThan(0.2f), "final ring drop submerges the ring");
+        }
     }
 }

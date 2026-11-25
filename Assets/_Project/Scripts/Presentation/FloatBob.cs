@@ -10,7 +10,7 @@ namespace SquishyBump.Presentation
         [SerializeField] private float spinDegPerSec = 8f;
         [SerializeField] private float phase;
 
-        private Vector3 basePos;
+        private Vector3 baseLocalPos;
 
         public void Configure(float bobAmplitude, float bobSpeed, float spinDegreesPerSecond, float phaseOffset)
         {
@@ -20,11 +20,11 @@ namespace SquishyBump.Presentation
             phase = phaseOffset;
         }
 
-        private void Start() => basePos = transform.position;
+        private void Start() => baseLocalPos = transform.localPosition;
 
         private void Update()
         {
-            transform.position = basePos + Vector3.up * (Mathf.Sin(Time.time * speed + phase) * amplitude);
+            transform.localPosition = baseLocalPos + Vector3.up * (Mathf.Sin(Time.time * speed + phase) * amplitude);
             transform.Rotate(0f, spinDegPerSec * Time.deltaTime, 0f, Space.World);
         }
     }
