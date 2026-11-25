@@ -97,6 +97,46 @@ MatchSetup qua SerializedObject/AssetDatabase và sinh meta. Không sửa GUID/a
 Đây là kiểm chứng khung D1 và tích hợp input/motor, không phải bài ổn định 120 s,
 thống kê AI-1–AI-6 hay T13 đầy đủ năm bậc. Không nâng các test đó thành đạt.
 
+## SB-17 — kiểm tra source bổ sung 20/11/2026
+
+Nhánh `feat/SB-17-basic-hud` đã qua compiler Roslyn đi kèm Unity 6000.3.28f1 với DLL
+đang có: source module và test biên dịch được; **không chạy test hoặc build Unity**.
+Lệnh từ project cha: `python scratch/compile_unity_sources.py squishy-bump-sb17`.
+Log bổ sung tại `../scratch/csc/squishy-bump-sb17/`. Unity thực tế còn thiếu license,
+batch exit 198; verify nhận lockfile còn sót là Editor mở dù không có Unity.exe.
+Chưa import/sinh meta cho MatchHud.cs/MatchHudTests.cs, chưa xác nhận bố cục hình ảnh
+hoặc hành vi runtime. Các checklist issue và T-test không đổi từ kiểm tra source này.
+
+## SB-17 — kiểm thử Native 21/11/2026
+
+Nhánh `feat/SB-17-basic-hud`, base `c293fe1`, Unity 6000.3.28f1.
+`tools/verify.ps1 -PlayMode` đạt **VERIFY: PASS**, EditMode **165/165**, PlayMode
+**38/38**, không lỗi, không warning C#, không test bị bỏ qua. Unity đã sinh meta
+cho HUD và test; giữ bản stash WIP trước khi cập nhật main.
+
+- `MatchHudTests`: đồng hồ đỏ ở 10 giây cuối; L1 đổi sang lần rụng vành kế tiếp;
+  số quả, tên quả/huy hiệu class và kg, vòng dash 1,5/3 giây và READY, Wobble ×5 đỏ.
+- Hồi quy mốc L1 135 giây đã được chạy **đỏ trước khi sửa**:
+  `TestResults/HudClockRegression.xml` ghi 1 đạt/1 lỗi vì nhận `Time 15 s` thay
+  `Ring 0 s`. Lượt verify cuối xác nhận ca này đã đạt.
+- `SyncTests` kiểm tra round-trip cooldown host; snapshot sáu quả là 225 byte.
+  Protocol approval tăng thành `LAN-5`; các build khác revision bị từ chối.
+- Kết quả XML/log Native: `TestResults/EditMode.*`, `TestResults/PlayMode.*`.
+- `tools/build-windows.ps1` đạt **BUILD: PASS**: Windows x64 v0.1.0, 100 MB,
+  0 lỗi, 2 phút 33 giây. `python tools/check_repo.py`: PASS (0 problems);
+  `git diff --check`: sạch.
+- Build tại `Builds/Windows/SquishyBump.exe`. SHA-256 của executable:
+  `FBD073CA59C4918EDBC6704F5393CF59021173AF11714C00DB4212C50117492B`;
+  `SquishyBump_Data/Managed/SquishyBump.UI.dll`:
+  `312D40D9405A9ED4B830014D8B1B852FF18A158FE0ECDD4B917280EB3F0DC46A`.
+  Hash assembly phân biệt code HUD; executable Unity có thể giống build khác.
+- Chưa quan sát được HUD trong Windows player: công cụ mở ứng dụng không phản hồi
+  và hết phiên thao tác. Kiểm tra anchor trong PlayMode chỉ chứng minh vị trí cấu
+  hình ở cạnh màn hình, chưa chứng minh khả năng đọc, chồng lấn hoặc các tỉ lệ khác.
+
+Các ca này chưa chứng minh LAN nhiều máy, toàn bộ Rank, hoặc bố cục trên mọi tỉ lệ
+màn hình; không nâng trạng thái T07/T15 từ bằng chứng HUD.
+
 ## Commands
 
 | What | Command | Output |
@@ -203,14 +243,14 @@ and [`gdd/ids.md`](gdd/ids.md). Update a row whenever the test is run (date, bui
 | T01 | pass | 16/11/2026 | PR SB-42 | Đình Duy | `BalanceProfileTests`: all 9 claims of GDD 14.1 pass; `HazardTelegraphs_LastAtLeastOneSecond` covers H01–H05 (H07 boxes always visible). H06's 1.5 s crack warning gets its assert when its config lands (SB-44). |
 | T02 | pass | 16/11/2026 | PR SB-12 | Đình Duy | `CollisionResolverTests.HeadOn_KnownSpeeds_MatchesImpulseFormula` and `CollisionTests.HeadOn_KnownSpeeds_MatchesFormulaWithinTwoPercent`: Normal vs Normal at +5 / −3 m/s → −1.4 / +3.4 m/s, within 2%. |
 | T03 | not run | | | | |
-| T04 | not run | | | | |
+| T04 | Một phần (luồng tự động) | 24/11/2026 | SB-26, nền `1dd3328` | Codex | `SinglePlayerRunTests`: scene thật L1–L5, bot chạy, retry thua/hòa giữ ID/nhân vật/tier/seed, summary5/5 và retry2; Windows Player4/4. Fixture điều khiển outcome qua kill plane, chưa phải lượt chơi Survival hoàn chỉnh do người thật điều khiển chống bot. [Báo cáo và bằng chứng](testing/sb26-single-run.md). |
 | T05 | pass (PlayMode tự động) | 22/11/2026 | PR #101, gameplay `c1824dd` | Codex | `RankRunTests` 8/8. Chạy riêng từng level, số lần rơi/hồi sinh/điểm: L1 18/12/7, L2 15/10/6, L3 17/12/13, L4 17/12/3, L5 17/11/4. Cả năm đạt mục 1–4, 6a (hạng trận), 6b (hạng phiên) và 7, kết thúc trước mốc đóng hồi sinh. Ca 2 quả kiểm mục 5: L1 rơi tick 6301 sau mốc 6300, L2 rơi tick 9000 cùng tick hết giờ. Cả hai ca xác nhận hồi sinh trước mốc, loại cả quả còn mạng sau khi cửa đóng và đồng hạng trận khi rơi cùng tick. Một host đi L1→L5 qua `LevelLauncher.LoadLevel`, đạt 6a mỗi màn và 6b sau L5, tổng 84/56/35 trong lượt verify. Fixture gọi loader giữa các trận. Đồng hạng phiên và xếp hạng nhiều quả sống khi hết giờ được kiểm bằng EditMode. L3/L5 chưa có lượt rơi do chạm đã hết hạn. Bằng chứng `TestResults/T05.xml`, `T05-L*.log`, `T05-Session*.log`, `T05-Close-L*.log`. Verify 223 EditMode, 54 PlayMode, 0 cảnh báo C#. Check repo PASS. |
 | T06 | not run | | | | |
 | T07 | Một phần | 15/11/2026 | Nhánh SB-16 | Minh Nhật | EditMode kiểm chứng chính sách Survival L2–L5 tại 150 giây. L1 dùng mẫu rơi được cấp trong PlayMode. Chờ chạy đủ năm scene với cả hai luật và H01. |
 | T08 | Đạt trong PlayMode | 15/11/2026 | Nhánh SB-16 | Minh Nhật | `SurvivalArenaTests.T08_LastTwoFallOnSameTick_DrawAndRetrySameSeed` đưa hai quả qua kill plane L1 cùng tick. Cả hai hạng 1, chơi lại cùng roster và seed. |
 | T09 | not run | | | | |
 | T10 | pass (Native PlayMode, 120 s mô phỏng) | 21/11/2026 | SB-44 / base `c293fe1` | Codex | 61 collider thật; kiểm tra từng tick ≥37 và BFS; xem bằng chứng bên dưới. |
-| T11 | not run | | | | |
+| T11 | Một phần — Survival loopback + Rank EditMode đạt | 24/11/2026 | SB-30 trên `main` | Codex / Duy | Peer gửi input rồi rớt; loại ở tick host, motor dừng, trận tiếp tục, lobby mở lại admission; Rank giữ điểm/không respawn trong EditMode; LAN riêng máy chưa chạy. |
 | T12 | pass (PlayMode loopback) | 21/11/2026 | SB-20 recovery, base `39bfc7f` | Codex | Client L1 về MainMenu và hiện thông báo khi host đóng phiên. |
 | T13 | not run | | | | |
 | T14 | not run | | | | |
@@ -439,3 +479,188 @@ trượt/né hazard của các bậc trên đủ năm sàn, T04/T05/T07 đầy �
 Không đổi trạng thái các test đó dựa vào bằng chứng này. PR phụ thuộc #98 và #103;
 cần tích hợp các PR phụ thuộc trước, merge main vào nhánh này, chuyển base về main
 và xác minh lại; không tự merge PR trong đợt làm việc này.
+
+
+### SB-17 — sửa review PR #97, 23/11/2026
+
+Nền a7b1656 đã tích hợp main vào feat/SB-17-basic-hud. Unity 6000.3.28f1 Native:
+`tools/verify.ps1 -PlayMode` → VERIFY: PASS, **242 EditMode + 60 PlayMode**,
+0 lỗi/cảnh báo compile; 1 skip có chủ đích là HudPlayerVisualTests chỉ chạy Windows Player.
+Test đó chạy riêng trong StandaloneWindows64 với Direct3D12: **1 đạt, 0 lỗi**,
+8 cảnh ở 1920×1080, 1280×720, 1440×900, 1680×720; đủ 6 tag, không giao chữ/quả.
+Đã xem trực tiếp cả 8 ảnh. Ba hồi quy đã chạy đỏ trước sửa: nhãn che chính quả,
+nhãn chồng nhau và nhãn che quả khác. [Ảnh, JSON, XML và lệnh chạy lại](testing/sb17-hud-review/README.md).
+
+Giữ anchor cố định, sửa Wobble lấy đỉnh model chiếu lên màn hình và tránh giao nhau.
+Fixture L1 freeze/đặt pose để đo, không thay thế chơi tay/LAN/T07; không nâng trạng
+thái các test đó. PR tiếp tục draft chờ cornel05 review theo yêu cầu.
+
+Release Windows x64 trên nền này: `tools/build-windows.ps1` → **BUILD: PASS**,
+101 MB, 0 errors, 48,85 s. `python tools/check_repo.py` → PASS (0 problems).
+# SB-25 nối tiếp PR #95 — tiến độ 21/11/2026, chưa nghiệm thu lobby
+
+Nhánh `feat/SB-25-3d-lobby` fast-forward lên `ea46852` (PR #95 đang mở) để dùng scene
+và LobbyRoom đã có. Bằng chứng 169 EditMode/36 PlayMode của PR #95 là lượt đồng đội
+ghi, không phải kết quả của thay đổi nối tiếp này.
+
+Source mới: Core LobbyState bất biến/ILobbyChannel; LobbyCodec tối đa 73 byte cho
+6 người, kiểm tra version/length/duplicate ID/fruit/ready; LobbySync reliable NGO,
+chỉ nhận state từ host và chỉ nhận ready của sender thật. LobbyCoordinator nối
+membership, clock, lựa chọn từ adapter host và countdown; không broadcast state
+mỗi tick khi idle, countdown cập nhật từng giây. Bootstrap poll transport và lưu
+lựa chọn qua đổi scene. LobbyController nối motor/input/snapshot cho host/client,
+kiểm tra pick volume theo vị trí host; LobbyPanel đặt board world-space và quầy host.
+LevelLauncher đưa Single/Host qua Lobby, Single vào L1, LAN roster chỉ có người thật
+theo fruit đã chọn. Rule/Lk được giữ trong LobbySelection; luồng các trận tiếp theo
+còn phải tích hợp SB-26/SB-29. Không có đường Start match bỏ qua ready từ menu cũ.
+
+Roslyn compile toàn bộ source module/Editor/test đạt; 10 ca assertion thuần ngoài
+Unity đạt: codec 1/2/6 người, payload sai, bất biến, ready/countdown/leave, coordinator
+host/client và cleanup. Chưa phải Unity test hoặc bằng chứng lobby đi lại được.
+Đã bổ sung LobbyPlayTests cho hai peer loopback: chọn bằng vị trí trong volume,
+từ chối trái đã có chủ, ready qua NGO, countdown rồi roster hai người đúng trái.
+MenuFlowTests đổi theo menu → lobby → chọn trái → L1. Các ca Native này chưa chạy.
+
+`tools/verify.ps1 -PlayMode` FAIL: Unity EditMode và PlayMode exit198 do license,
+không có XML. Lệnh ProjectScaffold.Run mới (`TestResults/SB25LiveScaffold.log`) cũng
+exit198; LobbyProfile.asset/gán MatchSetup chưa sinh. Repo check thiếu 9 meta mới.
+Diff sạch. Chưa commit/push/PR nối tiếp; các tiêu chí issue #23 giữ mở. Cần Editor
+import/scaffold, verify/build và kiểm tra trực quan đi lại/UI/input/shelf locks,
+LAN riêng máy và scene-load barrier của SB-24. Không cắt thành lobby 2D.
+Lượt verify sau runtime chọn live Editor vì lockfile còn sau startup lỗi rồi dừng
+do không tìm thấy CLI `unity`; vẫn không có XML. Không sửa cache/lock để vượt gate.
+
+## SB-25 — Native lobby 3D, 21/11/2026
+
+Nhánh `feat/SB-25-3d-lobby`, base `ea46852` của PR #95. Unity 6000.3.28f1 đã chạy
+`ProjectScaffold.ConfigureLobbyDefaults`: tạo LobbyProfile, gán walking class và
+MatchSetup bằng Editor API, sinh đủ meta. Giữ greybox 3D, không chọn phương án cắt 2D.
+
+`tools/verify.ps1 -PlayMode` cuối đạt **VERIFY: PASS**, **179 EditMode/37 PlayMode**,
+0 failed/skipped, 0 warning C#. `python tools/check_repo.py`: PASS (0 problems);
+`git diff --check`: sạch. XML/log tại `TestResults/EditMode.*`, `TestResults/PlayMode.*`.
+
+- Native đã bắt lỗi: so `FastBufferReader.Length` khiến LobbySync loại gói hợp lệ
+  vì NGO đã đọc header tên message. `LobbyDiagnostic.xml` ghi timeout tại host countdown;
+  sửa dùng số byte còn lại (`Length - Position`). Lỗi tham chiếu khi owner bị hủy trong
+  teardown cũng đã được tái hiện và sửa. Lượt đỏ đầu giữ trong `LobbyFailureBeforeFix.*`.
+- `LobbyWireFix.xml` đạt sau sửa, rồi ca cuối
+  `LanLobby_HostVolumesEnforceExclusiveClaims_ReadyStartsTwoHumanRoster` đạt **4,023434 s**:
+  host vào scene Lobby; client NGO loopback nhận info; gửi InputCommand đi phải rồi
+  dừng, avatar host dịch ngang >0,15 m qua PlayerMotor; chọn bằng vị trí trong volume,
+  từ chối kệ đã có chủ và nhãn kệ hiện "ĐÃ CHỌN"; đổi rule/Lk chỉ khi host gần quầy;
+  info chứa trái/ready/IP; ready qua NGO, countdown rồi L1 với đúng hai ID/trái đã chọn.
+  Sau khi kiểm tra countdown đang mở, fixture dùng timeScale 4 để rút ngắn thời gian
+  chờ; policy Native kiểm tra đủ 300 tick = 5 giây ở 60 Hz. Không có gói hợp lệ bị loại.
+- `MenuFlowTests` đạt menu → lobby → chọn trái → L1 → pause → leave. Codec/coordinator
+  kiểm tra state 1/2/6 người, dữ liệu sai, quyền host, stale revision, leave/cancel và
+  countdown chỉ mở khi tất cả ready.
+
+Chưa kiểm tra trực quan glyph/layout từ camera trong Windows player, LAN các PC riêng
+hoặc scene-load barrier tích hợp SB-24. Tiến trình session nhiều màn/D1 bots thuộc
+SB-26/SB-29/SB-18 khi tích hợp. Không nâng T06/T07 hoặc bài LAN nhiều máy từ loopback.
+
+`tools/build-windows.ps1` đạt **BUILD: PASS**, Windows x64 v0.1.0, **101 MB**, 0 lỗi,
+2 phút 25 giây. Build tại `Builds/Windows/SquishyBump.exe`. SHA-256 assembly trong
+`SquishyBump_Data/Managed/`: App.dll
+`C033BC93CEDF1A179D7F341EE30D46244CE1C57D6C0E10432C3B97A3A8372F88`, UI.dll
+`B939A2A79D66B37A6DA6FA008D91D1C51551DCBC8DE2D09C5EB79C915EDB7F6B`.
+
+
+SB-17 kiểm chứng cuối sau tích hợp main **c534179** (lobby PR #100), protocol
+**LAN-10** tránh trùng LAN-9 lobby: `tools/verify.ps1 -PlayMode` → **VERIFY: PASS,
+252 EditMode + 61 PlayMode**, 0 lỗi/cảnh báo compile. Một skip Windows-only có
+chủ đích; chạy riêng Windows Player Direct3D12 đạt **1/1**, cả 8 ảnh/JSON mới đã xem.
+`tools/build-windows.ps1` → **BUILD: PASS, 101 MB, 0 errors, 51,49 s**.
+[XML cuối và manifest](testing/sb17-hud-review/manifest.json). Repo check và diff sạch.
+Không nâng T05/T07/LAN từ fixture hình ảnh này. Giữ draft chờ cornel05 review.
+
+## 23/11/2026 · SB-29 Survival LAN, T18
+
+- Tái hiện trước sửa (`TestResults/SB29-red.xml`): client nhận kết quả L1, host không có nút **Tiếp tục**.
+- PlayMode sau sửa (`TestResults/PlayMode.xml`): hai peer qua L1 → L5, giữ nguyên ID/trái và nhận cùng kết quả phiên. Ca ba người loại host ở L1, host spectate L2 và client còn lại nhận kết quả khi đối thủ rời. Ca hòa ở màn cuối tải lại cùng màn, roster và seed rồi chốt một vô địch.
+- EditMode kiểm công thức với 6 người/5 màn và 4 người/3 màn, phòng 2 người, hòa cắt ngưỡng và bỏ cuộc. Phần PlayMode dùng NGO loopback cùng tiến trình, tắt NGO scene management và nạp scene ở host. T18 nhiều người trên các máy riêng còn chưa kiểm chứng.
+- `tools/verify.ps1 -PlayMode` → PASS, 260 EditMode và 62 PlayMode, 0 failed/skipped, 0 cảnh báo C#. `python tools/check_repo.py` → PASS.
+- Windows x64 → BUILD PASS, 101 MB, 0 lỗi. Hai tiến trình build mới Host/Join `127.0.0.1` vào cùng lobby. Chuyển L1 → L2 trên hai cửa sổ còn cần kiểm thủ công vì điều khiển tự động bị timeout khi đi tới kệ trái.
+
+## 23/11/2026 · SB-75 UI kit "Assets cho UX/UI"
+
+- `python tools/ui/import_uxui.py <thư mục Drive>` → 29 sprite (PNG 1x), giữ GUID của các nút cũ. Không nhập ảnh `[Demo]`.
+- Ảnh chụp Play Mode 1920×1080 so với `[Demo]` của từng màn: [Start](testing/sb75-ui/start.png), [Settings](testing/sb75-ui/settings.png), [Pause](testing/sb75-ui/pause.png), [HUD](testing/sb75-ui/hud.png), [Round](testing/sb75-ui/round.png), [WINNER](testing/sb75-ui/winner.png). Canvas co theo cả hai trục (match 0.5), nên cửa sổ rộng hơn 16:9 không đẩy hàng kết quả đè lên nút Next.
+- Test mới: `UiKitTests` (sprite, viền 9-slice, kích thước console), `MatchHudTests.Board_SortsByValueAndKeepsOrderOnTies`, `MatchOverlayTests` (tim xám khi mất mạng, banner Round n, chỉ hàng của mình không bị phủ xám, bục top 3).
+- `tools/verify.ps1 -PlayMode` → PASS, 308 EditMode và 68 PlayMode (1 skip Windows-only có sẵn), 0 cảnh báo C#. `python tools/check_repo.py` → PASS.
+- Chưa kiểm: bản build Windows và LAN hai máy thật (WINNER chỉ xem qua fixture).
+
+## SB-76 · 23/11/2026 · Animal characters + claw-machine lobby
+
+- Six animals (Bear, Pig, Cat, Penguin, Chick, Frog) replace the fruits, same slots/classes/GUIDs; `Squishy Bump/Swap To Animals` (`AnimalSwap`) renames assets and fits `Visual/Body/Model` (width 2 × radius, feet at −radius).
+- Fighters stay upright: `PresentationProfile.upright` → `RollVisual` turns the body to the velocity (720°/s), leans up to 14° at 6 m/s, keeps squash. Physics untouched.
+- Avatars: `Squishy Bump/Render Avatars` writes `avatar_0..5.png` ([avatars](testing/sb76/avatars.png)).
+- Lobby: `Squishy Bump/Build Lobby` places `Art/Lobby/Lobby.glb` (×3, turned 180°), pedestals → `Stand n`, prize-chute button → `Host desk`, colliders for floor/walls ([follow view](testing/sb76/lobby_follow.png), [overview](testing/sb76/lobby_high.png)); roster check: [six animals](testing/sb76/roster.png).
+- Tests: `FighterVisualTests` (model from `Art/Characters`, width from renderer bounds, single sphere collider), `PresentationTests` (`FacingYaw`, `UprightRotation`), `PresentationPlayTests.Upright_FacesVelocityWithoutRolling`; names updated in other tests.
+- `tools/verify.ps1 -PlayMode` → PASS, 310 EditMode and 68 PlayMode (1 skip Windows-only), 0 C# warnings. `python tools/check_repo.py` → PASS.
+- Not checked: screenshots are Editor renders (camera pose of the lobby follow view), not Play Mode captures; lobby claim/desk flow is covered by `LobbyPlayTests`, not eyeballed; Windows build size (+34 MB GLB) not measured; Sketchfab licences pending (see CREDITS.md).
+
+## SB-77 · 23/11/2026 · Lobby UI kit + room options
+
+- Kit from Drive folders 7, 8, 9 (`tools/ui/import_lobby_ui.py`): lobby console, Find Server console, row pill, 3 class cards. Credits and asset ledger rows added.
+- Lobby host desk is `LobbyConsole`: tabs MATCH SETUP (6 slots, animal avatars) / MAP (final level), D-pad flips Survival/Rank, CAPACITY slider (2-6), LOBBY MODE private/public, PASSWORD, START MATCH. Class cards above the stands take their numbers from `BalanceProfile`.
+- Net (host-enforced): `LobbyRoom.TryConfigureRoom`, `StubSessionService` password hash + capacity in connection approval (`WrongPassword`), protocol `SquishyBump-LAN-11`, `LobbyCodec` v2 (capacity, public). LAN beacon `LanDiscovery` (UDP 7778, public rooms only, no password in the packet) feeds the Find Server list.
+- Tests: `LobbyRoomTests` (options), `LobbyCodecTests` (capacity/public), `SyncTests` (password, capacity, payload size), `LanDiscoveryTests`, `UiKitTests` (new sprites and sheet sizes), `RoomOptionsPlayTests` (loopback: wrong password refused, capacity, listener), `LobbyPlayTests` driven through the console buttons.
+- Play Mode screenshots (`unity command capture game_view`): [Find Server](testing/sb77/find_server.png), [lobby console](testing/sb77/lobby_console.png), [MAP tab](testing/sb77/lobby_console_map.png), [class cards](testing/sb77/lobby_stands_cards.png).
+- `tools/verify.ps1 -PlayMode` → PASS, 347 EditMode and 72 PlayMode (1 skip Windows-only), 0 C# warnings. `python tools/check_repo.py` → PASS.
+- Not checked: two real PCs on a LAN (discovery used loopback only; Windows Firewall may block UDP broadcast, the manual IP join is the fallback), gamepad on the new screens, the "PRIVITE" typo baked into the team's art.
+
+### SB-26 — 24/11/2026
+
+Nền main `1dd3328`; `tools/verify.ps1 -PlayMode`: 356 EditMode +76 PlayMode đạt,
+0 lỗi/cảnh báo C#, 1 skip HudVisual dành cho Windows Player. Bốn ca Single Player
+Windows D3D12 đạt riêng. Fixture lobby đã tách hai lần nhấn đổi luật sang hai
+frame để đọc snapshot đã render. T04 giữ Một phần như bảng trên;
+[xem báo cáo và bằng chứng](testing/sb26-single-run.md).
+Build Windows x64 release đạt: 0 errors, 857 MB; repo checker PASS (0 problems).
+
+### SB-30 — đối soát lên `main` (24/11/2026)
+
+- Hợp nhất PR #96 với `main`: dùng chung `StubSessionService.AcceptingPlayers` (`GameplayBootstrap.LockLanRoster` / `UnlockLanRoster`), bỏ `ISessionAdmission`; gom phát `MatchEvent.Elimination` về `MatchDirector` cho cả Survival và Rank (không respawn, không cộng ring-out credit, giữ nguyên điểm đã ghi).
+- Kiểm thử: `SurvivalMatchTests` (đã cập nhật sang `GameEventHub`), `RankMatchTests.Disconnect_EliminatesWithoutRespawnOrCreditAndKeepsScore`, `SyncTests`, `MenuFlowTests.T11_ClientLeaves_RemoteInputStopsAndLobbyReopensAdmission` (loopback). Chưa chạy LAN 2 máy riêng.
+
+### SB-78 — gắn Creative map assets L1–L5 & direct launch (24/11/2026)
+
+- Assets & scenes: đưa raw GLBs/meshes/materials vào `Assets/_Project/Art/Levels/L1..L5/`, gắn vào `L1..L5.unity` qua `LevelArtSceneBuilder` (`TrainingRingFloor.prefab` / H01 trên L1, `LevelArtBinder` runtime trên L2/L4/L5). Giữ tỉ lệ visual fighter `1.0x` đợt này (mốc scale đã thử nghiệm trước đó giữ lại trong ghi chú: `L1: 0.95x`, `L2: 0.80x`, `L3: 0.60x`, `L4: 0.90x`, `L5: 0.85x`).
+- Inject màn chơi: CLI `-level 1..5` (`L1..L5`) & `-rule survival|rank` (`LevelLauncher` + `GameplayBootstrap`), `LevelPlayCommands.PlayL1..PlayL5`, `tools/play-level.ps1`.
+- Tests mới: `LevelLaunchArgsTests` (EditMode), `LevelArtTests` (PlayMode L1–L5).
+- Kết quả sau rebase lên `main` (`bcc115a`): `tools/verify.ps1 -PlayMode` → **VERIFY: PASS** (**376** EditMode, **82** PlayMode passed, **1** skipped WindowsPlayer-only, **0** cảnh báo `SquishyBump.*`); `python tools/check_repo.py` → **PASS** (0 problems); `tools/build-windows.ps1` → **BUILD: PASS** (**0 errors**, **3993 MB**). Chưa playtest tương tác trực tiếp trong `.exe` L1–L5 qua `play-level.ps1`.
+
+### SB-79 — đồng bộ Creative map assets L1 & L2 từ Drive (25/11/2026)
+
+- L1: trích `sand01_Normal.jpg` (`648 KB`) và màu `Sand` vàng cát linear `(0.80, 0.565, 0.125)` từ `cat vong 1..4.glb` sang `Band.mat` (giữ `Fixed_Vong1..4.asset` đúng bán kính đồng tâm & UV/tangents, tránh normal đảo/trùng bán kính của `cat vong 2..4`); nâng `Map1Demo.glb` → `Map1.glb` (ẩn `Torus.001..006` tĩnh) và thay bộ phao mới (`PhaoTron1..3`, `PhaoUnicorn1..2`, `PhaoLgbt`).
+- L2: thêm `chuotlatdat.glb` (`15.7 MB`) và `meolatdat.glb` (`12.1 MB`) gắn lên 3 chướng ngại vật xoay `Box 0..2` của `MovingGround` qua `LevelArtBinder` (giữ nguyên `BoxCollider`). L3–L5 đã khớp 100% với Drive nên giữ nguyên.
+- Kết quả: `tools/verify.ps1 -PlayMode` → **VERIFY: PASS** (**376** EditMode, **89** PlayMode passed, **2** skipped, **0** cảnh báo `SquishyBump.*`); `python tools/check_repo.py` → **PASS** (0 problems); `tools/build-windows.ps1` → **BUILD: PASS** (**0 errors**, **3847 MB**). Chưa mở `.exe` playtest tương tác trực tiếp L1/L2.
+
+### SB-80 — hoàn thiện Map 1: texture ván gỗ & dọn mesh dư/lỗi (25/11/2026)
+
+- Xóa hoàn toàn các mesh dư/lỗi còn sót trong `Map1.glb` (`Sphere.006`, `Cube.001`, `Circle.001/002/003/009`, `Torus.001..006`, `Cylinder.001..004`).
+- Tạo `WoodPlank.png` (`512×512`) + `WoodPlank.mat` (URP Lit) gán cho 10 tấm ván `Plane.009..020`, sửa scale âm `Plane.011`, và reparent ván gỗ + sỏi (`Roundcube.*`) vào đúng `Band 0..3` để rụng đồng bộ theo H01.
+- Kết quả: `tools/verify.ps1 -PlayMode` → **VERIFY: PASS** (**376** EditMode, **89** PlayMode passed, **2** skipped, **0** cảnh báo `SquishyBump.*`); `python tools/check_repo.py` → **PASS** (0 problems); `tools/build-windows.ps1` → **BUILD: PASS** (**0 errors**, **3845 MB**). Chưa mở `.exe` soi lại hình trực tiếp.
+
+## 24/11/2026 · SB-32 — kết quả, bảng điểm và spectator
+
+Nền main `e2e9a6a`, nhánh `feat/SB-32-results-spectator`. Windows Player Direct3D12:
+`ResultsSpectatorTests` **7/7 đạt, 0 skip**, gồm input Tab/trái/phải, target camera
+thật ở Survival/Rank, giữ camera khi chờ hồi sinh, bảng reliable host/client qua
+NGO loopback sau reconnect và snapshot mới. Kiểm 12 trang (match/session/Tab ×4
+kích thước 1280×720,1920×1080,1680×720,1280×960): biên/chiều cao chữ và ribbon
+không che podium. Đã xem ảnh match, session 4:3 và Tab ultrawide; không ghi
+2560×1080 đạt vì OS không áp dụng. [Báo cáo và bằng chứng](testing/sb32-results-spectator.md).
+Không nâng T04/T06/T07/T18 hoặc số người playtest ngoài từ các fixture này.
+Verifier cuối SB-32: VERIFY PASS, 376 EditMode +89 PlayMode, 0 lỗi/cảnh báo C#,
+2 skip có chủ đích (ca hình ảnh Windows-only); riêng SB-32 Player7/7 đạt.
+
+Xác minh nguồn cuối SB-32 ngày 24/11/2026: release Windows **Succeeded: 0 errors, 3993 MB, 00:01:05.8226868**; `python tools/check_repo.py` → **PASS (0 problems)**. Không đưa 43 meta UI do importer đổi maxTextureSize vào commit.
+
+### SB-81 — props Map 1 rụng đồng bộ theo H01 (25/11/2026)
+
+- Reparent 100% `MeshRenderer` của `Creative_Map1` (4 cây dừa, 2 rương, xẻng, đá lớn, 10 ván gỗ, sỏi) vào `Band 0..3` theo bán kính tâm `Renderer.bounds.center`; xóa node `Creative_Map1` rỗng.
+- `LevelArtTests` kiểm tra rương/xẻng/cây dừa ngoài thuộc `Band 0`, cây dừa vòng 2 thuộc `Band 1`, và rương rơi cùng `Band 0` khi `RingDrop` drop tick 2700.
+- Kết quả: `tools/verify.ps1 -PlayMode` → **VERIFY: PASS** (**376** EditMode, **89** PlayMode passed, **2** skipped, **0** cảnh báo `SquishyBump.*`); `python tools/check_repo.py` → **PASS** (0 problems); `tools/build-windows.ps1` → **BUILD: PASS** (**0 errors**, **3845 MB**). Chưa mở `.exe` kiểm tra rụng thực tế tại các mốc 45s/75s/105s.

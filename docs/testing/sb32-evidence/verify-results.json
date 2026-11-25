@@ -1,0 +1,156 @@
+{
+  "date": "2026-11-24",
+  "base": "e2e9a6a",
+  "unity": "6000.3.28f1",
+  "runs": {
+    "EditMode": {
+      "result": "Passed",
+      "total": "376",
+      "passed": "376",
+      "failed": "0",
+      "skipped": "0",
+      "start-time": "2026-11-24 13:57:02Z",
+      "end-time": "2026-11-24 13:57:05Z",
+      "raw_xml_sha256": "44b1bd4fa41fd8de1ad7afa3b2aa400a394b8f5e08e70b2963451306d4c639f5",
+      "sb32_cases": [
+        {
+          "fullname": "SquishyBump.Tests.EditMode.MatchOverlayTests.FinalWarning_At140SecondsOnL2ToL5Only",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.EditMode.MatchOverlayTests.Setup_HoldsCardLinesAndTimings",
+          "result": "Passed"
+        }
+      ],
+      "skips": []
+    },
+    "PlayMode": {
+      "result": "Skipped:Ignored",
+      "total": "91",
+      "passed": "89",
+      "failed": "0",
+      "skipped": "2",
+      "start-time": "2026-11-24 13:57:26Z",
+      "end-time": "2026-11-24 14:04:48Z",
+      "raw_xml_sha256": "3330254fde9e03d00a7e6988c0585e8631512718d678afbe86718dd33f767271",
+      "sb32_cases": [
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.MatchOverlayTests.Hearts_LostLivesTurnGrey",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.MatchOverlayTests.RoundResult_ShowsRoundBannerAndHighlightsOnlyTheLocalRow",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.MatchOverlayTests.SessionResult_PutsTopThreeOnPodiums",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.MatchOverlayTests.SessionResult_RankShowsPointsAndLivesOnVisiblePodium",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.ResultsSpectatorTests.ClientRankBoard_ReliablePointsAndRanksSurviveNewSnapshots",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.ResultsSpectatorTests.Rank_RespawnKeepsOwnCamera_EliminationEnablesCycle",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.ResultsSpectatorTests.ResultButton_WaitsThreeRealSecondsEvenWhenPaused",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.ResultsSpectatorTests.RoundAndSession_PodiumKeepsHostRanksPointsAndLives",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.ResultsSpectatorTests.Scoreboard_HoldTabUsesConfirmedRowsAndReleaseCloses",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.ResultsSpectatorTests.Survival_EliminatedCameraCyclesOnlyLivingFighters",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.ResultsSpectatorTests.WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions",
+          "result": "Skipped"
+        }
+      ],
+      "skips": [
+        {
+          "name": "SquishyBump.Tests.PlayMode.HudPlayerVisualTests.WindowsPlayer_HudAndTrackedTags_AspectSweep",
+          "reason": "Only supported on WindowsPlayer"
+        },
+        {
+          "name": "SquishyBump.Tests.PlayMode.ResultsSpectatorTests.WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions",
+          "reason": "Ca hình ảnh cần Windows Player có renderer thật."
+        }
+      ]
+    },
+    "WindowsPlayer": {
+      "result": "Passed",
+      "total": "7",
+      "passed": "7",
+      "failed": "0",
+      "skipped": "0",
+      "start-time": "0001-01-01 00:00:00Z",
+      "end-time": "0001-01-01 00:00:00Z",
+      "raw_xml_sha256": "9c9e3ec5262e4954ef2529de070a02f9b0ab406ec3f77c36f25a15929a3644ae",
+      "sb32_cases": [
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.ResultsSpectatorTests.ClientRankBoard_ReliablePointsAndRanksSurviveNewSnapshots",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.ResultsSpectatorTests.Rank_RespawnKeepsOwnCamera_EliminationEnablesCycle",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.ResultsSpectatorTests.ResultButton_WaitsThreeRealSecondsEvenWhenPaused",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.ResultsSpectatorTests.RoundAndSession_PodiumKeepsHostRanksPointsAndLives",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.ResultsSpectatorTests.Scoreboard_HoldTabUsesConfirmedRowsAndReleaseCloses",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.ResultsSpectatorTests.Survival_EliminatedCameraCyclesOnlyLivingFighters",
+          "result": "Passed"
+        },
+        {
+          "fullname": "SquishyBump.Tests.PlayMode.ResultsSpectatorTests.WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions",
+          "result": "Passed"
+        }
+      ],
+      "skips": []
+    }
+  },
+  "release_build": [
+    "[BuildScript] Succeeded: 0 errors, 3993 MB, 00:01:05.8226868"
+  ],
+  "release_dll_sha256": {
+    "SquishyBump.AI.dll": "41ebc3328887b6aa0228518ab6d2792477cafee91560980c1461c54247f17246",
+    "SquishyBump.App.dll": "8f619a52a76d7c998faa8f136ec1612bc080e05cc2d9bd5468168712ff9930fb",
+    "SquishyBump.Core.dll": "a63c29937c8b5d8f72477a16f7aa9ceab2263721274ba8b9de2a753da07c37a4",
+    "SquishyBump.Hazards.dll": "ecd014942eb1162e6a36ec300ae7f812699f4ee2e4e9ff18bc909419b305758d",
+    "SquishyBump.Match.dll": "1eb5066e39d3e1ba5c64cbd6e0f3b72681fcdae6db76f37099008de50ba08753",
+    "SquishyBump.Net.dll": "90a58bfdf8845211fc754a13973b825f77b5e8465480b37b0b3b84d2925768b3",
+    "SquishyBump.Physics.dll": "945b4d41b892d09c67c05b3ae3336aecf8c682cf0142e68ee5a02b4c931bc67a",
+    "SquishyBump.Presentation.dll": "9eed5c076abc220288c3b3d35e04d9a4de063060221ae4c01352250ea98c4d04",
+    "SquishyBump.UI.dll": "8dcf94a2eca73c4db1ed2e516f7cbb5d7a5596f80483f7d0a3ac451050b581f2"
+  },
+  "guid_scanner": {
+    "result": "FAIL có sẵn trên main, không ghi PASS",
+    "errors": 4,
+    "warnings": 0,
+    "file": "Assets/_Project/Settings/URP/DefaultVolumeProfile.asset",
+    "baseline_unchanged": true
+  }
+}

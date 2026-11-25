@@ -105,12 +105,12 @@ namespace SquishyBump.Tests.EditMode
             Assert.That(Balance.DashDeltaV(c), Is.EqualTo(dashDeltaV).Within(0.05f));
         }
 
-        [TestCase("Watermelon", "Heavy", "5CC46E")]
-        [TestCase("Pineapple", "Heavy", "FFC93C")]
-        [TestCase("Apple", "Normal", "EF4B4B")]
-        [TestCase("Mangosteen", "Normal", "7A4FA3")]
-        [TestCase("Peach", "Light", "FFA3B5")]
-        [TestCase("Blueberry", "Light", "4D7CDB")]
+        [TestCase("Bear", "Heavy", "B19659")]
+        [TestCase("Pig", "Heavy", "F9B8BE")]
+        [TestCase("Cat", "Normal", "AA77D6")]
+        [TestCase("Penguin", "Normal", "A4BFF2")]
+        [TestCase("Chick", "Light", "EABD71")]
+        [TestCase("Frog", "Light", "87E57A")]
         public void FruitAsset_MatchesCharacterTable(string name, string className, string hex)
         {
             var fruit = Load<FruitDefinition>($"Fruits/{name}");

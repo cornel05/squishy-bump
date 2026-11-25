@@ -21,7 +21,7 @@ namespace SquishyBump.Net.Sync
     public readonly struct FighterSnapshot
     {
         public FighterSnapshot(ushort id, byte fruit, Vector3 position, Vector3 velocity, byte wobble, byte lives,
-            FighterFlags flags, uint lastInput)
+            FighterFlags flags, uint lastInput, ushort dashCooldownTicks = 0)
         {
             Id = id;
             Fruit = fruit;
@@ -31,6 +31,7 @@ namespace SquishyBump.Net.Sync
             Lives = lives;
             Flags = flags;
             LastInput = lastInput;
+            DashCooldownTicks = dashCooldownTicks;
         }
 
         /// <summary>Fighter id = owner's NGO client id (host 0) or a bot slot id.</summary>
@@ -44,6 +45,8 @@ namespace SquishyBump.Net.Sync
         public FighterFlags Flags { get; }
         /// <summary>Last InputCommand.Sequence the host applied for this fighter.</summary>
         public uint LastInput { get; }
+        /// <summary>Host-confirmed cooldown at the snapshot tick; unreliable, 30 Hz.</summary>
+        public ushort DashCooldownTicks { get; }
     }
 
     public sealed class WorldSnapshot
@@ -72,7 +75,7 @@ namespace SquishyBump.Net.Sync
         public const int MaxFighters = 8;
         const int CommandBytes = 4 + 4 + 4 + 1 + 4;
         const int SnapshotHeader = 4 + 4 + 1;
-        const int FighterBytes = 2 + 1 + 12 + 12 + 1 + 1 + 1 + 4;
+        const int FighterBytes = 2 + 1 + 12 + 12 + 1 + 1 + 1 + 4 + 2;
 
         public static byte[] WriteInput(IReadOnlyList<InputCommand> commands)
         {
@@ -132,6 +135,7 @@ namespace SquishyBump.Net.Sync
                 w.Write(f.Lives);
                 w.Write((byte)f.Flags);
                 w.Write(f.LastInput);
+                w.Write(f.DashCooldownTicks);
             }
             return stream.ToArray();
         }
@@ -149,7 +153,7 @@ namespace SquishyBump.Net.Sync
             var fighters = new FighterSnapshot[count];
             for (var i = 0; i < count; i++)
                 fighters[i] = new FighterSnapshot(r.ReadUInt16(), r.ReadByte(), Read(r), Read(r), r.ReadByte(),
-                    r.ReadByte(), (FighterFlags)r.ReadByte(), r.ReadUInt32());
+                    r.ReadByte(), (FighterFlags)r.ReadByte(), r.ReadUInt32(), r.ReadUInt16());
             snapshot = new WorldSnapshot(tick, go, fighters);
             return true;
         }
@@ -163,7 +167,7 @@ namespace SquishyBump.Net.Sync
 
         public static byte[] WriteMatch(MatchEvent e)
         {
-            if (!ValidMatch(e)) throw new ArgumentException("Payload match không hợp lệ.", nameof(e));
+            if (!ValidMatch(e)) throw new ArgumentException("Invalid match payload.", nameof(e));
             using var stream = new MemoryStream(MatchHeaderBytes + e.Standings.Count * StandingBytes);
             using var w = new BinaryWriter(stream);
             w.Write(e.EventId); w.Write(e.HostTick); w.Write((byte)e.Kind);
@@ -192,6 +196,7 @@ namespace SquishyBump.Net.Sync
                 case MatchEventKind.Elimination: gameEvent = MatchEvent.Elimination(id, tick, fighter, value); break;
                 case MatchEventKind.MatchResult: gameEvent = MatchEvent.MatchResult(id, tick, rows); break;
                 case MatchEventKind.Scoreboard: gameEvent = MatchEvent.Scoreboard(id, tick, rows); break;
+                case MatchEventKind.SessionResult: gameEvent = MatchEvent.SessionResult(id, tick, rows); break;
                 default: return false;
             }
             // Không cho packet có trường không dùng giả dạng payload hợp lệ sau khi factory bỏ chúng.
@@ -204,7 +209,8 @@ namespace SquishyBump.Net.Sync
         private static bool ValidMatch(MatchEvent e)
         {
             if (e.EventId == 0 || !Enum.IsDefined(typeof(MatchEventKind), e.Kind)) return false;
-            var table = e.Kind == MatchEventKind.Scoreboard || e.Kind == MatchEventKind.MatchResult;
+            var table = e.Kind == MatchEventKind.Scoreboard || e.Kind == MatchEventKind.MatchResult ||
+                e.Kind == MatchEventKind.SessionResult;
             if (table)
             {
                 if (e.Standings.Count < 2 || e.Standings.Count > MatchFighterLimit) return false;

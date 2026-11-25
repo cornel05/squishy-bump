@@ -1,0 +1,1805 @@
+{
+  "EditMode": {
+    "result": "Passed",
+    "total": "356",
+    "passed": "356",
+    "failed": "0",
+    "skipped": "0",
+    "start-time": "2026-11-24 07:45:24Z",
+    "end-time": "2026-11-24 07:45:26Z",
+    "raw_xml_sha256": "f11d03312a4dd7b062eeabaf0cb1303661c250d6ff258a44ae830343c7b5f4dc",
+    "cases": [
+      {
+        "fullname": "SquishyBump.Tests.EditMode.AudioFeedbackTests.HitFeedback_HitStopFortyMillisecondsAndPitchRisesWithImpulse",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.AudioFeedbackTests.Profile_HasAllTwelveMonoPlaceholders",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.AudioFeedbackTests.TelegraphColors_AreTheGddHexValues",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.BalanceAsset_MatchesEngineSettings",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.BalanceAsset_MatchesGddTable",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.ClassAsset_MatchesGddTable(\"Heavy\",15.0f,0.6f,4.5f,0.8f,9.6f,4.8f,5.3f)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.ClassAsset_MatchesGddTable(\"Normal\",10.0f,0.5f,6.0f,1.0f,12.0f,6.0f,8.0f)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.ClassAsset_MatchesGddTable(\"Light\",7.0f,0.45f,7.5f,1.2f,14.4f,7.2f,11.4f)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.EveryMatch_EndsWithinTimeLimit",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.FreshFruit_IsNotRungOutFromTrainingRingCentreByOneBump",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.FruitAsset_MatchesCharacterTable(\"Bear\",\"Heavy\",\"B19659\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.FruitAsset_MatchesCharacterTable(\"Pig\",\"Heavy\",\"F9B8BE\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.FruitAsset_MatchesCharacterTable(\"Cat\",\"Normal\",\"AA77D6\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.FruitAsset_MatchesCharacterTable(\"Penguin\",\"Normal\",\"A4BFF2\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.FruitAsset_MatchesCharacterTable(\"Chick\",\"Light\",\"EABD71\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.FruitAsset_MatchesCharacterTable(\"Frog\",\"Light\",\"87E57A\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.HazardTelegraphs_LastAtLeastOneSecond",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.IceDash_RingsOutFreshLightButNotHeavy",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.Jump_ClearsObstacleBox",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.Jump_ReachesApexSpeedAndAirTime",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.Knockback_IsCappedAtMaxWobble",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.SnapshotLoad_FitsLanAndRelay",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.WeightClasses_ReachFullSpeedWithinFiveHundredthsOfEachOther",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BalanceProfileTests.WobbleFive_AllowsFinishingOnTrainingRing",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BotBrainTests.AuthorityCountdownAndElimination_ProduceNoInput",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BotBrainTests.BotMakingProgress_DoesNotTriggerAntiStuckFromTheOldRoamGoal",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BotBrainTests.D1_ReactionDelayRetargetCadenceAndSeed_AreRespected",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BotBrainTests.EdgeDanger_OverridesChaseAndSteersInward",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BotBrainTests.NearbyAlignedTarget_DashesThenBrakesToRecover",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.BotBrainTests.StationaryBot_RecoversToRandomSafeRoamGoal",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CannonsTests.Blast_IsOutwardWithThirtyPercentUp",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CannonsTests.Compass_ZeroIsNorthNinetyIsEast",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CannonsTests.FireTicks_EveryFiveSecondsStaggeredByOneAndAQuarter",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CannonsTests.Gust_FallsOffLinearlyAndScalesWithWobble",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CannonsTests.Launch_AtFortyFiveDegrees_MatchesTheWorkedExample",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CannonsTests.Profile_HoldsGddValues",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CannonsTests.Sweep_IsPlusMinusSixtyAtThirtyDegreesPerSecond",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CollisionResolverTests.Apart_NoContact_ChangesNothing",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CollisionResolverTests.DashHit_OnStationaryTarget_MatchesWorkedExample(\"Heavy\",0,120.0f,8.0f,9.6f)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CollisionResolverTests.DashHit_OnStationaryTarget_MatchesWorkedExample(\"Normal\",0,100.0f,10.0f,8.0f)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CollisionResolverTests.DashHit_OnStationaryTarget_MatchesWorkedExample(\"Light\",0,82.4f,11.8f,6.6f)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CollisionResolverTests.DashHit_OnStationaryTarget_MatchesWorkedExample(\"Heavy\",5,192.0f,12.8f,9.6f)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CollisionResolverTests.DashHit_OnStationaryTarget_MatchesWorkedExample(\"Normal\",5,160.0f,16.0f,8.0f)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CollisionResolverTests.DashHit_OnStationaryTarget_MatchesWorkedExample(\"Light\",5,131.8f,18.8f,6.6f)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CollisionResolverTests.HeadOn_KnownSpeeds_MatchesImpulseFormula",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CollisionResolverTests.Knockback_AtHighWobble_IsCapped",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CollisionResolverTests.LightTouch_BelowThreshold_IsNotAHit",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CollisionResolverTests.Overlap_InsideSlop_IsLeftAlone",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CollisionResolverTests.Overlap_IsCorrectedEightyPercentBeyondSlopByInverseMass",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CollisionResolverTests.Separating_Overlap_GetsNoImpulseButIsPushedApart",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.CollisionResolverTests.SixFighters_EveryPairIsTested",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ConfigurationAssetTests.BotAsset_MatchesDifficultyLadder(1,4.0f,0.5f,25.0f,35.0f,0.0f,0.5f,0.85f,3,None,1.0f,None)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ConfigurationAssetTests.BotAsset_MatchesDifficultyLadder(2,5.0f,0.4f,18.0f,30.0f,0.0f,1.0f,0.9f,63,None,1.0f,None)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ConfigurationAssetTests.BotAsset_MatchesDifficultyLadder(3,6.0f,0.3f,12.0f,25.0f,0.2f,1.5f,0.95f,127,WiderMargin,1.5f,AvoidHeavier)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ConfigurationAssetTests.BotAsset_MatchesDifficultyLadder(4,8.0f,0.2f,7.0f,20.0f,0.35f,2.0f,1.0f,1023,BrakeEarly,1.5f,PositionByClass)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ConfigurationAssetTests.BotAsset_MatchesDifficultyLadder(5,10.0f,0.12f,3.0f,15.0f,0.5f,2.5f,1.0f,2047,PredictSlide,1.5f,Predictive)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ConfigurationAssetTests.LevelAsset_MatchesArenaConfiguration(1,\"Training Ring\",12.0f,6.0f,135.0f,FinalRingDrop,\"1\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ConfigurationAssetTests.LevelAsset_MatchesArenaConfiguration(2,\"Moving Ground\",6.5f,5.25f,150.0f,TimeLimit,\"2,3,7\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ConfigurationAssetTests.LevelAsset_MatchesArenaConfiguration(3,\"Cannon Court\",9.0f,5.5f,150.0f,TimeLimit,\"4,5\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ConfigurationAssetTests.LevelAsset_MatchesArenaConfiguration(4,\"Frost Ring\",9.0f,6.0f,150.0f,TimeLimit,\"6\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ConfigurationAssetTests.LevelAsset_MatchesArenaConfiguration(5,\"Chaos Core\",9.0f,6.0f,150.0f,TimeLimit,\"4,5,6\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.EngineSettingsTests.Core_ReferencesNoOtherSquishyBumpAssembly",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.EngineSettingsTests.FixedTimestep_Is60Hz",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.EngineSettingsTests.Gravity_IsMinus20",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Model_HasNoCollider_ColliderStaysClassSphere(\"Bear\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Model_HasNoCollider_ColliderStaysClassSphere(\"Pig\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Model_HasNoCollider_ColliderStaysClassSphere(\"Cat\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Model_HasNoCollider_ColliderStaysClassSphere(\"Penguin\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Model_HasNoCollider_ColliderStaysClassSphere(\"Chick\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Model_HasNoCollider_ColliderStaysClassSphere(\"Frog\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Model_WidthFromRendererBoundsIsTwiceRadius_FeetOnSphereBottom(\"Bear\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Model_WidthFromRendererBoundsIsTwiceRadius_FeetOnSphereBottom(\"Pig\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Model_WidthFromRendererBoundsIsTwiceRadius_FeetOnSphereBottom(\"Cat\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Model_WidthFromRendererBoundsIsTwiceRadius_FeetOnSphereBottom(\"Penguin\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Model_WidthFromRendererBoundsIsTwiceRadius_FeetOnSphereBottom(\"Chick\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Model_WidthFromRendererBoundsIsTwiceRadius_FeetOnSphereBottom(\"Frog\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Prefabs_HaveGlbModelUnderBody(\"Bear\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Prefabs_HaveGlbModelUnderBody(\"Pig\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Prefabs_HaveGlbModelUnderBody(\"Cat\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Prefabs_HaveGlbModelUnderBody(\"Penguin\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Prefabs_HaveGlbModelUnderBody(\"Chick\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FighterVisualTests.Prefabs_HaveGlbModelUnderBody(\"Frog\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FrameStatsTests.BufferWrap_KeepsLatestSamplesInOrder",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FrameStatsTests.KnownSamples_MedianAndP95_Expected",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.FrameStatsTests.PerformanceTargets_MatchGdd",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.HazardSyncTests.HazardEvent_Malformed_IsRejected",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.HazardSyncTests.HazardEvent_RoundTripsWithHostTick",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.HazardSyncTests.TelegraphElapsed_MatchesHostStage",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.IceFieldTests.CrackFallFadeOverlap_OnlyRestoresColliderStateAfterClear",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.IceFieldTests.DuplicateTick_DoesNotAdvanceOrRepeatEvents",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.IceFieldTests.FourRings_Has61UniqueHexagonsAndWaveBoundaries",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.IceFieldTests.IceProfileAsset_MatchesGddAndFeedsRuntimeRules",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.IceFieldTests.NoFighters120Seconds_EveryTickPreservesMinimumAndConnectivity(uint.MinValue)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.IceFieldTests.NoFighters120Seconds_EveryTickPreservesMinimumAndConnectivity(1)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.IceFieldTests.NoFighters120Seconds_EveryTickPreservesMinimumAndConnectivity(18)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.IceFieldTests.NoFighters120Seconds_EveryTickPreservesMinimumAndConnectivity(314159)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.IceFieldTests.NoFighters120Seconds_EveryTickPreservesMinimumAndConnectivity(42)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.IceFieldTests.NoFighters120Seconds_EveryTickPreservesMinimumAndConnectivity(99)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.IceFieldTests.NoFighters120Seconds_EveryTickPreservesMinimumAndConnectivity(65535)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.IceFieldTests.NoFighters120Seconds_EveryTickPreservesMinimumAndConnectivity(uint.MaxValue)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.IceFieldTests.OccupiedTile_HasHigherSelectionFrequencyAcrossFixedSeeds",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.IceFieldTests.SameSeedAndOccupancy_ProducesIdenticalTransitions",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LanDiscoveryTests.Beacon_NeverContainsAPasswordOnlyAFlag",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LanDiscoveryTests.Decode_RejectsMalformedPackets",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LanDiscoveryTests.Decode_StripsControlCharacters_AndFallsBackToTheAddressWhenNameIsEmpty",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LanDiscoveryTests.Decode_TakesTheAddressFromTheSocket_NotThePacket",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LanDiscoveryTests.Encode_CutsLongNamesAtTheLimit",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LanDiscoveryTests.EncodeDecode_RoundTripsARoom",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LanDiscoveryTests.Hear_UpdatesTheSameHostInsteadOfListingItTwice",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LanDiscoveryTests.Rooms_ExpireWhenNotHeardForAFewSeconds_AndSortByName",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.ConfirmedResults_KeepTwoUntilFinal_ThenRankEveryone(2,5,System.Int32[])",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.ConfirmedResults_KeepTwoUntilFinal_ThenRankEveryone(6,5,System.Int32[])",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.ConfirmedResults_KeepTwoUntilFinal_ThenRankEveryone(4,3,System.Int32[])",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.ConfirmedResults_KeepTwoUntilFinal_ThenRankEveryone(2,1,System.Int32[])",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.LastOpponentLeaves_FinishesByForfeitWithoutAnotherMatch",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.TieAtKnockoutCutoff_ReplaysSameLevelAndRoster(1,2,1)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LanSurvivalRunTests.TieAtKnockoutCutoff_ReplaysSameLevelAndRoster(3,4,3)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyCodecTests.ClientCoordinator_OnlyRequestsReadyAndIgnoresStaleState",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyCodecTests.ConflictingFruitIdsAndReadyWithoutFruit_CannotSerialize",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyCodecTests.Coordinator_BindsMembershipReadyCountdownAndStartsExactlyOnce",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyCodecTests.Coordinator_LeaveCancelsCountdownAndReleasesFruit_DisposeUnsubscribes",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyCodecTests.CountdownRequiresTwoReadyPlayers_AndSourceListIsImmutable",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyCodecTests.RoomPolicy_ProducesCodecValidStateAcrossSelectionCountdownAndLeave",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyCodecTests.RoundTrip_KeepsCapacityAndPublicFlag",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyCodecTests.State_RoundTripsEverySupportedRoomSize(1)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyCodecTests.State_RoundTripsEverySupportedRoomSize(2)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyCodecTests.State_RoundTripsEverySupportedRoomSize(6)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyCodecTests.TryRead_RejectsBadCapacityOrFlagBytes",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyCodecTests.UnknownOrTruncatedOrExtraBytes_RejectWholePacket",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyCodecTests.Write_RejectsMorePlayersThanCapacity",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyRoomTests.AllReadyAtFiveSeconds_StartsOnceAndLocksRoom",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyRoomTests.Capacity_CannotDropBelowThePeopleInside_AndFullRoomRefusesNewcomers",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyRoomTests.FruitClaim_IsExclusiveAndReleasedWhenPlayerLeaves",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyRoomTests.HostChangesAndUnready_CancelCountdown",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyRoomTests.LobbyScene_ContainsSixPickVolumesDeskAndBoards",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyRoomTests.RoomOptions_CancelCountdown",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyRoomTests.RoomOptions_DefaultToSixPublicAndAreHostOnly",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyRoomTests.RoomOptions_RejectCapacityOutsideTwoToSix(1)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyRoomTests.RoomOptions_RejectCapacityOutsideTwoToSix(7)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyRoomTests.RoomOptions_RejectCapacityOutsideTwoToSix(0)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LobbyRoomTests.RoomOptions_RejectCapacityOutsideTwoToSix(-1)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LocalSaveTests.Corrupt_KeepsBadCopyAndGivesDefaults",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LocalSaveTests.Json_HoldsNoMatchState",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LocalSaveTests.Missing_GivesDefaults",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LocalSaveTests.Records_OnlyImprove",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.LocalSaveTests.SaveThenLoad_KeepsSettingsBindingsFruitAndRecords",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MatchEventTests.CallerReusesTable_PublishedResultRemainsImmutable",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MatchEventTests.HostDirector_WireAndDuplicateDelivery_ProduceSameConfirmedResult",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MatchEventTests.InvalidTableAndSelfCredit_CannotBeSent",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MatchEventTests.MalformedPacket_IsRejectedBeforeApplyingState",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MatchEventTests.MatchEvents_RoundTripWithoutChangingTiesLivesOrPoints(Countdown)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MatchEventTests.MatchEvents_RoundTripWithoutChangingTiesLivesOrPoints(RingOut)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MatchEventTests.MatchEvents_RoundTripWithoutChangingTiesLivesOrPoints(Respawn)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MatchEventTests.MatchEvents_RoundTripWithoutChangingTiesLivesOrPoints(Elimination)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MatchEventTests.MatchEvents_RoundTripWithoutChangingTiesLivesOrPoints(MatchResult)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MatchEventTests.MatchEvents_RoundTripWithoutChangingTiesLivesOrPoints(Scoreboard)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MatchEventTests.MatchEvents_RoundTripWithoutChangingTiesLivesOrPoints(SessionResult)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MatchEventTests.RespawnAndNewMatch_UpdateReplicaWithoutClientRules",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MatchOverlayTests.FinalWarning_At140SecondsOnL2ToL5Only",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MatchOverlayTests.Setup_HoldsCardLinesAndTimings",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MovingGroundTests.ArrowsWarnTwoSecondsBeforeReversal",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MovingGroundTests.BoxImpulse_IsFiftyTimesKAlongTravelPlusHalfRadial",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MovingGroundTests.ObstacleRing_AlwaysTurnsAgainstTurntableAtFifteenDegrees",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MovingGroundTests.Profile_HoldsGddValues",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MovingGroundTests.SurfaceVelocity_IsOmegaCrossR",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MovingGroundTests.Turntable_ReversesEveryFifteenSecondsWithTwoSecondRamp",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.MovingGroundTests.TurntableAngle_IsTheIntegralOfItsRate",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.ApproachPointReached_BotFacesVictimAndChargesInsteadOfWaitingAtWaypoint",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.Danger_MaxOfEdgeAndTelegraph_FilteredByTierAwareness",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.DangerCost_PrefersSafeDetour_ThenReplansWhenFloorFalls",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.DiagonalSteps_CostOneAndNeverCutBlockedCorner",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.Evade_SafeCellAcrossGapIsIgnored_ChoosesReachableSafeCellByPathCost",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.FallenCellsBlocked_IceWidensEdgeMargin",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.FiftySeededWeightedGrids_AStarEqualsIndependentDijkstra",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.Grid_OneMeterAndMaximum26By26",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.Utility_ExactGddTermsAndClassVulnerability",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.Utility_Hysteresis015AndEngagementThreshold04",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.WarningShapes_MatchRotatedFootprints(Circle,2,0,0,1,0,True)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.WarningShapes_MatchRotatedFootprints(Annulus,1,2,0,0,0,False)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.WarningShapes_MatchRotatedFootprints(Annulus,1,2,0,1.5f,0,True)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.WarningShapes_MatchRotatedFootprints(Box,2,0.25f,90,0,1,True)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.WarningShapes_MatchRotatedFootprints(Box,2,0.25f,90,1,0,False)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.WarningShapes_MatchRotatedFootprints(Cone,10,15,90,5,0,True)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.WarningShapes_MatchRotatedFootprints(Cone,10,15,90,0,5,False)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.WarningShapes_MatchRotatedFootprints(Hex,2,0,0,0.9f,0.5f,True)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.NavigationTests.WarningShapes_MatchRotatedFootprints(Hex,2,0,0,0.9f,0.9f,False)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.Dash_AddsImpulseOverMass(\"Heavy\",5.3f)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.Dash_AddsImpulseOverMass(\"Normal\",8.0f)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.Dash_AddsImpulseOverMass(\"Light\",11.4f)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.Dash_DuringCooldown_IsRejectedUntilThreeSeconds",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.Dash_InAir_IsAllowedOncePerAirtime",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.Jump_InAir_IsIgnored",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.Jump_OnGround_SetsLaunchSpeedOncePerPress",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.JumpDashMove_InOneTick_AllApplyInOrder",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.Move_HeldForOneSecond_SettlesAtMaxSpeed",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.Move_InAir_UsesThirtyPercentControl",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.Move_OnFloor_AcceleratesByClassTraction(\"Heavy\",9.6f)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.Move_OnFloor_AcceleratesByClassTraction(\"Normal\",12.0f)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.Move_OnFloor_AcceleratesByClassTraction(\"Light\",14.4f)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.Move_OnIce_AcceleratesAtHalfTheFloorRate",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.Move_WithYaw_IsCameraRelative",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.NoInput_BrakesTowardSurfaceVelocity",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.PressDuringStun_ExpiresAfterBufferWindow",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.PressDuringStun_FiresWhenStunEndsInsideBuffer",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.Stun_IgnoresInputAndStillBrakes",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PlayerMotorTests.Traction_ClampsVelocityChange",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PresentationTests.AngularVelocity_RollsWithoutSlipping",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PresentationTests.ClampPitch_StaysBetween15And60",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PresentationTests.FacingYaw_TurnsTowardVelocityAtMostMaxStep",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PresentationTests.Profile_HoldsGddValues",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PresentationTests.SquashFactor_PeaksThenReturnsToOne",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PresentationTests.UprightRotation_LeansForwardWithSpeedAndKeepsYaw",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PusherBlocksTests.BlockImpulse_IsFiftyAlongTheLane",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PusherBlocksTests.Pass_RunsDockToDockAtThreeMetresPerSecond",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.PusherBlocksTests.Profile_HoldsGddValues",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RankMatchTests.ClientCannotLoseLivesScoreOrRespawn",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RankMatchTests.FallAtWindowBoundary_DoesNotRespawn(1,105)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RankMatchTests.FallAtWindowBoundary_DoesNotRespawn(2,150)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RankMatchTests.FallAtWindowBoundary_DoesNotRespawn(5,150)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RankMatchTests.LastLivesLostSameTick_ShareFirstAfterConfirmation",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RankMatchTests.NoSafeFloor_KeepsRespawnPendingUntilWindowCloses",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RankMatchTests.Rank_RespawnsAtTwoSecondsAndProtectsForOnePointFiveSeconds",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RankMatchTests.RankRules_FromBalanceAsset_MatchesTheGddFixture",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RankMatchTests.RespawnPicker_RejectsUnsupportedFloorCandidates",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RankMatchTests.SoleEligibleFruitWaitingToRespawn_RemainsTheWinnerInTheReplicatedResult",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RankMatchTests.Timeout_RanksLivesBeforeWobble_AndKeepsPoints(2)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RankMatchTests.Timeout_RanksLivesBeforeWobble_AndKeepsPoints(3)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RankMatchTests.Timeout_RanksLivesBeforeWobble_AndKeepsPoints(4)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RankMatchTests.Timeout_RanksLivesBeforeWobble_AndKeepsPoints(5)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RankMatchTests.WaitingFruits_DoNotTriggerAnEarlyWinner",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RespawnPickerTests.SafeRadius_BandDroppingWithinThreeSeconds_IsExcluded",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RespawnPickerTests.SafeRadius_FreshL1_IsArenaMinusMargin",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RespawnPickerTests.SafeRadius_NoRingDrop_IgnoresSchedule",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RespawnPickerTests.TryPick_EmptyArena_PicksCentre",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RespawnPickerTests.TryPick_NeverInsideActiveHazard",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RespawnPickerTests.TryPick_NoFloorLeft_Fails",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RespawnPickerTests.TryPick_StaysInsideSafeRadiusAndFarFromFruits",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RingDropTests.BlinkOn_TogglesAtTwoHertz",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RingDropTests.DropTicks_Are45_75_105_135Seconds",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RingDropTests.HazardProfile_HoldsGddValues",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RingDropTests.RingDropTelegraph_LastsAtLeastOneSecond",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RingDropTests.SeamRadius_IsInnerEdgeOfEachBand",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.RingDropTests.StageAt_AmberThenRedInLastSecond",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ScoreServiceTests.ClientCannotWriteScoresOrTotals",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ScoreServiceTests.EqualSessionTotals_ShareRankAndSkipTheNextRank",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ScoreServiceTests.HazardOnlyAndSelfTouch_GiveNoPoint_AndRespawnClearsCredit",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ScoreServiceTests.LastTouchWindow_IsThreeSecondsInclusive(179,True)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ScoreServiceTests.LastTouchWindow_IsThreeSecondsInclusive(180,True)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ScoreServiceTests.LastTouchWindow_IsThreeSecondsInclusive(181,False)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ScoreServiceTests.MultipleContacts_CreditTheLastOtherFighter",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.ScoreServiceTests.SessionTotals_AccumulateOnceAndSortPointsLivesThenSurvivalTime",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SharedContractTests.HazardEvent_CarriesCannonAim",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SharedContractTests.MatchEventFactories_CarryPayload",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SharedContractTests.NonFiniteInput_IsInvalid",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SharedContractTests.OversizedMove_ClampedToLengthOne",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SharedContractTests.UnitMoveAtAnyAngle_IsValid",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SharedContractTests.Yaw_WrappedTo0To360",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SingleRosterTests.EachPlayerPick_LeavesFiveDistinctBotsAndStableCharacters(0)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SingleRosterTests.EachPlayerPick_LeavesFiveDistinctBotsAndStableCharacters(1)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SingleRosterTests.EachPlayerPick_LeavesFiveDistinctBotsAndStableCharacters(2)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SingleRosterTests.EachPlayerPick_LeavesFiveDistinctBotsAndStableCharacters(3)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SingleRosterTests.EachPlayerPick_LeavesFiveDistinctBotsAndStableCharacters(4)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SingleRosterTests.EachPlayerPick_LeavesFiveDistinctBotsAndStableCharacters(5)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SingleRosterTests.EveryLevelAndSeed_HasOneGuaranteedTierAndFourDrawsWithinA6Range",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SingleRosterTests.RankLoss_AdvancesThroughFiveLevelsAndFinishCannotAdvanceAgain",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SingleRosterTests.SurvivalLossOrTie_RetainsExactRoundAndCountsUnlimitedRetries",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SurvivalMatchTests.ClientCannotStartOrAdvanceTheMatch",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SurvivalMatchTests.IdleSurvival_EndsAt150SecondsAndRanksByWobble(2)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SurvivalMatchTests.IdleSurvival_EndsAt150SecondsAndRanksByWobble(3)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SurvivalMatchTests.IdleSurvival_EndsAt150SecondsAndRanksByWobble(4)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SurvivalMatchTests.IdleSurvival_EndsAt150SecondsAndRanksByWobble(5)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SurvivalMatchTests.SoleWinner_ConfirmsHalfASecondAfterLastElimination(2,Advance)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SurvivalMatchTests.SoleWinner_ConfirmsHalfASecondAfterLastElimination(5,SessionWon)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.Buffer_IgnoresStaleSnapshots",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.Buffer_RendersHundredMillisecondsBehindAndInterpolates",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.Inbox_DropsNaNAndCapsFloods",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.Inbox_Starved_RepeatsButtonsWithoutSteering",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.Inbox_UsesEachSequenceOnceInOrder",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.InputPacket_Malformed_IsRejected",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.InputPacket_OutOfRangeMove_IsClampedOnRead",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.InputPacket_RoundTripsLastThreeCommands",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.JoinPayload_StaysUnderTheApprovalLimit_AndNeverCarriesThePasswordText",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.LanApproval_EnforcesHostCapacity_NeverAboveSix(1,3,None)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.LanApproval_EnforcesHostCapacity_NeverAboveSix(2,3,None)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.LanApproval_EnforcesHostCapacity_NeverAboveSix(3,3,RoomFull)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.LanApproval_EnforcesHostCapacity_NeverAboveSix(2,2,RoomFull)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.LanApproval_EnforcesHostCapacity_NeverAboveSix(5,9,None)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.LanApproval_EnforcesHostCapacity_NeverAboveSix(6,9,RoomFull)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.LanApproval_EnforcesSixTotalPlayers(1,None)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.LanApproval_EnforcesSixTotalPlayers(5,None)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.LanApproval_EnforcesSixTotalPlayers(6,RoomFull)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.LanApproval_RejectsWrongVersionMalformedPayloadAndSinglePlayer",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.LanApproval_WithoutPassword_IgnoresAnythingTheClientSends",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.LanApproval_WithPassword_AcceptsOnlyTheMatchingHash",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.LanRejection_MapsHostReasonToStableCode(\"SB:VersionMismatch\",VersionMismatch)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.LanRejection_MapsHostReasonToStableCode(\"SB:RoomFull\",RoomFull)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.LanRejection_MapsHostReasonToStableCode(\"unknown\",ConnectFailed)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.ReadRejection_MapsWrongPassword",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.SyncTests.Snapshot_RoundTripsAndRejectsBadLength",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Font_SleepingLoads",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_ClassCards_MatchTheValueColumnUsedByLayout",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_ConsoleArt_MatchesTheScreenRectUsedByLayout",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_FixedArt_HasNoBorder(\"btn_back\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_FixedArt_HasNoBorder(\"console_settings\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_FixedArt_HasNoBorder(\"bg_start\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_LobbyConsoles_MatchTheSheetUsedByLayout",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"btn_create_server\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"btn_find_server\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"btn_settings\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"btn_credit\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"btn_exit_game\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"btn_resume\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"btn_next\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"btn_back\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"btn_home\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"btn_blank\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"btn_next_big\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"bg_start\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"logo\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"console_settings\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"console_pause\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"slider_track\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"slider_fill\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"slider_knob\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"toggle\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"panel_box\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"row_score\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"plate\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"ribbon_score\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"frame_winner\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"banner_round_1\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"banner_round_5\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"hud_heart\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"hud_heart_lost\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"hud_timer\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"hud_board\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"hud_weight\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"medal_1\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"medal_3\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"avatar_0\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"avatar_5\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"console_lobby\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"console_rooms\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"lobby_row\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"card_heavy\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"card_normal\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_SpriteExists(\"card_light\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_StretchedArt_IsNineSliced(\"panel_box\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_StretchedArt_IsNineSliced(\"row_score\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_StretchedArt_IsNineSliced(\"plate\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_StretchedArt_IsNineSliced(\"hud_board\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_StretchedArt_IsNineSliced(\"btn_blank\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Kit_StretchedArt_IsNineSliced(\"lobby_row\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Slug_LowercasesAndJoinsWithUnderscore(\"Create Server\",\"create_server\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Slug_LowercasesAndJoinsWithUnderscore(\"Exit Game\",\"exit_game\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.EditMode.UiKitTests.Slug_LowercasesAndJoinsWithUnderscore(\"L1 · Play mat\",\"l1_play_mat\")",
+        "result": "Passed"
+      }
+    ]
+  },
+  "PlayMode": {
+    "result": "Passed",
+    "total": "77",
+    "passed": "76",
+    "failed": "0",
+    "skipped": "1",
+    "start-time": "2026-11-24 07:45:44Z",
+    "end-time": "2026-11-24 07:52:28Z",
+    "raw_xml_sha256": "9bb4fbe53006e059d3dc3dbaea53e94cf0f6f0f9f4dacf3065ba31f30a2c23a2",
+    "cases": [
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.BotArenaTests.SinglePlayer_D1BotsMoveThroughPlayerMotorAndEnterEliminatedOnFall",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.BotArenaTests.SinglePlayer_D2UtilityBots_UseNavigationAndDashThroughRealMotor",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.CannonsPlayTests.CourtLayout_AirGustsAndFireballLandsOnTarget",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.ChaosArenaTests.L5_150Seconds_IceWavesEvery210TicksAndCannonsEvery240Ticks",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.ChaosArenaTests.L5_RealSceneReuses61IceTilesAndWestAirEastFire_AllSpawnsHaveFloor",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.CollisionTests.HeadOn_KnownSpeeds_MatchesFormulaWithinTwoPercent",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.CollisionTests.Hit_StunsForBasePlusWobbleAndIgnoresInput",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.CollisionTests.OverlappingFighters_AreNotSeparatedByPhysX",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.CollisionTests.Wobble_DecaysEverySixSecondsAndIsCapped",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.FighterTests.Dash_OnFloor_RespectsCooldown",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.FighterTests.Jump_FromFloor_ReachesApexAndLands",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.FighterTests.Spawn_AppliesClassOfTheFruit(\"Bear\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.FighterTests.Spawn_AppliesClassOfTheFruit(\"Pig\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.FighterTests.Spawn_AppliesClassOfTheFruit(\"Cat\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.FighterTests.Spawn_AppliesClassOfTheFruit(\"Penguin\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.FighterTests.Spawn_AppliesClassOfTheFruit(\"Chick\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.FighterTests.Spawn_AppliesClassOfTheFruit(\"Frog\")",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.HitStopTests.HitStop_WhileLanPauseMenuOpen_RestoresTime",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.HostGameplayTests.EventHub_DropsDuplicateEventIds",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.HostGameplayTests.HostClock_TicksOnlyWhileHosting",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.HostGameplayTests.Join_InvalidArguments_ReturnsFalse",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.HostGameplayTests.Join_UnresponsiveHost_ReturnsConnectFailedWithinSevenSeconds",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.HostGameplayTests.SinglePlayerSession_OnlySimulatesDuringNgoHost",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.HudPlayerVisualTests.WindowsPlayer_HudAndTrackedTags_AspectSweep",
+        "result": "Skipped"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.IceArenaTests.ClientRenderingBeforeRestore_QueuedNextWarningKeepsOldTileUnwalkable",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.IceArenaTests.HostEventsThroughCodec_ClientFloorMatchesEveryTransitionAndWaitsForSolidEvent",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.IceArenaTests.ReturningTile_RealFighterColliderDelaysSolidUntilClear",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.IceArenaTests.T10_L4WithoutFruits120SimulatedSeconds_PreservesRealFloor",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.IceLaunchTests.SinglePlayerL4_AfterGo_KeepsAtLeast37FloorColliders",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.LobbyPlayTests.LanLobby_HostVolumesEnforceExclusiveClaims_ReadyStartsTwoHumanRoster",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.LobbyPlayTests.LanSurvival_DrawAtFinal_ReplaysLevelUntilThereIsOneChampion",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.LobbyPlayTests.LanSurvival_HostKnockedOut_SpectatesWhileClientsPlayFinal",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.LobbyPlayTests.LanSurvival_TwoPlayersContinueThroughL5_AndClientReceivesChampion",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.MatchEventNetworkTests.ReliableEvents_LoopbackReplicasAndResultTextAgreeAndDuplicateIsIgnored",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.MatchHostTests.DuySandbox_HostsAndSpawnsSixFruits",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.MatchHostTests.L1_RingOutOfOneOfTwo_ConfirmsResult",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.MatchHudTests.Board_SortsByValueAndKeepsOrderOnTies",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.MatchHudTests.Hud_ClockDashAndWobbleFollowConfirmedValues",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.MatchHudTests.L1_ClockUsesNextRingDrop",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.MatchOverlayTests.Hearts_LostLivesTurnGrey",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.MatchOverlayTests.RoundResult_ShowsRoundBannerAndHighlightsOnlyTheLocalRow",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.MatchOverlayTests.SessionResult_PutsTopThreeOnPodiums",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.MenuFlowTests.LanHostLeaves_ClientInLevelReturnsToMenuWithHostLostMessage",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.MenuFlowTests.Level_StartsWithItsHazard(2)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.MenuFlowTests.Level_StartsWithItsHazard(3)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.MenuFlowTests.Menu_SinglePlayer_PauseAndLeave",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.MenuFlowTests.StatusText_ShowsHostAndPeers",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.MovingGroundPlayTests.Box_HitsOncePerHalfSecond",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.MovingGroundPlayTests.Turntable_CarriesIdleFruitAlongTheRotation",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.NavigationArenaTests.L2_ReversalBoxesAndPusherLanes_ExposeVisibleWarningsWithinGridBudget",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.NavigationArenaTests.L3_FireTargetOnlyVisibleAfterLaunch_AirConeAndBurnUseActualState",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.NavigationArenaTests.L4_OnlyCrackingTilesGiveHints_ActualFallenFloorIsBlocked",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.PresentationPlayTests.CameraRig_OrbitsAtDistanceWithClampedPitch",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.PresentationPlayTests.Landing_SquashesVisualOnly",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.PresentationPlayTests.Upright_FacesVelocityWithoutRolling",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.PusherBlocksPlayTests.Pushers_DepartByTheRulesAndNeverMeetABox",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.RankArenaTests.T05_Partial_ContactWithoutWobble_CreditsFall_RespawnsAndProtectsFighter",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.RankRunTests.RankRespawnClose_AfterCloseTick_FallEliminates(1)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.RankRunTests.RankRespawnClose_AfterCloseTick_FallEliminates(2)",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.RankRunTests.T05_SingleRank_FullSession_L1toL5",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.RankRunTests.T05_SingleRank_L1_FollowsRankRules",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.RankRunTests.T05_SingleRank_L2_FollowsRankRules",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.RankRunTests.T05_SingleRank_L3_FollowsRankRules",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.RankRunTests.T05_SingleRank_L4_FollowsRankRules",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.RankRunTests.T05_SingleRank_L5_FollowsRankRules",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.RingDropPlayTests.OuterBand_WarnsThreeSecondsAheadThenDropsWithFruit",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.RoomOptionsPlayTests.Capacity_IsClampedToTwoThroughSix",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.RoomOptionsPlayTests.Capacity_TwoLetsOneGuestIn_AndRefusesTheNext",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.RoomOptionsPlayTests.Discovery_ListenerListsABeaconAndIgnoresGarbage",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.RoomOptionsPlayTests.Password_WrongIsRefused_RightJoins",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.SinglePlayerRunTests.LobbyPick_StartsL1WithFiveOtherCharacters",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.SinglePlayerRunTests.SingleRank_FiveArenaFlow_AdvancesAfterLossAndKeepsScores",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.SinglePlayerRunTests.SingleSurvival_FiveArenaFlow_RetryTieAndSummary",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.SinglePlayerRunTests.SingleSurvival_Loss_OffersRetryInsteadOfLeavingRun",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.SurvivalArenaTests.T08_LastTwoFallOnSameTick_DrawAndRetrySameSeed",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.TrainingRingTests.HostSamples_ReportEachRingOutOnceUntilRespawn",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.TrainingRingTests.L1Scene_ProvidesFourBandsAndSixSpawns",
+        "result": "Passed"
+      }
+    ]
+  },
+  "SB26-WindowsPlayer": {
+    "result": "Passed",
+    "total": "4",
+    "passed": "4",
+    "failed": "0",
+    "skipped": "0",
+    "start-time": "0001-01-01 00:00:00Z",
+    "end-time": "0001-01-01 00:00:00Z",
+    "raw_xml_sha256": "9fa0397986845015f1b6e2124c3af7174caaf48b546238d9eb6a9a268bd1cc1e",
+    "cases": [
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.SinglePlayerRunTests.LobbyPick_StartsL1WithFiveOtherCharacters",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.SinglePlayerRunTests.SingleRank_FiveArenaFlow_AdvancesAfterLossAndKeepsScores",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.SinglePlayerRunTests.SingleSurvival_FiveArenaFlow_RetryTieAndSummary",
+        "result": "Passed"
+      },
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.SinglePlayerRunTests.SingleSurvival_Loss_OffersRetryInsteadOfLeavingRun",
+        "result": "Passed"
+      }
+    ]
+  },
+  "SB26-LobbyFixture": {
+    "result": "Passed",
+    "total": "1",
+    "passed": "1",
+    "failed": "0",
+    "skipped": "0",
+    "start-time": "2026-11-24 07:44:46Z",
+    "end-time": "2026-11-24 07:44:51Z",
+    "raw_xml_sha256": "547f1d170c4ddf8e1a6f65beff78d8872597645101091a06179a0feea74f9317",
+    "cases": [
+      {
+        "fullname": "SquishyBump.Tests.PlayMode.LobbyPlayTests.LanLobby_HostVolumesEnforceExclusiveClaims_ReadyStartsTwoHumanRoster",
+        "result": "Passed"
+      }
+    ]
+  },
+  "build": [
+    "[BuildScript] Succeeded: 0 errors, 857 MB, 00:01:23.8670644"
+  ]
+}

@@ -8,15 +8,15 @@ Every hazard is simulated by the host, scheduled from the match seed and announc
 |---|---|---|---|
 | H01 | Ring drop | L1 | The outermost 3 m ring drops at 45, 75, 105 and 135 s |
 | H02 | Turntable | L2 | Central disc rotates and reverses |
-| H03 | Pusher blocks | L2 | Two blocks run back and forth across the arena and push fruits off |
+| H03 | Pusher blocks | L2 | Two blocks run back and forth across the arena and push fighters off |
 | H04 | Air cannon | L3, L5 | Sweeping cone gust |
 | H05 | Fire cannon | L3, L5 | Lobbed fireball, blast, burning patch |
 | H06 | Cracking ice tiles | L4, L5 | Slippery ice tiles crack, fall and respawn |
-| H07 | Obstacle ring | L2 | Outer ring turns against the turntable; its boxes push fruits off |
+| H07 | Obstacle ring | L2 | Outer ring turns against the turntable; its boxes push fighters off |
 
 ## 7.1 H01 Ring drop (Training Ring)
 
-The Training Ring floor is a play mat of radius 12 m painted as four concentric bands, each 3 m wide. At 45, 75, 105 and 135 s the outermost remaining band drops away, so the radius goes 12 → 9 → 6 → 3 → 0 m. Each drop is announced 3 s ahead: the band's inner seam flashes amber, then red at 2 Hz in the last 1.0 s, with a rising creak. A fruit still on the band when it drops falls with it. Because the third drop (105 s) leaves only a 3 m disc, respawns under Rank stop from that moment. The fourth drop removes the last disc, so the match ends by about 136 s. The other levels have no shrinking floor; they end at the 150 s time limit (Section 3.6).
+The Training Ring floor is a arena island of radius 12 m painted as four concentric bands, each 3 m wide. At 45, 75, 105 and 135 s the outermost remaining band drops away, so the radius goes 12 → 9 → 6 → 3 → 0 m. Each drop is announced 3 s ahead: the band's inner seam flashes amber, then red at 2 Hz in the last 1.0 s, with a rising creak. A fighter still on the band when it drops falls with it. Because the third drop (105 s) leaves only a 3 m disc, respawns under Rank stop from that moment. The fourth drop removes the last disc, so the match ends by about 136 s. The other levels have no shrinking floor; they end at the 150 s time limit (Section 3.6).
 
 ## 7.2 H02 Turntable, H07 obstacle ring and H03 pusher blocks (Moving Ground)
 
@@ -34,14 +34,14 @@ Cannon Court is a round floor of radius 9 m with four cannons standing just outs
 
 | Parameter | H04 Air cannon | H05 Fire cannon |
 |---|---|---|
-| Aim | Freezes its sweep yaw when the telegraph starts | Turns to the fruit closest to its sweep line at 10 to 16 m (seeded tie-break) and locks that fruit's position; with no fruit in range it targets a floor point 13 m along its sweep line, still telegraphed |
+| Aim | Freezes its sweep yaw when the telegraph starts | Turns to the fighter closest to its sweep line at 10 to 16 m (seeded tie-break) and locks that fighter's position; with no fighter in range it targets a floor point 13 m along its sweep line, still telegraphed |
 | Telegraph | 1.0 s barrel glow and a translucent cone on the floor | 1.0 s glow, then a landing marker during the 1.0–1.3 s flight |
 | Effect | Cone 15° half-angle, 10 m range, 0.6 s gust, F₀ = 150 N; +1 Wobble if J ≥ 30 N·s | Blast R_b = 3 m, J₀ = 90 N·s, +2 Wobble; burning patch 2 m radius for 3 s adds +1 Wobble per full second inside |
-| Counter-play | Step out of the cone; a Heavy fruit slides least | Leave the marker; Light fruits escape fastest |
+| Counter-play | Step out of the cone; a Heavy fighter slides least | Leave the marker; Light fighters escape fastest |
 
 ## 7.4 H06 Cracking ice tiles (Frost Ring)
 
-Frost Ring is a frozen lake: a circular floor of 61 hexagonal ice tiles, 2 m flat-to-flat (a centre tile plus four rings: 1 + 6 + 12 + 18 + 24, outer radius about 9 m), with friction μ_ice = 0.3, so every fruit slides about twice as far as on the standard floor (Section 6.2). Ice and cracking form one idea, a frozen floor that breaks, so the level still introduces a single new concept. Every 3.0 s the host selects k tiles (k = 2 for 0–30 s, 3 for 30–60 s, 4 after 60 s). A selected tile shows spreading white cracks, blinks red and shakes for 1.5 s, then shatters and falls. It respawns after 10 s with a 1 s fade-in; its collider turns on only when no fruit overlaps it.
+Frost Ring is a frozen lake: a circular floor of 61 hexagonal ice tiles, 2 m flat-to-flat (a centre tile plus four rings: 1 + 6 + 12 + 18 + 24, outer radius about 9 m), with friction μ_ice = 0.3, so every fighter slides about twice as far as on the standard floor (Section 6.2). Ice and cracking form one idea, a frozen floor that breaks, so the level still introduces a single new concept. Every 3.0 s the host selects k tiles (k = 2 for 0–30 s, 3 for 30–60 s, 4 after 60 s). A selected tile shows spreading white cracks, blinks red and shakes for 1.5 s, then shatters and falls. It respawns after 10 s with a 1 s fade-in; its collider turns on only when no fighter overlaps it.
 
 - Weighted choice. Selection weight w = 1 + 1.5 × (number of fighters standing on the tile), so standing still is risky for everyone equally.
 - Floor floor. At least 60% of tiles (37) stay solid at all times.

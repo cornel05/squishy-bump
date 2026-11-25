@@ -14,9 +14,9 @@ When: before the first match of a Single Player run. Expected length: 10–12 s.
 
 | Beat | Image and action | Sound / on-screen text |
 |---|---|---|
-| 1. Closing time | The shutters roll down and the lights dim. The camera glides past shelves of toys to the squishy shelf, where the six fruits blink awake and hop down one by one | Music-box melody, a soft click of the shutter. Text: "Squishy Cup night" |
+| 1. Closing time | The shutters roll down and the lights dim. The camera glides past shelves of toys to the squishy shelf, where the six fighters blink awake and hop down one by one | Music-box melody, a soft click of the shutter. Text: "Squishy Cup night" |
 | 2. In front of the trophy | The Golden Squish shines on the counter beside a hand-drawn map of the five play areas. The group squeezes in for a photo; one touch makes them fall one after another, and the last one rolls a full turn and bounces up | Soft squishes and funny bounces |
-| 3. To positions | The squishies look at each other, pop back into shape and roll to the play mat. The wall clock chimes; the title appears | "Six squishies, five play areas. Who will stay on top to the end?" |
+| 3. To positions | The squishies look at each other, pop back into shape and roll to the arena island. The wall clock chimes; the title appears | "Six squishies, five play areas. Who will stay on top to the end?" |
 
 The opening shows friendly competition and the group's lovable clumsiness. It names no main character and does not hint at a winner.
 
@@ -26,7 +26,7 @@ Cards appear before the countdown and briefly set the mood and main challenge. L
 
 | Code | Level | Introduction line | Image |
 |---|---|---|---|
-| B02 | Training Ring | "Every Cup starts on the play mat. Watch the rings!" | Play mat with four painted rings and the ring-drop icon |
+| B02 | Training Ring | "Every Cup starts on the arena island. Watch the rings!" | Arena island with four painted rings and the ring-drop icon |
 | B03 | Moving Ground | "Two rings, two directions. Hop over the blocks!" | Turntable, outer ring with obstacle boxes and rails |
 | B04 | Cannon Court | "The toy soldiers have loaded their cannons!" | Air and fire cannons on the rim with their warning zones |
 | B05 | Frost Ring | "Careful in the freezer: the ice is cracking." | Ice-lolly freezer floor with one tile starting to crack |
@@ -49,13 +49,13 @@ The ending respects the contest result while friendship continues after the matc
 | Case | Presentation |
 |---|---|
 | Single: match won | Short celebration; the match result shows before the next choice |
-| Single: out of the match | The fruit falls onto the plush pile and bounces, unharmed. Message: "One fall, one more lesson!" |
+| Single: out of the match | The fighter falls onto the plush pile and bounces, unharmed. Message: "One fall, one more lesson!" |
 | Single: run completed | Ending scene of B.4; congratulations reflect the run actually completed |
 | Survival / Rank results | Result board and podium under the selected rule; Rank shows points and lives left; short celebration animation |
-| Shared rank | Tied fruits are honoured equally; no single winner is invented |
+| Shared rank | Tied fighters are honoured equally; no single winner is invented |
 | Early exit or lost session | A suitable message; no festival-complete scene |
 
-The plush pile catches every falling squishy. Under Survival it appears only after elimination or on the result screen; under Rank it is also the respawn moment, when a fruit with lives left springs back onto the floor after 2 s.
+The plush pile catches every falling squishy. Under Survival it appears only after elimination or on the result screen; under Rank it is also the respawn moment, when a fighter with lives left springs back onto the floor after 2 s.
 
 ## B.6 Triggers
 

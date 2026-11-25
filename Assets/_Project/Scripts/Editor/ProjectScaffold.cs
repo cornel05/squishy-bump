@@ -26,14 +26,14 @@ namespace SquishyBump.Editor
         const string DataRoot = "Assets/_Project/Data";
         const string FighterPrefabRoot = "Assets/_Project/Prefabs/Fighters";
         const string FruitMaterialRoot = "Assets/_Project/Art/Materials/Fruits";
-        const string FruitModelRoot = "Assets/_Project/Art/Fruits";
         const string PresentationProfilePath = DataRoot + "/Presentation/PresentationProfile.asset";
         const string HazardProfilePath = DataRoot + "/Hazards/HazardProfile.asset";
         const string TrainingRingFloorPrefab = "Assets/_Project/Prefabs/Hazards/TrainingRingFloor.prefab";
         const string MatchSetupPath = DataRoot + "/MatchSetup.asset";
         const string PlaceholderMaterial = DataRoot + "/TrainingRing/FruitPlaceholder.mat";
         static readonly string[] ClassNames = { "Heavy", "Normal", "Light" };
-        static readonly string[] FruitNames = { "Watermelon", "Pineapple", "Apple", "Mangosteen", "Peach", "Blueberry" };
+        // SB-76: the six animals (slot order; same slots, classes and roster indices as the old fruits).
+        static readonly string[] FruitNames = AnimalSwap.Animals;
 
         // Build order: Boot first; sandboxes are never built.
         static readonly string[] BuildScenes =
@@ -166,27 +166,20 @@ namespace SquishyBump.Editor
             }
         }
 
-        // SB-11: the A15 .glb (tools/models/make_fruits.py) as Visual/Body/Model. Its body has radius 0.5 like the
-        // placeholder sphere, so Body's scale fits it to the class radius. The placeholder renderer stays, switched
-        // off, so the radius is still visible in the Scene view. Prefabs that already have a Model are skipped.
+        // SB-76: the animal .glb (Art/Characters) as Visual/Body/Model, fitted by AnimalSwap (width = 2 x radius, feet at
+        // -radius). The placeholder renderer stays, switched off, so the radius is still visible in the Scene view.
+        // Prefabs that already have a Model are skipped.
         static void EnsureFruitModels()
         {
             foreach (var f in FruitNames)
             {
-                var model = AssetDatabase.LoadAssetAtPath<GameObject>($"{FruitModelRoot}/{f}.glb");
-                if (model == null) continue;
                 var path = $"{FighterPrefabRoot}/{f}.prefab";
                 var root = PrefabUtility.LoadPrefabContents(path);
-                var body = root.transform.Find("Visual/Body");
-                if (body != null && body.Find("Model") == null)
-                {
-                    var instance = (GameObject)PrefabUtility.InstantiatePrefab(model, body);
-                    instance.name = "Model";
-                    foreach (var c in instance.GetComponentsInChildren<Collider>(true)) Object.DestroyImmediate(c);
-                    body.GetComponent<MeshRenderer>().enabled = false;
-                    PrefabUtility.SaveAsPrefabAsset(root, path);
-                }
+                var hasModel = root.transform.Find("Visual/Body/Model") != null;
                 PrefabUtility.UnloadPrefabContents(root);
+                if (hasModel) continue;
+                AnimalSwap.AttachModel(path, f);
+                AnimalSwap.ConfigureDefinition(f);
             }
         }
 
@@ -234,10 +227,19 @@ namespace SquishyBump.Editor
             AssetDatabase.SaveAssets();
         }
 
+        /// <summary>Tạo/nối cấu hình lobby bằng Editor API, không dựng lại toàn bộ prefab.</summary>
+        [MenuItem("Squishy Bump/Configure Lobby Defaults")]
+        public static void ConfigureLobbyDefaults()
+        {
+            EnsureMatchSetup();
+            AssetDatabase.SaveAssets();
+        }
+
         // SB-31: the scene flow's data asset, and the Boot bootstrap pointing at it. Fills only empty slots.
         static void EnsureMatchSetup()
         {
             var setup = EnsureAsset<MatchSetup>(MatchSetupPath);
+            SinglePlayerSetup.Configure();
             var so = new SerializedObject(setup);
             if (so.FindProperty("defaultBotProfile").objectReferenceValue == null)
             {
@@ -245,6 +247,18 @@ namespace SquishyBump.Editor
                     AssetDatabase.LoadAssetAtPath<BotProfile>($"{DataRoot}/Bots/D1.asset");
                 so.ApplyModifiedPropertiesWithoutUndo();
                 EditorUtility.SetDirty(setup);
+            }
+            var lobby = EnsureAsset<LobbyProfile>($"{DataRoot}/LobbyProfile.asset");
+            var lobbyData = new SerializedObject(lobby);
+            if (lobbyData.FindProperty("walkingClass").objectReferenceValue == null)
+            {
+                lobbyData.FindProperty("walkingClass").objectReferenceValue = AssetDatabase.LoadAssetAtPath<ClassProfile>($"{DataRoot}/Classes/Normal.asset");
+                lobbyData.ApplyModifiedPropertiesWithoutUndo(); EditorUtility.SetDirty(lobby);
+            }
+            if (so.FindProperty("lobby").objectReferenceValue == null)
+            {
+                so.FindProperty("lobby").objectReferenceValue = lobby;
+                so.ApplyModifiedPropertiesWithoutUndo(); EditorUtility.SetDirty(setup);
             }
             if (so.FindProperty("balance").objectReferenceValue == null)
             {

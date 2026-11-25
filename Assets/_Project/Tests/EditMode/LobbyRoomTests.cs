@@ -72,6 +72,51 @@ namespace SquishyBump.Tests.EditMode
         }
 
         [Test]
+        public void RoomOptions_DefaultToSixPublicAndAreHostOnly()
+        {
+            var room = new LobbyRoom(0, 5, 300);
+            Assert.That(room.Capacity, Is.EqualTo(6));
+            Assert.That(room.Public, Is.True);
+            room.TryAdd(1);
+
+            Assert.That(room.TryConfigureRoom(1, 3, false), Is.False, "clients cannot change the room");
+            Assert.That(room.TryConfigureRoom(0, 3, false), Is.True);
+            Assert.That(room.Capacity, Is.EqualTo(3));
+            Assert.That(room.Public, Is.False);
+        }
+
+        [TestCase(1), TestCase(7), TestCase(0), TestCase(-1)]
+        public void RoomOptions_RejectCapacityOutsideTwoToSix(int capacity) =>
+            Assert.That(new LobbyRoom(0, 5, 300).TryConfigureRoom(0, capacity, true), Is.False);
+
+        [Test]
+        public void Capacity_CannotDropBelowThePeopleInside_AndFullRoomRefusesNewcomers()
+        {
+            var room = new LobbyRoom(0, 5, 300);
+            room.TryAdd(1); room.TryAdd(2);
+
+            Assert.That(room.TryConfigureRoom(0, 2, true), Is.False, "3 are inside");
+            Assert.That(room.TryConfigureRoom(0, 3, true), Is.True);
+            Assert.That(room.TryAdd(3), Is.False, "capacity 3 is full");
+            Assert.That(room.TryConfigureRoom(0, 4, true), Is.True);
+            Assert.That(room.TryAdd(3), Is.True);
+        }
+
+        [Test]
+        public void RoomOptions_CancelCountdown()
+        {
+            var room = new LobbyRoom(0, 5, 5);
+            room.TryAdd(1); room.TryClaim(0, 0); room.TryClaim(1, 1);
+            room.TrySetReady(0, true); room.TrySetReady(1, true);
+            room.Advance();
+            Assert.That(room.RemainingTicks, Is.GreaterThan(0));
+
+            room.TryConfigureRoom(0, 4, true);
+
+            Assert.That(room.RemainingTicks, Is.Zero);
+        }
+
+        [Test]
         public void LobbyScene_ContainsSixPickVolumesDeskAndBoards()
         {
             var scene = EditorSceneManager.OpenScene("Assets/_Project/Scenes/Lobby.unity", OpenSceneMode.Additive);

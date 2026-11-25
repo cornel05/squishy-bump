@@ -1,0 +1,79 @@
+{
+  "date": "2026-11-24",
+  "unity": "6000.3.28f1",
+  "base": "e2e9a6a",
+  "renderer": "Direct3D12",
+  "windows_player": {
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0
+  },
+  "scope": "UI fixtures + scene/motor/input/camera thật + NGO loopback cùng tiến trình; không phải LAN nhiều máy/playtest",
+  "resolutions": [
+    [
+      1280,
+      720
+    ],
+    [
+      1920,
+      1080
+    ],
+    [
+      1680,
+      720
+    ],
+    [
+      1280,
+      960
+    ]
+  ],
+  "unsupported_resolution": "2560x1080 không được OS áp dụng; không ghi đạt",
+  "files": [
+    {
+      "path": "before-board.xml",
+      "sha256": "805c266b8a72bc0f2de03d4033685bc0e7b1915ac9c305dfd33f4df1d7b97d93"
+    },
+    {
+      "path": "before-podium.xml",
+      "sha256": "971225bc8547ef8d0145b8c95b37242ef752fd25175e706978d928ea4eca122a"
+    },
+    {
+      "path": "before-row.xml",
+      "sha256": "2065473fa1cd7184aa4ad6b7c7c86966d452a83645ae8b54159fe8f9e52d56db"
+    },
+    {
+      "path": "layouts.txt",
+      "sha256": "5f2a816395c0ae869de4540341db0864258d396b81ad525311798277a8b5a3ae"
+    },
+    {
+      "path": "round-1280x720.png",
+      "sha256": "3be319d703197ba16653a3bf65685bb6b01ceda2d169c4d6609054dc6667b4ee"
+    },
+    {
+      "path": "scoreboard-1680x720.png",
+      "sha256": "5df5279bd00f1834b5bb3955e9bf420fa37f7deee21884bdbcc51dfb14bb4572"
+    },
+    {
+      "path": "session-1280x960.png",
+      "sha256": "365c91bbe950575e8622ea9351cf6b2b8cd27298ba650fe8213b880254131ab6"
+    },
+    {
+      "path": "verify-results.json",
+      "sha256": "2afbc4af1aee420a8bd90ac3f546394f514c277ab0c95a22b53cbd652816625b"
+    },
+    {
+      "path": "windows-player.xml",
+      "sha256": "4151b5ec1d052b4bddbfba20d032a81761e226fc6522f991dd2cb7bf01e29838"
+    }
+  ],
+  "source_hash_format": "UTF-8 LF",
+  "sources": {
+    "Assets/_Project/Scripts/App/LocalPlayerInput.cs": "4384a0e04bc9aea62275c8b95599bf9ed0c621728b1f8ef2eca9122f53e873c5",
+    "Assets/_Project/Scripts/App/MatchHost.cs": "1cefbab13d2197108125af598e66c83ddc55a32576ac716eb4192ecdbbb769b5",
+    "Assets/_Project/Scripts/UI/HUD/MatchHud.cs": "0b9483fd1052dace79fb5dfbc55340611bdf94ea94f94571dbbade2fd109eb52",
+    "Assets/_Project/Scripts/UI/Menus/MatchOverlay.cs": "0158a57961e930864594e48a1143e3f8fb99e38e61a6411e45a318066aee8d74",
+    "Assets/_Project/Tests/PlayMode/ResultsSpectatorTests.cs": "9004e8a2156c6a45fa071c663ab4e85ffb3b2290000048907a410fc3d6ca0d18",
+    "Assets/_Project/Tests/PlayMode/MatchOverlayTests.cs": "ba013f84a6ea28498c4b82d15ae10d7a682ef1117b0f39fe8a11152ba2d5e3e3",
+    "Assets/_Project/Tests/PlayMode/SquishyBump.Tests.PlayMode.asmdef": "27e8df29e90c1b0d5c47c9b4a025008f5bc39d6817b936fffd7d855006828366"
+  }
+}

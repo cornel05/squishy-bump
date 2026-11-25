@@ -47,7 +47,7 @@ namespace SquishyBump.Hazards
         {
             tint = new MaterialPropertyBlock();
             if (profile == null || balance == null || hazards == null)
-                throw new InvalidOperationException("IceTiles cần IceProfile, BalanceProfile và HazardProfile.");
+                throw new InvalidOperationException("IceTiles requires IceProfile, BalanceProfile and HazardProfile.");
             field = new IceField(IceRules.FromProfile(profile, Time.fixedDeltaTime, chaos), 0);
             field.Changed += OnChanged;
             mesh = HexPrism(profile.FlatToFlat, profile.Thickness);
@@ -92,7 +92,7 @@ namespace SquishyBump.Hazards
 
         public void SetSeed(uint seed)
         {
-            if (playingTick != 0) throw new InvalidOperationException("Chỉ đặt seed trước GO.");
+            if (playingTick != 0) throw new InvalidOperationException("Seed can only be set before GO.");
             field = new IceField(IceRules.FromProfile(profile, Time.fixedDeltaTime, chaos), seed);
             field.Changed += OnChanged;
         }

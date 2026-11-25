@@ -31,7 +31,7 @@ namespace SquishyBump.Editor
             var balance = AssetDatabase.LoadAssetAtPath<BalanceProfile>(Root + "/Data/Balance/BalanceProfile.asset");
             var hazards = AssetDatabase.LoadAssetAtPath<HazardProfile>(Root + "/Data/Hazards/HazardProfile.asset");
             var level = AssetDatabase.LoadAssetAtPath<LevelDefinition>($"{Root}/Data/Levels/L{number}.asset");
-            if (balance == null || hazards == null || level == null) throw new InvalidDataException($"Thiếu dữ liệu sàn L{number}.");
+            if (balance == null || hazards == null || level == null) throw new InvalidDataException($"Missing arena data for L{number}.");
             var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);
             Camera.main.transform.SetPositionAndRotation(new Vector3(0, 9, -12), Quaternion.Euler(35, 0, 0));
             var ice = new GameObject(number == 5 ? "H06 Chaos Core" : "H06 Frost Ring"); ice.SetActive(false);

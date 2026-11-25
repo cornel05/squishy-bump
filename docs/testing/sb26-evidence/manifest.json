@@ -1,0 +1,45 @@
+{
+  "date": "2026-11-24",
+  "unity": "6000.3.28f1",
+  "base": "1dd3328",
+  "fixture": "Scene/motor/bot/hazard thật; timeScale8; điều khiển outcome qua kill plane; T04 Một phần",
+  "files": [
+    {
+      "path": "before-retry.xml",
+      "sha256": "014c431822088d179000bdb7e291b53b9f4bc3fd0a5a5bc02b385513b9176ca6"
+    },
+    {
+      "path": "rank-flow.txt",
+      "sha256": "6ec3aca346cdf1e0b0e1f4afd52b4620f6a6b1f16082714a21fe728a694a8f0a"
+    },
+    {
+      "path": "SB26-Rank-Summary.png",
+      "sha256": "389f0211609d4a6a7eaa70603e955a5e152ed32e8eeb4e2af9fa08f0c16c1ae4"
+    },
+    {
+      "path": "SB26-Survival-Summary.png",
+      "sha256": "9bfa9a338ac261140f2407cb5055e0849cee808d54695406379b6287b4a09eee"
+    },
+    {
+      "path": "survival-flow.txt",
+      "sha256": "1d2c8ab89181bcd406282a953bccfe5fce48ebe7c2a49bd2ce476bec1595d74c"
+    },
+    {
+      "path": "verify-results.json",
+      "sha256": "42e47e7b9e2ee47b7bb14bfd11db4f59ac4131c1c4f65abf7d7fb0fe357e0ea7"
+    },
+    {
+      "path": "windows-player.xml",
+      "sha256": "3feead83cf24c1b50a18ce8e86b84e72f089d7cff3d484ff85c18b9d75a4d746"
+    }
+  ],
+  "source_hash_format": "UTF-8 LF",
+  "sources": {
+    "Assets/_Project/Scripts/Match/SinglePlayerRun.cs": "50fb8c88863cb8bd5c8f6f5758be4dd2e3b8f97718dcfe4207930af7cc2af8bf",
+    "Assets/_Project/Scripts/App/LevelLauncher.cs": "026332da172e8319574c508530e388b9cd7c7aeac7a585dd6715af97aec38ddd",
+    "Assets/_Project/Scripts/App/MatchHost.cs": "f8442e2bd7e13faf4982e409de045bbf09cac04e434ad75187641a4493d31afd",
+    "Assets/_Project/Tests/PlayMode/SinglePlayerRunTests.cs": "f047e563114fd23045cfc9248ab4c77da165bc62ba18a2d2befba4b309920bf8",
+    "Assets/_Project/Tests/PlayMode/LobbyPlayTests.cs": "2d6330aa9170b10acf3aad6f462c639b042ce2f572d2a3119c392639ddc0446b"
+  },
+  "renderer": "Direct3D 12 [level 12.2]"
+}

@@ -31,6 +31,12 @@ namespace SquishyBump.App
         /// <summary>Esc this frame (GDD 3.4).</summary>
         public bool MenuPressed => controls.Gameplay.Menu.WasPressedThisFrame();
 
+        public bool ScoreboardHeld => !Suspended && controls.Gameplay.Scoreboard.IsPressed();
+
+        public int SpectatorCycle => Suspended || Keyboard.current == null ? 0 :
+            (Keyboard.current.rightArrowKey.wasPressedThisFrame ? 1 : 0) -
+            (Keyboard.current.leftArrowKey.wasPressedThisFrame ? 1 : 0);
+
         /// <summary>Per rendered frame: orbit the camera.</summary>
         public void UpdateLook()
         {

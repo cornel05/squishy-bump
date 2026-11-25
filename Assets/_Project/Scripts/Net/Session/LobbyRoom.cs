@@ -19,6 +19,8 @@ namespace SquishyBump.Net.Session
         public int FinalLevel { get; private set; } = 1;
         public int RemainingTicks { get; private set; }
         public bool Started { get; private set; }
+        public int Capacity { get; private set; } = StubSessionService.MaxPlayers;
+        public bool Public { get; private set; } = true;
 
         public LobbyRoom(ulong hostId, int lastLevel, int countdownTicks)
         {
@@ -34,7 +36,7 @@ namespace SquishyBump.Net.Session
 
         public bool TryAdd(ulong sender)
         {
-            if (Started || players.Count >= StubSessionService.MaxPlayers || !players.TryAdd(sender, (null, false)))
+            if (Started || players.Count >= Capacity || !players.TryAdd(sender, (null, false)))
                 return false;
             RemainingTicks = 0;
             return true;
@@ -78,6 +80,19 @@ namespace SquishyBump.Net.Session
 
             Rule = rule;
             FinalLevel = finalLevel;
+            RemainingTicks = 0;
+            return true;
+        }
+
+        /// <summary>Host only: capacity 2–6 and not below the people already inside.</summary>
+        public bool TryConfigureRoom(ulong sender, int capacity, bool isPublic)
+        {
+            if (Started || sender != hostId || capacity < LobbyState.MinCapacity || capacity > StubSessionService.MaxPlayers ||
+                capacity < players.Count) return false;
+            if (Capacity == capacity && Public == isPublic) return true;
+
+            Capacity = capacity;
+            Public = isPublic;
             RemainingTicks = 0;
             return true;
         }

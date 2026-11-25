@@ -17,6 +17,7 @@ namespace SquishyBump.App
     public sealed class MatchClientView : IDisposable
     {
         private readonly GameplayBootstrap bootstrap;
+        private readonly NetworkManager manager;
         private readonly GameObject[] prefabs;
         private readonly CameraRig cameraRig;
         private readonly LocalPlayerInput input;
@@ -30,6 +31,7 @@ namespace SquishyBump.App
             LocalPlayerInput input, BalanceProfile balance)
         {
             this.bootstrap = bootstrap;
+            manager = bootstrap.GetComponent<NetworkManager>();
             this.prefabs = prefabs;
             this.cameraRig = cameraRig;
             this.input = input;
@@ -65,7 +67,7 @@ namespace SquishyBump.App
         {
             var newest = buffer.Newest;
             if (newest == null) return;
-            var own = (ushort)NetworkManager.Singleton.LocalClientId;
+            var own = (ushort)manager.LocalClientId;
             foreach (var f in newest.Fighters)
             {
                 if (!views.TryGetValue(f.Id, out var view))

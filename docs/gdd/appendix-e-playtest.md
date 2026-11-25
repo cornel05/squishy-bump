@@ -10,7 +10,7 @@ This appendix defines how Squishy Bump playtests are run, how feedback is collec
 |---|---|---|
 | E01 | Rules | Do players understand the goal of pushing opponents off, what elimination means and, under Rank, how lives and points work? |
 | E02 | Controls | Are movement, jump and dash easy to learn and perform? |
-| E03 | Fruit weight classes | Do players tell the three classes apart and play differently with each? |
+| E03 | Fighter weight classes | Do players tell the three classes apart and play differently with each? |
 | E04 | Living Arena | Do players notice warnings and understand the danger coming? |
 | E05 | Level | Does each arena convey its main challenge and give time to react? |
 | E06 | UI and results | Are the HUD, spectating and scoreboard easy to understand? |
@@ -44,9 +44,9 @@ Participants receive anonymous codes. Video or audio is recorded only with conse
 | Code | Situation | Observations |
 |---|---|---|
 | PT01 | A newcomer completes the Training Ring tutorial | Time, mistaken steps, help needed, can restate the goal |
-| PT01b | Pick a fruit in the 3D lobby and get ready | Finds the stands and the ready step without help; understands the class badge |
+| PT01b | Pick a fighter in the 3D lobby and get ready | Finds the stands and the ready step without help; understands the class badge |
 | PT02 | Approach, collide and hold position | Direction control, understanding of push, awareness of the edge |
-| PT03 | Play the same level with a Heavy and a Light fruit | Notices the difference in push and speed; reasons for fruit choice |
+| PT03 | Play the same level with a Heavy and a Light fighter | Notices the difference in push and speed; reasons for fighter choice |
 | PT04 | Play Moving Ground | Reads the motion, adjusts the path and braces for the reversal |
 | PT05 | Face air and fire cannons | Sees the warning, finds the danger zone and reacts in time |
 | PT06 | Face cracking tiles | Notices the warning state and leaves the tile |
@@ -66,7 +66,7 @@ Participants receive anonymous codes. Video or audio is recorded only with conse
 | Observer | … |
 | Participant code | … |
 | Mode / rule | … |
-| Level / chosen fruit | … |
+| Level / chosen fighter | … |
 | Machine / connection | … |
 
 | Time | PT code | Observed action or statement | Help given | Evidence |
@@ -83,10 +83,10 @@ Rate on a scale of 1–5, where 1 is strongly disagree and 5 is strongly agree. 
 |---|---|---|
 | Q01 | I understand the goal and how elimination works | … |
 | Q02 | I move, jump and dash as I intend | … |
-| Q03 | I can tell Heavy, Normal and Light fruits apart | … |
-| Q04 | My fruit's weight class changed how I played | … |
+| Q03 | I can tell Heavy, Normal and Light fighters apart | … |
+| Q04 | My fighter's weight class changed how I played | … |
 | Q05 | I notice warnings before hazards hit | … |
-| Q06 | I can clearly see the fruits, the edge and danger zones | … |
+| Q06 | I can clearly see the fighters, the edge and danger zones | … |
 | Q07 | I understand why I was pushed or eliminated | … |
 | Q08 | I understand the results board and my rank | … |
 | Q09 | The match felt fair | … |
@@ -94,7 +94,7 @@ Rate on a scale of 1–5, where 1 is strongly disagree and 5 is strongly agree. 
 
 - Which moment was the most fun?
 - What was hardest to understand or control?
-- Why did you pick your fruit, and would you pick another?
+- Why did you pick your fighter, and would you pick another?
 - If you could change one thing, what would it be?
 
 ## E.7 Metrics and criteria
