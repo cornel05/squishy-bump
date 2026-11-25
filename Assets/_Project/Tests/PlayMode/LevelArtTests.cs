@@ -105,12 +105,23 @@ namespace SquishyBump.Tests.PlayMode
                     Assert.That(ringDrop.transform.Find("Band 1/Low Poly Palm Tree.002"), Is.Not.Null, "Second-ring palm tree should belong to Band 1.");
                     var chest = band0.Find("Object_14");
                     var chestBefore = chest.position.y;
+                    var water = artRoot.transform.Find("Water");
+                    Assert.That(water, Is.Not.Null);
+                    Assert.That(water.position.y, Is.EqualTo(RingDrop.InitialWaterY).Within(0.01f),
+                        "L1 water should start close below the sand surface.");
                     // BalanceProfile ringDropSeconds[0] = 45 s → band 0 drops at playing tick 2700 (60 Hz).
                     ringDrop.StepOnHost(2700, 2700, 1f / 60f);
                     Assert.That(ringDrop.IsDropped(0), Is.True);
-                    yield return WaitFor(() => chest.position.y < chestBefore - 0.05f, 2f);
+                    yield return WaitFor(() => chest.position.y < chestBefore - 0.05f && water.position.y > RingDrop.InitialWaterY + 0.02f, 2f);
                     Assert.That(chest.position.y, Is.LessThan(chestBefore - 0.05f),
                         "Band 0 props should fall together with Band 0 when H01 drops.");
+                    Assert.That(water.position.y, Is.GreaterThan(RingDrop.InitialWaterY + 0.02f),
+                        "L1 water should rise when Band 0 drops.");
+                    // BalanceProfile ringDropSeconds[3] = 135 s → all 4 bands dropped at playing tick 8100 (60 Hz).
+                    ringDrop.StepOnHost(8100, 8100, 1f / 60f);
+                    yield return WaitFor(() => water.position.y > 0.2f, 3f);
+                    Assert.That(water.position.y, Is.GreaterThan(0.2f),
+                        "L1 water should submerge the entire ring once all bands have dropped.");
                     break;
                 case 2:
                     var binder2 = artRoot.GetComponent<LevelArtBinder>();

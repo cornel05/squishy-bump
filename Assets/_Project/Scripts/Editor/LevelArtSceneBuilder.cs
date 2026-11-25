@@ -28,6 +28,8 @@ namespace SquishyBump.Editor
         private const string IceTileMeshPath = ArtRoot + "/L4/IceTile.asset";
         private const float L1IslandY = -6.636805f;
         private const float L1IslandScale = 2.6653836f;
+        private const float L1WaterY = RingDrop.InitialWaterY;
+        private const float L1FloatOffsetY = -0.30f;
 
         private static readonly HashSet<string> L4StaticTileNames = CreateL4StaticTileNames();
 
@@ -149,14 +151,15 @@ namespace SquishyBump.Editor
 
             var floatsRoot = new GameObject("CreativeFloats");
             floatsRoot.transform.SetParent(artRoot.transform, false);
+            var floatY = L1WaterY + L1FloatOffsetY;
             var floatPlacements = new[]
             {
-                ("PhaoTron1.glb", "PhaoTron1", new Vector3(-17.180616f, -2.4056528f, -23.788546f), Quaternion.identity, 0f),
-                ("PhaoUnicorn1.glb", "PhaoUnicorn1", new Vector3(17.180616f, -2.4056528f, -26.431717f), new Quaternion(0f, 0.47715876f, 0f, 0.87881714f), 1.3f),
-                ("PhaoTron2.glb", "PhaoTron2", new Vector3(-17.84141f, -2.4056528f, 2.6431718f), new Quaternion(0f, 0.83867055f, 0f, 0.54463905f), 2.6f),
-                ("PhaoUnicorn2.glb", "PhaoUnicorn2", new Vector3(17.84141f, -2.4056528f, 7.9295154f), new Quaternion(0f, 0.99691737f, 0f, 0.07845909f), 3.9f),
-                ("PhaoTron3.glb", "PhaoTron3", new Vector3(-14.537445f, -2.4056528f, 27.753304f), new Quaternion(0f, 0.9135455f, 0f, -0.40673658f), 5.2f),
-                ("PhaoLgbt.glb", "PhaoLgbt", new Vector3(13.215858f, -2.4056528f, 29.07489f), new Quaternion(0f, 0.6087614f, 0f, -0.7933533f), 6.5f),
+                ("PhaoTron1.glb", "PhaoTron1", new Vector3(-17.180616f, floatY, -23.788546f), Quaternion.identity, 0f),
+                ("PhaoUnicorn1.glb", "PhaoUnicorn1", new Vector3(17.180616f, floatY, -26.431717f), new Quaternion(0f, 0.47715876f, 0f, 0.87881714f), 1.3f),
+                ("PhaoTron2.glb", "PhaoTron2", new Vector3(-17.84141f, floatY, 2.6431718f), new Quaternion(0f, 0.83867055f, 0f, 0.54463905f), 2.6f),
+                ("PhaoUnicorn2.glb", "PhaoUnicorn2", new Vector3(17.84141f, floatY, 7.9295154f), new Quaternion(0f, 0.99691737f, 0f, 0.07845909f), 3.9f),
+                ("PhaoTron3.glb", "PhaoTron3", new Vector3(-14.537445f, floatY, 27.753304f), new Quaternion(0f, 0.9135455f, 0f, -0.40673658f), 5.2f),
+                ("PhaoLgbt.glb", "PhaoLgbt", new Vector3(13.215858f, floatY, 29.07489f), new Quaternion(0f, 0.6087614f, 0f, -0.7933533f), 6.5f),
             };
             foreach (var (file, name, pos, rot, phase) in floatPlacements)
             {
@@ -172,9 +175,18 @@ namespace SquishyBump.Editor
             water.name = "Water";
             Object.DestroyImmediate(water.GetComponent<Collider>());
             water.transform.SetParent(artRoot.transform, false);
-            water.transform.localPosition = new Vector3(0f, -2.1056528f, 0f);
+            water.transform.localPosition = new Vector3(0f, L1WaterY, 0f);
             water.transform.localScale = new Vector3(4.361233f, 1f, 7.202643f);
             water.GetComponent<Renderer>().sharedMaterial = waterMat;
+
+            var ringDrop = floor.GetComponent<RingDrop>();
+            if (ringDrop != null)
+            {
+                var rdSo = new SerializedObject(ringDrop);
+                rdSo.FindProperty("waterSurface").objectReferenceValue = water.transform;
+                rdSo.FindProperty("floatsRoot").objectReferenceValue = floatsRoot.transform;
+                rdSo.ApplyModifiedPropertiesWithoutUndo();
+            }
 
             CreateArenaBounds(level, balance);
             AssetDatabase.SaveAssets();

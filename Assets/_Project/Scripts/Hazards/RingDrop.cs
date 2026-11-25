@@ -15,21 +15,37 @@ namespace SquishyBump.Hazards
     /// </summary>
     public sealed class RingDrop : MonoBehaviour, IHazard, IBotHazardHints
     {
+        public const float InitialWaterY = -0.25f;
+        public const float SubmergedWaterY = 0.35f;
+        public const float WaterRiseDropDepth = 1.2f;
+
         [SerializeField] private BalanceProfile balance;
         [SerializeField] private HazardProfile hazards;
         [Tooltip("Bands, outermost first.")]
         [SerializeField] private Collider[] bands = Array.Empty<Collider>();
+        [Header("L1 Rising Water (optional)")]
+        [SerializeField] private Transform waterSurface;
+        [SerializeField] private Transform floatsRoot;
 
         private IGameEventSink sink;
         private bool[] warned;
         private bool[] dropped;
         private float[] warningStartedAt;
         private float[] fallSpeed;
+        private float[] initialBandY;
         private LineRenderer[] seams;
+        private float currentWaterY = InitialWaterY;
 
         public int BandCount => bands.Length;
         public bool IsDropped(int band) => dropped[band];
+        public Transform WaterSurface => waterSurface;
         public event Action<int> BandDropped;
+
+        public void SetWaterSurface(Transform water, Transform floats = null)
+        {
+            waterSurface = water;
+            floatsRoot = floats;
+        }
 
         private void Awake()
         {
@@ -37,10 +53,27 @@ namespace SquishyBump.Hazards
             warned = new bool[n];
             dropped = new bool[n];
             fallSpeed = new float[n];
+            initialBandY = new float[n];
             warningStartedAt = new float[n];
-            for (var i = 0; i < n; i++) warningStartedAt[i] = float.NaN;
+            for (var i = 0; i < n; i++)
+            {
+                warningStartedAt[i] = float.NaN;
+                initialBandY[i] = bands[i] != null ? bands[i].transform.position.y : 0f;
+            }
             seams = new LineRenderer[n];
             for (var i = 0; i < n; i++) seams[i] = CreateSeam(i);
+            if (waterSurface == null)
+            {
+                var waterGo = GameObject.Find("Water");
+                if (waterGo != null) waterSurface = waterGo.transform;
+            }
+            if (floatsRoot == null)
+            {
+                var floatsGo = GameObject.Find("CreativeFloats");
+                if (floatsGo != null) floatsRoot = floatsGo.transform;
+            }
+            currentWaterY = InitialWaterY;
+            ApplyWaterHeight(currentWaterY);
         }
 
         /// <summary>Host only: where warnings are published.</summary>
@@ -112,14 +145,50 @@ namespace SquishyBump.Hazards
 
         private void Update()
         {
+            var totalDropProgress = 0f;
             for (var i = 0; i < bands.Length; i++)
             {
                 var started = warningStartedAt[i];
                 var elapsed = float.IsNaN(started) ? -1f : Time.time - started;
                 var stage = dropped[i] ? BandStage.Dropped : StageAt(elapsed, balance, hazards);
                 // Clients have no collider to turn off: their visual falls when the warning runs out.
-                if (stage == BandStage.Dropped) Fall(i);
+                if (stage == BandStage.Dropped)
+                {
+                    Fall(i);
+                    var t = bands[i].transform;
+                    totalDropProgress += !t.gameObject.activeSelf
+                        ? 1f
+                        : Mathf.Clamp01((initialBandY[i] - t.position.y) / WaterRiseDropDepth);
+                }
                 UpdateSeam(i, stage, elapsed);
+            }
+            UpdateWater(totalDropProgress);
+        }
+
+        private void UpdateWater(float totalDropProgress)
+        {
+            if (waterSurface == null || bands.Length == 0) return;
+            var low = Mathf.Clamp(Mathf.FloorToInt(totalDropProgress), 0, bands.Length);
+            var frac = totalDropProgress - low;
+            var targetY = Mathf.Lerp(TargetWaterY(low, bands.Length), TargetWaterY(low + 1, bands.Length), frac);
+            if (targetY <= currentWaterY) return;
+            currentWaterY = targetY;
+            ApplyWaterHeight(currentWaterY);
+        }
+
+        private void ApplyWaterHeight(float y)
+        {
+            if (waterSurface != null)
+            {
+                var pos = waterSurface.position;
+                pos.y = y;
+                waterSurface.position = pos;
+            }
+            if (floatsRoot != null)
+            {
+                var pos = floatsRoot.position;
+                pos.y = y - InitialWaterY;
+                floatsRoot.position = pos;
             }
         }
 
@@ -195,6 +264,15 @@ namespace SquishyBump.Hazards
         {
             var inner = (bandCount - band - 1) * width;
             return inner > 0f ? inner : width;
+        }
+
+        /// <summary>Target water Y after <paramref name="droppedBands"/> of <paramref name="bandCount"/> bands have fallen.</summary>
+        public static float TargetWaterY(int droppedBands, int bandCount)
+        {
+            if (bandCount <= 0 || droppedBands <= 0) return InitialWaterY;
+            if (droppedBands >= bandCount) return SubmergedWaterY;
+            var step = (0.05f - InitialWaterY) / (bandCount - 1);
+            return InitialWaterY + droppedBands * step;
         }
     }
 }

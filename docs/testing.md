@@ -664,3 +664,10 @@ Xác minh nguồn cuối SB-32 ngày 24/11/2026: release Windows **Succeeded: 0 
 - Reparent 100% `MeshRenderer` của `Creative_Map1` (4 cây dừa, 2 rương, xẻng, đá lớn, 10 ván gỗ, sỏi) vào `Band 0..3` theo bán kính tâm `Renderer.bounds.center`; xóa node `Creative_Map1` rỗng.
 - `LevelArtTests` kiểm tra rương/xẻng/cây dừa ngoài thuộc `Band 0`, cây dừa vòng 2 thuộc `Band 1`, và rương rơi cùng `Band 0` khi `RingDrop` drop tick 2700.
 - Kết quả: `tools/verify.ps1 -PlayMode` → **VERIFY: PASS** (**376** EditMode, **89** PlayMode passed, **2** skipped, **0** cảnh báo `SquishyBump.*`); `python tools/check_repo.py` → **PASS** (0 problems); `tools/build-windows.ps1` → **BUILD: PASS** (**0 errors**, **3845 MB**). Chưa mở `.exe` kiểm tra rụng thực tế tại các mốc 45s/75s/105s.
+
+### SB-83 — nâng mặt nước Map 1 sát ring và dâng nước khi vòng H01 rụng (25/11/2026)
+
+- Nhánh `feat/SB-83-l1-rising-water`: nâng `Water` lên `y = -0.25m` và `CreativeFloats` lên `y = -0.55m` (mặt cát giữ tại `y = 0`); `FloatBob` dùng `localPosition` để phao nổi theo nước; `RingDrop` dâng mặt nước và `CreativeFloats` theo từng vòng rụng (`-0.25m -> -0.15m -> -0.05m -> +0.05m -> +0.35m` khi vòng cuối rụng).
+- Rebuild `Assets/_Project/Scenes/Levels/L1.unity` qua `LevelArtSceneBuilder.BuildL1` (`BuildL1 exit: 0`).
+- Bổ sung `RingDropTests.TargetWaterY_RisesWithEachDroppedBandAndSubmergesRingAtEnd` (EditMode) và kiểm tra `Water` bắt đầu tại `-0.25m`, dâng sau khi `Band 0` rụng và vượt `0.2m` nhấn chìm ring khi 4 vòng rụng trong `LevelArtTests` (PlayMode).
+- Kết quả: `tools/verify.ps1 -PlayMode` → **VERIFY: PASS** (**377** EditMode, **89** PlayMode passed, **2** skipped `Skipped:Ignored`, **0** cảnh báo `SquishyBump.*`). Chưa build Windows `.exe` hoặc mở game kiểm tra bằng mắt.
