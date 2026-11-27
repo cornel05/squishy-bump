@@ -21,6 +21,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 85bc28d0ff1259a4cb4fe6ad1fa69b37, type: 2}
   - {fileID: 11400000, guid: fc8e383db5a11d2489be2d912d281edc, type: 2}
   lobby: {fileID: 11400000, guid: 94a94c2530c02e24c9ab2d4a8083ec76, type: 2}
+  tutorial: {fileID: 11400000, guid: e478336a49061df49a6edbacb53398fe, type: 2}
   presentation: {fileID: 11400000, guid: 525d71a458fbbf74a983cec1d1621525, type: 2}
   levels:
   - {fileID: 11400000, guid: 2a57594b5aef51b44bfbc338bb70f9fd, type: 2}

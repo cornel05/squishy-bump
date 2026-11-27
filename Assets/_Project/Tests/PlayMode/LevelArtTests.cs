@@ -36,6 +36,8 @@ namespace SquishyBump.Tests.PlayMode
                 .First(b => b.gameObject.scene.name == "DontDestroyOnLoad" && b.Launcher != null);
             app.Store = new LocalSave(System.IO.Path.Combine(Application.temporaryCachePath, "sb-tests"));
 
+            app.Saved.TutorialCompleted = true;
+
             app.Launcher.StartSinglePlayer(level);
             var sceneName = $"L{level}";
             yield return WaitFor(() =>
@@ -65,7 +67,9 @@ namespace SquishyBump.Tests.PlayMode
                 .ToArray();
             Assert.That(visibleRenderers, Is.Not.Empty);
             Assert.That(visibleRenderers.All(r => r.sharedMaterials.Length > 0 && r.sharedMaterials.All(m => m != null)),
-                Is.True, $"L{level} has an enabled renderer with a missing material.");
+                Is.True, $"L{level} has an enabled renderer with a missing material: " + string.Join("; ",
+                    visibleRenderers.Where(r => r.sharedMaterials.Length == 0 || r.sharedMaterials.Any(m => m == null))
+                        .Select(r => string.Join("/", r.GetComponentsInParent<Transform>(true).Reverse().Select(t => t.name)))));
 
             switch (level)
             {

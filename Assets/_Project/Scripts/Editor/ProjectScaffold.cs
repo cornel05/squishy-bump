@@ -236,6 +236,21 @@ namespace SquishyBump.Editor
         }
 
         // SB-31: the scene flow's data asset, and the Boot bootstrap pointing at it. Fills only empty slots.
+        [MenuItem("Squishy Bump/Configure Tutorial Defaults")]
+        public static void ConfigureTutorialDefaults()
+        {
+            var setup = AssetDatabase.LoadAssetAtPath<MatchSetup>($"{DataRoot}/MatchSetup.asset");
+            if (setup == null) throw new System.InvalidOperationException("MatchSetup.asset is missing.");
+            var so = new SerializedObject(setup);
+            if (so.FindProperty("tutorial").objectReferenceValue == null)
+            {
+                so.FindProperty("tutorial").objectReferenceValue = EnsureAsset<TutorialProfile>($"{DataRoot}/TutorialProfile.asset");
+                so.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(setup);
+            }
+            AssetDatabase.SaveAssets();
+        }
+
         static void EnsureMatchSetup()
         {
             var setup = EnsureAsset<MatchSetup>(MatchSetupPath);
@@ -260,6 +275,8 @@ namespace SquishyBump.Editor
                 so.FindProperty("lobby").objectReferenceValue = lobby;
                 so.ApplyModifiedPropertiesWithoutUndo(); EditorUtility.SetDirty(setup);
             }
+            ConfigureTutorialDefaults();
+            so.Update();
             if (so.FindProperty("balance").objectReferenceValue == null)
             {
                 so.FindProperty("balance").objectReferenceValue =

@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-27 04:01:35Z" end-time="2026-11-27 04:01:41Z" duration="6,449583">
+  <test-suite type="TestSuite" id="1136" name="Squishy Bump" fullname="Squishy Bump" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-11-27 04:01:35Z" end-time="2026-11-27 04:01:41Z" duration="6.449583" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1129" name="SquishyBump.Tests.PlayMode.dll" fullname="D:/Work/Code/Assignment/Game/squishy-bump-sb50/Library/ScriptAssemblies/SquishyBump.Tests.PlayMode.dll" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-11-27 04:01:35Z" end-time="2026-11-27 04:01:41Z" duration="6.430341" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="37260" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1130" name="SquishyBump" fullname="SquishyBump" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-11-27 04:01:35Z" end-time="2026-11-27 04:01:41Z" duration="6.426613" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1131" name="Tests" fullname="SquishyBump.Tests" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-11-27 04:01:35Z" end-time="2026-11-27 04:01:41Z" duration="6.423111" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1132" name="PlayMode" fullname="SquishyBump.Tests.PlayMode" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-11-27 04:01:35Z" end-time="2026-11-27 04:01:41Z" duration="6.420006" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1125" name="TutorialPlayTests" fullname="SquishyBump.Tests.PlayMode.TutorialPlayTests" classname="SquishyBump.Tests.PlayMode.TutorialPlayTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-27 04:01:35Z" end-time="2026-11-27 04:01:41Z" duration="6.415190" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1126" name="FiveSteps_UseRealMotorAndToyWithoutStartingHazards" fullname="SquishyBump.Tests.PlayMode.TutorialPlayTests.FiveSteps_UseRealMotorAndToyWithoutStartingHazards" methodname="FiveSteps_UseRealMotorAndToyWithoutStartingHazards" classname="SquishyBump.Tests.PlayMode.TutorialPlayTests" runstate="Runnable" seed="805674560" result="Passed" start-time="2026-11-27 04:01:35Z" end-time="2026-11-27 04:01:37Z" duration="2.604027" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1128" name="SkipThroughLauncher_PersistsChoiceAndStartsSixFreshFruits" fullname="SquishyBump.Tests.PlayMode.TutorialPlayTests.SkipThroughLauncher_PersistsChoiceAndStartsSixFreshFruits" methodname="SkipThroughLauncher_PersistsChoiceAndStartsSixFreshFruits" classname="SquishyBump.Tests.PlayMode.TutorialPlayTests" runstate="Runnable" seed="1811292127" result="Passed" start-time="2026-11-27 04:01:37Z" end-time="2026-11-27 04:01:41Z" duration="3.283848" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1127" name="TutorialFlags_RoundTripAndOldV1SaveStillShowsTutorial" fullname="SquishyBump.Tests.PlayMode.TutorialPlayTests.TutorialFlags_RoundTripAndOldV1SaveStillShowsTutorial" methodname="TutorialFlags_RoundTripAndOldV1SaveStillShowsTutorial" classname="SquishyBump.Tests.PlayMode.TutorialPlayTests" runstate="Runnable" seed="1029009272" result="Passed" start-time="2026-11-27 04:01:41Z" end-time="2026-11-27 04:01:41Z" duration="0.504040" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

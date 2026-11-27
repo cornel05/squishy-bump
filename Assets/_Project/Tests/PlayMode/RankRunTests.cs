@@ -215,7 +215,11 @@ namespace SquishyBump.Tests.PlayMode
             var previous = app.Launcher.Match;
             var start = Time.realtimeSinceStartupAsDouble;
             var deadline = start + level.EndTriggerSeconds / RunTimeScale + DeadlineSlackSeconds;
-            if (startSession) app.Launcher.StartSinglePlayer(number);
+            if (startSession)
+            {
+                app.Saved.TutorialCompleted = true;
+                app.Launcher.StartSinglePlayer(number);
+            }
             else app.Launcher.LoadLevel(number);
             bool Started() => app.Launcher.Match != previous && app.Launcher.Match?.Started == true;
             while (!Started() && Time.realtimeSinceStartupAsDouble < deadline)

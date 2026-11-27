@@ -99,6 +99,11 @@ namespace SquishyBump.App
             singleRoster = round.Fruits.Select((fruit, i) => new LobbyPlayer(i == 0 ? 0UL : (ulong)(FirstBotId + i), fruit, false)).ToArray();
             for (var i = 0; i < round.Tiers.Count; i++) singleProfiles[(ushort)(FirstBotId + i + 1)] = setup.BotProfile(round.Tiers[i]);
         }
+        private TutorialProfile tutorialProfile;
+        private TutorialSession tutorial;
+        private bool tutorialOffered;
+        public TutorialSession Tutorial => tutorial;
+        public void ConfigureTutorial(TutorialProfile profile) => tutorialProfile = profile;
 
         public MatchDirector Director { get; private set; }
         public IReadOnlyList<Fighter> Fighters => fighters;
@@ -253,6 +258,16 @@ namespace SquishyBump.App
         public void StartMatch()
         {
             if (Started || !bootstrap.Session.CanSimulateGameplay) return;
+            if (tutorial != null) return;
+            if (!tutorialOffered && tutorialProfile != null && TutorialFlow.ShouldRun(pausesGame, level,
+                bootstrap.Saved.TutorialCompleted, bootstrap.Saved.TutorialSkipped))
+            {
+                tutorialOffered = true;
+                if (overlay != null) overlay.HideCard();
+                tutorial = new TutorialSession(bootstrap, tutorialProfile, balance, bounds, fighterPrefabs[singleRoster?[0].Fruit ?? 0],
+                    cameraRig, transform, () => localInput.Sample(), FinishTutorial);
+                return;
+            }
             bootstrap.LockLanRoster();
             resolver = gameObject.AddComponent<CollisionResolver>();
             resolver.Configure(balance);
@@ -323,6 +338,18 @@ namespace SquishyBump.App
         }
 
         private static float SpawnLift(GameObject prefab) => prefab.GetComponent<SphereCollider>().radius;
+
+        private void FinishTutorial(bool skipped)
+        {
+            if (skipped) bootstrap.Saved.TutorialSkipped = true;
+            else bootstrap.Saved.TutorialCompleted = true;
+            bootstrap.WriteSave();
+            tutorial.Dispose(); tutorial = null;
+            Cursor.lockState = CursorLockMode.Locked;
+            // B02/thẻ điều khiển sau bài tập, rồi mới countdown; đồng hồ hazard chưa từng chạy.
+            if (overlay != null) overlay.ShowCard("Training Ring", "WASD move | Space jump | Shift dash", introSeconds);
+            StartWhenReady = true;
+        }
 
         private void Update()
         {
@@ -731,6 +758,7 @@ namespace SquishyBump.App
 
         private void OnDestroy()
         {
+            tutorial?.Dispose();
             if (bootstrap != null)
             {
                 bootstrap.Session.StateChanged -= OnSessionState;

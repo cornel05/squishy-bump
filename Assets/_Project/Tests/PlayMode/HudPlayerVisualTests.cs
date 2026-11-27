@@ -50,6 +50,7 @@ namespace SquishyBump.Tests.PlayMode
                 app.Store = new LocalSave(Path.Combine(Application.temporaryCachePath, "sb17-visual-save"));
                 app.Settings.Rule = MatchRule.Survival;
                 AudioListener.volume = 0;
+                app.Saved.TutorialCompleted = true;
                 app.Launcher.StartSinglePlayer(1);
                 var deadline = Time.realtimeSinceStartup + 25;
                 while ((app.Launcher.Match == null || !app.Launcher.Match.Started ||

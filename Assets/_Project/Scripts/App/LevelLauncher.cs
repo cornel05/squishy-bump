@@ -418,6 +418,7 @@ namespace SquishyBump.App
                 Match.ConfigureSinglePlayer(singleRun.Current, setup);
                 singleResultHandled = singleLoadPending = false;
             }
+            Match.ConfigureTutorial(setup.Tutorial);
             Pause = hostObject.AddComponent<PauseMenu>();
             Pause.Init(bootstrap.Settings, singlePlayer);
             Match.AttachPause(Pause, singlePlayer, LeaveToMenu);

@@ -23,6 +23,7 @@ namespace SquishyBump.Tests.PlayMode
         public IEnumerator LobbyPick_StartsL1WithFiveOtherCharacters()
         {
             yield return Boot();
+            app.Saved.TutorialCompleted = true;
             app.Launcher.EnterSinglePlayerLobby();
             yield return WaitFor(() => app.Launcher.Lobby != null && app.Launcher.Lobby.Coordinator != null);
             var lobby = app.Launcher.Lobby;
@@ -46,6 +47,7 @@ namespace SquishyBump.Tests.PlayMode
             app.Settings.Rule = rule;
             Assert.That(app.Session.Host(SessionMode.SinglePlayer), Is.True);
             app.SetLobbySelection(new LobbyState(1, rule, 5, 0, true, new[] { new LobbyPlayer(0, 3, true) }));
+            app.Saved.TutorialCompleted = true;
             app.Launcher.StartSinglePlayer(1, 913);
             var log = new List<string>();
             Dictionary<ushort, byte> characters = null;
@@ -185,6 +187,7 @@ namespace SquishyBump.Tests.PlayMode
         public IEnumerator SingleSurvival_Loss_OffersRetryInsteadOfLeavingRun()
         {
             yield return Boot();
+            app.Saved.TutorialCompleted = true;
             app.Launcher.StartSinglePlayer();
             yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
             var match = app.Launcher.Match;

@@ -51,6 +51,8 @@ namespace SquishyBump.Tests.PlayMode
                 b => b.gameObject.scene.name == "DontDestroyOnLoad" && b.Launcher != null);
             // Never write the player's real save from a test.
             app.Store = new LocalSave(System.IO.Path.Combine(Application.temporaryCachePath, "sb-tests"));
+            // Bài này kiểm tra menu/pause; tutorial có bộ kiểm thử riêng.
+            app.Saved.TutorialCompleted = true;
             Assert.That(app.Launcher, Is.Not.Null, "Boot carries the match setup");
 
             SceneManager.LoadScene($"{Root}/Scenes/MainMenu.unity", LoadSceneMode.Single);

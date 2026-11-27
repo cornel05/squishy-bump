@@ -20,6 +20,9 @@ namespace SquishyBump.Core
         /// <summary>Highest Single Player Survival level won (0 = none, 5 = the whole Cup).</summary>
         public int BestSurvivalLevel;
         public int BestRankScore;
+        // Bổ sung tương thích save v1: save cũ nhận false, không xoá settings/records.
+        public bool TutorialCompleted;
+        public bool TutorialSkipped;
 
         /// <summary>Keeps the better record; true when it improved.</summary>
         public bool RecordSurvival(int levelWon)

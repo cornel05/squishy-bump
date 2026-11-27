@@ -89,6 +89,7 @@ namespace SquishyBump.UI.Menus
             card.gameObject.SetActive(true);
             cardUntil = Time.unscaledTime + seconds;
         }
+        public void HideCard() => card.gameObject.SetActive(false);
 
         public void ShowBanner(string text, float seconds)
         {

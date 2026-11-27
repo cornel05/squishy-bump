@@ -378,3 +378,21 @@ khi ẩn chờ respawn; khi thật sự bị loại thì theo fighter sống và
 Trang kết quả match/session giữ hạng host, podium/top3/điểm/mạng, các hạng còn lại
 và delay ít nhất 3 giây unscaled. HUD gameplay ẩn trong kết quả. Không đổi Core
 contract, packet hay simulation ownership.
+# SB-50 — tutorial L1 đang triển khai
+
+Core TutorialProfile giữ bố trí marker/đồ chơi; Match.TutorialFlow giữ bước và chỉ
+chấp nhận bằng chứng từ host. App.TutorialSession nối InputCommand → PlayerMotor
+và CollisionResolver giống gameplay, nhưng không tạo MatchDirector, score hay bot.
+UI.TutorialPanel chỉ hiển thị và gửi yêu cầu bỏ qua/đóng thẻ class. Không đọc thiết bị
+ngoài LocalPlayerInput. Toy dùng collider không scale và cùng thông số class để
+resolver xử lý xung lực; không thuộc roster sáu quả hoặc bảng điểm.
+
+MatchHost giữ StartMatch cho đến khi bài tập kết thúc, gỡ mọi đối tượng tập rồi tạo
+roster mới. Do đó vị trí, vận tốc, cooldown, stun và Wobble không truyền sang match.
+Clock host tiếp tục chạy nhưng thời gian Playing của Director/hazard chưa bắt đầu.
+Rơi trong lúc tập reset motor tại điểm tập, giữ bước và xoá trạng thái nhảy dở dang.
+
+SaveData bổ sung TutorialCompleted/TutorialSkipped mặc định false, không đổi cấu
+trúc cũ; bỏ qua lưu lựa chọn riêng và không coi là hoàn thành đủ năm bước. Editor
+ProjectScaffold tạo profile và gán MatchSetup qua SerializedObject. Source chưa
+được Unity import; cần tích hợp SB-18 để năm bot D1 thực sự hoạt động sau tutorial.

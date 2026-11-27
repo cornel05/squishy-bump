@@ -226,6 +226,7 @@ namespace SquishyBump.Tests.PlayMode
             yield return SceneManager.LoadSceneAsync("Assets/_Project/Scenes/Boot.unity");
             app = Object.FindObjectsByType<GameplayBootstrap>(FindObjectsSortMode.None).Single(b => b.Launcher != null);
             app.Store = null; app.Saved.Bindings = ""; app.Settings.Rule = rule;
+            app.Saved.TutorialCompleted = true;
             app.Launcher.StartSinglePlayer(1, 913);
             yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
         }

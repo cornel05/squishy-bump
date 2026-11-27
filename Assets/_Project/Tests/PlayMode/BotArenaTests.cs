@@ -52,6 +52,7 @@ namespace SquishyBump.Tests.PlayMode
             try
             {
                 Time.timeScale = 4;
+                app.Saved.TutorialCompleted = true;
                 app.Launcher.StartSinglePlayer(1);
                 yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
                 var match = app.Launcher.Match;
@@ -79,6 +80,7 @@ namespace SquishyBump.Tests.PlayMode
             app = Object.FindObjectsByType<GameplayBootstrap>(FindObjectsSortMode.None)
                 .First(b => b.Launcher != null);
             app.Store = new LocalSave(System.IO.Path.Combine(Application.temporaryCachePath, "sb18-tests"));
+            app.Saved.TutorialCompleted = true;
             app.Launcher.StartSinglePlayer(1);
             yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
             var match = app.Launcher.Match;

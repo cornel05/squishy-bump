@@ -119,3 +119,13 @@ code luồng/roster và helper Editor theo GDD 3.5/A.6; không thêm model/ảnh
 hay asset sinh ảnh. D39 giữ các slot/hạng cân khi đổi sang thú. Không dùng RNG
 để sinh asset; RNG gameplay do host giữ seed. Hash config trong asset-ledger.csv;
 nguồn/giấy phép tài nguyên UI/nhân vật tái dùng giữ nguyên.
+
+
+SB-50 tái dùng uGUI, font tích hợp, hình cầu/trụ Unity và URP Lit để dựng
+marker, bóng tập và lời nhắc trên L1. Codex hỗ trợ C# theo issue #41, GDD
+3.7 và 9.3. Cấu hình được tạo qua Editor API Unity 6000.3.28f1. Danh mục
+nguồn ghi tại `docs/asset-ledger.csv` với ID TUT-CFG-001, TUT-PROC-001 và TUT-UI-001.
+
+SB-50 dùng lại MapDefault.mat từ PR #133 để 19 prop Roundcube tải
+được material mặc định. Nguồn là glTFast 6.20.0 (Apache-2.0), lưu qua
+Unity Editor API. Chi tiết trong dòng MAT-L1-DEFAULT của danh mục asset.
