@@ -671,3 +671,51 @@ Xác minh nguồn cuối SB-32 ngày 24/11/2026: release Windows **Succeeded: 0 
 - Rebuild `Assets/_Project/Scenes/Levels/L1.unity` qua `LevelArtSceneBuilder.BuildL1` (`BuildL1 exit: 0`).
 - Bổ sung `RingDropTests.TargetWaterY_RisesWithEachDroppedBandAndSubmergesRingAtEnd` (EditMode) và kiểm tra `Water` bắt đầu tại `-0.25m`, dâng sau khi `Band 0` rụng và vượt `0.2m` nhấn chìm ring khi 4 vòng rụng trong `LevelArtTests` (PlayMode).
 - Kết quả: `tools/verify.ps1 -PlayMode` → **VERIFY: PASS** (**377** EditMode, **89** PlayMode passed, **2** skipped `Skipped:Ignored`, **0** cảnh báo `SquishyBump.*`). Chưa build Windows `.exe` hoặc mở game kiểm tra bằng mắt.
+# SB-50 — bằng chứng bổ sung 21/11/2026, chưa nghiệm thu tutorial
+
+Nhánh `feat/SB-50-l1-tutorial`, base `c293fe1`: source compile bằng Roslyn đi kèm
+Unity 6000.3.28f1; 13 ca assertion `TutorialFlowTests` chạy ngoài Unity đạt. Phạm vi:
+thứ tự năm bước, nhảy phải rời sàn rồi đáp xuống, rơi/reset giữ bước, bỏ qua ở từng
+bước đúng một lần, quyền host và chỉ mở ở Single L1 chưa hoàn thành/bỏ qua.
+
+Chưa chạy `TutorialPlayTests`: motor thật qua năm bước và đồ chơi, reset sau rơi,
+hazard không chạy, skip qua LevelLauncher tạo sáu quả mới với cooldown/Wobble sạch,
+và JSON save tương thích v1. Chưa kiểm tra hiển thị badge, dấu sàn, trail, chuột/UI
+hoặc người mới hoàn thành ≤90 giây. Không có Windows build từ nhánh này.
+
+`ProjectScaffold.Run` dừng exit198 (`No valid Unity Editor license found`, log
+`TestResults/SB50Scaffold.log`). TutorialProfile.asset và gán MatchSetup chưa được
+Editor sinh; thiếu sáu meta mới. Không ghi YAML/GUID tay. Sau khi license hoạt động
+phải chạy scaffold, verify -PlayMode, check_repo và build. SB-18 chưa tích hợp: main
+hiện vẫn có các slot bot idle; chưa xác nhận tiêu chí **bot D1 vào sau tutorial**.
+Lượt `tools/verify.ps1 -PlayMode` chọn live Editor do lockfile còn sau lần startup
+thất bại, rồi dừng vì không tìm thấy CLI `unity`; không có XML NUnit. Không sửa cache/lock
+để vượt gate và không dùng kết quả compile Roslyn thay nghiệm thu Unity.
+
+MenuFlowTests bỏ qua tutorial trong save test vì kiểm tra menu/pause có phạm vi riêng;
+TutorialPlayTests giữ đầy đủ luồng tập và skip. Các ca này đều chưa được Unity chạy.
+
+
+### SB-50 — kiểm tra tutorial L1 ngày 27/11/2026
+
+Worktree `feat/SB-50-l1-tutorial` trên main `020bfb0`. EditMode sau tích hợp
+đạt 390/390. Sau khi tạo TutorialProfile và nối MatchSetup bằng Editor API,
+PlayMode lọc `TutorialPlayTests` đạt 3/3: qua năm bước bằng motor thật,
+cờ lưu tương thích save v1, và bỏ qua để bắt đầu trận với sáu fighter mới.
+Bằng chứng local trong `TestResults/SB50-EditMode.xml` và
+`TestResults/SB50-PlayMode.xml`. Đang xác minh toàn repo và build Windows.
+
+
+Lần verifier đầu trên nguồn có asset tutorial: 390 EditMode đạt; PlayMode
+79 đạt, 13 lỗi, 2 skip. Mười hai ca L1 chờ trận trong khi fixture đang ở
+tutorial; ca LAN host spectate chờ avatar tới quầy. Các fixture kiểm trận
+giờ khai báo save đã học xong, còn TutorialPlayTests vẫn dùng save mới.
+Dùng lại hai sửa hồi quy chung từ commit 7b101d6 của PR #133 (material
+mặc định của L1 và race thay avatar lobby). Lần chạy lại đang thực hiện.
+
+
+Lần PlayMode toàn bộ sau sửa, 27/11/2026: **92 đạt, 0 lỗi, 2 skip**.
+Hai ca skip cần Windows Player có renderer. Chạy Unity 6000.3.28f1 batch
+PlayMode bằng helper của repo do lock Editor còn sót ở đầu lượt; báo cáo
+[bộ PlayMode](testing/sb50-evidence/playmode.xml) và [ba ca tutorial](testing/sb50-evidence/tutorial-playmode.xml)
+giữ kết quả từng ca, lược output dài của Unity. XML nguyên gốc ở TestResults.

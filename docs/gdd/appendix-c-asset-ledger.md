@@ -199,3 +199,14 @@ code luồng/roster và helper Editor theo GDD 3.5/A.6; không thêm model/ảnh
 hay asset sinh ảnh. D39 giữ các slot/hạng cân khi đổi sang thú. Không dùng RNG
 để sinh asset; RNG gameplay do host giữ seed. Hash config trong asset-ledger.csv;
 nguồn/giấy phép tài nguyên UI/nhân vật tái dùng giữ nguyên.
+## Tutorial procedural đang triển khai — SB-50, 21/11/2026
+
+| Asset ID | Nguồn, công cụ và vị trí | Sử dụng/trạng thái |
+|---|---|---|
+| TUT-PROC-001 | Nhóm 18, code có hỗ trợ AI Codex; Unity primitive sphere/cylinder và material URP runtime trong `App/TutorialSession.cs` | Marker và bóng tập L1; chưa nghiệm thu build/hiển thị |
+| TUT-UI-001 | Nhóm 18, code có hỗ trợ AI Codex; uGUI/LegacyRuntime.ttf hiện hữu trong `UI/TutorialPanel.cs` | Lời nhắc và badge hình/ký tự, không dùng font/ảnh tải ngoài; chưa kiểm tra glyph trong build |
+
+Yêu cầu tạo: triển khai issue SB-50 theo GDD 3.7/9.3; không có prompt imagegen hoặc
+seed hình ảnh. Hình học không ngẫu nhiên. Không bổ sung nguồn/giấy phép bên ngoài;
+shader, primitive và font builtin theo thành phần Unity hiện hữu. Cập nhật ledger
+tổng hợp SB-61 sau tích hợp và xác minh build; chưa gắn trạng thái approved.
