@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="6" result="Passed" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-25 16:11:46Z" end-time="2026-11-25 16:12:09Z" duration="22,719027">
+  <test-suite type="TestSuite" id="1143" name="Squishy Bump" fullname="Squishy Bump" runstate="Runnable" testcasecount="101" result="Passed" start-time="2026-11-25 16:11:46Z" end-time="2026-11-25 16:12:09Z" duration="22.719027" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1136" name="SquishyBump.Tests.PlayMode.dll" fullname="D:/Work/Code/Assignment/Game/squishy-bump-sb47/Library/ScriptAssemblies/SquishyBump.Tests.PlayMode.dll" runstate="Runnable" testcasecount="101" result="Passed" start-time="2026-11-25 16:11:46Z" end-time="2026-11-25 16:12:09Z" duration="22.705897" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="37732" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1137" name="SquishyBump" fullname="SquishyBump" runstate="Runnable" testcasecount="101" result="Passed" start-time="2026-11-25 16:11:46Z" end-time="2026-11-25 16:12:09Z" duration="22.703504" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1138" name="Tests" fullname="SquishyBump.Tests" runstate="Runnable" testcasecount="101" result="Passed" start-time="2026-11-25 16:11:46Z" end-time="2026-11-25 16:12:09Z" duration="22.701614" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1139" name="PlayMode" fullname="SquishyBump.Tests.PlayMode" runstate="Runnable" testcasecount="101" result="Passed" start-time="2026-11-25 16:11:46Z" end-time="2026-11-25 16:12:09Z" duration="22.699735" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1052" name="LevelArtTests" fullname="SquishyBump.Tests.PlayMode.LevelArtTests" classname="SquishyBump.Tests.PlayMode.LevelArtTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-25 16:11:46Z" end-time="2026-11-25 16:11:59Z" duration="12.608369" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="ParameterizedMethod" id="1058" name="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals" fullname="SquishyBump.Tests.PlayMode.LevelArtTests.Level_WithCreativeArt_SpawnsFightersAndBindsVisuals" classname="SquishyBump.Tests.PlayMode.LevelArtTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-25 16:11:46Z" end-time="2026-11-25 16:11:59Z" duration="12.566760" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <test-case id="1053" name="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(1)" fullname="SquishyBump.Tests.PlayMode.LevelArtTests.Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(1)" methodname="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals" classname="SquishyBump.Tests.PlayMode.LevelArtTests" runstate="Runnable" seed="1911378750" result="Passed" start-time="2026-11-25 16:11:46Z" end-time="2026-11-25 16:11:50Z" duration="3.989735" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1054" name="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(2)" fullname="SquishyBump.Tests.PlayMode.LevelArtTests.Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(2)" methodname="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals" classname="SquishyBump.Tests.PlayMode.LevelArtTests" runstate="Runnable" seed="1022237535" result="Passed" start-time="2026-11-25 16:11:50Z" end-time="2026-11-25 16:11:53Z" duration="2.801590" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1055" name="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(3)" fullname="SquishyBump.Tests.PlayMode.LevelArtTests.Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(3)" methodname="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals" classname="SquishyBump.Tests.PlayMode.LevelArtTests" runstate="Runnable" seed="788724187" result="Passed" start-time="2026-11-25 16:11:53Z" end-time="2026-11-25 16:11:56Z" duration="2.776793" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1056" name="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(4)" fullname="SquishyBump.Tests.PlayMode.LevelArtTests.Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(4)" methodname="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals" classname="SquishyBump.Tests.PlayMode.LevelArtTests" runstate="Runnable" seed="1551473609" result="Passed" start-time="2026-11-25 16:11:56Z" end-time="2026-11-25 16:11:57Z" duration="1.510560" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1057" name="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(5)" fullname="SquishyBump.Tests.PlayMode.LevelArtTests.Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(5)" methodname="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals" classname="SquishyBump.Tests.PlayMode.LevelArtTests" runstate="Runnable" seed="53206871" result="Passed" start-time="2026-11-25 16:11:57Z" end-time="2026-11-25 16:11:59Z" duration="1.468219" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+            </test-suite>
+            <test-suite type="TestFixture" id="1059" name="LobbyPlayTests" fullname="SquishyBump.Tests.PlayMode.LobbyPlayTests" classname="SquishyBump.Tests.PlayMode.LobbyPlayTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-25 16:11:59Z" end-time="2026-11-25 16:12:09Z" duration="10.085195" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1062" name="LanSurvival_HostKnockedOut_SpectatesWhileClientsPlayFinal" fullname="SquishyBump.Tests.PlayMode.LobbyPlayTests.LanSurvival_HostKnockedOut_SpectatesWhileClientsPlayFinal" methodname="LanSurvival_HostKnockedOut_SpectatesWhileClientsPlayFinal" classname="SquishyBump.Tests.PlayMode.LobbyPlayTests" runstate="Runnable" seed="1243227855" result="Passed" start-time="2026-11-25 16:11:59Z" end-time="2026-11-25 16:12:09Z" duration="10.062655" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/THIS PC/AppData/LocalLow/BKU Group 18/Squishy Bump\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

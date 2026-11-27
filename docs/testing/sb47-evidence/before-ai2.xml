@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-25 15:02:25Z" end-time="2026-11-25 15:03:00Z" duration="34,7351272">
+  <test-suite type="TestSuite" id="1140" name="Squishy Bump" fullname="Squishy Bump" runstate="Runnable" testcasecount="98" result="Failed" site="Child" start-time="2026-11-25 15:02:25Z" end-time="2026-11-25 15:03:00Z" duration="34.735127" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1133" name="SquishyBump.Tests.PlayMode.dll" fullname="D:/Work/Code/Assignment/Game/squishy-bump-sb47/Library/ScriptAssemblies/SquishyBump.Tests.PlayMode.dll" runstate="Runnable" testcasecount="98" result="Failed" site="Child" start-time="2026-11-25 15:02:25Z" end-time="2026-11-25 15:03:00Z" duration="34.722931" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="13792" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1134" name="SquishyBump" fullname="SquishyBump" runstate="Runnable" testcasecount="98" result="Failed" site="Child" start-time="2026-11-25 15:02:25Z" end-time="2026-11-25 15:03:00Z" duration="34.721015" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1135" name="Tests" fullname="SquishyBump.Tests" runstate="Runnable" testcasecount="98" result="Failed" site="Child" start-time="2026-11-25 15:02:25Z" end-time="2026-11-25 15:03:00Z" duration="34.719774" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1136" name="PlayMode" fullname="SquishyBump.Tests.PlayMode" runstate="Runnable" testcasecount="98" result="Failed" site="Child" start-time="2026-11-25 15:02:25Z" end-time="2026-11-25 15:03:00Z" duration="34.718581" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1001" name="BotAcceptanceTests" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-11-25 15:02:25Z" end-time="2026-11-25 15:03:00Z" duration="34.712614" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1007" name="AI2_RealFrost60Seconds_FiveSeedsPerTier_RecordsEveryWarnedTileEncounter" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI2_RealFrost60Seconds_FiveSeedsPerTier_RecordsEveryWarnedTileEncounter" methodname="AI2_RealFrost60Seconds_FiveSeedsPerTier_RecordsEveryWarnedTileEncounter" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" seed="1225064019" result="Failed" start-time="2026-11-25 15:02:25Z" end-time="2026-11-25 15:03:00Z" duration="34.694730" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  D5: escaped 12/15, requires >=90% with nonzero observations
+  Expected: <empty>
+  But was:  < "D5: escaped 12/15, requires >=90% with nonzero observations" >
+]]></message>
+                  <stack-trace><![CDATA[at SquishyBump.Tests.PlayMode.BotAcceptanceTests+<AI2_RealFrost60Seconds_FiveSeedsPerTier_RecordsEveryWarnedTileEncounter>d__12.MoveNext () [0x00bfc] in D:\Work\Code\Assignment\Game\squishy-bump-sb47\Assets\_Project\Tests\PlayMode\BotAcceptanceTests.cs:248
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[AI2,D3,seed=18,fruit=Bear,escaped=3,resolved=3,unresolved=0,fallTick=0
+AI2,D3,seed=19,fruit=Cat,escaped=4,resolved=4,unresolved=0,fallTick=0
+AI2,D3,seed=20,fruit=Frog,escaped=3,resolved=3,unresolved=0,fallTick=0
+AI2,D3,seed=21,fruit=Bear,escaped=2,resolved=2,unresolved=0,fallTick=0
+AI2,D3,seed=22,fruit=Cat,escaped=4,resolved=4,unresolved=0,fallTick=0
+AI2,TOTAL,D3,escaped=16,resolved=16
+AI2,D4,seed=18,fruit=Bear,escaped=1,resolved=1,unresolved=0,fallTick=0
+AI2,D4,seed=19,fruit=Cat,escaped=4,resolved=4,unresolved=0,fallTick=0
+AI2,D4,seed=20,fruit=Frog,escaped=4,resolved=4,unresolved=0,fallTick=0
+AI2MISSED,D4,seed=21,t=1890,tile=28,tileCenter=(-2.000, 0.000, -3.464),p=(-1.424, 0.600, -2.687),v=(1.926, 0.000, -1.726),state=Evade,dest=(0.500, 0.000, -3.500),move=(-0.006, 0.764)
+AI2,D4,seed=21,fruit=Bear,escaped=2,resolved=3,unresolved=0,fallTick=0
+AI2,D4,seed=22,fruit=Cat,escaped=5,resolved=5,unresolved=0,fallTick=0
+AI2,TOTAL,D4,escaped=16,resolved=17
+AI2TRACE,D5,seed=18,t=3390,p=(5.557, 0.600, -0.436),v=(0.000, 0.000, 0.000),state=Evade,D=0,333,dest=(5.500, 0.000, -0.500),move=(0.000, 0.000),insideWarnings=0
+AI2TRACE,D5,seed=18,t=3405,p=(5.557, 0.600, -0.436),v=(0.000, 0.000, 0.000),state=Evade,D=0,333,dest=(5.500, 0.000, -0.500),move=(0.000, 0.000),insideWarnings=0
+AI2TRACE,D5,seed=18,t=3420,p=(5.557, 0.600, -0.436),v=(0.000, 0.000, 0.000),state=Evade,D=0,333,dest=(5.500, 0.000, -0.500),move=(0.000, 0.000),insideWarnings=0
+AI2TRACE,D5,seed=18,t=3435,p=(5.557, 0.600, -0.436),v=(0.000, 0.000, 0.000),state=Evade,D=0,333,dest=(5.500, 0.000, -0.500),move=(0.000, 0.000),insideWarnings=1
+AI2TRACE,D5,seed=18,t=3450,p=(5.557, 0.600, -0.436),v=(0.000, 0.000, 0.000),state=Evade,D=0,483,dest=(5.500, 0.000, -0.500),move=(0.000, 0.000),insideWarnings=1
+AI2TRACE,D5,seed=18,t=3465,p=(5.556, 0.600, -0.416),v=(-0.012, 0.000, 0.400),state=Evade,D=0,583,dest=(4.500, 0.000, 2.500),move=(0.000, 0.953),insideWarnings=1
+AI2TRACE,D5,seed=18,t=3480,p=(5.428, 0.600, -0.232),v=(-1.010, 0.000, 0.992),state=Evade,D=0,733,dest=(4.500, 0.000, 2.500),move=(-0.034, 0.673),insideWarnings=1
+AI2TRACE,D5,seed=18,t=3495,p=(5.035, 0.601, 0.091),v=(-2.023, 0.042, 1.574),state=Evade,D=0,833,dest=(4.500, 0.000, 2.500),move=(-0.005, 0.565),insideWarnings=1
+AI2TRACE,D5,seed=18,t=3510,p=(4.670, 0.600, 0.489),v=(-0.902, 0.000, 1.635),state=Evade,D=0,983,dest=(4.500, 0.000, 2.500),move=(0.385, 0.787),insideWarnings=1
+AI2MISSED,D5,seed=18,t=3510,tile=47,tileCenter=(4.000, 0.000, 0.000),p=(4.670, 0.600, 0.489),v=(-0.822, 0.000, 1.635),state=Evade,dest=(4.500, 0.000, 2.500),move=(0.385, 0.787)
+AI2,D5,seed=18,fruit=Bear,escaped=2,resolved=3,unresolved=0,fallTick=0
+AI2,D5,seed=19,fruit=Cat,escaped=2,resolved=2,unresolved=0,fallTick=0
+AI2TRACE,D5,seed=20,t=2850,p=(-1.675, 0.450, -0.758),v=(0.448, 0.000, -2.113),state=Evade,D=0,600,dest=(-3.500, 0.000, -3.500),move=(-0.007, 0.279),insideWarnings=0
+AI2TRACE,D5,seed=20,t=2865,p=(-1.612, 0.450, -1.165),v=(-0.294, 0.000, -1.375),state=Evade,D=0,600,dest=(-3.500, 0.000, -3.500),move=(0.069, 0.261),insideWarnings=0
+AI2TRACE,D5,seed=20,t=2880,p=(-1.884, 0.450, -1.602),v=(-1.561, 0.000, -2.274),state=Evade,D=0,600,dest=(-3.500, 0.000, -3.500),move=(0.000, 0.358),insideWarnings=0
+AI2TRACE,D5,seed=20,t=2895,p=(-2.192, 0.450, -2.050),v=(-0.984, 0.000, -1.384),state=Evade,D=0,578,dest=(-3.500, 0.000, -3.500),move=(-0.004, 0.218),insideWarnings=0
+AI2TRACE,D5,seed=20,t=2910,p=(-2.558, 0.450, -2.467),v=(-1.988, 0.000, -2.181),state=Evade,D=0,578,dest=(-3.500, 0.000, -3.500),move=(0.000, 0.423),insideWarnings=0
+AI2TRACE,D5,seed=20,t=2925,p=(-3.102, 0.450, -3.071),v=(-1.877, -0.001, -2.149),state=Evade,D=0,583,dest=(-2.500, 0.000, -2.500),move=(-0.035, 0.437),insideWarnings=1
+AI2TRACE,D5,seed=20,t=2940,p=(-3.410, 0.450, -3.430),v=(-0.672, 0.000, -0.812),state=Evade,D=0,733,dest=(-2.500, 0.000, -2.500),move=(-0.012, 0.524),insideWarnings=1
+AI2TRACE,D5,seed=20,t=2955,p=(-3.416, 0.450, -3.456),v=(0.544, 0.000, 0.516),state=Evade,D=0,833,dest=(-2.500, 0.000, -2.500),move=(-0.005, 0.527),insideWarnings=1
+AI2TRACE,D5,seed=20,t=2970,p=(-3.118, 0.450, -3.150),v=(1.761, 0.000, 1.842),state=Evade,D=0,983,dest=(-2.500, 0.000, -2.500),move=(-0.001, 0.450),insideWarnings=1
+AI2MISSED,D5,seed=20,t=2970,tile=19,tileCenter=(-4.000, 0.000, -3.464),p=(-3.118, 0.450, -3.150),v=(1.842, 0.000, 1.930),state=Evade,dest=(-2.500, 0.000, -2.500),move=(-0.001, 0.450)
+AI2,D5,seed=20,fruit=Frog,escaped=3,resolved=4,unresolved=0,fallTick=0
+AI2,D5,seed=21,fruit=Bear,escaped=1,resolved=1,unresolved=0,fallTick=0
+AI2TRACE,D5,seed=22,t=2670,p=(-2.695, 0.499, -0.707),v=(1.916, -0.054, 0.589),state=Evade,D=0,600,dest=(-1.500, 0.000, -0.500),move=(0.042, 0.453),insideWarnings=0
+AI2TRACE,D5,seed=22,t=2685,p=(-2.160, 0.500, -0.609),v=(1.840, 0.000, 0.304),state=Evade,D=0,600,dest=(-1.500, 0.000, -0.500),move=(0.000, 0.301),insideWarnings=0
+AI2TRACE,D5,seed=22,t=2700,p=(-1.809, 0.500, -0.551),v=(1.056, 0.000, 0.177),state=Evade,D=0,578,dest=(-1.500, 0.000, -0.500),move=(0.000, 0.171),insideWarnings=0
+AI2TRACE,D5,seed=22,t=2715,p=(-1.624, 0.500, -0.521),v=(0.504, 0.000, 0.079),state=Evade,D=0,578,dest=(-1.500, 0.000, -0.500),move=(-0.001, 0.080),insideWarnings=1
+AI2TRACE,D5,seed=22,t=2730,p=(-1.584, 0.500, -0.514),v=(0.000, 0.000, 0.000),state=Evade,D=0,578,dest=(-1.500, 0.000, -0.500),move=(0.000, 0.000),insideWarnings=1
+AI2TRACE,D5,seed=22,t=2745,p=(-1.566, 0.500, -0.497),v=(0.360, 0.000, 0.347),state=Evade,D=0,583,dest=(1.500, 0.000, 1.500),move=(0.000, 0.402),insideWarnings=1
+AI2TRACE,D5,seed=22,t=2760,p=(-1.333, 0.500, -0.271),v=(1.438, 0.000, 1.390),state=Evade,D=0,733,dest=(1.500, 0.000, 1.500),move=(0.000, 0.922),insideWarnings=1
+AI2TRACE,D5,seed=22,t=2775,p=(-0.872, 0.500, 0.213),v=(1.744, 0.000, 2.416),state=Evade,D=0,833,dest=(1.500, 0.000, 1.500),move=(-0.167, 0.668),insideWarnings=1
+AI2TRACE,D5,seed=22,t=2790,p=(-0.322, 0.500, 0.805),v=(2.841, 0.000, 2.363),state=Evade,D=0,983,dest=(1.500, 0.000, 1.500),move=(-0.005, 0.599),insideWarnings=1
+AI2MISSED,D5,seed=22,t=2790,tile=30,tileCenter=(0.000, 0.000, 0.000),p=(-0.322, 0.500, 0.805),v=(2.743, 0.000, 2.346),state=Evade,dest=(1.500, 0.000, 1.500),move=(-0.005, 0.599)
+AI2,D5,seed=22,fruit=Cat,escaped=4,resolved=5,unresolved=0,fallTick=0
+AI2,TOTAL,D5,escaped=12,resolved=15
+Saving results to: C:/Users/THIS PC/AppData/LocalLow/BKU Group 18/Squishy Bump\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

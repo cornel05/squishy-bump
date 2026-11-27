@@ -1,0 +1,234 @@
+{
+  "date": "2026-11-25",
+  "base": "020bfb0de74e42295bf55dfbef3eb39c6292aa50",
+  "unity": "6000.3.28f1",
+  "runs": {
+    "EditMode": {
+      "passed": "421",
+      "failed": "0",
+      "skipped": "0",
+      "start-time": "2026-11-25 16:12:43Z",
+      "end-time": "2026-11-25 16:12:46Z",
+      "raw_sha256": "14570eb027a2d563b45b6060b13debfc3a43e29acae30ead811a5db59cf3e02f",
+      "skips": [],
+      "csharp_issues": []
+    },
+    "PlayMode": {
+      "passed": "99",
+      "failed": "0",
+      "skipped": "2",
+      "start-time": "2026-11-25 16:13:09Z",
+      "end-time": "2026-11-25 16:26:36Z",
+      "raw_sha256": "5e48f747ed9fcd35c4254f2a17390977f46f61c15675f37787e2b2058c79e4db",
+      "skips": [
+        {
+          "name": "SquishyBump.Tests.PlayMode.HudPlayerVisualTests.WindowsPlayer_HudAndTrackedTags_AspectSweep",
+          "reason": "Only supported on WindowsPlayer"
+        },
+        {
+          "name": "SquishyBump.Tests.PlayMode.ResultsSpectatorTests.WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions",
+          "reason": "Ca hình ảnh cần Windows Player có renderer thật."
+        }
+      ],
+      "csharp_issues": []
+    }
+  },
+  "acceptance_cases": [
+    {
+      "name": "SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI1_OneBotRealRing120Seconds_FiveSeedsPerTier",
+      "result": "Passed",
+      "duration": "121.385614",
+      "totals": [
+        "AI1,D1,seed=18,fruit=Bear,firstFallSeconds=none,decisions=478",
+        "AI1,D1,seed=19,fruit=Cat,firstFallSeconds=none,decisions=478",
+        "AI1,D1,seed=20,fruit=Frog,firstFallSeconds=none,decisions=478",
+        "AI1,D1,seed=21,fruit=Bear,firstFallSeconds=none,decisions=478",
+        "AI1,D1,seed=22,fruit=Cat,firstFallSeconds=none,decisions=478",
+        "AI1,D2,seed=18,fruit=Bear,firstFallSeconds=none,decisions=598",
+        "AI1,D2,seed=19,fruit=Cat,firstFallSeconds=none,decisions=598",
+        "AI1,D2,seed=20,fruit=Frog,firstFallSeconds=none,decisions=598",
+        "AI1,D2,seed=21,fruit=Bear,firstFallSeconds=none,decisions=598",
+        "AI1,D2,seed=22,fruit=Cat,firstFallSeconds=none,decisions=598",
+        "AI1,D3,seed=18,fruit=Bear,firstFallSeconds=none,decisions=719",
+        "AI1,D3,seed=19,fruit=Cat,firstFallSeconds=none,decisions=719",
+        "AI1,D3,seed=20,fruit=Frog,firstFallSeconds=none,decisions=719",
+        "AI1,D3,seed=21,fruit=Bear,firstFallSeconds=none,decisions=719",
+        "AI1,D3,seed=22,fruit=Cat,firstFallSeconds=none,decisions=719",
+        "AI1,D4,seed=18,fruit=Bear,firstFallSeconds=none,decisions=959",
+        "AI1,D4,seed=19,fruit=Cat,firstFallSeconds=none,decisions=959",
+        "AI1,D4,seed=20,fruit=Frog,firstFallSeconds=none,decisions=959",
+        "AI1,D4,seed=21,fruit=Bear,firstFallSeconds=none,decisions=959",
+        "AI1,D4,seed=22,fruit=Cat,firstFallSeconds=none,decisions=959",
+        "AI1,D5,seed=18,fruit=Bear,firstFallSeconds=none,decisions=1199",
+        "AI1,D5,seed=19,fruit=Cat,firstFallSeconds=none,decisions=1199",
+        "AI1,D5,seed=20,fruit=Frog,firstFallSeconds=none,decisions=1199",
+        "AI1,D5,seed=21,fruit=Bear,firstFallSeconds=none,decisions=1199",
+        "AI1,D5,seed=22,fruit=Cat,firstFallSeconds=none,decisions=1199"
+      ]
+    },
+    {
+      "name": "SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI2_RealFrost60Seconds_FiveSeedsPerTier_RecordsEveryWarnedTileEncounter",
+      "result": "Passed",
+      "duration": "34.567809",
+      "totals": [
+        "AI2,TOTAL,D3,escaped=16,resolved=16",
+        "AI2,TOTAL,D4,escaped=16,resolved=17",
+        "AI2,TOTAL,D5,escaped=15,resolved=15"
+      ]
+    },
+    {
+      "name": "SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI3_D5AgainstD1_TwentyPredeclaredDuels",
+      "result": "Passed",
+      "duration": "34.037660",
+      "totals": [
+        "DUEL,TOTAL,D5-D1,higherWins=18,lowerWins=2,draws=0,matches=20"
+      ]
+    },
+    {
+      "name": "SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI4_D2AgainstD1_TwentyPredeclaredDuels",
+      "result": "Passed",
+      "duration": "28.575808",
+      "totals": [
+        "DUEL,TOTAL,D2-D1,higherWins=14,lowerWins=6,draws=0,matches=20"
+      ]
+    },
+    {
+      "name": "SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI4_D3AgainstD2_TwentyPredeclaredDuels",
+      "result": "Passed",
+      "duration": "27.170534",
+      "totals": [
+        "DUEL,TOTAL,D3-D2,higherWins=14,lowerWins=5,draws=1,matches=20"
+      ]
+    },
+    {
+      "name": "SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI4_D4AgainstD3_TwentyPredeclaredDuels",
+      "result": "Passed",
+      "duration": "25.972351",
+      "totals": [
+        "DUEL,TOTAL,D4-D3,higherWins=11,lowerWins=9,draws=0,matches=20"
+      ]
+    },
+    {
+      "name": "SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI4_D5AgainstD4_TwentyPredeclaredDuels",
+      "result": "Passed",
+      "duration": "27.474325",
+      "totals": [
+        "DUEL,TOTAL,D5-D4,higherWins=13,lowerWins=7,draws=0,matches=20"
+      ]
+    },
+    {
+      "name": "SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI5_FiveD5ChaosCore_ProfilesAllLivingBotLogic",
+      "result": "Passed",
+      "duration": "10.529599",
+      "totals": [
+        "AI5,seed=18,EditorNull,AMD Ryzen 7 6800H with Radeon Graphics ,cores=16,allFiveAliveSamples=969,meanMs=0.7026,p95Ms=2.5733,decisions=351/474/512/170/350",
+        "AI5,seed=19,EditorNull,AMD Ryzen 7 6800H with Radeon Graphics ,cores=16,allFiveAliveSamples=732,meanMs=0.5729,p95Ms=2.0786,decisions=471/321/511/131/505",
+        "AI5,seed=20,EditorNull,AMD Ryzen 7 6800H with Radeon Graphics ,cores=16,allFiveAliveSamples=614,meanMs=0.5680,p95Ms=2.0145,decisions=187/197/187/197/111",
+        "AI5,TOTAL,seeds=18/19/20,allFiveAliveSamples=2315,meanMs=0.6259"
+      ]
+    },
+    {
+      "name": "SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI6_D4MovingGround120Seconds_RecordsEveryObstacleEncounter",
+      "result": "Passed",
+      "duration": "4.027358",
+      "totals": [
+        "AI6,D4,PusherBlocks,avoided=25,resolved=28,unresolved=0,stuckRecoveries=0/1/0/0/0,alive=0",
+        "AI6,D4,MovingGround,avoided=10,resolved=14,unresolved=0,stuckRecoveries=0/1/0/0/0,alive=0"
+      ]
+    },
+    {
+      "name": "SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI6_D5MovingGround120Seconds_RecordsEveryObstacleEncounter",
+      "result": "Passed",
+      "duration": "5.443659",
+      "totals": [
+        "AI6,D5,PusherBlocks,avoided=46,resolved=49,unresolved=0,stuckRecoveries=0/0/4/0/0,alive=1",
+        "AI6,D5,MovingGround,avoided=9,resolved=12,unresolved=0,stuckRecoveries=0/0/4/0/0,alive=1"
+      ]
+    }
+  ],
+  "release_build": [
+    "[BuildScript] Succeeded: 0 errors, 3845 MB, 00:06:40.0110304"
+  ],
+  "windows_startup": {
+    "date": "2026-11-25",
+    "mode": "Windows release headless managed startup only; no level/rule CLI arguments",
+    "duration_seconds": 50,
+    "alive_after_observation": true,
+    "managed_assemblies_loaded": true,
+    "startup_exception_matches": 0,
+    "save_unchanged": true,
+    "exe_sha256": "fbd073ca59c4918edbc6704f5393cf59021173af11714c00db4212c50117492b",
+    "log_bytes": 1642,
+    "ended_by": "Stopped only this smoke process after observation"
+  },
+  "guid_scan": {
+    "tool": "check_unity_project",
+    "schema": 1,
+    "root": "D:/Work/Code/Assignment/Game/squishy-bump-sb47",
+    "files_checked": 783,
+    "error_count": 4,
+    "warning_count": 0,
+    "errors": [
+      {
+        "code": "missing-script",
+        "file": "Assets/_Project/Settings/URP/DefaultVolumeProfile.asset",
+        "line": 78,
+        "message": "script reference points to GUID 60f3b30c03e6ba64d9a27dc9dba8f28d, which no .meta in the project has",
+        "fix": "if the .cs file was moved or renamed, put its original .meta (guid: 60f3b30c03e6ba64d9a27dc9dba8f28d) back next to it; otherwise restore the script, or remove the missing component in the Unity Editor"
+      },
+      {
+        "code": "missing-script",
+        "file": "Assets/_Project/Settings/URP/DefaultVolumeProfile.asset",
+        "line": 119,
+        "message": "script reference points to GUID 0fd9ee276a1023e439cf7a9c393195fa, which no .meta in the project has",
+        "fix": "if the .cs file was moved or renamed, put its original .meta (guid: 0fd9ee276a1023e439cf7a9c393195fa) back next to it; otherwise restore the script, or remove the missing component in the Unity Editor"
+      },
+      {
+        "code": "missing-script",
+        "file": "Assets/_Project/Settings/URP/DefaultVolumeProfile.asset",
+        "line": 264,
+        "message": "script reference points to GUID 5a00a63fdd6bd2a45ab1f2d869305ffd, which no .meta in the project has",
+        "fix": "if the .cs file was moved or renamed, put its original .meta (guid: 5a00a63fdd6bd2a45ab1f2d869305ffd) back next to it; otherwise restore the script, or remove the missing component in the Unity Editor"
+      },
+      {
+        "code": "missing-script",
+        "file": "Assets/_Project/Settings/URP/DefaultVolumeProfile.asset",
+        "line": 836,
+        "message": "script reference points to GUID 74955a4b0b4243bc87231e8b59ed9140, which no .meta in the project has",
+        "fix": "if the .cs file was moved or renamed, put its original .meta (guid: 74955a4b0b4243bc87231e8b59ed9140) back next to it; otherwise restore the script, or remove the missing component in the Unity Editor"
+      }
+    ],
+    "warnings": [],
+    "truncated": false
+  },
+  "guid_scan_note": "Four existing URP volume profile missing-script diagnostics match SB32 baseline; unchanged from origin/main. Not a clean GUID scan.",
+  "release_dll_sha256": {
+    "SquishyBump.AI.dll": "9453bdb9259abc652f2706c8cea6ba76d2c58b3be9ca52c280653ff76193916e",
+    "SquishyBump.App.dll": "e4c7dcf40292edc8923da075023cedbb92457a2ed8f7655f2c90ea14c457a5ea",
+    "SquishyBump.Core.dll": "54b2087aa23784f6518bbe9fe2fb44d27a3dca29044310fb195cd693b455e056",
+    "SquishyBump.Hazards.dll": "734dc7166824161d7dfb6df10bdf0d1a4bd6a60d8f9c73f4a5ff2311d1f4c259",
+    "SquishyBump.Match.dll": "472fbccff1a119fcaec3a15a31d3b356b8336c4434d3fee7eb7c0f911e6e8f5f",
+    "SquishyBump.Net.dll": "fe5efddb7ac3b9d6e4e7c284a63101cecc8f8ebe89a5ec7bb120618b9a249ada",
+    "SquishyBump.Physics.dll": "0fc65a23a7ae23460b68e11618829a799a87b2f30b04452d3420cb94d39aea1a",
+    "SquishyBump.Presentation.dll": "67ac6b6763d3982e2a469f6725939b74914f05a1ef728d6209079f69a3582b77",
+    "SquishyBump.UI.dll": "6a770d345457cd4c6ac8bfcd0fb3d8f63ff73d9c454a21ab6c7aa56c58011dff"
+  },
+  "profiler_artifacts_local_only": [
+    {
+      "file": "SB47-AI5-seed18.raw",
+      "bytes": 63494513,
+      "sha256": "ba73b9885fb9feacc91c1177b76823df3c56aa7bb4b4e0f505cf682c24db43c1"
+    },
+    {
+      "file": "SB47-AI5-seed19.raw",
+      "bytes": 63920203,
+      "sha256": "f6af67109a32f309eaf7ddc37966d7b71b975e063df3068d099d69b21cc0c8e8"
+    },
+    {
+      "file": "SB47-AI5-seed20.raw",
+      "bytes": 35293455,
+      "sha256": "fc6d1e6a0371f75c06b29358aeb668e2255f7cc80801dee59eebf42fab7e6ce1"
+    }
+  ],
+  "repo_check": "check_repo: PASS (0 problems)"
+}

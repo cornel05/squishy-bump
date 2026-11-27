@@ -4,6 +4,7 @@ using System.Linq;
 using NUnit.Framework;
 using SquishyBump.AI;
 using SquishyBump.App;
+using SquishyBump.Core;
 using SquishyBump.Match;
 using SquishyBump.Physics;
 using UnityEngine;
@@ -42,6 +43,8 @@ namespace SquishyBump.Tests.PlayMode
             yield return SceneManager.LoadSceneAsync($"{Root}/Scenes/Boot.unity", LoadSceneMode.Single);
             app = Object.FindObjectsByType<GameplayBootstrap>(FindObjectsSortMode.None)
                 .First(b => b.Launcher != null);
+            app.Store = new LocalSave(System.IO.Path.Combine(Application.temporaryCachePath, "sb47-d2-tests"));
+            app.Settings.Rule = MatchRule.Survival;
             var profile = UnityEditor.AssetDatabase.LoadAssetAtPath<SquishyBump.Core.BotProfile>(
                 $"{Root}/Data/Bots/D2.asset");
             UnityEngine.Events.UnityAction<Scene, LoadSceneMode> configure = (scene, mode) =>
@@ -79,6 +82,7 @@ namespace SquishyBump.Tests.PlayMode
             app = Object.FindObjectsByType<GameplayBootstrap>(FindObjectsSortMode.None)
                 .First(b => b.Launcher != null);
             app.Store = new LocalSave(System.IO.Path.Combine(Application.temporaryCachePath, "sb18-tests"));
+            app.Settings.Rule = MatchRule.Survival;
             app.Launcher.StartSinglePlayer(1);
             yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
             var match = app.Launcher.Match;

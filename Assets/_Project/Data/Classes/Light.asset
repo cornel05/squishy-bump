@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 306521f7791141a498259031c433eb98, type: 3}
   m_Name: Light
   m_EditorClassIdentifier: SquishyBump.Core::SquishyBump.Core.ClassProfile
+  category: 2
   mass: 7
   radius: 0.45
   maxSpeed: 7.5

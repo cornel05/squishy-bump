@@ -84,7 +84,7 @@ namespace SquishyBump.App
         private IReadOnlyList<LobbyPlayer> singleRoster;
         private readonly Dictionary<ushort, BotBrain> bots = new();
         private BotNavigationWorld navigationWorld;
-        private uint nextNavigationTick;
+        private double nextNavigationTick;
         public IBotNavigationSnapshot BotNavigation { get; private set; }
         public IReadOnlyDictionary<ushort, BotBrain> Bots => bots;
         public void ConfigureBots(BotProfile profile)
@@ -99,7 +99,6 @@ namespace SquishyBump.App
             singleRoster = round.Fruits.Select((fruit, i) => new LobbyPlayer(i == 0 ? 0UL : (ulong)(FirstBotId + i), fruit, false)).ToArray();
             for (var i = 0; i < round.Tiers.Count; i++) singleProfiles[(ushort)(FirstBotId + i + 1)] = setup.BotProfile(round.Tiers[i]);
         }
-
         public MatchDirector Director { get; private set; }
         public IReadOnlyList<Fighter> Fighters => fighters;
         public MatchClientView ClientView => clientView;
@@ -201,6 +200,7 @@ namespace SquishyBump.App
             public Renderer[] VisibleRenderers;
             public bool Out;
             public int BotTier;
+            public float FacingYaw;
         }
 
         private void Start()
@@ -279,7 +279,7 @@ namespace SquishyBump.App
                 Hud.SetWobble(id, 0, true);
                 var profile = singleProfiles.TryGetValue(id, out var assigned) ? assigned : botProfile;
                 if (id >= FirstBotId && profile != null)
-                { f.BotTier = profile.Tier; bots[id] = new BotBrain(profile, id, seed); }
+                { f.BotTier = profile.Tier; bots[id] = new BotBrain(profile, id, seed, f.Motor.FighterClass, balance); }
                 resolver.Register(f.Id, f.Motor);
                 fighterPhysics.Add(f.Id, f.Motor);
                 if (id != 0 && id < FirstBotId) inboxes[id] = new InputInbox();
@@ -431,7 +431,7 @@ namespace SquishyBump.App
             var local = localInput.Sample();
             var sensedFighters = fighters.Select(f => new BotFighter(f.Id, f.Motor.transform.position,
                 f.Motor.GetComponent<Rigidbody>().linearVelocity, !f.Out,
-                f.Motor.GetComponent<Rigidbody>().mass, resolver.GetWobble(f.Id))).ToArray();
+                f.Motor.GetComponent<Rigidbody>().mass, resolver.GetWobble(f.Id), f.FacingYaw, f.Motor.IsDashing)).ToArray();
             var radius = bounds.OuterRadius;
             if (ringDrop != null && goTick != 0)
             {
@@ -442,7 +442,9 @@ namespace SquishyBump.App
             {
                 BotNavigation = navigationWorld.Capture(bounds.OuterRadius, Director.ElapsedTicks, dt);
                 var fastest = bots.Values.Max(b => b.DecisionRateHz);
-                nextNavigationTick = tick + (uint)Mathf.Max(1, Mathf.RoundToInt(1f / (fastest * dt)));
+                var period = System.Math.Max(1d, 1d / (fastest * dt));
+                if (nextNavigationTick == 0 || tick - nextNavigationTick > period) nextNavigationTick = tick;
+                nextNavigationTick += period;
             }
 
             foreach (var f in fighters)
@@ -458,10 +460,12 @@ namespace SquishyBump.App
                 if (bots.TryGetValue(f.Id, out var brain))
                     input = brain.Step(bootstrap.Session.CanSimulateGameplay, playing, !f.Out,
                         f.Motor.IsDashing, f.Motor.DashReady, f.Motor.transform.position,
-                        f.Motor.transform.eulerAngles.y, bounds.transform.position, radius, sensedFighters, dt, BotNavigation);
+                        f.FacingYaw, bounds.transform.position, radius, sensedFighters, dt, BotNavigation,
+                        balance.TimeLimitSeconds - Director.ElapsedTicks * dt, finalWarningSeconds, Director.ElapsedTicks * dt);
                 // Countdown and idle slots send an empty command; motors still integrate gravity and traction.
                 if (!playing || (f.Id >= FirstBotId && !bots.ContainsKey(f.Id)))
                     input = new InputCommand(input.Sequence, Vector2.zero, false, false, input.YawDegrees);
+                f.FacingYaw = input.YawDegrees;
                 bootstrap.TrySimulate(f.Motor, input);
             }
             resolver.Step(dt);

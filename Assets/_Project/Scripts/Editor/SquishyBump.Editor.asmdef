@@ -9,7 +9,8 @@
         "SquishyBump.App",
         "Unity.Netcode.Runtime",
         "SquishyBump.Presentation",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "glTFast"
     ],
     "includePlatforms": [
         "Editor"

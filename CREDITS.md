@@ -119,3 +119,24 @@ code luồng/roster và helper Editor theo GDD 3.5/A.6; không thêm model/ảnh
 hay asset sinh ảnh. D39 giữ các slot/hạng cân khi đổi sang thú. Không dùng RNG
 để sinh asset; RNG gameplay do host giữ seed. Hash config trong asset-ledger.csv;
 nguồn/giấy phép tài nguyên UI/nhân vật tái dùng giữ nguyên.
+
+## Bổ sung SB-47 — metadata hạng cân, 22/11/2026 (đang kiểm chứng)
+
+`CFG-WEIGHT-HEAVY/NORMAL/LIGHT`: ba ClassProfile hiện có được Unity Editor API
+`BotDifficultySetup.ConfigureWeightClasses` gán enum category theo tên asset đã xác định.
+Khối lượng, bán kính, tốc độ và lực bám giữ số liệu GDD 6.1. Codex hỗ trợ C# theo
+issue SB-47/GDD A.5; không thêm ảnh, model, texture, âm thanh hay nguồn ngoài.
+CSV lưu hash từng asset; không dùng RNG khi gán category. Các chiến thuật bot mới
+còn đang kiểm chứng; metadata này không chứng minh AI-1–AI-6 hoặc T13 đã đạt.
+
+
+SB-47 (25/11/2026), `MAT-L1-DEFAULT`: Unity Editor API lưu bản sao material
+mặc định của glTFast hiện hữu thành `Art/Levels/L1/MapDefault.mat`, gán cho 19
+Roundcube mà nguồn Map1.glb không khai báo material. Không thêm mesh/texture,
+không sinh ảnh và không dùng RNG. Nguồn/giấy phép model Creative giữ nguyên;
+glTFast 6.20.0 theo Apache-2.0 (LICENSE.md) của package trong PackageCache (phiên bản trong packages-lock).
+Codex hỗ trợ mã C# lưu material bền vững; hash asset trong `docs/asset-ledger.csv`.
+
+Cập nhật kiểm chứng 25/11/2026: metadata hạng cân được bộ T13 tự động xác nhận;
+xem `docs/testing/sb47-bot-difficulty.md`. Trạng thái WIP22/11 ở trên là mốc lịch sử;
+feature hiện chờ PR review/merge, không thay thế bằng chứng LAN/playtest người thật.

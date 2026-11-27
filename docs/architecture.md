@@ -1,4 +1,4 @@
-﻿# Architecture
+# Architecture
 
 Design source: GDD 10 (technology and architecture) and 13.2. This page is the code-side map.
 
@@ -378,3 +378,43 @@ khi ẩn chờ respawn; khi thật sự bị loại thì theo fighter sống và
 Trang kết quả match/session giữ hạng host, podium/top3/điểm/mạng, các hạng còn lại
 và delay ít nhất 3 giây unscaled. HUD gameplay ẩn trong kết quả. Không đổi Core
 contract, packet hay simulation ownership.
+
+### SB-47 — độ khó và điều khiển bot, cập nhật 25/11/2026
+
+Nhánh `feat/SB-47-bot-difficulty` đã tích hợp main `4c9ecf0`; roster A.6 của SB-26
+và UI/spectator SB-32 được giữ nguyên. Trạng thái nghiệm thu xem báo cáo kiểm thử.
+Lịch quyết định và lịch chụp navigation giữ phần lẻ giữa các bước 60 Hz; tránh 8 Hz
+bị làm tròn thành 7,5 Hz hoặc các bậc khác hụt nhịp do float. BotProfile giữ bảng A.5.
+ClassProfile thêm `FruitWeightClass` do Editor API gán; PlayerMotor chỉ công khai
+tham chiếu đọc `FighterClass`. App truyền dữ liệu vào BotBrain, AI vẫn chỉ phụ thuộc Core.
+App ghi yaw từ InputCommand để cảm nhận hướng đối thủ, không dùng góc lăn mesh.
+
+Hợp đồng bổ sung `ITimedBotNavigationSnapshot.CapturedAtSeconds` dùng cùng đồng hồ
+từ GO. Ảnh cảnh báo và vị trí đối thủ vẫn có độ trễ A.5; thời gian tới tác động của
+cảnh báo đã biết tiếp tục giảm theo đồng hồ, không đứng yên trong hàng đợi cảm nhận.
+Cost lưới và công thức utility A.3/A.4 giữ nguyên. Khi không còn ô D<0.2 trong 4 m,
+Evade tìm ô tới được ít nguy hiểm nhất thay vì mặc định trở về tâm sàn. Điểm đứng
+có xét footprint quả và sai số tới waypoint. Roam ưu tiên danger thấp nhất trong các
+ô tới được, rồi chọn ô gần tâm nhất; không cố đứng tại tâm khi ô đó đã được cảnh báo.
+D5 tính thời gian thoát trên mục tiêu nằm ngoài vùng cảnh báo đang chứa fighter,
+không coi ô hiện tại có cùng danger mép là đường thoát dài 0 m. Bộ AI-2 trên
+main mới đạt D3 16/16, D4 16/17, D5 15/15; xem XML và giới hạn fixture trong báo cáo.
+
+Theo path, sai số tới waypoint 0,1 m tách khỏi ngưỡng tiến bộ anti-stuck 0,5 m.
+Bot nhìn tới cuối đoạn thẳng và giới hạn tốc độ theo lực bám, khoảng tới góc rẽ/đích.
+D4–D5 trên băng tính thêm quãng phản ứng khi phanh; D5 dự đoán điểm dừng từ μ_ice.
+D3 tránh head-on quả nặng hơn; D4 thêm giữ trung tâm/flank theo hạng cân; D5 chọn
+điểm đứng an toàn trước vùng đã cảnh báo để nhử quả nặng và ưu tiên giảm giao tranh
+trong cửa sổ cảnh báo cuối trận do App cấp. Các mức nghiệm thu được báo riêng.
+
+App tiếp tục lấy từng bậc từ `ConfigureSinglePlayer`/MatchSetup của SB-26. Không
+thêm API thay slot người bằng bot, không đổi wire protocol hoặc quyền mô phỏng host.
+
+SB-47 bổ sung `BotTerrainCell.SurfaceVelocity`: App chụp `ISurfaceMotion.VelocityAt`
+hoặc vận tốc Rigidbody của mặt sàn, cùng snapshot có timestamp. Steering đổi vận
+tốc đường đi thế giới sang input tương đối với mặt sàn, kể cả lúc đã tới ô đích;
+không để bàn xoay cuốn bot trở vào làn H03. Không sửa mô phỏng H02/H03 hoặc motor.
+D4/D5 phanh trước làn pusher theo quãng phản ứng và phanh của chính mình, không
+đợi footprint đã vào làn. Hộp H07 được nhảy qua dựa trên chuyển động đã cảm nhận,
+vừa nhảy vừa rời quỹ đạo hộp. D5 tránh aim vượt qua phía sau mình và chọn phía
+né giữ quán tính ngang; dash phải có quỹ đạo tự phanh còn nằm trên sàn đã cảm nhận.

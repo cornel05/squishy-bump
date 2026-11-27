@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-25 15:37:44Z" end-time="2026-11-25 15:37:52Z" duration="8,6211035">
+  <test-suite type="TestSuite" id="1143" name="Squishy Bump" fullname="Squishy Bump" runstate="Runnable" testcasecount="101" result="Failed" site="Child" start-time="2026-11-25 15:37:44Z" end-time="2026-11-25 15:37:52Z" duration="8.621104" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1136" name="SquishyBump.Tests.PlayMode.dll" fullname="D:/Work/Code/Assignment/Game/squishy-bump-sb47/Library/ScriptAssemblies/SquishyBump.Tests.PlayMode.dll" runstate="Runnable" testcasecount="101" result="Failed" site="Child" start-time="2026-11-25 15:37:44Z" end-time="2026-11-25 15:37:52Z" duration="8.605387" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="27156" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1137" name="SquishyBump" fullname="SquishyBump" runstate="Runnable" testcasecount="101" result="Failed" site="Child" start-time="2026-11-25 15:37:44Z" end-time="2026-11-25 15:37:52Z" duration="8.602901" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1138" name="Tests" fullname="SquishyBump.Tests" runstate="Runnable" testcasecount="101" result="Failed" site="Child" start-time="2026-11-25 15:37:44Z" end-time="2026-11-25 15:37:52Z" duration="8.600593" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1139" name="PlayMode" fullname="SquishyBump.Tests.PlayMode" runstate="Runnable" testcasecount="101" result="Failed" site="Child" start-time="2026-11-25 15:37:44Z" end-time="2026-11-25 15:37:52Z" duration="8.598015" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1001" name="BotAcceptanceTests" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" testcasecount="10" result="Failed" site="Child" start-time="2026-11-25 15:37:44Z" end-time="2026-11-25 15:37:52Z" duration="8.589973" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1003" name="AI6_D4MovingGround120Seconds_RecordsEveryObstacleEncounter" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI6_D4MovingGround120Seconds_RecordsEveryObstacleEncounter" methodname="AI6_D4MovingGround120Seconds_RecordsEveryObstacleEncounter" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" seed="493413958" result="Failed" start-time="2026-11-25 15:37:44Z" end-time="2026-11-25 15:37:48Z" duration="4.637714" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  PusherBlocks: avoided 17/27, requires >=70% with nonzero observations
+  Expected: <empty>
+  But was:  < "PusherBlocks: avoided 17/27, requires >=70% with nonzero observations" >
+]]></message>
+                  <stack-trace><![CDATA[at SquishyBump.Tests.PlayMode.BotAcceptanceTests+<RunGroup>d__12.MoveNext () [0x013dd] in D:\Work\Code\Assignment\Game\squishy-bump-sb47\Assets\_Project\Tests\PlayMode\BotAcceptanceTests.cs:260
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[AI6BEGIN,D4,MovingGround,id=1004,warning=1,t=68,p=(2.157, 0.450, -1.748),v=(4.225, 0.000, 3.652)
+AI6END,D4,MovingGround,id=1004,warning=1,t=74,hit=False
+AI6BEGIN,D4,MovingGround,id=1002,warning=1,t=82,p=(3.584, 0.450, -1.172),v=(4.658, 0.000, -0.755)
+AI6END,D4,MovingGround,id=1002,warning=1,t=85,hit=False
+AI6BEGIN,D4,MovingGround,id=1004,warning=1,t=165,p=(1.535, 0.450, -0.610),v=(3.852, 0.000, 4.689)
+AI6END,D4,MovingGround,id=1004,warning=1,t=185,hit=False
+AI6BEGIN,D4,MovingGround,id=1000,warning=1,t=240,p=(0.572, 0.600, 1.140),v=(5.139, 0.000, 1.962)
+AI6BEGIN,D4,MovingGround,id=1003,warning=2,t=240,p=(0.042, 0.600, -0.127),v=(1.942, 0.000, -8.379)
+AI6BEGIN,D4,PusherBlocks,id=1003,warning=0,t=241,p=(0.050, 0.600, -0.267),v=(0.690, -0.015, -8.365)
+AI6END,D4,MovingGround,id=1000,warning=1,t=245,hit=False
+AI6BEGIN,D4,MovingGround,id=1000,warning=1,t=249,p=(1.166, 0.600, 1.658),v=(3.182, 0.000, 4.385)
+AI6END,D4,MovingGround,id=1000,warning=1,t=253,hit=False
+AI6END,D4,PusherBlocks,id=1003,warning=0,t=259,hit=False
+AI6END,D4,MovingGround,id=1003,warning=2,t=269,hit=False
+AI6BEGIN,D4,MovingGround,id=1004,warning=1,t=286,p=(1.893, 0.450, 2.682),v=(4.547, 0.000, 3.871)
+AI6BEGIN,D4,MovingGround,id=1001,warning=1,t=299,p=(-0.036, 0.500, 1.510),v=(5.704, 0.000, 4.968)
+AI6BEGIN,D4,PusherBlocks,id=1000,warning=0,t=306,p=(3.224, 0.600, -0.147),v=(1.870, 0.000, -3.895)
+AI6END,D4,MovingGround,id=1001,warning=1,t=312,hit=False
+AI6HIT,D4,MovingGround,id=1004,t=335,p=(3.406, 0.991, 3.515),v=(0.241, -4.738, -0.332),state=Evade
+AI6END,D4,MovingGround,id=1004,warning=1,t=338,hit=True
+AI6BEGIN,D4,PusherBlocks,id=1003,warning=0,t=347,p=(0.549, 0.600, -2.253),v=(-1.553, 0.000, 3.496)
+AI6END,D4,PusherBlocks,id=1000,warning=0,t=352,hit=False
+AI6END,D4,PusherBlocks,id=1003,warning=0,t=411,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=1,t=432,p=(0.380, 0.500, 2.196),v=(-2.970, 0.000, -1.737)
+AI6BEGIN,D4,PusherBlocks,id=1000,warning=0,t=438,p=(-0.704, 0.600, -2.272),v=(-1.863, 0.000, 2.145)
+AI6BEGIN,D4,PusherBlocks,id=1004,warning=1,t=462,p=(-2.332, 0.450, 2.123),v=(-3.376, 0.000, -3.644)
+AI6BEGIN,D4,MovingGround,id=1000,warning=2,t=463,p=(-1.405, 0.600, -2.127),v=(6.116, 0.000, 0.144)
+AI6BEGIN,D4,MovingGround,id=1003,warning=0,t=463,p=(-2.737, 0.600, -2.354),v=(-4.327, 0.000, 0.936)
+AI6END,D4,PusherBlocks,id=1001,warning=1,t=464,hit=False
+AI6END,D4,MovingGround,id=1000,warning=2,t=465,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1003,warning=0,t=467,p=(-2.999, 0.600, -2.291),v=(-3.687, 0.000, 0.947)
+AI6END,D4,MovingGround,id=1003,warning=0,t=473,hit=False
+AI6HIT,D4,PusherBlocks,id=1000,t=478,p=(-0.196, 0.600, -2.083),v=(3.556, 0.000, 0.176),state=Evade
+AI6BEGIN,D4,MovingGround,id=1000,warning=0,t=495,p=(-1.098, 0.600, -2.205),v=(-3.251, 0.000, -1.540)
+AI6END,D4,PusherBlocks,id=1000,warning=0,t=499,hit=True
+AI6END,D4,PusherBlocks,id=1003,warning=0,t=501,hit=False
+AI6HIT,D4,PusherBlocks,id=1004,t=502,p=(-4.907, 0.450, 0.516),v=(-9.299, -0.002, -8.122),state=Evade
+AI6BEGIN,D4,MovingGround,id=1004,warning=0,t=503,p=(-4.847, 0.450, 0.375),v=(2.987, 0.000, -8.122)
+AI6END,D4,PusherBlocks,id=1004,warning=1,t=504,hit=True
+AI6BEGIN,D4,PusherBlocks,id=1004,warning=0,t=509,p=(-4.583, 0.450, -0.361),v=(2.413, 0.000, -6.802)
+AI6END,D4,MovingGround,id=1000,warning=0,t=514,hit=False
+AI6END,D4,MovingGround,id=1004,warning=0,t=520,hit=False
+AI6END,D4,PusherBlocks,id=1004,warning=0,t=532,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1004,warning=0,t=533,p=(-3.632, 0.449, -2.106),v=(-0.885, 0.000, 2.917)
+AI6HIT,D4,PusherBlocks,id=1004,t=549,p=(-3.685, 0.450, -1.841),v=(0.470, 0.000, -0.931),state=Evade
+AI6BEGIN,D4,MovingGround,id=1003,warning=0,t=550,p=(-2.480, 0.600, -3.929),v=(1.501, 0.000, -1.747)
+AI6END,D4,MovingGround,id=1003,warning=0,t=553,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=1,t=569,p=(-1.895, 0.500, 2.200),v=(-1.020, 0.000, -3.200)
+AI6HIT,D4,PusherBlocks,id=1001,t=569,p=(-1.895, 0.500, 2.200),v=(-1.217, 0.000, -3.238),state=Chase
+AI6END,D4,PusherBlocks,id=1001,warning=1,t=588,hit=True
+AI6HIT,D4,PusherBlocks,id=1001,t=600,p=(-0.112, 0.500, 2.209),v=(1.177, 0.000, -1.000),state=Roam
+AI6BEGIN,D4,MovingGround,id=1001,warning=2,t=601,p=(0.041, 0.500, 2.193),v=(9.177, 0.000, -1.000)
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=1,t=601,p=(0.041, 0.500, 2.193),v=(9.177, 0.000, -1.000)
+AI6END,D4,MovingGround,id=1001,warning=2,t=641,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1003,warning=0,t=645,p=(-1.165, 0.600, -2.300),v=(-1.792, 0.000, 0.822)
+AI6END,D4,PusherBlocks,id=1001,warning=1,t=650,hit=False
+AI6END,D4,PusherBlocks,id=1003,warning=0,t=665,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=1,t=705,p=(2.255, 0.500, 2.194),v=(1.215, 0.000, -2.152)
+AI6END,D4,PusherBlocks,id=1001,warning=1,t=756,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=1,t=768,p=(0.801, 0.500, 0.256),v=(1.594, 0.000, 3.798)
+AI6END,D4,PusherBlocks,id=1001,warning=1,t=816,hit=False
+AI6BEGIN,D4,MovingGround,id=1000,warning=1,t=933,p=(-4.201, 1.552, -3.059),v=(-0.135, 2.928, 0.352)
+AI6END,D4,MovingGround,id=1000,warning=1,t=964,hit=False
+AI6BEGIN,D4,MovingGround,id=1001,warning=1,t=975,p=(-2.929, 0.500, -0.015),v=(-9.598, 0.000, -6.114)
+AI6HIT,D4,MovingGround,id=1001,t=988,p=(-4.685, 0.547, -1.268),v=(-7.008, -0.595, -5.466),state=Charge
+AI6END,D4,MovingGround,id=1001,warning=1,t=995,hit=True
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=1,t=1021,p=(-5.246, 0.500, 0.222),v=(0.051, 0.000, 1.351)
+AI6BEGIN,D4,MovingGround,id=1001,warning=1,t=1033,p=(-5.193, 0.500, 0.411),v=(0.636, 0.000, 0.087)
+AI6END,D4,PusherBlocks,id=1001,warning=1,t=1045,hit=False
+AI6END,D4,MovingGround,id=1001,warning=1,t=1048,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1000,warning=0,t=1082,p=(-0.008, 0.600, -0.997),v=(-0.001, 0.000, -0.003)
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=0,t=1082,p=(-3.229, 0.500, -1.833),v=(3.865, 0.000, -3.884)
+AI6END,D4,PusherBlocks,id=1001,warning=0,t=1090,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=0,t=1123,p=(-1.436, 0.500, -2.186),v=(-0.572, 0.000, 1.188)
+AI6END,D4,PusherBlocks,id=1001,warning=0,t=1126,hit=False
+AI6END,D4,PusherBlocks,id=1000,warning=0,t=1171,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=0,t=1178,p=(-3.469, 0.500, -2.196),v=(-0.579, 0.000, 0.906)
+AI6END,D4,PusherBlocks,id=1001,warning=0,t=1199,hit=False
+AI6BEGIN,D4,MovingGround,id=1001,warning=0,t=1200,p=(-3.389, 0.500, -2.364),v=(4.568, 0.000, -8.586)
+AI6END,D4,MovingGround,id=1001,warning=0,t=1205,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=0,t=1209,p=(-2.962, 0.530, -2.183),v=(1.567, -0.044, 8.240)
+AI6END,D4,PusherBlocks,id=1001,warning=0,t=1228,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=1,t=1234,p=(-2.473, 0.500, 0.207),v=(0.821, 0.000, 3.552)
+AI6BEGIN,D4,PusherBlocks,id=1000,warning=0,t=1254,p=(-0.469, 0.600, -2.300),v=(-2.463, 0.000, 2.325)
+AI6END,D4,PusherBlocks,id=1001,warning=1,t=1277,hit=False
+AI6HIT,D4,PusherBlocks,id=1000,t=1283,p=(-1.529, 0.600, -1.693),v=(-2.143, 0.000, -1.057),state=Evade
+AI6HIT,D4,PusherBlocks,id=1001,t=1293,p=(-2.941, 0.500, -0.152),v=(1.201, 0.000, -0.874),state=Chase
+AI6BEGIN,D4,MovingGround,id=1001,warning=2,t=1294,p=(-2.738, 0.500, -0.167),v=(12.201, 0.000, -0.874)
+AI6END,D4,PusherBlocks,id=1000,warning=0,t=1308,hit=True
+AI6END,D4,MovingGround,id=1001,warning=2,t=1330,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1000,warning=0,t=1331,p=(0.564, 0.600, -2.288),v=(4.826, 0.000, 3.352)
+AI6HIT,D4,PusherBlocks,id=1000,t=1331,p=(0.564, 0.600, -2.288),v=(4.674, 0.000, 3.303),state=Charge
+AI6BEGIN,D4,MovingGround,id=1000,warning=2,t=1332,p=(0.764, 0.600, -2.233),v=(12.007, 0.000, 3.303)
+AI6HIT,D4,PusherBlocks,id=1001,t=1381,p=(2.738, 0.500, -0.153),v=(-0.677, 0.000, -1.475),state=Roam
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=0,t=1383,p=(3.078, 0.500, -0.201),v=(10.124, 0.000, -1.452)
+AI6,D4,MovingGround,avoided=17,resolved=20,unresolved=0,stuckRecoveries=1/1/0/0/0,alive=0
+AI6,D4,PusherBlocks,avoided=17,resolved=27,unresolved=0,stuckRecoveries=1/1/0/0/0,alive=0
+]]></output>
+              </test-case>
+              <test-case id="1004" name="AI6_D5MovingGround120Seconds_RecordsEveryObstacleEncounter" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI6_D5MovingGround120Seconds_RecordsEveryObstacleEncounter" methodname="AI6_D5MovingGround120Seconds_RecordsEveryObstacleEncounter" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" seed="1606157232" result="Failed" start-time="2026-11-25 15:37:48Z" end-time="2026-11-25 15:37:52Z" duration="3.926944" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  PusherBlocks: avoided 17/28, requires >=70% with nonzero observations
+  Expected: <empty>
+  But was:  < "PusherBlocks: avoided 17/28, requires >=70% with nonzero observations" >
+]]></message>
+                  <stack-trace><![CDATA[at SquishyBump.Tests.PlayMode.BotAcceptanceTests+<RunGroup>d__12.MoveNext () [0x013dd] in D:\Work\Code\Assignment\Game\squishy-bump-sb47\Assets\_Project\Tests\PlayMode\BotAcceptanceTests.cs:260
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[AI6BEGIN,D5,MovingGround,id=1004,warning=2,t=90,p=(1.865, 0.450, -0.460),v=(-8.381, 0.000, -6.100)
+AI6END,D5,MovingGround,id=1004,warning=2,t=92,hit=False
+AI6BEGIN,D5,MovingGround,id=1000,warning=1,t=107,p=(0.630, 0.600, 0.078),v=(7.742, 0.000, 0.374)
+AI6END,D5,MovingGround,id=1000,warning=1,t=108,hit=False
+AI6BEGIN,D5,MovingGround,id=1002,warning=1,t=138,p=(2.114, 0.450, 0.275),v=(4.601, 0.000, 2.146)
+AI6END,D5,MovingGround,id=1002,warning=1,t=139,hit=False
+AI6BEGIN,D5,MovingGround,id=1001,warning=2,t=197,p=(2.484, 0.500, 0.496),v=(-2.071, 0.000, -10.189)
+AI6END,D5,MovingGround,id=1001,warning=2,t=198,hit=False
+AI6BEGIN,D5,MovingGround,id=1001,warning=2,t=206,p=(1.947, 0.500, -0.522),v=(-2.176, 0.000, -6.104)
+AI6END,D5,MovingGround,id=1001,warning=2,t=209,hit=False
+AI6BEGIN,D5,MovingGround,id=1001,warning=2,t=216,p=(1.653, 0.500, -1.399),v=(-1.279, 0.000, -5.188)
+AI6END,D5,MovingGround,id=1001,warning=2,t=220,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=0,t=243,p=(1.039, 0.600, -0.103),v=(-0.034, 0.000, -0.363)
+AI6END,D5,PusherBlocks,id=1003,warning=0,t=258,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1001,warning=0,t=268,p=(2.543, 0.500, -2.181),v=(3.407, 0.000, 1.439)
+AI6BEGIN,D5,PusherBlocks,id=1004,warning=0,t=271,p=(0.908, 0.450, -2.137),v=(3.925, 0.000, 4.398)
+AI6END,D5,PusherBlocks,id=1004,warning=0,t=305,hit=False
+AI6END,D5,PusherBlocks,id=1001,warning=0,t=309,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1002,warning=0,t=313,p=(2.813, 0.450, -2.132),v=(-0.151, 0.000, 3.096)
+AI6BEGIN,D5,PusherBlocks,id=1000,warning=0,t=314,p=(-0.652, 0.600, -0.144),v=(-1.025, 0.000, -3.515)
+AI6BEGIN,D5,PusherBlocks,id=1001,warning=0,t=336,p=(2.053, 0.500, -0.228),v=(-2.463, 0.000, -2.105)
+AI6END,D5,PusherBlocks,id=1002,warning=0,t=347,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=362,p=(0.789, 0.600, 1.126),v=(-0.127, 0.000, -1.517)
+AI6BEGIN,D5,PusherBlocks,id=1004,warning=1,t=362,p=(2.856, 0.450, 1.023),v=(2.457, 0.000, -0.712)
+AI6END,D5,PusherBlocks,id=1000,warning=0,t=369,hit=False
+AI6END,D5,PusherBlocks,id=1001,warning=0,t=373,hit=False
+AI6END,D5,PusherBlocks,id=1004,warning=1,t=383,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1004,warning=0,t=389,p=(4.015, 0.458, -0.253),v=(5.047, 0.495, -4.195)
+AI6BEGIN,D5,PusherBlocks,id=1001,warning=0,t=392,p=(-0.256, 0.500, -0.214),v=(-0.777, 0.000, -1.683)
+AI6HIT,D5,PusherBlocks,id=1004,t=392,p=(4.251, 0.452, -0.445),v=(4.390, -0.389, -3.495),state=Chase
+AI6BEGIN,D5,MovingGround,id=1000,warning=2,t=400,p=(-1.538, 0.600, -3.138),v=(6.658, 0.000, 0.779)
+AI6END,D5,MovingGround,id=1000,warning=2,t=404,hit=False
+AI6BEGIN,D5,MovingGround,id=1002,warning=1,t=412,p=(1.187, 0.450, -2.120),v=(-1.630, 0.000, 13.938)
+AI6BEGIN,D5,PusherBlocks,id=1002,warning=0,t=412,p=(1.187, 0.450, -2.120),v=(-1.630, 0.000, 13.938)
+AI6END,D5,PusherBlocks,id=1001,warning=0,t=415,hit=False
+AI6END,D5,MovingGround,id=1002,warning=1,t=418,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1001,warning=1,t=422,p=(-0.456, 0.517, 0.249),v=(-12.207, 0.284, 8.188)
+AI6END,D5,PusherBlocks,id=1002,warning=0,t=425,hit=False
+AI6HIT,D5,PusherBlocks,id=1004,t=426,p=(2.507, 0.450, -0.935),v=(10.283, 0.000, -5.222),state=Evade
+AI6BEGIN,D5,PusherBlocks,id=1002,warning=1,t=429,p=(1.552, 0.450, 0.306),v=(1.516, 0.000, 6.482)
+AI6BEGIN,D5,MovingGround,id=1003,warning=1,t=430,p=(1.466, 0.603, 1.431),v=(-2.556, 0.163, 6.301)
+AI6END,D5,PusherBlocks,id=1002,warning=1,t=436,hit=False
+AI6END,D5,PusherBlocks,id=1001,warning=1,t=439,hit=False
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=440,hit=False
+AI6END,D5,PusherBlocks,id=1004,warning=0,t=448,hit=True
+AI6END,D5,MovingGround,id=1003,warning=1,t=455,hit=False
+AI6HIT,D5,PusherBlocks,id=1004,t=456,p=(1.773, 0.450, -2.154),v=(2.407, 0.000, 0.810),state=Chase
+AI6BEGIN,D5,MovingGround,id=1004,warning=0,t=457,p=(1.551, 0.450, -2.151),v=(-13.308, 0.000, 0.182)
+AI6BEGIN,D5,PusherBlocks,id=1004,warning=0,t=459,p=(1.120, 0.450, -2.150),v=(-12.828, 0.000, 0.027)
+AI6HIT,D5,PusherBlocks,id=1002,t=461,p=(1.537, 0.450, -0.206),v=(-1.747, 0.000, -2.842),state=Chase
+AI6BEGIN,D5,PusherBlocks,id=1002,warning=0,t=462,p=(1.260, 0.450, -0.253),v=(-16.605, 0.000, -2.842)
+AI6END,D5,PusherBlocks,id=1002,warning=0,t=475,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1002,warning=0,t=489,p=(-4.698, 0.450, -0.254),v=(-10.156, 0.000, -0.321)
+AI6END,D5,MovingGround,id=1004,warning=0,t=497,hit=False
+AI6HIT,D5,PusherBlocks,id=1000,t=501,p=(-0.709, 0.600, -2.348),v=(-1.042, 0.000, 2.107),state=Roam
+AI6BEGIN,D5,PusherBlocks,id=1000,warning=0,t=504,p=(-1.100, 0.600, -2.293),v=(-7.673, 0.000, 0.597)
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=510,p=(-0.106, 0.600, 2.243),v=(0.133, 0.000, -4.347)
+AI6END,D5,PusherBlocks,id=1000,warning=0,t=522,hit=False
+AI6HIT,D5,PusherBlocks,id=1000,t=565,p=(-4.102, 0.600, -2.325),v=(1.871, 0.000, 0.752),state=Evade
+AI6HIT,D5,PusherBlocks,id=1003,t=566,p=(-1.352, 0.600, 1.570),v=(-3.370, 0.000, 2.261),state=Evade
+AI6BEGIN,D5,PusherBlocks,id=1000,warning=0,t=568,p=(-4.367, 0.600, -2.288),v=(-5.142, 0.000, 0.761)
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=584,hit=True
+AI6HIT,D5,PusherBlocks,id=1000,t=595,p=(-5.897, 0.600, -2.150),v=(-2.214, 0.000, -0.542),state=Evade
+AI6HIT,D5,PusherBlocks,id=1003,t=619,p=(-0.112, 0.600, 2.341),v=(1.118, 0.000, -2.720),state=Roam
+AI6BEGIN,D5,MovingGround,id=1003,warning=2,t=620,p=(0.016, 0.600, 2.296),v=(7.651, 0.000, -2.720)
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=620,p=(0.016, 0.600, 2.296),v=(7.651, 0.000, -2.720)
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=623,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=634,p=(1.529, 0.600, 2.298),v=(5.498, 0.000, -0.244)
+AI6END,D5,MovingGround,id=1003,warning=2,t=652,hit=False
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=661,hit=False
+AI6HIT,D5,PusherBlocks,id=1003,t=672,p=(3.151, 0.600, 2.347),v=(-0.059, 0.000, -0.424),state=Roam
+AI6BEGIN,D5,MovingGround,id=1003,warning=2,t=673,p=(3.265, 0.607, 2.340),v=(6.808, 0.409, -0.472)
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=678,p=(3.794, 0.815, 2.298),v=(6.123, 6.262, -0.528)
+AI6HIT,D5,MovingGround,id=1003,t=684,p=(4.390, 1.325, 2.242),v=(5.792, 4.262, -0.582),state=Evade
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=685,hit=False
+AI6,D5,MovingGround,avoided=11,resolved=12,unresolved=0,stuckRecoveries=1/0/0/0/0,alive=0
+AI6,D5,PusherBlocks,avoided=17,resolved=28,unresolved=0,stuckRecoveries=1/0/0/0/0,alive=0
+Saving results to: C:/Users/THIS PC/AppData/LocalLow/BKU Group 18/Squishy Bump\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

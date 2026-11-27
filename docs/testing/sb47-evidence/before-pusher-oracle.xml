@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-25 15:30:54Z" end-time="2026-11-25 15:31:28Z" duration="33,9903307">
+  <test-suite type="TestSuite" id="1143" name="Squishy Bump" fullname="Squishy Bump" runstate="Runnable" testcasecount="101" result="Failed" site="Child" start-time="2026-11-25 15:30:54Z" end-time="2026-11-25 15:31:28Z" duration="33.990331" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1136" name="SquishyBump.Tests.PlayMode.dll" fullname="D:/Work/Code/Assignment/Game/squishy-bump-sb47/Library/ScriptAssemblies/SquishyBump.Tests.PlayMode.dll" runstate="Runnable" testcasecount="101" result="Failed" site="Child" start-time="2026-11-25 15:30:54Z" end-time="2026-11-25 15:31:28Z" duration="33.975019" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="34048" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1137" name="SquishyBump" fullname="SquishyBump" runstate="Runnable" testcasecount="101" result="Failed" site="Child" start-time="2026-11-25 15:30:54Z" end-time="2026-11-25 15:31:28Z" duration="33.972392" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1138" name="Tests" fullname="SquishyBump.Tests" runstate="Runnable" testcasecount="101" result="Failed" site="Child" start-time="2026-11-25 15:30:54Z" end-time="2026-11-25 15:31:28Z" duration="33.969596" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1139" name="PlayMode" fullname="SquishyBump.Tests.PlayMode" runstate="Runnable" testcasecount="101" result="Failed" site="Child" start-time="2026-11-25 15:30:54Z" end-time="2026-11-25 15:31:28Z" duration="33.966795" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1001" name="BotAcceptanceTests" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" testcasecount="10" result="Failed" site="Child" start-time="2026-11-25 15:30:54Z" end-time="2026-11-25 15:31:28Z" duration="33.957175" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1009" name="AI4_D5AgainstD4_TwentyPredeclaredDuels" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI4_D5AgainstD4_TwentyPredeclaredDuels" methodname="AI4_D5AgainstD4_TwentyPredeclaredDuels" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" seed="1410140941" result="Passed" start-time="2026-11-25 15:30:54Z" end-time="2026-11-25 15:31:19Z" duration="24.828925" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[DUEL,D5-D4,seed=18,higherSlot=0,elapsedTicks=632,placements=1000:1;1001:2
+DUEL,D5-D4,seed=19,higherSlot=1,elapsedTicks=1017,placements=1001:1;1000:2
+DUELDASH,D5,t=94,p=(-0.501, 0.500, 0.163),v=(0.019, -0.053, 1.300),yaw=91,22,other=(-0.504, 0.500, -0.930),otherV=(0.022, 0.000, -2.211)
+DUELDASH,D4,t=111,p=(-0.413, 0.500, -1.169),v=(1.335, 0.000, -0.647),yaw=345,25,other=(-0.500, 0.500, 0.223),otherV=(0.000, 0.000, 0.000)
+DUELDASH,D5,t=166,p=(-0.384, 0.500, 2.045),v=(-0.393, 0.000, -2.744),yaw=186,23,other=(-0.558, 0.500, -0.615),otherV=(0.179, 0.000, 0.358)
+DUELDASH,D4,t=313,p=(0.904, 0.500, -0.495),v=(0.033, 0.000, 4.390),yaw=260,34,other=(-0.530, 0.500, -0.470),otherV=(0.647, 0.000, 3.127)
+DUELDASH,D4,t=493,p=(0.086, 0.500, 0.053),v=(3.545, 0.000, -1.127),yaw=330,03,other=(-1.229, 0.500, 1.188),otherV=(0.017, 0.000, 0.491)
+DUELDASH,D5,t=507,p=(-1.254, 0.500, 1.137),v=(-0.432, 0.000, -1.120),yaw=118,55,other=(0.579, 0.500, -0.104),otherV=(0.877, 0.000, -0.279)
+DUELDASH,D4,t=628,p=(2.747, 0.500, 0.190),v=(-0.039, 0.000, 2.464),yaw=183,46,other=(2.131, 0.500, -1.939),otherV=(0.000, 0.000, 0.000)
+DUELDASH,D5,t=694,p=(1.008, 0.500, -0.957),v=(0.369, 0.000, 2.954),yaw=15,67,other=(1.887, 0.500, -0.557),otherV=(-3.624, 0.000, 2.045)
+DUEL,D5-D4,seed=20,higherSlot=0,elapsedTicks=787,placements=1000:1;1001:2
+DUEL,D5-D4,seed=21,higherSlot=1,elapsedTicks=695,placements=1000:1;1001:2
+DUEL,D5-D4,seed=22,higherSlot=0,elapsedTicks=864,placements=1000:1;1001:2
+DUEL,D5-D4,seed=23,higherSlot=1,elapsedTicks=725,placements=1001:1;1000:2
+DUEL,D5-D4,seed=24,higherSlot=0,elapsedTicks=630,placements=1000:1;1001:2
+DUEL,D5-D4,seed=25,higherSlot=1,elapsedTicks=956,placements=1000:1;1001:2
+DUEL,D5-D4,seed=26,higherSlot=0,elapsedTicks=966,placements=1001:1;1000:2
+DUEL,D5-D4,seed=27,higherSlot=1,elapsedTicks=850,placements=1001:1;1000:2
+DUEL,D5-D4,seed=28,higherSlot=0,elapsedTicks=1032,placements=1000:1;1001:2
+DUEL,D5-D4,seed=29,higherSlot=1,elapsedTicks=494,placements=1000:1;1001:2
+DUEL,D5-D4,seed=30,higherSlot=0,elapsedTicks=981,placements=1001:1;1000:2
+DUEL,D5-D4,seed=31,higherSlot=1,elapsedTicks=794,placements=1001:1;1000:2
+DUEL,D5-D4,seed=32,higherSlot=0,elapsedTicks=798,placements=1000:1;1001:2
+DUEL,D5-D4,seed=33,higherSlot=1,elapsedTicks=848,placements=1001:1;1000:2
+DUEL,D5-D4,seed=34,higherSlot=0,elapsedTicks=802,placements=1000:1;1001:2
+DUEL,D5-D4,seed=35,higherSlot=1,elapsedTicks=736,placements=1000:1;1001:2
+DUEL,D5-D4,seed=36,higherSlot=0,elapsedTicks=517,placements=1000:1;1001:2
+DUEL,D5-D4,seed=37,higherSlot=1,elapsedTicks=744,placements=1000:1;1001:2
+DUEL,TOTAL,D5-D4,higherWins=13,lowerWins=7,draws=0,matches=20
+]]></output>
+              </test-case>
+              <test-case id="1003" name="AI6_D4MovingGround120Seconds_RecordsEveryObstacleEncounter" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI6_D4MovingGround120Seconds_RecordsEveryObstacleEncounter" methodname="AI6_D4MovingGround120Seconds_RecordsEveryObstacleEncounter" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" seed="98929098" result="Passed" start-time="2026-11-25 15:31:19Z" end-time="2026-11-25 15:31:23Z" duration="3.928932" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[AI6BEGIN,D4,MovingGround,id=1002,warning=2,t=90,p=(3.415, 0.450, 0.579),v=(-7.950, 0.000, -9.093)
+AI6END,D4,MovingGround,id=1002,warning=2,t=93,hit=False
+AI6BEGIN,D4,MovingGround,id=1003,warning=1,t=98,p=(3.287, 0.625, -1.170),v=(8.450, 0.770, -0.952)
+AI6END,D4,MovingGround,id=1003,warning=1,t=110,hit=False
+AI6BEGIN,D4,MovingGround,id=1004,warning=1,t=212,p=(0.897, 0.450, 0.509),v=(4.951, 0.000, 2.585)
+AI6END,D4,MovingGround,id=1004,warning=1,t=216,hit=False
+AI6BEGIN,D4,MovingGround,id=1004,warning=1,t=217,p=(1.322, 0.450, 0.684),v=(4.925, 0.000, 2.035)
+AI6END,D4,MovingGround,id=1004,warning=1,t=230,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=0,t=241,p=(0.501, 0.500, -1.147),v=(-2.226, 0.000, -4.696)
+AI6END,D4,PusherBlocks,id=1001,warning=0,t=262,hit=False
+AI6BEGIN,D4,MovingGround,id=1004,warning=1,t=274,p=(1.500, 0.450, 2.038),v=(2.279, 0.000, 4.101)
+AI6END,D4,MovingGround,id=1004,warning=1,t=279,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=0,t=317,p=(-0.667, 0.500, -2.183),v=(2.940, 0.000, 3.180)
+AI6BEGIN,D4,PusherBlocks,id=1000,warning=1,t=362,p=(-0.525, 0.600, 1.679),v=(-4.788, 0.000, 3.115)
+AI6END,D4,PusherBlocks,id=1001,warning=0,t=363,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1004,warning=1,t=365,p=(-1.792, 0.450, 2.149),v=(-1.589, 0.000, -1.049)
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=1,t=368,p=(-0.934, 0.500, 0.271),v=(-5.152, 0.000, 9.290)
+AI6END,D4,PusherBlocks,id=1004,warning=1,t=368,hit=False
+AI6BEGIN,D4,MovingGround,id=1000,warning=1,t=376,p=(-0.865, 0.603, 2.278),v=(2.555, 0.131, 5.535)
+AI6END,D4,PusherBlocks,id=1000,warning=1,t=377,hit=False
+AI6END,D4,PusherBlocks,id=1001,warning=1,t=392,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1004,warning=1,t=397,p=(-4.543, 0.450, 2.134),v=(-1.967, 0.000, -1.300)
+AI6END,D4,MovingGround,id=1000,warning=1,t=403,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1000,warning=1,t=453,p=(0.223, 0.600, 2.286),v=(-0.800, 0.000, -2.534)
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=1,t=464,p=(-3.173, 0.500, 2.193),v=(1.204, -0.005, -3.151)
+AI6END,D4,PusherBlocks,id=1004,warning=1,t=464,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1004,warning=0,t=474,p=(-3.947, 0.450, -0.282),v=(1.186, 0.000, -2.404)
+AI6END,D4,PusherBlocks,id=1000,warning=1,t=486,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1000,warning=1,t=524,p=(-1.309, 0.600, 2.285),v=(-0.522, 0.000, -1.688)
+AI6HIT,D4,PusherBlocks,id=1001,t=525,p=(-3.516, 0.500, 1.080),v=(-0.393, 0.000, -0.411),state=Evade
+AI6BEGIN,D4,MovingGround,id=1001,warning=2,t=526,p=(-3.370, 0.500, 1.073),v=(8.807, 0.000, -0.411)
+AI6END,D4,MovingGround,id=1001,warning=2,t=532,hit=False
+AI6END,D4,PusherBlocks,id=1001,warning=1,t=550,hit=True
+AI6END,D4,PusherBlocks,id=1004,warning=0,t=552,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1001,warning=0,t=559,p=(-0.833, 0.500, -0.216),v=(1.668, 0.000, -1.926)
+AI6HIT,D4,PusherBlocks,id=1004,t=562,p=(-3.911, 0.450, 0.232),v=(1.177, -0.007, 1.726),state=Chase
+AI6BEGIN,D4,PusherBlocks,id=1004,warning=1,t=563,p=(-3.658, 0.450, 0.261),v=(15.177, -0.001, 1.726)
+AI6END,D4,PusherBlocks,id=1004,warning=1,t=564,hit=False
+AI6BEGIN,D4,MovingGround,id=1004,warning=2,t=564,p=(-3.409, 0.450, 0.249),v=(14.941, 0.000, -0.205)
+AI6END,D4,PusherBlocks,id=1000,warning=1,t=566,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1004,warning=1,t=574,p=(-1.420, 0.450, 0.392),v=(-3.452, 0.000, 12.611)
+AI6BEGIN,D4,MovingGround,id=1004,warning=1,t=574,p=(-1.420, 0.450, 0.392),v=(-3.452, 0.000, 12.611)
+AI6END,D4,MovingGround,id=1004,warning=2,t=574,hit=False
+AI6END,D4,MovingGround,id=1004,warning=1,t=575,hit=False
+AI6BEGIN,D4,PusherBlocks,id=1000,warning=1,t=586,p=(-0.696, 0.600, 2.286),v=(1.427, 0.000, -1.295)
+AI6END,D4,PusherBlocks,id=1001,warning=0,t=586,hit=False
+AI6HIT,D4,PusherBlocks,id=1000,t=586,p=(-0.696, 0.600, 2.286),v=(1.512, 0.000, -1.430),state=Chase
+AI6BEGIN,D4,MovingGround,id=1000,warning=2,t=587,p=(-0.555, 0.600, 2.262),v=(8.445, 0.000, -1.430)
+AI6END,D4,PusherBlocks,id=1004,warning=1,t=592,hit=False
+AI6HIT,D4,PusherBlocks,id=1004,t=592,p=(-0.698, 0.450, 0.248),v=(0.540, 0.000, -0.028),state=Evade
+AI6BEGIN,D4,MovingGround,id=1004,warning=2,t=593,p=(-0.427, 0.450, 0.247),v=(16.254, 0.000, -0.028)
+AI6END,D4,MovingGround,id=1000,warning=2,t=630,hit=False
+AI6HIT,D4,PusherBlocks,id=1000,t=658,p=(3.042, 0.600, 2.179),v=(-1.977, 0.000, 1.096),state=Evade
+AI6BEGIN,D4,MovingGround,id=1000,warning=2,t=659,p=(3.131, 0.600, 2.197),v=(5.356, 0.000, 1.096)
+AI6END,D4,PusherBlocks,id=1000,warning=1,t=665,hit=True
+AI6HIT,D4,MovingGround,id=1000,t=697,p=(5.392, 1.424, 2.749),v=(2.511, -3.405, 0.514),state=Evade
+AI6,D4,PusherBlocks,avoided=12,resolved=16,unresolved=0,stuckRecoveries=1/0/0/0/0,alive=0
+AI6,D4,MovingGround,avoided=10,resolved=12,unresolved=0,stuckRecoveries=1/0/0/0/0,alive=0
+]]></output>
+              </test-case>
+              <test-case id="1004" name="AI6_D5MovingGround120Seconds_RecordsEveryObstacleEncounter" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI6_D5MovingGround120Seconds_RecordsEveryObstacleEncounter" methodname="AI6_D5MovingGround120Seconds_RecordsEveryObstacleEncounter" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" seed="245045426" result="Failed" start-time="2026-11-25 15:31:23Z" end-time="2026-11-25 15:31:28Z" duration="5.177225" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  PusherBlocks: avoided 29/46, requires >=70% with nonzero observations
+  Expected: <empty>
+  But was:  < "PusherBlocks: avoided 29/46, requires >=70% with nonzero observations" >
+]]></message>
+                  <stack-trace><![CDATA[at SquishyBump.Tests.PlayMode.BotAcceptanceTests+<RunGroup>d__11.MoveNext () [0x013f1] in D:\Work\Code\Assignment\Game\squishy-bump-sb47\Assets\_Project\Tests\PlayMode\BotAcceptanceTests.cs:259
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[AI6BEGIN,D5,MovingGround,id=1003,warning=0,t=65,p=(3.277, 0.600, -1.974),v=(-5.582, -0.043, 5.801)
+AI6END,D5,MovingGround,id=1003,warning=0,t=66,hit=False
+AI6BEGIN,D5,MovingGround,id=1002,warning=1,t=218,p=(2.856, 0.452, 0.852),v=(6.670, 0.155, 4.440)
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=0,t=241,p=(2.198, 0.600, -1.638),v=(-2.191, 0.000, 0.056)
+AI6END,D5,MovingGround,id=1002,warning=1,t=258,hit=False
+AI6END,D5,PusherBlocks,id=1003,warning=0,t=280,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1000,warning=0,t=282,p=(0.121, 0.600, -0.109),v=(0.936, 0.000, -0.558)
+AI6END,D5,PusherBlocks,id=1000,warning=0,t=297,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=0,t=340,p=(-0.629, 0.600, -2.280),v=(2.311, 0.000, 2.512)
+AI6BEGIN,D5,MovingGround,id=1002,warning=1,t=356,p=(3.151, 0.450, 3.046),v=(-1.666, 0.000, 6.746)
+AI6BEGIN,D5,PusherBlocks,id=1000,warning=1,t=362,p=(0.795, 0.600, 0.571),v=(1.525, 0.000, -0.657)
+AI6BEGIN,D5,PusherBlocks,id=1001,warning=1,t=362,p=(2.852, 0.500, 1.450),v=(-1.415, 0.000, -4.234)
+AI6HIT,D5,MovingGround,id=1002,t=366,p=(2.902, 0.450, 3.952),v=(-1.350, 0.000, 4.125),state=Evade
+AI6END,D5,MovingGround,id=1002,warning=1,t=367,hit=True
+AI6END,D5,PusherBlocks,id=1001,warning=1,t=389,hit=False
+AI6END,D5,PusherBlocks,id=1003,warning=0,t=402,hit=False
+AI6END,D5,PusherBlocks,id=1000,warning=1,t=418,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1001,warning=1,t=418,p=(0.923, 0.500, 0.220),v=(-3.676, 0.000, 2.627)
+AI6BEGIN,D5,PusherBlocks,id=1002,warning=1,t=464,p=(-1.281, 0.450, 2.147),v=(3.964, 0.000, -1.245)
+AI6END,D5,PusherBlocks,id=1001,warning=1,t=472,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1001,warning=0,t=482,p=(-1.443, 0.500, -0.231),v=(5.960, 0.000, -3.574)
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=0,t=484,p=(-0.909, 0.600, -2.280),v=(0.742, 0.000, 2.679)
+AI6HIT,D5,PusherBlocks,id=1001,t=490,p=(-0.716, 0.500, -0.609),v=(4.787, 0.000, -2.268),state=Evade
+AI6HIT,D5,PusherBlocks,id=1003,t=491,p=(-0.870, 0.600, -1.922),v=(-0.040, 0.000, 2.908),state=Evade
+AI6BEGIN,D5,MovingGround,id=1003,warning=0,t=495,p=(-1.176, 0.603, -1.833),v=(-4.695, 0.107, -2.163)
+AI6END,D5,PusherBlocks,id=1001,warning=0,t=500,hit=True
+AI6BEGIN,D5,PusherBlocks,id=1001,warning=1,t=504,p=(-1.732, 0.500, 0.208),v=(-3.530, 0.000, 4.874)
+AI6END,D5,PusherBlocks,id=1001,warning=1,t=505,hit=False
+AI6END,D5,MovingGround,id=1003,warning=0,t=506,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1001,warning=0,t=509,p=(-1.827, 0.500, -0.255),v=(-1.119, -0.010, -4.885)
+AI6END,D5,PusherBlocks,id=1002,warning=1,t=510,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1000,warning=1,t=512,p=(0.526, 0.600, 2.279),v=(0.276, 0.000, -1.800)
+AI6END,D5,PusherBlocks,id=1003,warning=0,t=516,hit=True
+AI6HIT,D5,PusherBlocks,id=1001,t=520,p=(-2.250, 0.500, -0.865),v=(-2.837, 0.000, -2.092),state=Evade
+AI6END,D5,PusherBlocks,id=1000,warning=1,t=541,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1000,warning=1,t=571,p=(-0.335, 0.600, 2.270),v=(0.258, 0.000, -1.882)
+AI6HIT,D5,PusherBlocks,id=1000,t=588,p=(-0.333, 0.600, 1.961),v=(-0.490, 0.000, 0.240),state=Evade
+AI6END,D5,PusherBlocks,id=1000,warning=1,t=612,hit=True
+AI6HIT,D5,PusherBlocks,id=1000,t=639,p=(0.939, 0.600, 2.334),v=(-1.048, 0.000, -1.767),state=Roam
+AI6BEGIN,D5,MovingGround,id=1000,warning=2,t=641,p=(1.092, 0.600, 2.301),v=(4.533, 0.000, -0.224)
+AI6END,D5,MovingGround,id=1000,warning=2,t=642,hit=False
+AI6HIT,D5,PusherBlocks,id=1000,t=669,p=(2.333, 0.600, 2.300),v=(0.980, 0.000, -0.120),state=Roam
+AI6BEGIN,D5,MovingGround,id=1000,warning=2,t=670,p=(2.451, 0.600, 2.300),v=(7.113, 0.000, 0.000)
+AI6BEGIN,D5,PusherBlocks,id=1000,warning=1,t=679,p=(3.412, 0.913, 2.300),v=(5.974, 5.928, -0.005)
+AI6HIT,D5,MovingGround,id=1000,t=707,p=(5.877, 1.424, 2.264),v=(4.589, -3.405, -0.144),state=Evade
+AI6END,D5,PusherBlocks,id=1000,warning=1,t=708,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=0,t=1082,p=(0.105, 0.600, -0.989),v=(0.027, 0.000, 0.000)
+AI6END,D5,PusherBlocks,id=1003,warning=0,t=1134,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=0,t=1378,p=(0.275, 0.600, -2.271),v=(-0.708, 0.000, 2.447)
+AI6END,D5,PusherBlocks,id=1003,warning=0,t=1411,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=0,t=1464,p=(0.032, 0.600, -2.280),v=(1.431, 0.000, 3.444)
+AI6END,D5,PusherBlocks,id=1003,warning=0,t=1530,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=0,t=1600,p=(-0.383, 0.600, -1.855),v=(2.600, 0.000, 3.830)
+AI6END,D5,PusherBlocks,id=1003,warning=0,t=1672,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=0,t=2132,p=(-0.064, 0.600, -0.936),v=(-0.327, 0.000, 0.021)
+AI6END,D5,PusherBlocks,id=1003,warning=0,t=2186,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=0,t=2235,p=(-1.932, 0.600, -2.289),v=(1.854, 0.000, 2.813)
+AI6END,D5,PusherBlocks,id=1003,warning=0,t=2280,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=0,t=2326,p=(-1.554, 0.600, -2.263),v=(2.392, 0.000, 2.254)
+AI6HIT,D5,PusherBlocks,id=1003,t=2340,p=(-1.197, 0.600, -1.932),v=(0.657, 0.000, 0.596),state=Evade
+AI6HIT,D5,PusherBlocks,id=1003,t=2370,p=(0.038, 0.600, -2.209),v=(0.951, 0.000, -1.711),state=Evade
+AI6END,D5,PusherBlocks,id=1003,warning=0,t=2374,hit=True
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=0,t=2650,p=(-0.121, 0.600, -2.070),v=(-0.071, 0.000, -1.326)
+AI6END,D5,PusherBlocks,id=1003,warning=0,t=2658,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=0,t=2866,p=(0.147, 0.600, -2.269),v=(-0.289, 0.000, 2.487)
+AI6HIT,D5,PusherBlocks,id=1003,t=2885,p=(-0.149, 0.600, -1.944),v=(-1.428, 0.000, -0.491),state=Evade
+AI6END,D5,PusherBlocks,id=1003,warning=0,t=2901,hit=True
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=0,t=3371,p=(0.137, 0.600, -0.878),v=(0.511, 0.000, 0.338)
+AI6END,D5,PusherBlocks,id=1003,warning=0,t=3401,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=3692,p=(0.010, 0.600, 1.058),v=(0.185, 0.000, -0.001)
+AI6BEGIN,D5,MovingGround,id=1003,warning=0,t=3742,p=(-0.849, 0.600, 2.233),v=(-2.693, 0.000, 2.980)
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=3744,hit=False
+AI6END,D5,MovingGround,id=1003,warning=0,t=3753,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=3812,p=(-0.198, 0.600, 2.254),v=(3.047, 0.000, -2.892)
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=3868,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=3919,p=(-0.076, 0.600, 2.281),v=(1.958, 0.000, -3.076)
+AI6HIT,D5,PusherBlocks,id=1003,t=3924,p=(0.063, 0.600, 2.007),v=(1.390, 0.000, -3.048),state=Evade
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=3959,hit=True
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=4025,p=(-0.139, 0.600, 2.297),v=(2.609, 0.000, -2.739)
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=4092,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=4327,p=(0.095, 0.600, 0.991),v=(-0.291, 0.000, 0.028)
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=4372,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=4435,p=(-0.491, 0.600, 2.289),v=(3.539, 0.000, -1.474)
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=4458,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=4571,p=(1.250, 0.600, 2.259),v=(-3.295, 0.000, -3.122)
+AI6HIT,D5,PusherBlocks,id=1003,t=4578,p=(0.863, 0.600, 1.911),v=(-3.305, 0.000, -2.487),state=Evade
+AI6HIT,D5,PusherBlocks,id=1003,t=4608,p=(2.287, 0.600, 2.114),v=(1.468, 0.000, 1.643),state=Evade
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=4615,hit=True
+AI6HIT,D5,PusherBlocks,id=1003,t=4656,p=(3.847, 0.600, 2.330),v=(-1.289, 0.000, -1.850),state=Evade
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=4657,p=(3.894, 0.600, 2.299),v=(2.844, 0.000, -1.850)
+AI6HIT,D5,PusherBlocks,id=1003,t=4686,p=(4.206, 0.600, 2.300),v=(-1.401, 0.000, -0.106),state=Evade
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=4757,hit=True
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=4922,p=(-0.097, 0.600, 0.991),v=(0.132, 0.000, 0.006)
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=4975,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=5028,p=(-1.733, 0.600, 2.283),v=(2.074, 0.000, -3.088)
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=5089,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=5132,p=(-1.462, 0.600, 2.287),v=(2.233, 0.000, -3.101)
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=5186,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=5243,p=(-1.505, 0.600, 2.259),v=(1.986, 0.000, -3.255)
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=5315,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=5459,p=(-0.004, 0.600, 2.287),v=(-0.038, 0.000, -4.500)
+AI6BEGIN,D5,MovingGround,id=1003,warning=0,t=5515,p=(-1.218, 0.600, 1.490),v=(-3.209, 0.000, 2.793)
+AI6END,D5,MovingGround,id=1003,warning=0,t=5516,hit=False
+AI6BEGIN,D5,MovingGround,id=1003,warning=0,t=5520,p=(-1.456, 0.600, 1.721),v=(-2.647, 0.000, 2.969)
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=5530,hit=False
+AI6END,D5,MovingGround,id=1003,warning=0,t=5535,hit=False
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=5622,p=(-1.135, 0.600, 2.295),v=(3.252, 0.000, -2.758)
+AI6HIT,D5,PusherBlocks,id=1003,t=5671,p=(-0.067, 0.600, 1.978),v=(-1.369, 0.000, 2.537),state=Evade
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=5679,hit=True
+AI6HIT,D5,PusherBlocks,id=1003,t=5714,p=(0.470, 0.600, 2.326),v=(-0.683, 0.000, -2.521),state=Roam
+AI6BEGIN,D5,PusherBlocks,id=1003,warning=1,t=5715,p=(0.535, 0.600, 2.284),v=(3.851, 0.000, -2.521)
+AI6END,D5,PusherBlocks,id=1003,warning=1,t=5718,hit=False
+AI6HIT,D5,PusherBlocks,id=1003,t=5744,p=(1.746, 0.600, 2.300),v=(1.080, 0.000, -0.139),state=Roam
+AI6HIT,D5,PusherBlocks,id=1003,t=5774,p=(3.717, 0.600, 2.300),v=(1.603, 0.000, -0.014),state=Evade
+AI6HIT,D5,PusherBlocks,id=1003,t=5804,p=(6.026, 0.600, 2.327),v=(2.140, 0.000, 0.122),state=Evade
+AI6,D5,MovingGround,avoided=7,resolved=9,unresolved=0,stuckRecoveries=0/0/0/20/0,alive=0
+AI6,D5,PusherBlocks,avoided=29,resolved=46,unresolved=0,stuckRecoveries=0/0/0/20/0,alive=0
+Saving results to: C:/Users/THIS PC/AppData/LocalLow/BKU Group 18/Squishy Bump\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

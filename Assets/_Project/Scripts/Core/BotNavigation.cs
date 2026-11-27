@@ -26,11 +26,13 @@ namespace SquishyBump.Core
 
     public readonly struct BotTerrainCell
     {
-        public BotTerrainCell(bool walkable, bool ice, float edgeDistance)
-        { Walkable = walkable; Ice = ice; EdgeDistance = edgeDistance; }
+        public BotTerrainCell(bool walkable, bool ice, float edgeDistance, Vector2 surfaceVelocity = default)
+        { Walkable = walkable; Ice = ice; EdgeDistance = edgeDistance; SurfaceVelocity = surfaceVelocity; }
         public bool Walkable { get; }
         public bool Ice { get; }
         public float EdgeDistance { get; }
+        /// <summary>Vận tốc mặt sàn đã quan sát, theo trục thế giới (x,z); steering bù trước khi gửi input tương đối.</summary>
+        public Vector2 SurfaceVelocity { get; }
     }
 
     /// <summary>Ảnh chụp bất biến do App cấp. AI không tìm scene singleton hoặc ghi vật lý.</summary>
@@ -48,5 +50,11 @@ namespace SquishyBump.Core
     {
         /// <summary>Chỉ đọc trạng thái host đã cảnh báo/đang tác động; không tự lập lịch hazard mới.</summary>
         void CollectBotWarnings(List<BotHazardWarning> warnings, int playingTicks, float dt);
+    }
+
+    /// <summary>Mốc đồng hồ từ GO để tuổi cảm nhận không làm đứng yên bộ đếm cảnh báo.</summary>
+    public interface ITimedBotNavigationSnapshot : IBotNavigationSnapshot
+    {
+        float CapturedAtSeconds { get; }
     }
 }
