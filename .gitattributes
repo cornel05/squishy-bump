@@ -58,3 +58,9 @@ docs/testing/sb26-evidence/*.txt text eol=lf
 docs/testing/sb32-evidence/*.json text eol=lf
 docs/testing/sb32-evidence/*.xml text eol=lf
 docs/testing/sb32-evidence/*.txt text eol=lf
+
+# Bằng chứng SB-47 dùng LF để SHA-256 ổn định qua checkout.
+docs/testing/sb47-evidence/*.json text eol=lf
+docs/testing/sb47-evidence/*.xml text eol=lf
+docs/testing/sb47-evidence/*.txt text eol=lf
+docs/testing/sb47-evidence/* linguist-generated=true

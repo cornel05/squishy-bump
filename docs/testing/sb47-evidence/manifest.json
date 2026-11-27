@@ -1,0 +1,82 @@
+{
+  "date": "2026-11-25",
+  "base": "020bfb0de74e42295bf55dfbef3eb39c6292aa50",
+  "branch": "feat/SB-47-bot-difficulty",
+  "source_sha256_utf8_lf": {
+    "Assets/_Project/Art/Levels/L1/MapDefault.mat": "33ac5f1eaf6ccb69aac1828aa45dfa905b7944cba5deda5484c52bc9706c2df4",
+    "Assets/_Project/Art/Levels/L1/MapDefault.mat.meta": "502c7087ae9f9b40f825a2af92d60763df52ae13c0fdd6dee6555db27f37269d",
+    "Assets/_Project/Data/Classes/Heavy.asset": "d923b183c73c2c729f3af95b55c008bc09b4af3705da07fd760ea22ab6bede8a",
+    "Assets/_Project/Data/Classes/Light.asset": "13c9157934b40e586563956d85232fef86054f15878db9e01b8dfb2d447b2084",
+    "Assets/_Project/Data/Classes/Normal.asset": "98ce71c6bd7835c8eeaf2954f9a212b0347a97b670b420463ce4c318bfb9c53e",
+    "Assets/_Project/Scenes/Levels/L1.unity": "2aa6fc844bc7fdbc57d13a46b19689097b4e2bbbdde0e91945e901184e22c33f",
+    "Assets/_Project/Scripts/AI/BotBrain.cs": "071613567e3291ff671690d0383b73e83f374a2868bc6f094625fb3ea77fc213",
+    "Assets/_Project/Scripts/AI/DangerMap.cs": "4bea3eb3945cee4a140b3dcc79063a82a59316d7f976eabb88d78185f438f3aa",
+    "Assets/_Project/Scripts/AI/GridPathfinder.cs": "b3153a97da31b9bf08741c439b5af8cb552ea7938a23acf7837e34a52d95bfb7",
+    "Assets/_Project/Scripts/App/BotNavigationWorld.cs": "c13e4a4cd46704cc3e463395da1f44134052a168f66a5f58f8ea08a1d5079ea6",
+    "Assets/_Project/Scripts/App/MatchHost.cs": "b72cf86fef470d01f96b7133e8e30eeb048d407d08091fba20c698792efd3c56",
+    "Assets/_Project/Scripts/Core/BotNavigation.cs": "f1c40637e2e3150f0b76f7a223d8f8cad97208694fc7410277258f787665ee2c",
+    "Assets/_Project/Scripts/Core/ClassProfile.cs": "fc3132755441950cb1fd4dd7f771d54d60b96ac71cca9aa4f13ca6f4faa56a41",
+    "Assets/_Project/Scripts/Editor/BotDifficultySetup.cs": "406da2591fd2ab3ad3e0bd6c9091c24174f21a315208a94110b20747f7b1ebd5",
+    "Assets/_Project/Scripts/Editor/BotDifficultySetup.cs.meta": "d757b577eab1822377f22081564d3ec4a35999e8c43e45e8098d6f840d83bf4d",
+    "Assets/_Project/Scripts/Editor/LevelArtSceneBuilder.cs": "daf2f9cab92972077696f346ddaecbb33d76ba7d5ec8c60061d9caef779873da",
+    "Assets/_Project/Scripts/Editor/SquishyBump.Editor.asmdef": "191978dcecad091c0ea0d5beee1a614c47cbdc1193f2857f27449d99bfe4b7db",
+    "Assets/_Project/Scripts/Physics/PlayerMotor.cs": "9289e10840dd5a1c58c86622f3e6ed3c9ab1d116b3d9b37189cf9eb706b61017",
+    "Assets/_Project/Tests/EditMode/BotDifficultyTests.cs": "2645b6fe97e70b47400d96ac07b2a3c8cc4eb493c18032af3999385cb4d52251",
+    "Assets/_Project/Tests/EditMode/BotDifficultyTests.cs.meta": "e01544d6af2de7b1c5261e51abddb20713808e4331b826dfb70c64c36cdb6565",
+    "Assets/_Project/Tests/PlayMode/BotAcceptanceTests.cs": "6f42ea1214c42daba13839352865ccb78d458e119d5df797452177d35903e10a",
+    "Assets/_Project/Tests/PlayMode/BotAcceptanceTests.cs.meta": "5793261f36b132216faa4bc7a243cf09726f738e030ed0ac991fdcc3d105d296",
+    "Assets/_Project/Tests/PlayMode/BotArenaTests.cs": "ee96902d52bd7ab119f017eb613f089687f93846c7c3e5433f90fb811c3775c1",
+    "Assets/_Project/Tests/PlayMode/LevelArtTests.cs": "a8d2a8d9286a3893c72aecc281aa232219475d27a179d4e1143a219e9495f7f3",
+    "Assets/_Project/Tests/PlayMode/LobbyPlayTests.cs": "8f6c450017b0354d221cdba4b21b9dd618651c20bb5cb9b0536d7d6450156a38"
+  },
+  "files": [
+    {
+      "path": "before-acceptance.xml",
+      "sha256": "09b8fa772b84832d167fbe4000610f6c8fa149637b970933a556313eb849304d"
+    },
+    {
+      "path": "before-ai2.xml",
+      "sha256": "8cbcf58666c69dc4dc37f55556e8bd61ad387b594ba408a51444cf598ca86c5f"
+    },
+    {
+      "path": "before-global-fixes.xml",
+      "sha256": "c9252db73487f0f5d09569932e845aafb005b56703bfe1e3e86a7b1a256ef2be"
+    },
+    {
+      "path": "before-pusher-braking.xml",
+      "sha256": "bbefcd97ff8cb4dc13811b6b01465b7b398e763a751e80266dde647d88fe7f30"
+    },
+    {
+      "path": "before-pusher-oracle.xml",
+      "sha256": "a5ffe4b41b9d2f1ad64313c0962080aaeeb30d6ab3e38462cd0af9e0cc7d3268"
+    },
+    {
+      "path": "before-surface-input.xml",
+      "sha256": "1d13ae620d6bd0c4e370b082a5ebc0c51c2105a0eaf9d3b904114e98d3b7abc4"
+    },
+    {
+      "path": "editmode.xml",
+      "sha256": "833ee5325bce9815a2033775f3e4c07707038860560ce9c00833c0a97b874146"
+    },
+    {
+      "path": "global-fixes.xml",
+      "sha256": "9978a0f56a59937e286f5ae2b43676e7f0538be4b3837af9bedebdfaba6ee05b"
+    },
+    {
+      "path": "playmode.xml",
+      "sha256": "5cba92e72c0ec136713885b81209df772c4286f25e80a5f5af7389befffb8ee7"
+    },
+    {
+      "path": "summary.json",
+      "sha256": "a759181a2fd048ebb6b407e186e686c708569e3b39b0f6548994ad5aafb17aff"
+    },
+    {
+      "path": "windows-startup.json",
+      "sha256": "b862e21eb67bf51fb0701d4a0d15210ef2593656437ae021bb68d96c469186b1"
+    },
+    {
+      "path": "windows-startup.log.txt",
+      "sha256": "1f1c9ee0aafaff9092556cf0d0f15958372e961e20d5d53decb575e5f3b7d572"
+    }
+  ]
+}

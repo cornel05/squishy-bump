@@ -11,11 +11,12 @@ namespace SquishyBump.App
     /// <summary>Adapter chụp floor collider và hint hazard thành dữ liệu Core, dùng chung cho các bot.</summary>
     public sealed class BotNavigationWorld
     {
-        private sealed class Snapshot : IBotNavigationSnapshot
+        private sealed class Snapshot : ITimedBotNavigationSnapshot
         {
             private readonly BotTerrainCell[] cells;
-            public Snapshot(int side, Vector2 origin, BotTerrainCell[] terrain, List<BotHazardWarning> warnings)
-            { Width = Height = side; Origin = origin; cells = terrain; Warnings = warnings.AsReadOnly(); }
+            public Snapshot(int side, Vector2 origin, BotTerrainCell[] terrain, List<BotHazardWarning> warnings, float seconds)
+            { Width = Height = side; Origin = origin; cells = terrain; Warnings = warnings.AsReadOnly(); CapturedAtSeconds = seconds; }
+            public float CapturedAtSeconds { get; }
             public int Width { get; }
             public int Height { get; }
             public Vector2 Origin { get; }
@@ -41,6 +42,7 @@ namespace SquishyBump.App
             var origin = new Vector2(center.x, center.z) - Vector2.one * ((side - 1) * 0.5f);
             var count = side * side;
             var grounded = new bool[count]; var ice = new bool[count];
+            var surfaceVelocity = new Vector2[count];
             var gaps = new List<int>();
             var height = Mathf.Max(1f, Mathf.Abs(balance.KillPlaneY));
             for (var i = 0; i < count; i++)
@@ -53,6 +55,10 @@ namespace SquishyBump.App
                 {
                     grounded[i] = true;
                     ice[i] = hit.collider.GetComponentInParent<IceTiles>() != null;
+                    var motion = hit.collider.GetComponentInParent<ISurfaceMotion>();
+                    var velocity = motion != null ? motion.VelocityAt(point) :
+                        hit.rigidbody != null ? hit.rigidbody.GetPointVelocity(point) : Vector3.zero;
+                    surfaceVelocity[i] = new Vector2(velocity.x, velocity.z);
                 }
                 if (!grounded[i]) gaps.Add(i);
             }
@@ -71,11 +77,11 @@ namespace SquishyBump.App
                     var dz = Mathf.Max(0, Mathf.Abs(z - gap / side) - 0.5f);
                     nearestSquared = Mathf.Min(nearestSquared, dx * dx + dz * dz);
                 }
-                cells[i] = new BotTerrainCell(true, ice[i], Mathf.Sqrt(nearestSquared));
+                cells[i] = new BotTerrainCell(true, ice[i], Mathf.Sqrt(nearestSquared), surfaceVelocity[i]);
             }
             var warnings = new List<BotHazardWarning>();
             foreach (var provider in providers) provider.CollectBotWarnings(warnings, playingTicks, dt);
-            return new Snapshot(side, origin, cells, warnings);
+            return new Snapshot(side, origin, cells, warnings, playingTicks * dt);
         }
     }
 }

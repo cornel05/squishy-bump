@@ -67,6 +67,7 @@ namespace SquishyBump.Physics
             body.linearVelocity = Vector3.zero;
             body.angularVelocity = Vector3.zero;
         }
+        public ClassProfile FighterClass => fighterClass;
 
         private void Awake()
         {

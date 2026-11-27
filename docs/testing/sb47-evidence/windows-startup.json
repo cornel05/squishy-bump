@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-25",
+  "mode": "Windows release headless managed startup only; no level/rule CLI arguments",
+  "duration_seconds": 50,
+  "alive_after_observation": true,
+  "managed_assemblies_loaded": true,
+  "startup_exception_matches": 0,
+  "save_unchanged": true,
+  "exe_sha256": "fbd073ca59c4918edbc6704f5393cf59021173af11714c00db4212c50117492b",
+  "log_bytes": 1642,
+  "ended_by": "Stopped only this smoke process after observation"
+}

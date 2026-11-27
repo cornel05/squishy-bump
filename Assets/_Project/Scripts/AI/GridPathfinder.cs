@@ -31,6 +31,24 @@ namespace SquishyBump.AI
         public BotPath FindCheapest(DangerMap map, int start, Predicate<int> eligible) =>
             Search(map, start, -1, false, eligible ?? throw new ArgumentNullException(nameof(eligible)));
 
+        /// <summary>Khi không còn ô dưới ngưỡng an toàn, chọn danger thấp nhất trong vùng tới được.
+        /// Dijkstra thăm cost tăng dần nên các ô cùng danger giữ lựa chọn rẻ nhất.</summary>
+        public BotPath FindLeastDanger(DangerMap map, int start, Predicate<int> eligible, Func<int, float> danger = null)
+        {
+            if (eligible == null) throw new ArgumentNullException(nameof(eligible));
+            var best = -1; var lowest = float.PositiveInfinity;
+            Search(map, start, -1, false, cell =>
+            {
+                if (eligible(cell))
+                {
+                    var value = danger == null ? map[cell] : danger(cell);
+                    if (value < lowest) { best = cell; lowest = value; }
+                }
+                return false;
+            });
+            return best < 0 ? default : Reconstruct(map, start, best);
+        }
+
         private BotPath Search(DangerMap map, int start, int goal, bool useHeuristic, Predicate<int> eligible)
         {
             ExpandedNodes = 0;

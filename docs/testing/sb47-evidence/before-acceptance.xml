@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="10" result="Failed(Child)" total="10" passed="6" failed="4" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-25 15:08:27Z" end-time="2026-11-25 15:13:31Z" duration="304,4807892">
+  <test-suite type="TestSuite" id="1143" name="Squishy Bump" fullname="Squishy Bump" runstate="Runnable" testcasecount="101" result="Failed" site="Child" start-time="2026-11-25 15:08:27Z" end-time="2026-11-25 15:13:31Z" duration="304.480789" total="10" passed="6" failed="4" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1136" name="SquishyBump.Tests.PlayMode.dll" fullname="D:/Work/Code/Assignment/Game/squishy-bump-sb47/Library/ScriptAssemblies/SquishyBump.Tests.PlayMode.dll" runstate="Runnable" testcasecount="101" result="Failed" site="Child" start-time="2026-11-25 15:08:27Z" end-time="2026-11-25 15:13:31Z" duration="304.461911" total="10" passed="6" failed="4" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="38644" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1137" name="SquishyBump" fullname="SquishyBump" runstate="Runnable" testcasecount="101" result="Failed" site="Child" start-time="2026-11-25 15:08:27Z" end-time="2026-11-25 15:13:31Z" duration="304.458300" total="10" passed="6" failed="4" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1138" name="Tests" fullname="SquishyBump.Tests" runstate="Runnable" testcasecount="101" result="Failed" site="Child" start-time="2026-11-25 15:08:27Z" end-time="2026-11-25 15:13:31Z" duration="304.455448" total="10" passed="6" failed="4" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1139" name="PlayMode" fullname="SquishyBump.Tests.PlayMode" runstate="Runnable" testcasecount="101" result="Failed" site="Child" start-time="2026-11-25 15:08:27Z" end-time="2026-11-25 15:13:31Z" duration="304.453023" total="10" passed="6" failed="4" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1001" name="BotAcceptanceTests" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" testcasecount="10" result="Failed" site="Child" start-time="2026-11-25 15:08:27Z" end-time="2026-11-25 15:13:31Z" duration="304.445827" total="10" passed="6" failed="4" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1011" name="AI1_OneBotRealRing120Seconds_FiveSeedsPerTier" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI1_OneBotRealRing120Seconds_FiveSeedsPerTier" methodname="AI1_OneBotRealRing120Seconds_FiveSeedsPerTier" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" seed="856904273" result="Passed" start-time="2026-11-25 15:08:27Z" end-time="2026-11-25 15:10:41Z" duration="134.064397" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[AI1,D1,seed=18,fruit=Bear,firstFallSeconds=none,decisions=478
+AI1,D1,seed=19,fruit=Cat,firstFallSeconds=none,decisions=478
+AI1,D1,seed=20,fruit=Frog,firstFallSeconds=none,decisions=478
+AI1,D1,seed=21,fruit=Bear,firstFallSeconds=none,decisions=478
+AI1,D1,seed=22,fruit=Cat,firstFallSeconds=none,decisions=478
+AI1,D2,seed=18,fruit=Bear,firstFallSeconds=none,decisions=598
+AI1,D2,seed=19,fruit=Cat,firstFallSeconds=none,decisions=598
+AI1,D2,seed=20,fruit=Frog,firstFallSeconds=none,decisions=598
+AI1,D2,seed=21,fruit=Bear,firstFallSeconds=none,decisions=598
+AI1,D2,seed=22,fruit=Cat,firstFallSeconds=none,decisions=598
+AI1,D3,seed=18,fruit=Bear,firstFallSeconds=none,decisions=719
+AI1,D3,seed=19,fruit=Cat,firstFallSeconds=none,decisions=719
+AI1,D3,seed=20,fruit=Frog,firstFallSeconds=none,decisions=719
+AI1,D3,seed=21,fruit=Bear,firstFallSeconds=none,decisions=719
+AI1,D3,seed=22,fruit=Cat,firstFallSeconds=none,decisions=719
+AI1,D4,seed=18,fruit=Bear,firstFallSeconds=none,decisions=959
+AI1,D4,seed=19,fruit=Cat,firstFallSeconds=none,decisions=959
+AI1,D4,seed=20,fruit=Frog,firstFallSeconds=none,decisions=959
+AI1,D4,seed=21,fruit=Bear,firstFallSeconds=none,decisions=959
+AI1,D4,seed=22,fruit=Cat,firstFallSeconds=none,decisions=959
+AI1,D5,seed=18,fruit=Bear,firstFallSeconds=none,decisions=1199
+AI1,D5,seed=19,fruit=Cat,firstFallSeconds=none,decisions=1199
+AI1,D5,seed=20,fruit=Frog,firstFallSeconds=none,decisions=1199
+AI1,D5,seed=21,fruit=Bear,firstFallSeconds=none,decisions=1199
+AI1,D5,seed=22,fruit=Cat,firstFallSeconds=none,decisions=1199
+]]></output>
+              </test-case>
+              <test-case id="1010" name="AI2_RealFrost60Seconds_FiveSeedsPerTier_RecordsEveryWarnedTileEncounter" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI2_RealFrost60Seconds_FiveSeedsPerTier_RecordsEveryWarnedTileEncounter" methodname="AI2_RealFrost60Seconds_FiveSeedsPerTier_RecordsEveryWarnedTileEncounter" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" seed="288197526" result="Passed" start-time="2026-11-25 15:10:41Z" end-time="2026-11-25 15:11:16Z" duration="35.059854" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[AI2,D3,seed=18,fruit=Bear,escaped=3,resolved=3,unresolved=0,fallTick=0
+AI2,D3,seed=19,fruit=Cat,escaped=4,resolved=4,unresolved=0,fallTick=0
+AI2,D3,seed=20,fruit=Frog,escaped=3,resolved=3,unresolved=0,fallTick=0
+AI2,D3,seed=21,fruit=Bear,escaped=2,resolved=2,unresolved=0,fallTick=0
+AI2,D3,seed=22,fruit=Cat,escaped=4,resolved=4,unresolved=0,fallTick=0
+AI2,TOTAL,D3,escaped=16,resolved=16
+AI2,D4,seed=18,fruit=Bear,escaped=1,resolved=1,unresolved=0,fallTick=0
+AI2,D4,seed=19,fruit=Cat,escaped=4,resolved=4,unresolved=0,fallTick=0
+AI2,D4,seed=20,fruit=Frog,escaped=4,resolved=4,unresolved=0,fallTick=0
+AI2MISSED,D4,seed=21,t=1890,tile=28,tileCenter=(-2.000, 0.000, -3.464),p=(-1.424, 0.600, -2.687),v=(1.926, 0.000, -1.726),state=Evade,dest=(0.500, 0.000, -3.500),move=(-0.006, 0.764)
+AI2,D4,seed=21,fruit=Bear,escaped=2,resolved=3,unresolved=0,fallTick=0
+AI2,D4,seed=22,fruit=Cat,escaped=5,resolved=5,unresolved=0,fallTick=0
+AI2,TOTAL,D4,escaped=16,resolved=17
+AI2,D5,seed=18,fruit=Bear,escaped=2,resolved=2,unresolved=0,fallTick=0
+AI2,D5,seed=19,fruit=Cat,escaped=2,resolved=2,unresolved=0,fallTick=0
+AI2,D5,seed=20,fruit=Frog,escaped=4,resolved=4,unresolved=0,fallTick=0
+AI2,D5,seed=21,fruit=Bear,escaped=1,resolved=1,unresolved=0,fallTick=0
+AI2,D5,seed=22,fruit=Cat,escaped=6,resolved=6,unresolved=0,fallTick=0
+AI2,TOTAL,D5,escaped=15,resolved=15
+]]></output>
+              </test-case>
+              <test-case id="1005" name="AI3_D5AgainstD1_TwentyPredeclaredDuels" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI3_D5AgainstD1_TwentyPredeclaredDuels" methodname="AI3_D5AgainstD1_TwentyPredeclaredDuels" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" seed="1248591201" result="Passed" start-time="2026-11-25 15:11:16Z" end-time="2026-11-25 15:11:45Z" duration="29.307528" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[DUEL,D5-D1,seed=18,higherSlot=0,elapsedTicks=707,placements=1000:1;1001:2
+DUEL,D5-D1,seed=19,higherSlot=1,elapsedTicks=1293,placements=1001:1;1000:2
+DUEL,D5-D1,seed=20,higherSlot=0,elapsedTicks=1038,placements=1000:1;1001:2
+DUEL,D5-D1,seed=21,higherSlot=1,elapsedTicks=1430,placements=1001:1;1000:2
+DUEL,D5-D1,seed=22,higherSlot=0,elapsedTicks=912,placements=1000:1;1001:2
+DUEL,D5-D1,seed=23,higherSlot=1,elapsedTicks=1163,placements=1001:1;1000:2
+DUEL,D5-D1,seed=24,higherSlot=0,elapsedTicks=551,placements=1000:1;1001:2
+DUEL,D5-D1,seed=25,higherSlot=1,elapsedTicks=1039,placements=1001:1;1000:2
+DUEL,D5-D1,seed=26,higherSlot=0,elapsedTicks=631,placements=1000:1;1001:2
+DUEL,D5-D1,seed=27,higherSlot=1,elapsedTicks=1250,placements=1001:1;1000:2
+DUEL,D5-D1,seed=28,higherSlot=0,elapsedTicks=599,placements=1001:1;1000:2
+DUEL,D5-D1,seed=29,higherSlot=1,elapsedTicks=1062,placements=1001:1;1000:2
+DUEL,D5-D1,seed=30,higherSlot=0,elapsedTicks=1945,placements=1000:1;1001:2
+DUEL,D5-D1,seed=31,higherSlot=1,elapsedTicks=832,placements=1001:1;1000:2
+DUEL,D5-D1,seed=32,higherSlot=0,elapsedTicks=1542,placements=1000:1;1001:2
+DUEL,D5-D1,seed=33,higherSlot=1,elapsedTicks=717,placements=1001:1;1000:2
+DUEL,D5-D1,seed=34,higherSlot=0,elapsedTicks=1039,placements=1000:1;1001:2
+DUEL,D5-D1,seed=35,higherSlot=1,elapsedTicks=1066,placements=1001:1;1000:2
+DUEL,D5-D1,seed=36,higherSlot=0,elapsedTicks=660,placements=1000:1;1001:2
+DUEL,D5-D1,seed=37,higherSlot=1,elapsedTicks=1012,placements=1001:1;1000:2
+DUEL,TOTAL,D5-D1,higherWins=19,lowerWins=1,draws=0,matches=20
+]]></output>
+              </test-case>
+              <test-case id="1006" name="AI4_D2AgainstD1_TwentyPredeclaredDuels" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI4_D2AgainstD1_TwentyPredeclaredDuels" methodname="AI4_D2AgainstD1_TwentyPredeclaredDuels" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" seed="191036747" result="Passed" start-time="2026-11-25 15:11:45Z" end-time="2026-11-25 15:12:10Z" duration="24.736975" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[DUEL,D2-D1,seed=18,higherSlot=0,elapsedTicks=2671,placements=1000:1;1001:2
+DUEL,D2-D1,seed=19,higherSlot=1,elapsedTicks=733,placements=1001:1;1000:2
+DUEL,D2-D1,seed=20,higherSlot=0,elapsedTicks=1593,placements=1000:1;1001:2
+DUEL,D2-D1,seed=21,higherSlot=1,elapsedTicks=1754,placements=1000:1;1001:2
+DUEL,D2-D1,seed=22,higherSlot=0,elapsedTicks=2750,placements=1001:1;1000:2
+DUEL,D2-D1,seed=23,higherSlot=1,elapsedTicks=671,placements=1000:1;1001:2
+DUEL,D2-D1,seed=24,higherSlot=0,elapsedTicks=1298,placements=1000:1;1001:2
+DUEL,D2-D1,seed=25,higherSlot=1,elapsedTicks=972,placements=1000:1;1001:2
+DUEL,D2-D1,seed=26,higherSlot=0,elapsedTicks=902,placements=1000:1;1001:2
+DUEL,D2-D1,seed=27,higherSlot=1,elapsedTicks=881,placements=1001:1;1000:2
+DUEL,D2-D1,seed=28,higherSlot=0,elapsedTicks=1993,placements=1000:1;1001:2
+DUEL,D2-D1,seed=29,higherSlot=1,elapsedTicks=1495,placements=1001:1;1000:2
+DUEL,D2-D1,seed=30,higherSlot=0,elapsedTicks=851,placements=1001:1;1000:2
+DUEL,D2-D1,seed=31,higherSlot=1,elapsedTicks=1453,placements=1000:1;1001:2
+DUEL,D2-D1,seed=32,higherSlot=0,elapsedTicks=998,placements=1000:1;1001:2
+DUEL,D2-D1,seed=33,higherSlot=1,elapsedTicks=1339,placements=1001:1;1000:2
+DUEL,D2-D1,seed=34,higherSlot=0,elapsedTicks=964,placements=1000:1;1001:2
+DUEL,D2-D1,seed=35,higherSlot=1,elapsedTicks=1177,placements=1001:1;1000:2
+DUEL,D2-D1,seed=36,higherSlot=0,elapsedTicks=1146,placements=1000:1;1001:2
+DUEL,D2-D1,seed=37,higherSlot=1,elapsedTicks=969,placements=1001:1;1000:2
+DUEL,TOTAL,D2-D1,higherWins=14,lowerWins=6,draws=0,matches=20
+]]></output>
+              </test-case>
+              <test-case id="1007" name="AI4_D3AgainstD2_TwentyPredeclaredDuels" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI4_D3AgainstD2_TwentyPredeclaredDuels" methodname="AI4_D3AgainstD2_TwentyPredeclaredDuels" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" seed="1271654869" result="Passed" start-time="2026-11-25 15:12:10Z" end-time="2026-11-25 15:12:31Z" duration="21.048943" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[DUEL,D3-D2,seed=18,higherSlot=0,elapsedTicks=903,placements=1000:1;1001:2
+DUEL,D3-D2,seed=19,higherSlot=1,elapsedTicks=541,placements=1001:1;1000:2
+DUEL,D3-D2,seed=20,higherSlot=0,elapsedTicks=623,placements=1000:1;1001:2
+DUEL,D3-D2,seed=21,higherSlot=1,elapsedTicks=1002,placements=1001:1;1000:2
+DUEL,D3-D2,seed=22,higherSlot=0,elapsedTicks=504,placements=1001:1;1000:2
+DUEL,D3-D2,seed=23,higherSlot=1,elapsedTicks=956,placements=1001:1;1000:2
+DUEL,D3-D2,seed=24,higherSlot=0,elapsedTicks=789,placements=1000:1;1001:2
+DUEL,D3-D2,seed=25,higherSlot=1,elapsedTicks=700,placements=1000:1;1001:2
+DUEL,D3-D2,seed=26,higherSlot=0,elapsedTicks=1015,placements=1000:1;1001:2
+DUEL,D3-D2,seed=27,higherSlot=1,elapsedTicks=803,placements=1001:1;1000:2
+DUEL,D3-D2,seed=28,higherSlot=0,elapsedTicks=665,placements=1001:1;1000:2
+DUEL,D3-D2,seed=29,higherSlot=1,elapsedTicks=477,placements=1000:1;1001:2
+DUEL,D3-D2,seed=30,higherSlot=0,elapsedTicks=574,placements=1000:1;1001:2
+DUEL,D3-D2,seed=31,higherSlot=1,elapsedTicks=521,placements=1001:1;1000:2
+DUEL,D3-D2,seed=32,higherSlot=0,elapsedTicks=801,placements=1000:1;1001:2
+DUEL,D3-D2,seed=33,higherSlot=1,elapsedTicks=876,placements=1001:1;1000:2
+DUEL,D3-D2,seed=34,higherSlot=0,elapsedTicks=1524,placements=1000:1;1001:1
+DUEL,D3-D2,seed=35,higherSlot=1,elapsedTicks=873,placements=1001:1;1000:2
+DUEL,D3-D2,seed=36,higherSlot=0,elapsedTicks=889,placements=1000:1;1001:2
+DUEL,D3-D2,seed=37,higherSlot=1,elapsedTicks=669,placements=1000:1;1001:2
+DUEL,TOTAL,D3-D2,higherWins=14,lowerWins=5,draws=1,matches=20
+]]></output>
+              </test-case>
+              <test-case id="1008" name="AI4_D4AgainstD3_TwentyPredeclaredDuels" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI4_D4AgainstD3_TwentyPredeclaredDuels" methodname="AI4_D4AgainstD3_TwentyPredeclaredDuels" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" seed="255269294" result="Passed" start-time="2026-11-25 15:12:31Z" end-time="2026-11-25 15:12:53Z" duration="22.068149" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[DUEL,D4-D3,seed=18,higherSlot=0,elapsedTicks=646,placements=1000:1;1001:2
+DUEL,D4-D3,seed=19,higherSlot=1,elapsedTicks=1303,placements=1001:1;1000:2
+DUEL,D4-D3,seed=20,higherSlot=0,elapsedTicks=476,placements=1001:1;1000:2
+DUEL,D4-D3,seed=21,higherSlot=1,elapsedTicks=799,placements=1000:1;1001:2
+DUEL,D4-D3,seed=22,higherSlot=0,elapsedTicks=696,placements=1000:1;1001:2
+DUEL,D4-D3,seed=23,higherSlot=1,elapsedTicks=1242,placements=1000:1;1001:2
+DUEL,D4-D3,seed=24,higherSlot=0,elapsedTicks=570,placements=1001:1;1000:2
+DUEL,D4-D3,seed=25,higherSlot=1,elapsedTicks=971,placements=1001:1;1000:2
+DUEL,D4-D3,seed=26,higherSlot=0,elapsedTicks=596,placements=1000:1;1001:2
+DUEL,D4-D3,seed=27,higherSlot=1,elapsedTicks=517,placements=1001:1;1000:2
+DUEL,D4-D3,seed=28,higherSlot=0,elapsedTicks=532,placements=1001:1;1000:2
+DUEL,D4-D3,seed=29,higherSlot=1,elapsedTicks=500,placements=1001:1;1000:2
+DUEL,D4-D3,seed=30,higherSlot=0,elapsedTicks=421,placements=1000:1;1001:2
+DUEL,D4-D3,seed=31,higherSlot=1,elapsedTicks=718,placements=1000:1;1001:2
+DUEL,D4-D3,seed=32,higherSlot=0,elapsedTicks=534,placements=1000:1;1001:2
+DUEL,D4-D3,seed=33,higherSlot=1,elapsedTicks=774,placements=1000:1;1001:2
+DUEL,D4-D3,seed=34,higherSlot=0,elapsedTicks=1277,placements=1001:1;1000:2
+DUEL,D4-D3,seed=35,higherSlot=1,elapsedTicks=600,placements=1001:1;1000:2
+DUEL,D4-D3,seed=36,higherSlot=0,elapsedTicks=605,placements=1001:1;1000:2
+DUEL,D4-D3,seed=37,higherSlot=1,elapsedTicks=707,placements=1001:1;1000:2
+DUEL,TOTAL,D4-D3,higherWins=11,lowerWins=9,draws=0,matches=20
+]]></output>
+              </test-case>
+              <test-case id="1009" name="AI4_D5AgainstD4_TwentyPredeclaredDuels" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI4_D5AgainstD4_TwentyPredeclaredDuels" methodname="AI4_D5AgainstD4_TwentyPredeclaredDuels" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" seed="1585646347" result="Failed" start-time="2026-11-25 15:12:53Z" end-time="2026-11-25 15:13:19Z" duration="25.396086" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  D5–D4: 4/20 thắng; 0 hòa vẫn tính trong mẫu 20 trận.
+  Expected: in range (11,15)
+  But was:  4
+]]></message>
+                  <stack-trace><![CDATA[at SquishyBump.Tests.PlayMode.BotAcceptanceTests+<RunDuels>d__16.MoveNext () [0x00a68] in D:\Work\Code\Assignment\Game\squishy-bump-sb47\Assets\_Project\Tests\PlayMode\BotAcceptanceTests.cs:321
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[DUEL,D5-D4,seed=18,higherSlot=0,elapsedTicks=594,placements=1000:1;1001:2
+DUEL,D5-D4,seed=19,higherSlot=1,elapsedTicks=942,placements=1001:1;1000:2
+DUEL,D5-D4,seed=20,higherSlot=0,elapsedTicks=811,placements=1001:1;1000:2
+DUEL,D5-D4,seed=21,higherSlot=1,elapsedTicks=693,placements=1000:1;1001:2
+DUEL,D5-D4,seed=22,higherSlot=0,elapsedTicks=573,placements=1001:1;1000:2
+DUEL,D5-D4,seed=23,higherSlot=1,elapsedTicks=1143,placements=1001:1;1000:2
+DUEL,D5-D4,seed=24,higherSlot=0,elapsedTicks=741,placements=1001:1;1000:2
+DUEL,D5-D4,seed=25,higherSlot=1,elapsedTicks=567,placements=1000:1;1001:2
+DUEL,D5-D4,seed=26,higherSlot=0,elapsedTicks=606,placements=1000:1;1001:2
+DUEL,D5-D4,seed=27,higherSlot=1,elapsedTicks=2775,placements=1000:1;1001:2
+DUEL,D5-D4,seed=28,higherSlot=0,elapsedTicks=824,placements=1001:1;1000:2
+DUEL,D5-D4,seed=29,higherSlot=1,elapsedTicks=470,placements=1000:1;1001:2
+DUEL,D5-D4,seed=30,higherSlot=0,elapsedTicks=801,placements=1001:1;1000:2
+DUEL,D5-D4,seed=31,higherSlot=1,elapsedTicks=770,placements=1000:1;1001:2
+DUEL,D5-D4,seed=32,higherSlot=0,elapsedTicks=800,placements=1001:1;1000:2
+DUEL,D5-D4,seed=33,higherSlot=1,elapsedTicks=471,placements=1000:1;1001:2
+DUEL,D5-D4,seed=34,higherSlot=0,elapsedTicks=645,placements=1001:1;1000:2
+DUEL,D5-D4,seed=35,higherSlot=1,elapsedTicks=667,placements=1000:1;1001:2
+DUEL,D5-D4,seed=36,higherSlot=0,elapsedTicks=577,placements=1001:1;1000:2
+DUEL,D5-D4,seed=37,higherSlot=1,elapsedTicks=618,placements=1000:1;1001:2
+DUEL,TOTAL,D5-D4,higherWins=4,lowerWins=16,draws=0,matches=20
+]]></output>
+              </test-case>
+              <test-case id="1002" name="AI5_FiveD5ChaosCore_ProfilesAllLivingBotLogic" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI5_FiveD5ChaosCore_ProfilesAllLivingBotLogic" methodname="AI5_FiveD5ChaosCore_ProfilesAllLivingBotLogic" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" seed="1764257325" result="Failed" start-time="2026-11-25 15:13:19Z" end-time="2026-11-25 15:13:23Z" duration="4.192782" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  At least 10 seconds with all five bots active after warmup.
+  Expected: greater than or equal to 600
+  But was:  234
+]]></message>
+                  <stack-trace><![CDATA[at SquishyBump.Tests.PlayMode.BotAcceptanceTests+<RunGroup>d__10.MoveNext () [0x00df6] in D:\Work\Code\Assignment\Game\squishy-bump-sb47\Assets\_Project\Tests\PlayMode\BotAcceptanceTests.cs:198
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[AI5,EditorNull,AMD Ryzen 7 6800H with Radeon Graphics ,cores=16,allFiveAliveSamples=234,meanMs=0,5838,p95Ms=2,1406,decisions=599/103/48/599/97
+]]></output>
+              </test-case>
+              <test-case id="1003" name="AI6_D4MovingGround120Seconds_RecordsEveryObstacleEncounter" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI6_D4MovingGround120Seconds_RecordsEveryObstacleEncounter" methodname="AI6_D4MovingGround120Seconds_RecordsEveryObstacleEncounter" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" seed="665218435" result="Failed" start-time="2026-11-25 15:13:23Z" end-time="2026-11-25 15:13:27Z" duration="4.290861" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  MovingGround: avoided 2/8, requires >=70% with nonzero observations
+  Expected: <empty>
+  But was:  < "MovingGround: avoided 2/8, requires >=70% with nonzero observations" >
+]]></message>
+                  <stack-trace><![CDATA[at SquishyBump.Tests.PlayMode.BotAcceptanceTests+<RunGroup>d__10.MoveNext () [0x0105e] in D:\Work\Code\Assignment\Game\squishy-bump-sb47\Assets\_Project\Tests\PlayMode\BotAcceptanceTests.cs:209
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[AI6,D4,MovingGround,avoided=2,resolved=8,unresolved=0,stuckRecoveries=0/0/0/0/0,alive=0
+AI6,D4,PusherBlocks,avoided=11,resolved=15,unresolved=0,stuckRecoveries=0/0/0/0/0,alive=0
+]]></output>
+              </test-case>
+              <test-case id="1004" name="AI6_D5MovingGround120Seconds_RecordsEveryObstacleEncounter" fullname="SquishyBump.Tests.PlayMode.BotAcceptanceTests.AI6_D5MovingGround120Seconds_RecordsEveryObstacleEncounter" methodname="AI6_D5MovingGround120Seconds_RecordsEveryObstacleEncounter" classname="SquishyBump.Tests.PlayMode.BotAcceptanceTests" runstate="Runnable" seed="1163485690" result="Failed" start-time="2026-11-25 15:13:27Z" end-time="2026-11-25 15:13:31Z" duration="4.250857" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  MovingGround: avoided 2/9, requires >=70% with nonzero observations
+  Expected: <empty>
+  But was:  < "MovingGround: avoided 2/9, requires >=70% with nonzero observations" >
+]]></message>
+                  <stack-trace><![CDATA[at SquishyBump.Tests.PlayMode.BotAcceptanceTests+<RunGroup>d__10.MoveNext () [0x0105e] in D:\Work\Code\Assignment\Game\squishy-bump-sb47\Assets\_Project\Tests\PlayMode\BotAcceptanceTests.cs:209
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[AI6,D5,PusherBlocks,avoided=34,resolved=43,unresolved=0,stuckRecoveries=1/0/1/0/0,alive=0
+AI6,D5,MovingGround,avoided=2,resolved=9,unresolved=0,stuckRecoveries=1/0/1/0/0,alive=0
+Saving results to: C:/Users/THIS PC/AppData/LocalLow/BKU Group 18/Squishy Bump\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

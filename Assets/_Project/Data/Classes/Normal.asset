@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 306521f7791141a498259031c433eb98, type: 3}
   m_Name: Normal
   m_EditorClassIdentifier: SquishyBump.Core::SquishyBump.Core.ClassProfile
+  category: 0
   mass: 10
   radius: 0.5
   maxSpeed: 6

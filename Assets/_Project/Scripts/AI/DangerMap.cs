@@ -18,12 +18,12 @@ namespace SquishyBump.AI
         public bool Walkable(int index) => index >= 0 && index < Count && walkable[index];
 
         public DangerMap(IBotNavigationSnapshot snapshot, float edgeMargin,
-            BotAwareness awareness, float iceMarginMultiplier = 1f)
+            BotAwareness awareness, float iceMarginMultiplier = 1f, float warningAgeSeconds = 0)
         {
             if (snapshot == null) throw new ArgumentNullException(nameof(snapshot));
             if (snapshot.Width < 1 || snapshot.Height < 1 || snapshot.Width > MaximumSide ||
                 snapshot.Height > MaximumSide || !Finite(edgeMargin) || edgeMargin <= 0 ||
-                !Finite(iceMarginMultiplier) || iceMarginMultiplier < 1)
+                !Finite(iceMarginMultiplier) || iceMarginMultiplier < 1 || !Finite(warningAgeSeconds) || warningAgeSeconds < 0)
                 throw new ArgumentOutOfRangeException(nameof(snapshot));
             Width = snapshot.Width; Height = snapshot.Height; Origin = snapshot.Origin;
             danger = new float[Width * Height]; walkable = new bool[Count];
@@ -37,7 +37,7 @@ namespace SquishyBump.AI
                 var value = cell.Walkable ? Mathf.Clamp01(1 - cell.EdgeDistance / margin) : 1f;
                 foreach (var warning in snapshot.Warnings)
                     if ((warning.Awareness & awareness) != 0 && Contains(warning, Position(i)))
-                        value = Mathf.Max(value, Mathf.Clamp01(1 - warning.SecondsUntilImpact / 2f));
+                        value = Mathf.Max(value, Mathf.Clamp01(1 - (warning.SecondsUntilImpact - warningAgeSeconds) / 2f));
                 danger[i] = value;
             }
         }
@@ -69,6 +69,27 @@ namespace SquishyBump.AI
                         warning.Size.x / Mathf.Sqrt(3f) - Mathf.Abs(local.x) / Mathf.Sqrt(3f);
                 default: return false;
             }
+        }
+        /// <summary>Biên bảo thủ cho footprint quả khi chọn điểm đứng; cost lưới vẫn theo A.4.</summary>
+        public static bool ContainsExpanded(BotHazardWarning warning, Vector3 point, float padding)
+        {
+            if (padding <= 0) return Contains(warning, point);
+            var size = warning.Size;
+            switch (warning.Shape)
+            {
+                case BotHazardShape.Circle: size.x += padding; break;
+                case BotHazardShape.Annulus: size = new Vector2(Mathf.Max(0, size.x - padding), size.y + padding); break;
+                case BotHazardShape.Box: size += Vector2.one * padding; break;
+                case BotHazardShape.Hex: size.x += 2 * padding; break;
+                case BotHazardShape.Cone:
+                    var distance = Vector2.Distance(new Vector2(point.x, point.z), warning.Center);
+                    if (distance <= padding) return true;
+                    size.x += padding;
+                    size.y = Mathf.Min(180, size.y + Mathf.Asin(padding / distance) * Mathf.Rad2Deg);
+                    break;
+            }
+            return Contains(new BotHazardWarning(warning.Awareness, warning.Shape, warning.Center,
+                size, warning.YawDegrees, warning.SecondsUntilImpact), point);
         }
         private static bool Finite(float value) => !float.IsNaN(value) && !float.IsInfinity(value);
     }

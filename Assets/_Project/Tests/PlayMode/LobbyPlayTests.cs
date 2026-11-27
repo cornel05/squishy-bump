@@ -195,7 +195,14 @@ namespace SquishyBump.Tests.PlayMode
                 lobby.Motors[ids[i]].GetComponent<Rigidbody>().position = PickPosition(stands, choices[i]);
             yield return WaitFor(() => ids.Select(id => lobby.Coordinator.Room.Players[id].Fruit)
                 .SequenceEqual(choices.Take(ids.Length).Select(choice => (int?)choice)), "mọi người chọn trái");
-            lobby.Motors[0].GetComponent<Rigidbody>().position = layout.Find("Host desk").position + Vector3.back * 2;
+            // Claim is published at the end of a host tick; the next tick replaces the neutral avatar.
+            // Wait for that replacement before teleporting the fixture to the desk.
+            var roster = UnityEditor.AssetDatabase.LoadAssetAtPath<MatchSetup>("Assets/_Project/Data/MatchSetup.asset").Roster;
+            yield return WaitFor(() => ids.Select((id, i) => lobby.Motors[id].gameObject.name.StartsWith(roster[choices[i]].name))
+                .All(matches => matches), "avatar đã đổi theo lựa chọn");
+            var hostBody = lobby.Motors[0].GetComponent<Rigidbody>();
+            hostBody.linearVelocity = Vector3.zero;
+            hostBody.position = layout.Find("Host desk").position + Vector3.back * 2;
             var hostDesk = lobby.GetComponentsInChildren<RectTransform>(true).Single(t => t.name == "Host desk");
             yield return WaitFor(() => hostDesk.gameObject.activeSelf, "host tới quầy");
             SetRule(lobby, hostDesk, MatchRule.Survival);

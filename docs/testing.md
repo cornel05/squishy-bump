@@ -1,4 +1,4 @@
-﻿# Testing
+# Testing
 
 ## Lượt thử SB-20 ngày 21/11/2026 — phục hồi phiên LAN
 
@@ -252,7 +252,7 @@ and [`gdd/ids.md`](gdd/ids.md). Update a row whenever the test is run (date, bui
 | T10 | pass (Native PlayMode, 120 s mô phỏng) | 21/11/2026 | SB-44 / base `c293fe1` | Codex | 61 collider thật; kiểm tra từng tick ≥37 và BFS; xem bằng chứng bên dưới. |
 | T11 | Một phần — Survival loopback + Rank EditMode đạt | 24/11/2026 | SB-30 trên `main` | Codex / Duy | Peer gửi input rồi rớt; loại ở tick host, motor dừng, trận tiếp tục, lobby mở lại admission; Rank giữ điểm/không respawn trong EditMode; LAN riêng máy chưa chạy. |
 | T12 | pass (PlayMode loopback) | 21/11/2026 | SB-20 recovery, base `39bfc7f` | Codex | Client L1 về MainMenu và hiện thông báo khi host đóng phiên. |
-| T13 | not run | | | | |
+| T13 | PASS tự động A.7 (Editor) | 25/11/2026 | 020bfb0 + SB47 source manifest | Nhật / Codex | [Báo cáo và XML](testing/sb47-bot-difficulty.md); 10/10 ca AI, chưa merge PR |
 | T14 | not run | | | | |
 | T15 | fail — delayed local response | 21/11/2026 | v0.1.0 / `4f0c0de` | Codex | MPP L3, nominal 100 ms RTT / 2% loss. Client moved on 6/6 instrumented inputs after 344–354 ms. Gust warning matched the rendered host tick and aim. See T15 evidence above. |
 | T16 | cut | 16/11/2026 | | Đình Duy | Out of A02 scope: D36 (#82). |
@@ -671,3 +671,98 @@ Xác minh nguồn cuối SB-32 ngày 24/11/2026: release Windows **Succeeded: 0 
 - Rebuild `Assets/_Project/Scenes/Levels/L1.unity` qua `LevelArtSceneBuilder.BuildL1` (`BuildL1 exit: 0`).
 - Bổ sung `RingDropTests.TargetWaterY_RisesWithEachDroppedBandAndSubmergesRingAtEnd` (EditMode) và kiểm tra `Water` bắt đầu tại `-0.25m`, dâng sau khi `Band 0` rụng và vượt `0.2m` nhấn chìm ring khi 4 vòng rụng trong `LevelArtTests` (PlayMode).
 - Kết quả: `tools/verify.ps1 -PlayMode` → **VERIFY: PASS** (**377** EditMode, **89** PlayMode passed, **2** skipped `Skipped:Ignored`, **0** cảnh báo `SquishyBump.*`). Chưa build Windows `.exe` hoặc mở game kiểm tra bằng mắt.
+
+### SB-47 — bằng chứng WIP ngày 22/11/2026, chưa nghiệm thu
+
+Worktree `squishy-bump-sb47`, nhánh `feat/SB-47-bot-difficulty`, nền PR #104
+`88d41f1` (đã tích hợp main `05fb37a`), WIP trước tích hợp giữ trong stash
+`5e43708f1b2131c52a543ae741dfadbd53a550f7`. Chưa có commit/PR cho SB-47. Giữ thông số
+GDD A.5; không đánh dấu T13.
+
+- Hồi quy nhịp quyết định: Native **205 đạt/4 lỗi** trước sửa, sau sửa **209/209 EditMode**.
+  Trong cửa sổ 10 s ở bước 60 Hz, năm bậc giữ trung bình 4/5/6/8/10 Hz. Lưu
+  `TestResults/SB47-DecisionCadenceBeforeFix.*`; các bộ EditMode sau cũng chứa ca này.
+- Hồi quy ô đích A*: `SB47-GridGoalBeforeFix.*` **0 đạt/1 lỗi**, đứng đúng tâm ô đích
+  lệch (-0.5,-0.5) vẫn có hai lần anti-stuck. Đo tiến bộ tới ô đích thực tế đã sửa lỗi;
+  bộ sau đó **219/219 EditMode**. Không dùng ngưỡng anti-stuck làm sai số tới waypoint.
+- AI-1: bản sau sửa ô đích chạy **25 lượt**, D1–D5, seed 18–22 cho mỗi bậc, hạng
+  Nặng/Vừa/Nhẹ luân phiên theo fixture, **120 s/lượt ở bước 60 Hz**. Dùng prefab,
+  PlayerMotor, CollisionResolver, PhysX và RingDrop L1 thật; không tạo kết quả bằng
+  cách chỉnh vị trí trong lúc đo. `SB47-AI1AfterFix.xml/log` **1/1 đạt**, 92.896 s
+  thời gian thực, không lần rơi nào trong 25 lượt. Đồng hồ driver chạy trực tiếp vì
+  MatchDirector không chấp nhận trận một người. Không phải full session hay player build.
+  Oracle D1 tính mọi lần rơi trong đủ 120 s; bản đo ban đầu có hai lần rơi và chưa đạt.
+- Hồi quy thiếu ô an toàn: `SB47-NoSafeCellBeforeFix.*` **0/1 lỗi**, quay về tâm đang
+  có D=0.95 khi không có ô D<0.2. Thêm fallback chọn danger thấp nhất trong vùng tới
+  được; bộ EditMode lúc đó **220/220**, 0 skip/lỗi/cảnh báo compile. Đây là mốc trước
+  các sửa clock/waypoint/footprint tiếp theo, không xác nhận mã WIP mới nhất đã xanh.
+- AI-2: 15 lượt cố định (D3–D5 × seed 18–22), 60 s/lượt, cùng ba hạng cân luân phiên,
+  H06/Frost Ring và PhysX thật. Ghi mọi lần tâm quả vào ô Cracking; đánh giá tại lúc
+  ô Fallen, không bỏ lượt rơi, trường hợp còn Cracking cuối cửa sổ ghi unresolved.
+  Ca còn rơi trước 60 s cũng được báo lỗi. Bản đầu `SB47-AI2BeforeArrivalFix.*`:
+  D3 **3/3**, D4 **4/7**, D5 **6/12** lần rời ô đúng hạn; vẫn có nhiều lượt rơi vào
+  lỗ khác nên chưa đạt. Các bản trung gian tiếp tục thất bại và giữ XML/log riêng.
+  Bản Native gần nhất `SB47-AI2ArrivalClock.*`: D3 **6/7**, D4 **11/14**, D5 **10/15**;
+  vẫn dưới 90%, có lượt rơi nên **AI-2 FAIL**. Trace `SB47-AI2Trace.*` cho thấy một
+  ca D4 phanh về 0 khi chưa rời ô đang nứt, dùng để sửa waypoint/phanh tiếp theo.
+
+Bản sửa vị trí liên tục/footprint đã chạy trên nền mới: **264/264 EditMode**, 0 lỗi,
+skip/cảnh báo C#, gồm hồi quy clock cảnh báo và footprint các hình. AI-2Footprint
+vẫn thất bại: D3 **11/12**, D4 **12/15**, D5 **11/14**; D5 không rơi trong cả năm lượt
+nhưng tỷ lệ rời ô vẫn chưa đủ. Hồi quy `SB47-RoamDangerBeforeFix.*` **0/1 lỗi**:
+Roam cố giữ tâm sàn có D=0.25 thay vì tới ô ít nguy hiểm, dù chưa cần Evade (D≥0.5).
+Sau sửa ưu tiên danger rồi khoảng cách tới tâm, **265/265 EditMode** đạt. AI-2Roam:
+D3 **10/10**, D4 **13/15**, D5 **12/15**; D3 seed20 và D5 seed19 còn rơi. **AI-2
+vẫn FAIL**, đang đo trace chi tiết; không bỏ lượt lỗi hoặc thay seed để đạt tỷ lệ.
+
+Lượt Native ban đầu từng không thực thi vì quota xét duyệt đến 03:15. Sau khi mốc
+đó đã qua, lệnh được gửi lại qua cổng xét duyệt bình thường. Unity thoát 198 khi Hub
+không chạy; mở Hub MSIX đã cài ở chế độ nền làm mới dịch vụ giấy phép hiện có,
+reimport thoát 0 và các bộ Native trên chạy được. Không kích hoạt giấy phép mới,
+không dùng đường khác để vượt cổng xét duyệt. Quota/giấy phép không còn là chặn hiện tại.
+
+Các fixture AI-3/AI-4 đã được biên dịch trong bộ Native trên, **chưa chạy**: mỗi cặp 20
+match L1, seed 18–37 cố định, đổi phía/fruit mỗi lượt, cùng hạng Vừa, motor/physics/
+hazard/MatchDirector thật. Hòa vẫn nằm trong mẫu 20 trận. Ngưỡng AI-3 là 16–20 thắng,
+AI-4 từng cặp liền kề là 11–15 thắng. Chưa có số liệu tỷ lệ thắng nào từ các fixture này.
+
+Cần chạy lại AI-1 và toàn bộ `tools/verify.ps1 -PlayMode` trên bản cuối; hoàn tất
+AI-2–AI-6, profiler và build Windows trước khi kết luận. Chưa có bằng chứng T13,
+T04/T07 đầy đủ, playtest người thật, chất lượng hình ảnh hoặc LAN nhiều PC. Mốc T05
+PlayMode tự động do main `05fb37a` bổ sung được giữ nguyên trong bảng, không phải
+bằng chứng do SB-47 tạo và chưa thay thế kiểm tra luồng progression/bot A.6 của SB-26.
+
+
+### SB-47 — nghiệm thu T13 nguồn cuối ngày 25/11/2026
+
+Tiếp tục từ WIP 22/11 ở trên; nguồn nhánh `feat/SB-47-bot-difficulty`, tích hợp
+main `020bfb0` qua `99be17c`. Nhật/Codex chạy `tools/verify.ps1 -PlayMode`:
+**VERIFY: PASS**, **421 EditMode + 99 PlayMode đạt**, 0 lỗi/cảnh báo C#, 2 skip
+hình ảnh do Null renderer. Cả 10 ca BotAcceptanceTests đạt, không skip ca AI.
+Fingerprint nguồn và XML: [báo cáo SB-47](testing/sb47-bot-difficulty.md),
+[summary](testing/sb47-evidence/summary.json), [manifest](testing/sb47-evidence/manifest.json).
+
+- AI-1: 25 lượt 120s, không rơi. AI-2: D3 16/16, D4 16/17, D5 15/15.
+- AI-3: 18/20. AI-4 bậc cao thắng 14/20, 14/20, 11/20, 13/20;
+  một hòa D3/D2 vẫn nằm trong 20 trận.
+- AI-5: ba lượt L5, 2315 mẫu đủ năm bot sống, mean 0.6259ms;
+  từng lượt 0.7026/0.5729/0.5680ms, p95 2.5733/2.0786/2.0145ms.
+  Ryzen7 6800H/16 logical, Native Editor/Null renderer, profiler bật;
+  đây không phải T14/FPS player.
+- AI-6: D4 H07 10/14, H03 25/28; D5 H07 9/12, H03 46/49;
+  0 unresolved, không kẹt >3s. Hồi quy chống kẹt và số lần thực trong XML.
+  Oracle tính né sớm theo quỹ đạo và giữ mọi contact là lỗi; không đổi seed/ngưỡng.
+
+Lần verifier đầu 97 pass/2 fail được giữ làm before-global-fixes.xml: L1 mất 19
+material mặc định glTFast, fixture lobby đụng race thay avatar. Editor API lưu
+material persistent/gán đúng 19 tham chiếu; fixture chờ avatar, giữ assertion/timeout.
+Sáu ca đích sau sửa đều đạt rồi mới chạy verifier toàn bộ trên nguồn cuối.
+T13 đạt tự động; issue #38 đã lưu/đọc lại 4/4. Chưa có bằng chứng LAN nhiều PC,
+playtest ngoài nhóm hoặc full T07 từ bộ này. Release Windows **BUILD: PASS**, 0 errors, 3845 MB (6 phút 40 giây).
+Scanner GUID bổ trợ: 783 tệp, 4 lỗi URP cũ trùng baseline SB-32, 0 warning;
+file URP không đổi với main, không ghi scanner GUID PASS. Smoke và phạm vi được ghi bên dưới; chờ PR review.
+
+Smoke bản Windows vừa build: headless 50 giây, managed assemblies tải xong,
+process còn chạy, 0 exception, save.json không đổi; chỉ dừng PID smoke do công cụ
+tạo. Log/JSON trong sb47-evidence; không dùng smoke này làm bằng chứng gameplay,
+renderer, LAN hoặc FPS. Chờ cornel05 review PR; không tự merge.
