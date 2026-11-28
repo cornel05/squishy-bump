@@ -7,6 +7,7 @@ using NUnit.Framework;
 using SquishyBump.App;
 using SquishyBump.Core;
 using SquishyBump.Match;
+using SquishyBump.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
@@ -23,7 +24,18 @@ namespace SquishyBump.Tests.PlayMode
         public IEnumerator LobbyPick_StartsL1WithFiveOtherCharacters()
         {
             yield return Boot();
-            app.Launcher.EnterSinglePlayerLobby();
+            yield return SceneManager.LoadSceneAsync("Assets/_Project/Scenes/MainMenu.unity");
+            var menu = app.Launcher.Menu;
+            menu.ShowPage("Single Player");
+            menu.GetComponentsInChildren<Button>()
+                .Single(b => b.GetComponentInChildren<Text>().text == "Enter Lobby").onClick.Invoke();
+            var opening = menu.GetComponentInChildren<CupCutscene>();
+            Assert.That(opening, Is.Not.Null);
+            Assert.That(opening.gameObject.name, Is.EqualTo("B01 Opening"));
+            Assert.That(opening.GetComponentsInChildren<Text>().Single(t => t.name == "Subtitle").text,
+                Does.Contain("Six squishies"));
+            Assert.That(app.Session.State, Is.EqualTo(SessionState.Idle));
+            SkipCutscene(opening);
             yield return WaitFor(() => app.Launcher.Lobby != null && app.Launcher.Lobby.Coordinator != null);
             var lobby = app.Launcher.Lobby;
             Assert.That(lobby.Coordinator.ClaimFromHostPosition(0, 4), Is.True);
@@ -31,6 +43,7 @@ namespace SquishyBump.Tests.PlayMode
             yield return WaitFor(() => app.Launcher.Match != null && app.Launcher.Match.Started);
             var match = app.Launcher.Match;
             Assert.That(match.Director.Level, Is.EqualTo(1));
+            Assert.That(Object.FindFirstObjectByType<CupCutscene>(), Is.Null);
             Assert.That(match.Fighters.Single(f => f.Id == 0).Fruit, Is.EqualTo(4));
             Assert.That(match.Fighters.Select(f => (int)f.Fruit).OrderBy(x => x), Is.EqualTo(Enumerable.Range(0, 6)));
             Assert.That(match.Bots, Has.Count.EqualTo(5));
@@ -107,11 +120,24 @@ namespace SquishyBump.Tests.PlayMode
                     { Drop(match, match.Fighters[1].Id); yield return null; }
                 }
                 yield return WaitFor(() => match.Director.Phase == MatchPhase.Result);
-                if (n < 5) yield return ClickResult("Continue");
+                if (n < 5)
+                {
+                    Assert.That(Object.FindFirstObjectByType<CupCutscene>(), Is.Null);
+                    yield return ClickResult("Continue");
+                }
                 else
                 {
                     yield return WaitFor(() => app.Launcher.SingleRun.Finished);
                     Assert.That(app.Launcher.SingleRun.LevelsCleared, Is.EqualTo(5));
+                    var ending = app.Launcher.Overlay.GetComponentInChildren<CupCutscene>();
+                    Assert.That(ending, Is.Not.Null);
+                    Assert.That(ending.gameObject.name, Is.EqualTo("B09 Ending"));
+                    Assert.That(ending.GetComponentsInChildren<Text>().Single(t => t.name == "Subtitle").text,
+                        Does.Contain("Five play areas completed."));
+                    var resultBeforeSkip = app.Launcher.Overlay.ResultText;
+                    SkipCutscene(ending);
+                    Assert.That(app.Launcher.Overlay.GetComponentInChildren<CupCutscene>(), Is.Null);
+                    Assert.That(app.Launcher.Overlay.ResultText, Is.EqualTo(resultBeforeSkip));
                     Assert.That(app.Launcher.Overlay.ResultText, Does.Contain("CLEARED 5/5 LEVELS"));
                     Assert.That(app.Launcher.Overlay.GetComponentsInChildren<Text>().Any(t => t.name == "Single Run Summary" && t.text.Contains("RETRIES:")), Is.True);
                     if (Application.platform == RuntimePlatform.WindowsPlayer)
@@ -133,6 +159,14 @@ namespace SquishyBump.Tests.PlayMode
             }
             Directory.CreateDirectory(Path.Combine(EvidenceRoot(), "TestResults"));
             File.WriteAllLines(Path.Combine(EvidenceRoot(), $"TestResults/SB26-{Application.platform}-{rule}-Flow.txt"), log);
+        }
+
+        private static void SkipCutscene(CupCutscene cutscene)
+        {
+            var skip = cutscene.GetComponentsInChildren<Button>()
+                .Single(b => b.GetComponentInChildren<Text>().text == "Skip cutscene");
+            skip.onClick.Invoke();
+            skip.onClick.Invoke();
         }
 
         private static string EvidenceRoot()

@@ -258,7 +258,7 @@ and [`gdd/ids.md`](gdd/ids.md). Update a row whenever the test is run (date, bui
 | T16 | cut | 16/11/2026 | | Đình Duy | Out of A02 scope: D36 (#82). |
 | T17 | cut | 16/11/2026 | | Đình Duy | Out of A02 scope: D37 (#83). |
 | T18 | not run | | | | |
-| T19 | not run | | | | |
+| T19 | Một phần: cutscene Single Player | 28/11/2026 | base 020bfb0 + SB-71 | Nhật / Codex | [PlayMode](testing/sb71-evidence/single-player-playmode.xml); phần Relay chưa chạy |
 | T20 | not run | | | | |
 
 ### SB-44 — L4/H06 Native, 21/11/2026
@@ -671,3 +671,21 @@ Xác minh nguồn cuối SB-32 ngày 24/11/2026: release Windows **Succeeded: 0 
 - Rebuild `Assets/_Project/Scenes/Levels/L1.unity` qua `LevelArtSceneBuilder.BuildL1` (`BuildL1 exit: 0`).
 - Bổ sung `RingDropTests.TargetWaterY_RisesWithEachDroppedBandAndSubmergesRingAtEnd` (EditMode) và kiểm tra `Water` bắt đầu tại `-0.25m`, dâng sau khi `Band 0` rụng và vượt `0.2m` nhấn chìm ring khi 4 vòng rụng trong `LevelArtTests` (PlayMode).
 - Kết quả: `tools/verify.ps1 -PlayMode` → **VERIFY: PASS** (**377** EditMode, **89** PlayMode passed, **2** skipped `Skipped:Ignored`, **0** cảnh báo `SquishyBump.*`). Chưa build Windows `.exe` hoặc mở game kiểm tra bằng mắt.
+
+### SB-71 — B01/B09, 28/11/2026
+
+Unity 6000.3.28f1 PlayMode lọc `SinglePlayerRunTests` trên base `020bfb0`
+đạt **4/4**, không cảnh báo C#. B01 mở từ màn chọn luật, có phụ đề, Skip
+đưa vào lobby rồi L1. B09 chỉ xuất hiện ở kết quả lượt đã hoàn tất; cả
+Survival lẫn Rank được chạy đủ năm sàn. Skip B09 giữ nguyên kết quả,
+và các màn trung gian không phát đoạn kết. Báo cáo NUnit trong
+[SB-71 evidence](testing/sb71-evidence/single-player-playmode.xml).
+T19 mới có bằng chứng phần cutscene trong Editor. Relay và kiểm tra
+hình ảnh trên Windows Player vẫn chưa thực hiện.
+
+Verifier toàn bộ được chạy cùng hai sửa hồi quy đã kiểm chứng từ #133:
+material mặc định của Roundcube L1 và chờ đúng avatar trong fixture LAN.
+
+Verifier nguồn cuối `tools/verify.ps1 -PlayMode` → **VERIFY: PASS**:
+377 EditMode và 89 PlayMode đạt, 0 lỗi, 0 cảnh báo C#. Hai ca hình ảnh cần
+renderer Windows Player được skip. [XML kiểm thử](testing/sb71-evidence).

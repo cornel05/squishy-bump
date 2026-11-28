@@ -5,6 +5,7 @@ using SquishyBump.Core;
 using SquishyBump.Hazards;
 using SquishyBump.Match;
 using SquishyBump.Presentation;
+using SquishyBump.UI;
 using SquishyBump.UI.Menus;
 using Unity.Netcode;
 using UnityEngine;
@@ -210,6 +211,10 @@ namespace SquishyBump.App
                 Overlay.ShowSessionResult(rows, id => setup.Roster[characters[id]].name, id => characters[id]);
                 Overlay.ShowSinglePlayerSummary(singleRun.LevelsCleared, singleRun.Retries);
                 Overlay.OfferResultAction("Main Menu", LeaveToMenu);
+                var leaders = rows.Where(row => row.Rank == 1).ToArray();
+                int? winner = leaders.Length == 1 && characters.TryGetValue(leaders[0].FighterId, out var slot) ? slot : null;
+                CupCutscene.Ending(Overlay.transform, winner.HasValue ? setup.Roster[winner.Value].name : null,
+                    winner, singleRun.LevelsCleared);
             }
             else Overlay.OfferResultAction(singleWon ? "Continue" : "Retry", ContinueSinglePlayer);
         }
@@ -367,7 +372,11 @@ namespace SquishyBump.App
             Menu.Init(bootstrap.Session, bootstrap.Settings, $"v{Application.version}", setup.Levels, bootstrap.Discovery);
             if (bootstrap.Session.LastEndReason == SessionEndReason.HostLost)
                 Menu.ShowPage("Multiplayer");
-            Menu.SinglePlayerRequested += _ => EnterSinglePlayerLobby();
+            Menu.SinglePlayerRequested += _ =>
+            {
+                if (go.GetComponentInChildren<CupCutscene>(true) == null)
+                    CupCutscene.Opening(go.transform, EnterSinglePlayerLobby);
+            };
             Menu.HostRequested += () => HostLan();
             Menu.JoinRequested += (address, password) => Join(address, password);
             Menu.QuitRequested += Application.Quit;

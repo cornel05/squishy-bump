@@ -119,3 +119,12 @@ code luồng/roster và helper Editor theo GDD 3.5/A.6; không thêm model/ảnh
 hay asset sinh ảnh. D39 giữ các slot/hạng cân khi đổi sang thú. Không dùng RNG
 để sinh asset; RNG gameplay do host giữ seed. Hash config trong asset-ledger.csv;
 nguồn/giấy phép tài nguyên UI/nhân vật tái dùng giữ nguyên.
+
+
+SB-71 tái dùng các sprite bg_start, avatar_0–5, medal_1 và banner_round_1 từ UI kit
+đã khai báo ở trên. Storyboard, phụ đề và chuyển cảnh được dựng trong Unity
+6000.3.28f1 bằng C# và uGUI với hỗ trợ Codex, theo kịch bản Phụ lục B.
+Không có ảnh hoặc âm thanh mới. Mục CUT-STORY-001 trong danh mục asset.
+
+Bản sửa material L1 tái dùng từ PR #133. MapDefault.mat là bản lưu material mặc
+định glTFast 6.20.0 (Apache-2.0) qua Editor API, dùng cho 19 prop Roundcube.

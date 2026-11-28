@@ -109,6 +109,7 @@ namespace SquishyBump.Editor
             island.transform.localPosition = new Vector3(0f, L1IslandY, 0f);
             island.transform.localScale = Vector3.one * L1IslandScale;
             StripNonVisuals(island);
+            BindL1DefaultMaterials(island);
             PrefabUtility.UnpackPrefabInstance(island, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
 
             var leftoverNames = new[]
@@ -358,6 +359,55 @@ namespace SquishyBump.Editor
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene, level.ScenePath);
             Debug.Log($"[LevelArtSceneBuilder] Built {level.ScenePath}");
+        }
+
+        [MenuItem("Squishy Bump/Repair L1 Default Materials")]
+        public static void RepairL1DefaultMaterials()
+        {
+            try
+            {
+                var scene = EditorSceneManager.OpenScene(LoadLevel(1).ScenePath, OpenSceneMode.Single);
+                var changed = scene.GetRootGameObjects().Sum(BindL1DefaultMaterials);
+                if (changed > 0) EditorSceneManager.SaveScene(scene);
+                AssetDatabase.SaveAssets();
+                Debug.Log($"[LevelArtSceneBuilder] Persisted default material on {changed} L1 renderers.");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+                if (Application.isBatchMode) EditorApplication.Exit(1);
+                throw;
+            }
+        }
+
+        private static int BindL1DefaultMaterials(GameObject root)
+        {
+            // Map1 Roundcube primitives omit material in the source glTF. The importer's
+            // generated fallback is transient; a scene needs a persistent copy after reload.
+            var renderers = root.GetComponentsInChildren<MeshRenderer>(true)
+                .Where(r => r.name.StartsWith("Roundcube.", StringComparison.Ordinal) &&
+                    (r.sharedMaterials.Length == 0 || r.sharedMaterials.Any(m => m == null || !EditorUtility.IsPersistent(m))))
+                .ToArray();
+            if (renderers.Length == 0) return 0;
+            var path = $"{ArtRoot}/L1/MapDefault.mat";
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material == null)
+            {
+                var fallback = GLTFast.Materials.MaterialGenerator.GetDefaultMaterialGenerator().GetDefaultMaterial();
+                if (fallback == null) throw new InvalidOperationException("Missing glTF default material.");
+                material = new Material(fallback) { name = "MapDefault", hideFlags = HideFlags.None };
+                AssetDatabase.CreateAsset(material, path);
+            }
+            foreach (var renderer in renderers)
+            {
+                var materials = renderer.sharedMaterials;
+                if (materials.Length == 0) materials = new[] { material };
+                else for (var i = 0; i < materials.Length; i++)
+                    if (materials[i] == null || !EditorUtility.IsPersistent(materials[i])) materials[i] = material;
+                renderer.sharedMaterials = materials;
+                EditorUtility.SetDirty(renderer);
+            }
+            return renderers.Length;
         }
 
         private static void ConfigureL1SandMaterial(Material bandMat, string normalPath)
