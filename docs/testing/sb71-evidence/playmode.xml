@@ -1,0 +1,775 @@
+<?xml version='1.0' encoding='utf8'?>
+<test-run id="2" testcasecount="91" result="Skipped:Ignored" total="91" passed="89" failed="0" inconclusive="0" skipped="2" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-28 07:05:25Z" end-time="2026-11-28 07:12:41Z" duration="435,8708151">
+  <test-suite type="TestSuite" id="1132" name="Squishy Bump" fullname="Squishy Bump" runstate="Runnable" testcasecount="91" result="Skipped" label="Ignored" start-time="2026-11-28 07:05:25Z" end-time="2026-11-28 07:12:41Z" duration="435.870815" total="91" passed="89" failed="0" inconclusive="0" skipped="2" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <reason>
+      <message>One or more child tests were ignored</message>
+    </reason>
+    <test-suite type="Assembly" id="1125" name="SquishyBump.Tests.PlayMode.dll" fullname="D:/Work/Code/Assignment/Game/squishy-bump-sb71/Library/ScriptAssemblies/SquishyBump.Tests.PlayMode.dll" runstate="Runnable" testcasecount="91" result="Skipped" label="Ignored" start-time="2026-11-28 07:05:26Z" end-time="2026-11-28 07:12:41Z" duration="435.859144" total="91" passed="89" failed="0" inconclusive="0" skipped="2" asserts="0">
+      <properties>
+        <property name="_PID" value="24388" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <reason>
+        <message>One or more child tests were ignored</message>
+      </reason>
+      <test-suite type="TestSuite" id="1126" name="SquishyBump" fullname="SquishyBump" runstate="Runnable" testcasecount="91" result="Skipped" label="Ignored" start-time="2026-11-28 07:05:26Z" end-time="2026-11-28 07:12:41Z" duration="435.856930" total="91" passed="89" failed="0" inconclusive="0" skipped="2" asserts="0">
+        <properties />
+        <reason>
+          <message>One or more child tests were ignored</message>
+        </reason>
+        <test-suite type="TestSuite" id="1127" name="Tests" fullname="SquishyBump.Tests" runstate="Runnable" testcasecount="91" result="Skipped" label="Ignored" start-time="2026-11-28 07:05:26Z" end-time="2026-11-28 07:12:41Z" duration="435.855107" total="91" passed="89" failed="0" inconclusive="0" skipped="2" asserts="0">
+          <properties />
+          <reason>
+            <message>One or more child tests were ignored</message>
+          </reason>
+          <test-suite type="TestSuite" id="1128" name="PlayMode" fullname="SquishyBump.Tests.PlayMode" runstate="Runnable" testcasecount="91" result="Skipped" label="Ignored" start-time="2026-11-28 07:05:26Z" end-time="2026-11-28 07:12:41Z" duration="435.852737" total="91" passed="89" failed="0" inconclusive="0" skipped="2" asserts="0">
+            <properties />
+            <reason>
+              <message>One or more child tests were ignored</message>
+            </reason>
+            <test-suite type="TestFixture" id="1001" name="BotArenaTests" fullname="SquishyBump.Tests.PlayMode.BotArenaTests" classname="SquishyBump.Tests.PlayMode.BotArenaTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-28 07:05:26Z" end-time="2026-11-28 07:05:40Z" duration="14.310079" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1003" name="SinglePlayer_D1BotsMoveThroughPlayerMotorAndEnterEliminatedOnFall" fullname="SquishyBump.Tests.PlayMode.BotArenaTests.SinglePlayer_D1BotsMoveThroughPlayerMotorAndEnterEliminatedOnFall" methodname="SinglePlayer_D1BotsMoveThroughPlayerMotorAndEnterEliminatedOnFall" classname="SquishyBump.Tests.PlayMode.BotArenaTests" runstate="Runnable" seed="863082509" result="Passed" start-time="2026-11-28 07:05:26Z" end-time="2026-11-28 07:05:36Z" duration="10.098447" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1002" name="SinglePlayer_D2UtilityBots_UseNavigationAndDashThroughRealMotor" fullname="SquishyBump.Tests.PlayMode.BotArenaTests.SinglePlayer_D2UtilityBots_UseNavigationAndDashThroughRealMotor" methodname="SinglePlayer_D2UtilityBots_UseNavigationAndDashThroughRealMotor" classname="SquishyBump.Tests.PlayMode.BotArenaTests" runstate="Runnable" seed="1955467618" result="Passed" start-time="2026-11-28 07:05:36Z" end-time="2026-11-28 07:05:40Z" duration="4.197010" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1004" name="CannonsPlayTests" fullname="SquishyBump.Tests.PlayMode.CannonsPlayTests" classname="SquishyBump.Tests.PlayMode.CannonsPlayTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-28 07:05:40Z" end-time="2026-11-28 07:05:40Z" duration="0.077043" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1005" name="CourtLayout_AirGustsAndFireballLandsOnTarget" fullname="SquishyBump.Tests.PlayMode.CannonsPlayTests.CourtLayout_AirGustsAndFireballLandsOnTarget" methodname="CourtLayout_AirGustsAndFireballLandsOnTarget" classname="SquishyBump.Tests.PlayMode.CannonsPlayTests" runstate="Runnable" seed="199584537" result="Passed" start-time="2026-11-28 07:05:40Z" end-time="2026-11-28 07:05:40Z" duration="0.060294" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1006" name="ChaosArenaTests" fullname="SquishyBump.Tests.PlayMode.ChaosArenaTests" classname="SquishyBump.Tests.PlayMode.ChaosArenaTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-28 07:05:40Z" end-time="2026-11-28 07:05:45Z" duration="5.098805" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1008" name="L5_150Seconds_IceWavesEvery210TicksAndCannonsEvery240Ticks" fullname="SquishyBump.Tests.PlayMode.ChaosArenaTests.L5_150Seconds_IceWavesEvery210TicksAndCannonsEvery240Ticks" methodname="L5_150Seconds_IceWavesEvery210TicksAndCannonsEvery240Ticks" classname="SquishyBump.Tests.PlayMode.ChaosArenaTests" runstate="Runnable" seed="1356925625" result="Passed" start-time="2026-11-28 07:05:40Z" end-time="2026-11-28 07:05:45Z" duration="4.693079" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1007" name="L5_RealSceneReuses61IceTilesAndWestAirEastFire_AllSpawnsHaveFloor" fullname="SquishyBump.Tests.PlayMode.ChaosArenaTests.L5_RealSceneReuses61IceTilesAndWestAirEastFire_AllSpawnsHaveFloor" methodname="L5_RealSceneReuses61IceTilesAndWestAirEastFire_AllSpawnsHaveFloor" classname="SquishyBump.Tests.PlayMode.ChaosArenaTests" runstate="Runnable" seed="437052838" result="Passed" start-time="2026-11-28 07:05:45Z" end-time="2026-11-28 07:05:45Z" duration="0.404478" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1009" name="CollisionTests" fullname="SquishyBump.Tests.PlayMode.CollisionTests" classname="SquishyBump.Tests.PlayMode.CollisionTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-28 07:05:45Z" end-time="2026-11-28 07:05:45Z" duration="0.198096" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1010" name="HeadOn_KnownSpeeds_MatchesFormulaWithinTwoPercent" fullname="SquishyBump.Tests.PlayMode.CollisionTests.HeadOn_KnownSpeeds_MatchesFormulaWithinTwoPercent" methodname="HeadOn_KnownSpeeds_MatchesFormulaWithinTwoPercent" classname="SquishyBump.Tests.PlayMode.CollisionTests" runstate="Runnable" seed="2054800765" result="Passed" start-time="2026-11-28 07:05:45Z" end-time="2026-11-28 07:05:45Z" duration="0.011203" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1011" name="Hit_StunsForBasePlusWobbleAndIgnoresInput" fullname="SquishyBump.Tests.PlayMode.CollisionTests.Hit_StunsForBasePlusWobbleAndIgnoresInput" methodname="Hit_StunsForBasePlusWobbleAndIgnoresInput" classname="SquishyBump.Tests.PlayMode.CollisionTests" runstate="Runnable" seed="354635789" result="Passed" start-time="2026-11-28 07:05:45Z" end-time="2026-11-28 07:05:45Z" duration="0.003744" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1012" name="OverlappingFighters_AreNotSeparatedByPhysX" fullname="SquishyBump.Tests.PlayMode.CollisionTests.OverlappingFighters_AreNotSeparatedByPhysX" methodname="OverlappingFighters_AreNotSeparatedByPhysX" classname="SquishyBump.Tests.PlayMode.CollisionTests" runstate="Runnable" seed="1726880871" result="Passed" start-time="2026-11-28 07:05:45Z" end-time="2026-11-28 07:05:45Z" duration="0.160530" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1013" name="Wobble_DecaysEverySixSecondsAndIsCapped" fullname="SquishyBump.Tests.PlayMode.CollisionTests.Wobble_DecaysEverySixSecondsAndIsCapped" methodname="Wobble_DecaysEverySixSecondsAndIsCapped" classname="SquishyBump.Tests.PlayMode.CollisionTests" runstate="Runnable" seed="583802068" result="Passed" start-time="2026-11-28 07:05:45Z" end-time="2026-11-28 07:05:45Z" duration="0.005260" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1014" name="FighterTests" fullname="SquishyBump.Tests.PlayMode.FighterTests" classname="SquishyBump.Tests.PlayMode.FighterTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-11-28 07:05:45Z" end-time="2026-11-28 07:06:02Z" duration="16.543291" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1023" name="Dash_OnFloor_RespectsCooldown" fullname="SquishyBump.Tests.PlayMode.FighterTests.Dash_OnFloor_RespectsCooldown" methodname="Dash_OnFloor_RespectsCooldown" classname="SquishyBump.Tests.PlayMode.FighterTests" runstate="Runnable" seed="960177801" result="Passed" start-time="2026-11-28 07:05:45Z" end-time="2026-11-28 07:05:47Z" duration="2.025709" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1022" name="Jump_FromFloor_ReachesApexAndLands" fullname="SquishyBump.Tests.PlayMode.FighterTests.Jump_FromFloor_ReachesApexAndLands" methodname="Jump_FromFloor_ReachesApexAndLands" classname="SquishyBump.Tests.PlayMode.FighterTests" runstate="Runnable" seed="1453926341" result="Passed" start-time="2026-11-28 07:05:47Z" end-time="2026-11-28 07:05:50Z" duration="2.516236" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1021" name="Spawn_AppliesClassOfTheFruit" fullname="SquishyBump.Tests.PlayMode.FighterTests.Spawn_AppliesClassOfTheFruit" classname="SquishyBump.Tests.PlayMode.FighterTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-28 07:05:50Z" end-time="2026-11-28 07:06:02Z" duration="11.999724" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <test-case id="1015" name="Spawn_AppliesClassOfTheFruit(&quot;Bear&quot;)" fullname="SquishyBump.Tests.PlayMode.FighterTests.Spawn_AppliesClassOfTheFruit(&quot;Bear&quot;)" methodname="Spawn_AppliesClassOfTheFruit" classname="SquishyBump.Tests.PlayMode.FighterTests" runstate="Runnable" seed="903068498" result="Passed" start-time="2026-11-28 07:05:50Z" end-time="2026-11-28 07:05:52Z" duration="1.998942" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1016" name="Spawn_AppliesClassOfTheFruit(&quot;Pig&quot;)" fullname="SquishyBump.Tests.PlayMode.FighterTests.Spawn_AppliesClassOfTheFruit(&quot;Pig&quot;)" methodname="Spawn_AppliesClassOfTheFruit" classname="SquishyBump.Tests.PlayMode.FighterTests" runstate="Runnable" seed="1536412862" result="Passed" start-time="2026-11-28 07:05:52Z" end-time="2026-11-28 07:05:54Z" duration="1.999920" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1017" name="Spawn_AppliesClassOfTheFruit(&quot;Cat&quot;)" fullname="SquishyBump.Tests.PlayMode.FighterTests.Spawn_AppliesClassOfTheFruit(&quot;Cat&quot;)" methodname="Spawn_AppliesClassOfTheFruit" classname="SquishyBump.Tests.PlayMode.FighterTests" runstate="Runnable" seed="882902089" result="Passed" start-time="2026-11-28 07:05:54Z" end-time="2026-11-28 07:05:56Z" duration="1.999678" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1018" name="Spawn_AppliesClassOfTheFruit(&quot;Penguin&quot;)" fullname="SquishyBump.Tests.PlayMode.FighterTests.Spawn_AppliesClassOfTheFruit(&quot;Penguin&quot;)" methodname="Spawn_AppliesClassOfTheFruit" classname="SquishyBump.Tests.PlayMode.FighterTests" runstate="Runnable" seed="1989444903" result="Passed" start-time="2026-11-28 07:05:56Z" end-time="2026-11-28 07:05:58Z" duration="1.999978" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1019" name="Spawn_AppliesClassOfTheFruit(&quot;Chick&quot;)" fullname="SquishyBump.Tests.PlayMode.FighterTests.Spawn_AppliesClassOfTheFruit(&quot;Chick&quot;)" methodname="Spawn_AppliesClassOfTheFruit" classname="SquishyBump.Tests.PlayMode.FighterTests" runstate="Runnable" seed="2032457355" result="Passed" start-time="2026-11-28 07:05:58Z" end-time="2026-11-28 07:06:00Z" duration="1.999765" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1020" name="Spawn_AppliesClassOfTheFruit(&quot;Frog&quot;)" fullname="SquishyBump.Tests.PlayMode.FighterTests.Spawn_AppliesClassOfTheFruit(&quot;Frog&quot;)" methodname="Spawn_AppliesClassOfTheFruit" classname="SquishyBump.Tests.PlayMode.FighterTests" runstate="Runnable" seed="1126731331" result="Passed" start-time="2026-11-28 07:06:00Z" end-time="2026-11-28 07:06:02Z" duration="1.999831" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+            </test-suite>
+            <test-suite type="TestFixture" id="1024" name="HitStopTests" fullname="SquishyBump.Tests.PlayMode.HitStopTests" classname="SquishyBump.Tests.PlayMode.HitStopTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-28 07:06:02Z" end-time="2026-11-28 07:06:03Z" duration="0.900091" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1025" name="HitStop_WhileLanPauseMenuOpen_RestoresTime" fullname="SquishyBump.Tests.PlayMode.HitStopTests.HitStop_WhileLanPauseMenuOpen_RestoresTime" methodname="HitStop_WhileLanPauseMenuOpen_RestoresTime" classname="SquishyBump.Tests.PlayMode.HitStopTests" runstate="Runnable" seed="722915949" result="Passed" start-time="2026-11-28 07:06:02Z" end-time="2026-11-28 07:06:03Z" duration="0.899326" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1026" name="HostGameplayTests" fullname="SquishyBump.Tests.PlayMode.HostGameplayTests" classname="SquishyBump.Tests.PlayMode.HostGameplayTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-28 07:06:03Z" end-time="2026-11-28 07:06:09Z" duration="6.544624" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1031" name="EventHub_DropsDuplicateEventIds" fullname="SquishyBump.Tests.PlayMode.HostGameplayTests.EventHub_DropsDuplicateEventIds" methodname="EventHub_DropsDuplicateEventIds" classname="SquishyBump.Tests.PlayMode.HostGameplayTests" runstate="Runnable" seed="920240506" result="Passed" start-time="2026-11-28 07:06:03Z" end-time="2026-11-28 07:06:03Z" duration="0.004427" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1028" name="HostClock_TicksOnlyWhileHosting" fullname="SquishyBump.Tests.PlayMode.HostGameplayTests.HostClock_TicksOnlyWhileHosting" methodname="HostClock_TicksOnlyWhileHosting" classname="SquishyBump.Tests.PlayMode.HostGameplayTests" runstate="Runnable" seed="884557158" result="Passed" start-time="2026-11-28 07:06:03Z" end-time="2026-11-28 07:06:03Z" duration="0.439800" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1029" name="Join_InvalidArguments_ReturnsFalse" fullname="SquishyBump.Tests.PlayMode.HostGameplayTests.Join_InvalidArguments_ReturnsFalse" methodname="Join_InvalidArguments_ReturnsFalse" classname="SquishyBump.Tests.PlayMode.HostGameplayTests" runstate="Runnable" seed="1720664391" result="Passed" start-time="2026-11-28 07:06:03Z" end-time="2026-11-28 07:06:03Z" duration="0.343588" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1030" name="Join_UnresponsiveHost_ReturnsConnectFailedWithinSevenSeconds" fullname="SquishyBump.Tests.PlayMode.HostGameplayTests.Join_UnresponsiveHost_ReturnsConnectFailedWithinSevenSeconds" methodname="Join_UnresponsiveHost_ReturnsConnectFailedWithinSevenSeconds" classname="SquishyBump.Tests.PlayMode.HostGameplayTests" runstate="Runnable" seed="1544419219" result="Passed" start-time="2026-11-28 07:06:03Z" end-time="2026-11-28 07:06:09Z" duration="5.361689" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                </test-case>
+              <test-case id="1027" name="SinglePlayerSession_OnlySimulatesDuringNgoHost" fullname="SquishyBump.Tests.PlayMode.HostGameplayTests.SinglePlayerSession_OnlySimulatesDuringNgoHost" methodname="SinglePlayerSession_OnlySimulatesDuringNgoHost" classname="SquishyBump.Tests.PlayMode.HostGameplayTests" runstate="Runnable" seed="1963185298" result="Passed" start-time="2026-11-28 07:06:09Z" end-time="2026-11-28 07:06:09Z" duration="0.392426" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1032" name="HudPlayerVisualTests" fullname="SquishyBump.Tests.PlayMode.HudPlayerVisualTests" classname="SquishyBump.Tests.PlayMode.HudPlayerVisualTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-28 07:06:09Z" end-time="2026-11-28 07:06:09Z" duration="0.000954" total="1" passed="0" failed="0" inconclusive="0" skipped="1" asserts="0">
+              <properties />
+              <test-case id="1033" name="WindowsPlayer_HudAndTrackedTags_AspectSweep" fullname="SquishyBump.Tests.PlayMode.HudPlayerVisualTests.WindowsPlayer_HudAndTrackedTags_AspectSweep" methodname="WindowsPlayer_HudAndTrackedTags_AspectSweep" classname="SquishyBump.Tests.PlayMode.HudPlayerVisualTests" runstate="Skipped" seed="453206318" result="Skipped" start-time="2026-11-28 07:06:09Z" end-time="2026-11-28 07:06:09Z" duration="0.000279" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="_SKIPREASON" value="Only supported on WindowsPlayer" />
+                  <property name="Timeout" value="180000" />
+                </properties>
+                <reason>
+                  <message>Only supported on WindowsPlayer</message>
+                </reason>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1034" name="IceArenaTests" fullname="SquishyBump.Tests.PlayMode.IceArenaTests" classname="SquishyBump.Tests.PlayMode.IceArenaTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-28 07:06:09Z" end-time="2026-11-28 07:06:19Z" duration="10.176725" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1037" name="ClientRenderingBeforeRestore_QueuedNextWarningKeepsOldTileUnwalkable" fullname="SquishyBump.Tests.PlayMode.IceArenaTests.ClientRenderingBeforeRestore_QueuedNextWarningKeepsOldTileUnwalkable" methodname="ClientRenderingBeforeRestore_QueuedNextWarningKeepsOldTileUnwalkable" classname="SquishyBump.Tests.PlayMode.IceArenaTests" runstate="Runnable" seed="1995297866" result="Passed" start-time="2026-11-28 07:06:09Z" end-time="2026-11-28 07:06:10Z" duration="0.420424" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1038" name="HostEventsThroughCodec_ClientFloorMatchesEveryTransitionAndWaitsForSolidEvent" fullname="SquishyBump.Tests.PlayMode.IceArenaTests.HostEventsThroughCodec_ClientFloorMatchesEveryTransitionAndWaitsForSolidEvent" methodname="HostEventsThroughCodec_ClientFloorMatchesEveryTransitionAndWaitsForSolidEvent" classname="SquishyBump.Tests.PlayMode.IceArenaTests" runstate="Runnable" seed="791755747" result="Passed" start-time="2026-11-28 07:06:10Z" end-time="2026-11-28 07:06:13Z" duration="3.733988" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1036" name="ReturningTile_RealFighterColliderDelaysSolidUntilClear" fullname="SquishyBump.Tests.PlayMode.IceArenaTests.ReturningTile_RealFighterColliderDelaysSolidUntilClear" methodname="ReturningTile_RealFighterColliderDelaysSolidUntilClear" classname="SquishyBump.Tests.PlayMode.IceArenaTests" runstate="Runnable" seed="153021786" result="Passed" start-time="2026-11-28 07:06:13Z" end-time="2026-11-28 07:06:14Z" duration="0.397620" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1035" name="T10_L4WithoutFruits120SimulatedSeconds_PreservesRealFloor" fullname="SquishyBump.Tests.PlayMode.IceArenaTests.T10_L4WithoutFruits120SimulatedSeconds_PreservesRealFloor" methodname="T10_L4WithoutFruits120SimulatedSeconds_PreservesRealFloor" classname="SquishyBump.Tests.PlayMode.IceArenaTests" runstate="Runnable" seed="567204761" result="Passed" start-time="2026-11-28 07:06:14Z" end-time="2026-11-28 07:06:19Z" duration="5.623083" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1039" name="IceLaunchTests" fullname="SquishyBump.Tests.PlayMode.IceLaunchTests" classname="SquishyBump.Tests.PlayMode.IceLaunchTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-28 07:06:19Z" end-time="2026-11-28 07:06:30Z" duration="10.708483" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1040" name="SinglePlayerL4_AfterGo_KeepsAtLeast37FloorColliders" fullname="SquishyBump.Tests.PlayMode.IceLaunchTests.SinglePlayerL4_AfterGo_KeepsAtLeast37FloorColliders" methodname="SinglePlayerL4_AfterGo_KeepsAtLeast37FloorColliders" classname="SquishyBump.Tests.PlayMode.IceLaunchTests" runstate="Runnable" seed="1041349795" result="Passed" start-time="2026-11-28 07:06:19Z" end-time="2026-11-28 07:06:30Z" duration="10.705632" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1041" name="LevelArtTests" fullname="SquishyBump.Tests.PlayMode.LevelArtTests" classname="SquishyBump.Tests.PlayMode.LevelArtTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-28 07:06:30Z" end-time="2026-11-28 07:06:40Z" duration="9.627082" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="ParameterizedMethod" id="1047" name="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals" fullname="SquishyBump.Tests.PlayMode.LevelArtTests.Level_WithCreativeArt_SpawnsFightersAndBindsVisuals" classname="SquishyBump.Tests.PlayMode.LevelArtTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-28 07:06:30Z" end-time="2026-11-28 07:06:40Z" duration="9.608088" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <test-case id="1042" name="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(1)" fullname="SquishyBump.Tests.PlayMode.LevelArtTests.Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(1)" methodname="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals" classname="SquishyBump.Tests.PlayMode.LevelArtTests" runstate="Runnable" seed="1840454659" result="Passed" start-time="2026-11-28 07:06:30Z" end-time="2026-11-28 07:06:32Z" duration="1.872968" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1043" name="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(2)" fullname="SquishyBump.Tests.PlayMode.LevelArtTests.Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(2)" methodname="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals" classname="SquishyBump.Tests.PlayMode.LevelArtTests" runstate="Runnable" seed="340397111" result="Passed" start-time="2026-11-28 07:06:32Z" end-time="2026-11-28 07:06:34Z" duration="2.310455" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1044" name="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(3)" fullname="SquishyBump.Tests.PlayMode.LevelArtTests.Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(3)" methodname="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals" classname="SquishyBump.Tests.PlayMode.LevelArtTests" runstate="Runnable" seed="668011660" result="Passed" start-time="2026-11-28 07:06:34Z" end-time="2026-11-28 07:06:37Z" duration="2.641685" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1045" name="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(4)" fullname="SquishyBump.Tests.PlayMode.LevelArtTests.Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(4)" methodname="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals" classname="SquishyBump.Tests.PlayMode.LevelArtTests" runstate="Runnable" seed="1272872793" result="Passed" start-time="2026-11-28 07:06:37Z" end-time="2026-11-28 07:06:38Z" duration="1.458816" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1046" name="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(5)" fullname="SquishyBump.Tests.PlayMode.LevelArtTests.Level_WithCreativeArt_SpawnsFightersAndBindsVisuals(5)" methodname="Level_WithCreativeArt_SpawnsFightersAndBindsVisuals" classname="SquishyBump.Tests.PlayMode.LevelArtTests" runstate="Runnable" seed="230030851" result="Passed" start-time="2026-11-28 07:06:38Z" end-time="2026-11-28 07:06:40Z" duration="1.322285" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+            </test-suite>
+            <test-suite type="TestFixture" id="1048" name="LobbyPlayTests" fullname="SquishyBump.Tests.PlayMode.LobbyPlayTests" classname="SquishyBump.Tests.PlayMode.LobbyPlayTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-28 07:06:40Z" end-time="2026-11-28 07:07:24Z" duration="44.079623" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1049" name="LanLobby_HostVolumesEnforceExclusiveClaims_ReadyStartsTwoHumanRoster" fullname="SquishyBump.Tests.PlayMode.LobbyPlayTests.LanLobby_HostVolumesEnforceExclusiveClaims_ReadyStartsTwoHumanRoster" methodname="LanLobby_HostVolumesEnforceExclusiveClaims_ReadyStartsTwoHumanRoster" classname="SquishyBump.Tests.PlayMode.LobbyPlayTests" runstate="Runnable" seed="1145441920" result="Passed" start-time="2026-11-28 07:06:40Z" end-time="2026-11-28 07:06:45Z" duration="5.110682" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1052" name="LanSurvival_DrawAtFinal_ReplaysLevelUntilThereIsOneChampion" fullname="SquishyBump.Tests.PlayMode.LobbyPlayTests.LanSurvival_DrawAtFinal_ReplaysLevelUntilThereIsOneChampion" methodname="LanSurvival_DrawAtFinal_ReplaysLevelUntilThereIsOneChampion" classname="SquishyBump.Tests.PlayMode.LobbyPlayTests" runstate="Runnable" seed="371969491" result="Passed" start-time="2026-11-28 07:06:45Z" end-time="2026-11-28 07:06:52Z" duration="7.594304" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1051" name="LanSurvival_HostKnockedOut_SpectatesWhileClientsPlayFinal" fullname="SquishyBump.Tests.PlayMode.LobbyPlayTests.LanSurvival_HostKnockedOut_SpectatesWhileClientsPlayFinal" methodname="LanSurvival_HostKnockedOut_SpectatesWhileClientsPlayFinal" classname="SquishyBump.Tests.PlayMode.LobbyPlayTests" runstate="Runnable" seed="1173854135" result="Passed" start-time="2026-11-28 07:06:52Z" end-time="2026-11-28 07:07:01Z" duration="8.437859" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1050" name="LanSurvival_TwoPlayersContinueThroughL5_AndClientReceivesChampion" fullname="SquishyBump.Tests.PlayMode.LobbyPlayTests.LanSurvival_TwoPlayersContinueThroughL5_AndClientReceivesChampion" methodname="LanSurvival_TwoPlayersContinueThroughL5_AndClientReceivesChampion" classname="SquishyBump.Tests.PlayMode.LobbyPlayTests" runstate="Runnable" seed="196608061" result="Passed" start-time="2026-11-28 07:07:01Z" end-time="2026-11-28 07:07:24Z" duration="22.917564" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1053" name="MatchEventNetworkTests" fullname="SquishyBump.Tests.PlayMode.MatchEventNetworkTests" classname="SquishyBump.Tests.PlayMode.MatchEventNetworkTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-28 07:07:24Z" end-time="2026-11-28 07:07:24Z" duration="0.260337" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1054" name="ReliableEvents_LoopbackReplicasAndResultTextAgreeAndDuplicateIsIgnored" fullname="SquishyBump.Tests.PlayMode.MatchEventNetworkTests.ReliableEvents_LoopbackReplicasAndResultTextAgreeAndDuplicateIsIgnored" methodname="ReliableEvents_LoopbackReplicasAndResultTextAgreeAndDuplicateIsIgnored" classname="SquishyBump.Tests.PlayMode.MatchEventNetworkTests" runstate="Runnable" seed="1885637121" result="Passed" start-time="2026-11-28 07:07:24Z" end-time="2026-11-28 07:07:24Z" duration="0.237211" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1055" name="MatchHostTests" fullname="SquishyBump.Tests.PlayMode.MatchHostTests" classname="SquishyBump.Tests.PlayMode.MatchHostTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-28 07:07:24Z" end-time="2026-11-28 07:07:26Z" duration="1.680105" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1056" name="DuySandbox_HostsAndSpawnsSixFruits" fullname="SquishyBump.Tests.PlayMode.MatchHostTests.DuySandbox_HostsAndSpawnsSixFruits" methodname="DuySandbox_HostsAndSpawnsSixFruits" classname="SquishyBump.Tests.PlayMode.MatchHostTests" runstate="Runnable" seed="306508236" result="Passed" start-time="2026-11-28 07:07:24Z" end-time="2026-11-28 07:07:25Z" duration="0.516290" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1057" name="L1_RingOutOfOneOfTwo_ConfirmsResult" fullname="SquishyBump.Tests.PlayMode.MatchHostTests.L1_RingOutOfOneOfTwo_ConfirmsResult" methodname="L1_RingOutOfOneOfTwo_ConfirmsResult" classname="SquishyBump.Tests.PlayMode.MatchHostTests" runstate="Runnable" seed="1703498356" result="Passed" start-time="2026-11-28 07:07:25Z" end-time="2026-11-28 07:07:26Z" duration="1.162439" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1058" name="MatchHudTests" fullname="SquishyBump.Tests.PlayMode.MatchHudTests" classname="SquishyBump.Tests.PlayMode.MatchHudTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-28 07:07:26Z" end-time="2026-11-28 07:07:26Z" duration="0.055335" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1060" name="Board_SortsByValueAndKeepsOrderOnTies" fullname="SquishyBump.Tests.PlayMode.MatchHudTests.Board_SortsByValueAndKeepsOrderOnTies" methodname="Board_SortsByValueAndKeepsOrderOnTies" classname="SquishyBump.Tests.PlayMode.MatchHudTests" runstate="Runnable" seed="156815798" result="Passed" start-time="2026-11-28 07:07:26Z" end-time="2026-11-28 07:07:26Z" duration="0.026894" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1059" name="Hud_ClockDashAndWobbleFollowConfirmedValues" fullname="SquishyBump.Tests.PlayMode.MatchHudTests.Hud_ClockDashAndWobbleFollowConfirmedValues" methodname="Hud_ClockDashAndWobbleFollowConfirmedValues" classname="SquishyBump.Tests.PlayMode.MatchHudTests" runstate="Runnable" seed="1241815506" result="Passed" start-time="2026-11-28 07:07:26Z" end-time="2026-11-28 07:07:26Z" duration="0.017194" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1061" name="L1_ClockUsesNextRingDrop" fullname="SquishyBump.Tests.PlayMode.MatchHudTests.L1_ClockUsesNextRingDrop" methodname="L1_ClockUsesNextRingDrop" classname="SquishyBump.Tests.PlayMode.MatchHudTests" runstate="Runnable" seed="379894222" result="Passed" start-time="2026-11-28 07:07:26Z" end-time="2026-11-28 07:07:26Z" duration="0.009946" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1062" name="MatchOverlayTests" fullname="SquishyBump.Tests.PlayMode.MatchOverlayTests" classname="SquishyBump.Tests.PlayMode.MatchOverlayTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-28 07:07:26Z" end-time="2026-11-28 07:07:26Z" duration="0.034827" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1063" name="Hearts_LostLivesTurnGrey" fullname="SquishyBump.Tests.PlayMode.MatchOverlayTests.Hearts_LostLivesTurnGrey" methodname="Hearts_LostLivesTurnGrey" classname="SquishyBump.Tests.PlayMode.MatchOverlayTests" runstate="Runnable" seed="589140768" result="Passed" start-time="2026-11-28 07:07:26Z" end-time="2026-11-28 07:07:26Z" duration="0.005953" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1064" name="RoundResult_ShowsRoundBannerAndHighlightsOnlyTheLocalRow" fullname="SquishyBump.Tests.PlayMode.MatchOverlayTests.RoundResult_ShowsRoundBannerAndHighlightsOnlyTheLocalRow" methodname="RoundResult_ShowsRoundBannerAndHighlightsOnlyTheLocalRow" classname="SquishyBump.Tests.PlayMode.MatchOverlayTests" runstate="Runnable" seed="1801331734" result="Passed" start-time="2026-11-28 07:07:26Z" end-time="2026-11-28 07:07:26Z" duration="0.011773" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1066" name="SessionResult_PutsTopThreeOnPodiums" fullname="SquishyBump.Tests.PlayMode.MatchOverlayTests.SessionResult_PutsTopThreeOnPodiums" methodname="SessionResult_PutsTopThreeOnPodiums" classname="SquishyBump.Tests.PlayMode.MatchOverlayTests" runstate="Runnable" seed="2134482554" result="Passed" start-time="2026-11-28 07:07:26Z" end-time="2026-11-28 07:07:26Z" duration="0.008621" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1065" name="SessionResult_RankShowsPointsAndLivesOnVisiblePodium" fullname="SquishyBump.Tests.PlayMode.MatchOverlayTests.SessionResult_RankShowsPointsAndLivesOnVisiblePodium" methodname="SessionResult_RankShowsPointsAndLivesOnVisiblePodium" classname="SquishyBump.Tests.PlayMode.MatchOverlayTests" runstate="Runnable" seed="99115094" result="Passed" start-time="2026-11-28 07:07:26Z" end-time="2026-11-28 07:07:26Z" duration="0.006706" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1067" name="MenuFlowTests" fullname="SquishyBump.Tests.PlayMode.MenuFlowTests" classname="SquishyBump.Tests.PlayMode.MenuFlowTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-28 07:07:26Z" end-time="2026-11-28 07:07:46Z" duration="20.522025" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1069" name="LanHostLeaves_ClientInLevelReturnsToMenuWithHostLostMessage" fullname="SquishyBump.Tests.PlayMode.MenuFlowTests.LanHostLeaves_ClientInLevelReturnsToMenuWithHostLostMessage" methodname="LanHostLeaves_ClientInLevelReturnsToMenuWithHostLostMessage" classname="SquishyBump.Tests.PlayMode.MenuFlowTests" runstate="Runnable" seed="555861908" result="Passed" start-time="2026-11-28 07:07:26Z" end-time="2026-11-28 07:07:28Z" duration="1.766444" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1073" name="Level_StartsWithItsHazard" fullname="SquishyBump.Tests.PlayMode.MenuFlowTests.Level_StartsWithItsHazard" classname="SquishyBump.Tests.PlayMode.MenuFlowTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-28 07:07:28Z" end-time="2026-11-28 07:07:32Z" duration="4.762295" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <test-case id="1071" name="Level_StartsWithItsHazard(2)" fullname="SquishyBump.Tests.PlayMode.MenuFlowTests.Level_StartsWithItsHazard(2)" methodname="Level_StartsWithItsHazard" classname="SquishyBump.Tests.PlayMode.MenuFlowTests" runstate="Runnable" seed="1223243388" result="Passed" start-time="2026-11-28 07:07:28Z" end-time="2026-11-28 07:07:30Z" duration="2.125637" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1072" name="Level_StartsWithItsHazard(3)" fullname="SquishyBump.Tests.PlayMode.MenuFlowTests.Level_StartsWithItsHazard(3)" methodname="Level_StartsWithItsHazard" classname="SquishyBump.Tests.PlayMode.MenuFlowTests" runstate="Runnable" seed="441611" result="Passed" start-time="2026-11-28 07:07:30Z" end-time="2026-11-28 07:07:32Z" duration="2.619641" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-case id="1068" name="Menu_SinglePlayer_PauseAndLeave" fullname="SquishyBump.Tests.PlayMode.MenuFlowTests.Menu_SinglePlayer_PauseAndLeave" methodname="Menu_SinglePlayer_PauseAndLeave" classname="SquishyBump.Tests.PlayMode.MenuFlowTests" runstate="Runnable" seed="958524249" result="Passed" start-time="2026-11-28 07:07:32Z" end-time="2026-11-28 07:07:38Z" duration="5.914679" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1074" name="StatusText_ShowsHostAndPeers" fullname="SquishyBump.Tests.PlayMode.MenuFlowTests.StatusText_ShowsHostAndPeers" methodname="StatusText_ShowsHostAndPeers" classname="SquishyBump.Tests.PlayMode.MenuFlowTests" runstate="Runnable" seed="168913580" result="Passed" start-time="2026-11-28 07:07:38Z" end-time="2026-11-28 07:07:39Z" duration="0.353564" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1070" name="T11_ClientLeaves_RemoteInputStopsAndLobbyReopensAdmission" fullname="SquishyBump.Tests.PlayMode.MenuFlowTests.T11_ClientLeaves_RemoteInputStopsAndLobbyReopensAdmission" methodname="T11_ClientLeaves_RemoteInputStopsAndLobbyReopensAdmission" classname="SquishyBump.Tests.PlayMode.MenuFlowTests" runstate="Runnable" seed="526419743" result="Passed" start-time="2026-11-28 07:07:39Z" end-time="2026-11-28 07:07:46Z" duration="7.722953" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1075" name="MovingGroundPlayTests" fullname="SquishyBump.Tests.PlayMode.MovingGroundPlayTests" classname="SquishyBump.Tests.PlayMode.MovingGroundPlayTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-28 07:07:46Z" end-time="2026-11-28 07:07:49Z" duration="2.695866" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1077" name="Box_HitsOncePerHalfSecond" fullname="SquishyBump.Tests.PlayMode.MovingGroundPlayTests.Box_HitsOncePerHalfSecond" methodname="Box_HitsOncePerHalfSecond" classname="SquishyBump.Tests.PlayMode.MovingGroundPlayTests" runstate="Runnable" seed="169638013" result="Passed" start-time="2026-11-28 07:07:46Z" end-time="2026-11-28 07:07:47Z" duration="0.674909" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1076" name="Turntable_CarriesIdleFruitAlongTheRotation" fullname="SquishyBump.Tests.PlayMode.MovingGroundPlayTests.Turntable_CarriesIdleFruitAlongTheRotation" methodname="Turntable_CarriesIdleFruitAlongTheRotation" classname="SquishyBump.Tests.PlayMode.MovingGroundPlayTests" runstate="Runnable" seed="795416021" result="Passed" start-time="2026-11-28 07:07:47Z" end-time="2026-11-28 07:07:49Z" duration="1.998909" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1078" name="NavigationArenaTests" fullname="SquishyBump.Tests.PlayMode.NavigationArenaTests" classname="SquishyBump.Tests.PlayMode.NavigationArenaTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-28 07:07:49Z" end-time="2026-11-28 07:07:53Z" duration="3.855095" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1080" name="L2_ReversalBoxesAndPusherLanes_ExposeVisibleWarningsWithinGridBudget" fullname="SquishyBump.Tests.PlayMode.NavigationArenaTests.L2_ReversalBoxesAndPusherLanes_ExposeVisibleWarningsWithinGridBudget" methodname="L2_ReversalBoxesAndPusherLanes_ExposeVisibleWarningsWithinGridBudget" classname="SquishyBump.Tests.PlayMode.NavigationArenaTests" runstate="Runnable" seed="531728876" result="Passed" start-time="2026-11-28 07:07:49Z" end-time="2026-11-28 07:07:51Z" duration="1.525622" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1081" name="L3_FireTargetOnlyVisibleAfterLaunch_AirConeAndBurnUseActualState" fullname="SquishyBump.Tests.PlayMode.NavigationArenaTests.L3_FireTargetOnlyVisibleAfterLaunch_AirConeAndBurnUseActualState" methodname="L3_FireTargetOnlyVisibleAfterLaunch_AirConeAndBurnUseActualState" classname="SquishyBump.Tests.PlayMode.NavigationArenaTests" runstate="Runnable" seed="1257566194" result="Passed" start-time="2026-11-28 07:07:51Z" end-time="2026-11-28 07:07:52Z" duration="1.714717" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1079" name="L4_OnlyCrackingTilesGiveHints_ActualFallenFloorIsBlocked" fullname="SquishyBump.Tests.PlayMode.NavigationArenaTests.L4_OnlyCrackingTilesGiveHints_ActualFallenFloorIsBlocked" methodname="L4_OnlyCrackingTilesGiveHints_ActualFallenFloorIsBlocked" classname="SquishyBump.Tests.PlayMode.NavigationArenaTests" runstate="Runnable" seed="832673380" result="Passed" start-time="2026-11-28 07:07:52Z" end-time="2026-11-28 07:07:53Z" duration="0.613412" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1082" name="PresentationPlayTests" fullname="SquishyBump.Tests.PlayMode.PresentationPlayTests" classname="SquishyBump.Tests.PlayMode.PresentationPlayTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-28 07:07:53Z" end-time="2026-11-28 07:07:55Z" duration="2.365059" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1085" name="CameraRig_OrbitsAtDistanceWithClampedPitch" fullname="SquishyBump.Tests.PlayMode.PresentationPlayTests.CameraRig_OrbitsAtDistanceWithClampedPitch" methodname="CameraRig_OrbitsAtDistanceWithClampedPitch" classname="SquishyBump.Tests.PlayMode.PresentationPlayTests" runstate="Runnable" seed="340680055" result="Passed" start-time="2026-11-28 07:07:53Z" end-time="2026-11-28 07:07:53Z" duration="0.012909" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1084" name="Landing_SquashesVisualOnly" fullname="SquishyBump.Tests.PlayMode.PresentationPlayTests.Landing_SquashesVisualOnly" methodname="Landing_SquashesVisualOnly" classname="SquishyBump.Tests.PlayMode.PresentationPlayTests" runstate="Runnable" seed="1238588122" result="Passed" start-time="2026-11-28 07:07:53Z" end-time="2026-11-28 07:07:54Z" duration="0.758925" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1083" name="Upright_FacesVelocityWithoutRolling" fullname="SquishyBump.Tests.PlayMode.PresentationPlayTests.Upright_FacesVelocityWithoutRolling" methodname="Upright_FacesVelocityWithoutRolling" classname="SquishyBump.Tests.PlayMode.PresentationPlayTests" runstate="Runnable" seed="105244755" result="Passed" start-time="2026-11-28 07:07:54Z" end-time="2026-11-28 07:07:55Z" duration="1.492655" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1086" name="PusherBlocksPlayTests" fullname="SquishyBump.Tests.PlayMode.PusherBlocksPlayTests" classname="SquishyBump.Tests.PlayMode.PusherBlocksPlayTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-28 07:07:55Z" end-time="2026-11-28 07:07:57Z" duration="2.003133" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1087" name="Pushers_DepartByTheRulesAndNeverMeetABox" fullname="SquishyBump.Tests.PlayMode.PusherBlocksPlayTests.Pushers_DepartByTheRulesAndNeverMeetABox" methodname="Pushers_DepartByTheRulesAndNeverMeetABox" classname="SquishyBump.Tests.PlayMode.PusherBlocksPlayTests" runstate="Runnable" seed="1455902407" result="Passed" start-time="2026-11-28 07:07:55Z" end-time="2026-11-28 07:07:57Z" duration="2.002381" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1088" name="RankArenaTests" fullname="SquishyBump.Tests.PlayMode.RankArenaTests" classname="SquishyBump.Tests.PlayMode.RankArenaTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-28 07:07:57Z" end-time="2026-11-28 07:08:00Z" duration="2.954594" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1089" name="T05_Partial_ContactWithoutWobble_CreditsFall_RespawnsAndProtectsFighter" fullname="SquishyBump.Tests.PlayMode.RankArenaTests.T05_Partial_ContactWithoutWobble_CreditsFall_RespawnsAndProtectsFighter" methodname="T05_Partial_ContactWithoutWobble_CreditsFall_RespawnsAndProtectsFighter" classname="SquishyBump.Tests.PlayMode.RankArenaTests" runstate="Runnable" seed="1626069936" result="Passed" start-time="2026-11-28 07:07:57Z" end-time="2026-11-28 07:08:00Z" duration="2.953694" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1090" name="RankRunTests" fullname="SquishyBump.Tests.PlayMode.RankRunTests" classname="SquishyBump.Tests.PlayMode.RankRunTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-11-28 07:08:00Z" end-time="2026-11-28 07:10:48Z" duration="168.062939" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="ParameterizedMethod" id="1098" name="RankRespawnClose_AfterCloseTick_FallEliminates" fullname="SquishyBump.Tests.PlayMode.RankRunTests.RankRespawnClose_AfterCloseTick_FallEliminates" classname="SquishyBump.Tests.PlayMode.RankRunTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-28 07:08:00Z" end-time="2026-11-28 07:08:30Z" duration="29.306553" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <test-case id="1096" name="RankRespawnClose_AfterCloseTick_FallEliminates(1)" fullname="SquishyBump.Tests.PlayMode.RankRunTests.RankRespawnClose_AfterCloseTick_FallEliminates(1)" methodname="RankRespawnClose_AfterCloseTick_FallEliminates" classname="SquishyBump.Tests.PlayMode.RankRunTests" runstate="Runnable" seed="1892770702" result="Passed" start-time="2026-11-28 07:08:00Z" end-time="2026-11-28 07:08:12Z" duration="11.837491" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  </test-case>
+                <test-case id="1097" name="RankRespawnClose_AfterCloseTick_FallEliminates(2)" fullname="SquishyBump.Tests.PlayMode.RankRunTests.RankRespawnClose_AfterCloseTick_FallEliminates(2)" methodname="RankRespawnClose_AfterCloseTick_FallEliminates" classname="SquishyBump.Tests.PlayMode.RankRunTests" runstate="Runnable" seed="782658563" result="Passed" start-time="2026-11-28 07:08:12Z" end-time="2026-11-28 07:08:30Z" duration="17.462402" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  </test-case>
+              </test-suite>
+              <test-case id="1099" name="T05_SingleRank_FullSession_L1toL5" fullname="SquishyBump.Tests.PlayMode.RankRunTests.T05_SingleRank_FullSession_L1toL5" methodname="T05_SingleRank_FullSession_L1toL5" classname="SquishyBump.Tests.PlayMode.RankRunTests" runstate="Runnable" seed="1458735826" result="Passed" start-time="2026-11-28 07:08:30Z" end-time="2026-11-28 07:09:37Z" duration="67.229645" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1091" name="T05_SingleRank_L1_FollowsRankRules" fullname="SquishyBump.Tests.PlayMode.RankRunTests.T05_SingleRank_L1_FollowsRankRules" methodname="T05_SingleRank_L1_FollowsRankRules" classname="SquishyBump.Tests.PlayMode.RankRunTests" runstate="Runnable" seed="1054364196" result="Passed" start-time="2026-11-28 07:09:37Z" end-time="2026-11-28 07:09:59Z" duration="22.049230" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1092" name="T05_SingleRank_L2_FollowsRankRules" fullname="SquishyBump.Tests.PlayMode.RankRunTests.T05_SingleRank_L2_FollowsRankRules" methodname="T05_SingleRank_L2_FollowsRankRules" classname="SquishyBump.Tests.PlayMode.RankRunTests" runstate="Runnable" seed="1887698806" result="Passed" start-time="2026-11-28 07:09:59Z" end-time="2026-11-28 07:10:11Z" duration="11.861326" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1093" name="T05_SingleRank_L3_FollowsRankRules" fullname="SquishyBump.Tests.PlayMode.RankRunTests.T05_SingleRank_L3_FollowsRankRules" methodname="T05_SingleRank_L3_FollowsRankRules" classname="SquishyBump.Tests.PlayMode.RankRunTests" runstate="Runnable" seed="1332104415" result="Passed" start-time="2026-11-28 07:10:11Z" end-time="2026-11-28 07:10:22Z" duration="11.614909" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1094" name="T05_SingleRank_L4_FollowsRankRules" fullname="SquishyBump.Tests.PlayMode.RankRunTests.T05_SingleRank_L4_FollowsRankRules" methodname="T05_SingleRank_L4_FollowsRankRules" classname="SquishyBump.Tests.PlayMode.RankRunTests" runstate="Runnable" seed="1130649674" result="Passed" start-time="2026-11-28 07:10:22Z" end-time="2026-11-28 07:10:34Z" duration="11.364876" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1095" name="T05_SingleRank_L5_FollowsRankRules" fullname="SquishyBump.Tests.PlayMode.RankRunTests.T05_SingleRank_L5_FollowsRankRules" methodname="T05_SingleRank_L5_FollowsRankRules" classname="SquishyBump.Tests.PlayMode.RankRunTests" runstate="Runnable" seed="1933644297" result="Passed" start-time="2026-11-28 07:10:34Z" end-time="2026-11-28 07:10:48Z" duration="14.608554" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1100" name="ResultsSpectatorTests" fullname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" classname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" runstate="Runnable" testcasecount="7" result="Skipped" label="Ignored" start-time="2026-11-28 07:10:48Z" end-time="2026-11-28 07:11:03Z" duration="15.114132" total="7" passed="6" failed="0" inconclusive="0" skipped="1" asserts="0">
+              <properties />
+              <reason>
+                <message>One or more child tests were ignored</message>
+              </reason>
+              <test-case id="1106" name="ClientRankBoard_ReliablePointsAndRanksSurviveNewSnapshots" fullname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests.ClientRankBoard_ReliablePointsAndRanksSurviveNewSnapshots" methodname="ClientRankBoard_ReliablePointsAndRanksSurviveNewSnapshots" classname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" runstate="Runnable" seed="2101847037" result="Passed" start-time="2026-11-28 07:10:48Z" end-time="2026-11-28 07:10:51Z" duration="2.331209" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1105" name="Rank_RespawnKeepsOwnCamera_EliminationEnablesCycle" fullname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests.Rank_RespawnKeepsOwnCamera_EliminationEnablesCycle" methodname="Rank_RespawnKeepsOwnCamera_EliminationEnablesCycle" classname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" runstate="Runnable" seed="931496523" result="Passed" start-time="2026-11-28 07:10:51Z" end-time="2026-11-28 07:10:55Z" duration="4.448380" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1101" name="ResultButton_WaitsThreeRealSecondsEvenWhenPaused" fullname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests.ResultButton_WaitsThreeRealSecondsEvenWhenPaused" methodname="ResultButton_WaitsThreeRealSecondsEvenWhenPaused" classname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" runstate="Runnable" seed="99523904" result="Passed" start-time="2026-11-28 07:10:55Z" end-time="2026-11-28 07:10:58Z" duration="3.360291" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1102" name="RoundAndSession_PodiumKeepsHostRanksPointsAndLives" fullname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests.RoundAndSession_PodiumKeepsHostRanksPointsAndLives" methodname="RoundAndSession_PodiumKeepsHostRanksPointsAndLives" classname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" runstate="Runnable" seed="1761933457" result="Passed" start-time="2026-11-28 07:10:58Z" end-time="2026-11-28 07:10:59Z" duration="0.422677" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1103" name="Scoreboard_HoldTabUsesConfirmedRowsAndReleaseCloses" fullname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests.Scoreboard_HoldTabUsesConfirmedRowsAndReleaseCloses" methodname="Scoreboard_HoldTabUsesConfirmedRowsAndReleaseCloses" classname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" runstate="Runnable" seed="1759068189" result="Passed" start-time="2026-11-28 07:10:59Z" end-time="2026-11-28 07:11:00Z" duration="1.395088" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1104" name="Survival_EliminatedCameraCyclesOnlyLivingFighters" fullname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests.Survival_EliminatedCameraCyclesOnlyLivingFighters" methodname="Survival_EliminatedCameraCyclesOnlyLivingFighters" classname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" runstate="Runnable" seed="514414022" result="Passed" start-time="2026-11-28 07:11:00Z" end-time="2026-11-28 07:11:03Z" duration="2.755606" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1107" name="WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions" fullname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests.WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions" methodname="WindowsPlayer_ResultAndScoreboardLayoutsAtFourResolutions" classname="SquishyBump.Tests.PlayMode.ResultsSpectatorTests" runstate="Runnable" seed="1960708878" result="Skipped" label="Ignored" start-time="2026-11-28 07:11:03Z" end-time="2026-11-28 07:11:03Z" duration="0.377305" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <reason>
+                  <message>Ca hình ảnh cần Windows Player có renderer thật.</message>
+                </reason>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1108" name="RingDropPlayTests" fullname="SquishyBump.Tests.PlayMode.RingDropPlayTests" classname="SquishyBump.Tests.PlayMode.RingDropPlayTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-28 07:11:03Z" end-time="2026-11-28 07:11:04Z" duration="1.012024" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1109" name="OuterBand_WarnsThreeSecondsAheadThenDropsWithFruit" fullname="SquishyBump.Tests.PlayMode.RingDropPlayTests.OuterBand_WarnsThreeSecondsAheadThenDropsWithFruit" methodname="OuterBand_WarnsThreeSecondsAheadThenDropsWithFruit" classname="SquishyBump.Tests.PlayMode.RingDropPlayTests" runstate="Runnable" seed="846912826" result="Passed" start-time="2026-11-28 07:11:03Z" end-time="2026-11-28 07:11:04Z" duration="0.989956" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1110" name="RoomOptionsPlayTests" fullname="SquishyBump.Tests.PlayMode.RoomOptionsPlayTests" classname="SquishyBump.Tests.PlayMode.RoomOptionsPlayTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-28 07:11:04Z" end-time="2026-11-28 07:11:06Z" duration="1.489891" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1113" name="Capacity_IsClampedToTwoThroughSix" fullname="SquishyBump.Tests.PlayMode.RoomOptionsPlayTests.Capacity_IsClampedToTwoThroughSix" methodname="Capacity_IsClampedToTwoThroughSix" classname="SquishyBump.Tests.PlayMode.RoomOptionsPlayTests" runstate="Runnable" seed="768459299" result="Passed" start-time="2026-11-28 07:11:04Z" end-time="2026-11-28 07:11:05Z" duration="0.346293" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                </test-case>
+              <test-case id="1112" name="Capacity_TwoLetsOneGuestIn_AndRefusesTheNext" fullname="SquishyBump.Tests.PlayMode.RoomOptionsPlayTests.Capacity_TwoLetsOneGuestIn_AndRefusesTheNext" methodname="Capacity_TwoLetsOneGuestIn_AndRefusesTheNext" classname="SquishyBump.Tests.PlayMode.RoomOptionsPlayTests" runstate="Runnable" seed="208117283" result="Passed" start-time="2026-11-28 07:11:05Z" end-time="2026-11-28 07:11:05Z" duration="0.378345" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                </test-case>
+              <test-case id="1114" name="Discovery_ListenerListsABeaconAndIgnoresGarbage" fullname="SquishyBump.Tests.PlayMode.RoomOptionsPlayTests.Discovery_ListenerListsABeaconAndIgnoresGarbage" methodname="Discovery_ListenerListsABeaconAndIgnoresGarbage" classname="SquishyBump.Tests.PlayMode.RoomOptionsPlayTests" runstate="Runnable" seed="218370130" result="Passed" start-time="2026-11-28 07:11:05Z" end-time="2026-11-28 07:11:06Z" duration="0.385311" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                </test-case>
+              <test-case id="1111" name="Password_WrongIsRefused_RightJoins" fullname="SquishyBump.Tests.PlayMode.RoomOptionsPlayTests.Password_WrongIsRefused_RightJoins" methodname="Password_WrongIsRefused_RightJoins" classname="SquishyBump.Tests.PlayMode.RoomOptionsPlayTests" runstate="Runnable" seed="1797434450" result="Passed" start-time="2026-11-28 07:11:06Z" end-time="2026-11-28 07:11:06Z" duration="0.378494" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1115" name="SinglePlayerRunTests" fullname="SquishyBump.Tests.PlayMode.SinglePlayerRunTests" classname="SquishyBump.Tests.PlayMode.SinglePlayerRunTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-28 07:11:06Z" end-time="2026-11-28 07:12:40Z" duration="94.069818" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1116" name="LobbyPick_StartsL1WithFiveOtherCharacters" fullname="SquishyBump.Tests.PlayMode.SinglePlayerRunTests.LobbyPick_StartsL1WithFiveOtherCharacters" methodname="LobbyPick_StartsL1WithFiveOtherCharacters" classname="SquishyBump.Tests.PlayMode.SinglePlayerRunTests" runstate="Runnable" seed="186743007" result="Passed" start-time="2026-11-28 07:11:06Z" end-time="2026-11-28 07:11:09Z" duration="2.631397" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1118" name="SingleRank_FiveArenaFlow_AdvancesAfterLossAndKeepsScores" fullname="SquishyBump.Tests.PlayMode.SinglePlayerRunTests.SingleRank_FiveArenaFlow_AdvancesAfterLossAndKeepsScores" methodname="SingleRank_FiveArenaFlow_AdvancesAfterLossAndKeepsScores" classname="SquishyBump.Tests.PlayMode.SinglePlayerRunTests" runstate="Runnable" seed="1536078334" result="Passed" start-time="2026-11-28 07:11:09Z" end-time="2026-11-28 07:11:49Z" duration="40.563882" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1117" name="SingleSurvival_FiveArenaFlow_RetryTieAndSummary" fullname="SquishyBump.Tests.PlayMode.SinglePlayerRunTests.SingleSurvival_FiveArenaFlow_RetryTieAndSummary" methodname="SingleSurvival_FiveArenaFlow_RetryTieAndSummary" classname="SquishyBump.Tests.PlayMode.SinglePlayerRunTests" runstate="Runnable" seed="818669" result="Passed" start-time="2026-11-28 07:11:49Z" end-time="2026-11-28 07:12:35Z" duration="45.460067" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1119" name="SingleSurvival_Loss_OffersRetryInsteadOfLeavingRun" fullname="SquishyBump.Tests.PlayMode.SinglePlayerRunTests.SingleSurvival_Loss_OffersRetryInsteadOfLeavingRun" methodname="SingleSurvival_Loss_OffersRetryInsteadOfLeavingRun" classname="SquishyBump.Tests.PlayMode.SinglePlayerRunTests" runstate="Runnable" seed="354436858" result="Passed" start-time="2026-11-28 07:12:35Z" end-time="2026-11-28 07:12:40Z" duration="5.412931" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1120" name="SurvivalArenaTests" fullname="SquishyBump.Tests.PlayMode.SurvivalArenaTests" classname="SquishyBump.Tests.PlayMode.SurvivalArenaTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-28 07:12:40Z" end-time="2026-11-28 07:12:41Z" duration="0.615830" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1121" name="T08_LastTwoFallOnSameTick_DrawAndRetrySameSeed" fullname="SquishyBump.Tests.PlayMode.SurvivalArenaTests.T08_LastTwoFallOnSameTick_DrawAndRetrySameSeed" methodname="T08_LastTwoFallOnSameTick_DrawAndRetrySameSeed" classname="SquishyBump.Tests.PlayMode.SurvivalArenaTests" runstate="Runnable" seed="394601956" result="Passed" start-time="2026-11-28 07:12:40Z" end-time="2026-11-28 07:12:41Z" duration="0.591971" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1122" name="TrainingRingTests" fullname="SquishyBump.Tests.PlayMode.TrainingRingTests" classname="SquishyBump.Tests.PlayMode.TrainingRingTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-28 07:12:41Z" end-time="2026-11-28 07:12:41Z" duration="0.790103" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1124" name="HostSamples_ReportEachRingOutOnceUntilRespawn" fullname="SquishyBump.Tests.PlayMode.TrainingRingTests.HostSamples_ReportEachRingOutOnceUntilRespawn" methodname="HostSamples_ReportEachRingOutOnceUntilRespawn" classname="SquishyBump.Tests.PlayMode.TrainingRingTests" runstate="Runnable" seed="1751029981" result="Passed" start-time="2026-11-28 07:12:41Z" end-time="2026-11-28 07:12:41Z" duration="0.362525" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1123" name="L1Scene_ProvidesFourBandsAndSixSpawns" fullname="SquishyBump.Tests.PlayMode.TrainingRingTests.L1Scene_ProvidesFourBandsAndSixSpawns" methodname="L1Scene_ProvidesFourBandsAndSixSpawns" classname="SquishyBump.Tests.PlayMode.TrainingRingTests" runstate="Runnable" seed="1549773725" result="Passed" start-time="2026-11-28 07:12:41Z" end-time="2026-11-28 07:12:41Z" duration="0.403725" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
